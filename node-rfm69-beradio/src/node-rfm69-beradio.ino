@@ -1,13 +1,72 @@
-//               Hiveyes node sketch
-// 
-// (c) 2015 Richard Pobering <einsiedlerkrebs@netfrag.org>
-// (c) 2015 Andreas Motl, Elmyra UG <andreas.motl@elmyra.de>
-//
+/*
+   
+                  Hiveeyes node-rfm69-beradio
+ 
+   Code collects sensor data encodes them with BERadio protocol 
+   and sends it through RFM69 radio module to a gateway.
 
-///////////////////////////////////////////////////////////
+   Copyright (C) 2016  Richard Pobering <einsiedlerkrebs@ginnungagap.org>
+   Copyright (C) 2016  Andreas Motl <andreas.motl@elmyra.de>
+
+   <https://hiveeyes.org>   
+
+   This program is free software; you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation; either version 3 of the License, or
+   (at your option) any later version.
+
+   This program is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+
+   You should have received a copy of the GNU General Public License
+   along with this program; if not, see: 
+   <http://www.gnu.org/licenses/gpl-3.0.txt>, 
+   or write to the Free Software Foundation,
+   Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA
+
+-------------------------------------------------------------------------   
+
+   Hiveeyes node sketch for Arduino based platforms   
+
+   This is a arduino sketch for the hiveeyes bee monitoring system.
+   The purpose is to collect vital data of a bee hive and transmit it
+   over a RFM69 radio module to a gateway, which sends the data over
+   the internet or collects it in a own database.
+
+   The sensor data could be temperature (via DS18B20 or DHT) sensors,
+   humidity (DHT) or a load cell (H30A with HX711). Other sensors can 
+   easily be added. 
+
+   After the sensor data is collected, it gets encapsulated in a
+   BERadio character string, which will be the transmitted payload. 
+   BERadio is a wrapper that makes use of EmBeEncode dictrionaries and 
+   lists and adds some infrastructural metadata to it.
+ 
+   This code is for use with BERadio at the gateway side, e.g.
+   as a forwarder from serial to mqtt.
+
+   The creation of this code is strongly influenced by other projects, so
+   credits goes to 
+   them: <https://hiveeyes.org/docs/beradio/README.html#credits> 
+
+   Feel free to adapt this code to your own needs.
+
+-------------------------------------------------------------------------   
+
+   Futher informations can be obtained at:
+
+   hiveeyes 										https://hiveeyes.org/
+   documentation 								https://swarm.hiveeyes.org/docs/
+   repository										https://github.com/hiveeyes/
+   beradio											https://hiveeyes.org/docs/beradio/
+
+-------------------------------------------------------------------------   
+
+*/
+
 // TODO:  * put all settings into "#define" header (e.g. scale)
-//        * 
-
 
 // Libraries 
 
@@ -16,7 +75,7 @@
 #include <SPI.h>                  
 #include <SPIFlash.h>                   // https://github.com/LowPowerLab/SPIFlash
 #include <avr/wdt.h>
-#include <WirelessHEX69.h>              // https://github.com/LowPowerLab/WirelessProgramming/tree/master/WirelessHEX69
+#include <WirelessHEX69.h>              // https://github.com/einsiedlerkrebs/WirelessProgramming 
 #include <EmBencode.h>                  // https://github.com/jcw/embencode
 #include <LowPower.h>                   // https://github.com/LowPowerLab/LowPower
 #include <HX711.h>                      // https://github.com/bogde/HX711
@@ -28,6 +87,7 @@
 // Defines //
 
 // BERadio & RFM69 defines
+
 #define NODEID      1
 #define NETWORKID   100
 #define GATEWAYID   1
@@ -52,12 +112,13 @@
 #endif
 
 //    SPIflash defines
+
 // MANUFACTURER_ID             0x1F44 for adesto(ex atmel) 4mbit flash
 //                             0xEF30 for windbond 4mbit flash
 //                             0xEF40 for windbond 16/64mbit flash
 //							   0x0102 for Spansion S25FL032P 32-Mbit 
 
-//#define FLASH_MANUFACTURER_ID 0x0102  // uncomment and set accordingly, if you have a spi-flash on board 
+#define FLASH_MANUFACTURER_ID 0x0102  // set accordingly, if you have a spi-flash on board 
 
 // common defines
 
@@ -75,6 +136,7 @@
 #define SLEEP_MINUTES 15                // set you sleeping rhythm, in about minutes
  
 // Sensor defines
+
 #define ONE_WIRE_BUS 9                  // DS18B20 data pin
 #define TEMPERATURE_PRECISION 9         // DS18B20 value resolution
 #define DHT_PIN1 7                      // DHT pin #1
@@ -368,7 +430,7 @@ void encodeSomeData (int BERfamily) {           // this function encodes the val
 	     encoder.push("a");                       // "a" marks the value source (rACK)
 		   encoder.push(rACK);
    }
-   eincoder.endDict();                          // ends the dictionary
+   encoder.endDict();                           // ends the dictionary
    //#ifdef DEBUG_ENCODE
    Serial.println();
    Serial.println(theData.buff);

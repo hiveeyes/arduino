@@ -1,3 +1,27 @@
 [submodule "libraries/RFM69"]
 	path = libraries/RFM69
 	url = https://github.com/LowPowerLab/RFM69
+[submodule "libraries/SPIFlash"]
+	path = libraries/SPIFlash
+	url = https://github.com/LowPowerLab/SPIFlash
+[submodule "libraries/embencode"]
+	path = libraries/embencode
+	url = https://github.com/jcw/embencode
+[submodule "libraries/LowPower"]
+	path = libraries/LowPower
+	url = https://github.com/LowPowerLab/LowPower
+[submodule "libraries/HX711"]
+	path = libraries/HX711
+	url = https://github.com/bogde/HX711
+[submodule "libraries/arduino-DHT"]
+	path = libraries/arduino-DHT
+	url = https://github.com/markruys/arduino-DHT
+[submodule "libraries/OneWire"]
+	path = libraries/OneWire
+	url = https://github.com/PaulStoffregen/OneWire
+[submodule "libraries/Arduino-Temperature-Control-Library"]
+	path = libraries/Arduino-Temperature-Control-Library
+	url = https://github.com/milesburton/Arduino-Temperature-Control-Library
+[submodule "libraries/WirelessProgramming"]
+	path = libraries/WirelessProgramming
+	url = https://github.com/einsiedlerkrebs/WirelessProgramming
