@@ -4,9 +4,11 @@
  
    Code collects sensor data encodes them with BERadio protocol 
    and sends it through RFM69 radio module to a gateway.
+    
+   Software release 0.4.1
 
-   Copyright (C) 2016  Richard Pobering <einsiedlerkrebs@ginnungagap.org>
-   Copyright (C) 2016  Andreas Motl <andreas.motl@elmyra.de>
+   Copyright (C) 2014-2016  Richard Pobering <einsiedlerkrebs@ginnungagap.org>
+   Copyright (C) 2014-2016  Andreas Motl <andreas.motl@elmyra.de>
 
    <https://hiveeyes.org>   
 
