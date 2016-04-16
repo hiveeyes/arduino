@@ -27,7 +27,7 @@ In this case you clone the repository, in the normal manner::
 Or simply copy the needed sketch into your Arduino IDE.
 
 ========================================
-Setup inotool - using phytons virtualenv
+Setup inotool - using Pythons virtualenv
 ========================================
 ::
 
@@ -36,6 +36,19 @@ Setup inotool - using phytons virtualenv
     $ pip install ino
 
 or visit http://inotool.org/#installation
+
+
+============
+Use sketches
+============
+
+Build a sketch from the commandline::
+
+    cd node-rfm69-beradio
+    make compile
+
+After a successful build, find the firmware at ``.build/uno/firmware.hex``.
+
 
 =========
 Libraries
