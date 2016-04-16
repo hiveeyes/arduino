@@ -1,6 +1,5 @@
-.venv27
-.build/
+/.idea
+/.venv*
+/.build
 ino.ini
 *.swp
-**/ino.ini
-**/**/ino.ini
