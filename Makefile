@@ -1,25 +1,11 @@
 # ==========================================
-# #                 utilities
-# # ==========================================
+#                 utilities
+# ==========================================
 #
-# # ------------------------------------------
-# #                   misc
-# # ------------------------------------------
-# #
-# # Miscellaneous tools:
-# # Ino-tool, Documentation building
-# #
-
-# build sketches, flash binaries and show serial output
-
-run: flash 
-	ino serial
-
-compile: 
-	ino build
-
-flash: compile
-	ino upload
+# ------------------------------------------
+#               documentation
+# ------------------------------------------
+#
 
 # build sphinx documentation
 
