@@ -1,0 +1,6 @@
+.venv27
+.build/
+ino.ini
+*.swp
+**/ino.ini
+**/**/ino.ini
