@@ -46,6 +46,10 @@ To clone the repository with the all the libraries do::
 
     $ git clone --recursive https://github.com/hiveeyes/arduino
 
+In order to update newly added libraries in submodules do::
+
+    $ git submodule update --recursive --init
+
 =======
 Hacking
 =======
@@ -71,4 +75,5 @@ The libraries a central organized as git submodules in `libraries/` . To add new
 
     $ cd arduino/
     $ git submodule add https://mightbegithub.com/author/repo-name libraries/repo-name
+
 
