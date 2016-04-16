@@ -24,8 +24,7 @@ flash: compile
 # build sphinx documentation
 
 docs-html: virtualenv
-		`pwd`/.venv27/bin/python setup.py develop
-		export SPHINXBUILD="`pwd`/.venv27/bin/sphinx-build"; cd doc; make html
+		export SPHINXBUILD="`pwd`/.venv27/bin/sphinx-build"; cd docs; make html
 
 virtualenv:
 		test -e .venv27/bin/python || `command -v virtualenv` --python=`command -v python2.7` --no-site-packages --verbose .venv27

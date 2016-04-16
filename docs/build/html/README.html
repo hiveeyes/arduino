@@ -1,0 +1,175 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Hiveeyes Arduino &mdash; Hiveeyes Arduino 0.5.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.5.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="Hiveeyes Arduino 0.5.0 documentation" href="index.html" />
+   
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="hiveeyes-arduino">
+<h1>Hiveeyes Arduino<a class="headerlink" href="#hiveeyes-arduino" title="Permalink to this headline">¶</a></h1>
+<p>This is the hiveeyes arduino repository. All Arduino based code (including ESP8266) of the project can be found here. To allow different flavours the naming convention is <code class="docutils literal"><span class="pre">purpose-transport-protocol</span></code>.</p>
+<ul class="simple">
+<li><code class="docutils literal"><span class="pre">purpose</span></code>   could be either node or gateway</li>
+<li><code class="docutils literal"><span class="pre">transport</span></code> could be the physical transport mechanism, e.g. like RFM69-radio, LoRa-radio, GSM or WiFi</li>
+<li><code class="docutils literal"><span class="pre">protocol</span></code>  aimes for the protocol the following communication instance would be connected with</li>
+</ul>
+<p>The reporitory is designed for use it with ino-tool, see: inotool.org . Ino-tool is a alternative to the Arduino IDE, which let you use your favourite editor and compile from the commandline. To start over you simply install ino-tool for your linux and recursivly clone this repository.</p>
+<div class="section" id="cloning-the-repository">
+<h2>Cloning the repository<a class="headerlink" href="#cloning-the-repository" title="Permalink to this headline">¶</a></h2>
+<p>If you use ino-tool, you can start right over after cloning the repository recursive:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span>$ git clone --recursive https://github.com/hiveeyes/arduino
+</pre></div>
+</div>
+<p>Otherwise, if you want to use the Arduino IDE you have to install all necessary libraries manualy,
+see: <a class="reference external" href="https://www.arduino.cc/en/Guide/Libraries">https://www.arduino.cc/en/Guide/Libraries</a>. The sources of the libraries can be found in the header of each sketch (.ino).
+In this case you clone the repository, in the normal manner:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span>$ git clone https://github.com/hiveeyes/arduino
+</pre></div>
+</div>
+<p>Or simply copy the needed sketch into your Arduino IDE.</p>
+</div>
+<div class="section" id="setup-inotool-using-phytons-virtualenv">
+<h2>Setup inotool - using phytons virtualenv<a class="headerlink" href="#setup-inotool-using-phytons-virtualenv" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-python"><div class="highlight"><pre><span></span>$ virtualenv-2.7 --no-site-packages .venv27
+$ source .venv27/bin/activate
+$ pip install ino
+</pre></div>
+</div>
+<p>or visit <a class="reference external" href="http://inotool.org/#installation">http://inotool.org/#installation</a></p>
+</div>
+<div class="section" id="libraries">
+<h2>Libraries<a class="headerlink" href="#libraries" title="Permalink to this headline">¶</a></h2>
+<p>The libraries for this arduino repository are organized on a central place; <cite>libraries/</cite> and are symlinked into the flavours lib folders
+To clone the repository with the all the libraries do:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span>$ git clone --recursive https://github.com/hiveeyes/arduino
+</pre></div>
+</div>
+<p>In order to update newly added libraries in submodules do:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span>$ git submodule update --recursive --init
+</pre></div>
+</div>
+</div>
+<div class="section" id="hacking">
+<h2>Hacking<a class="headerlink" href="#hacking" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="initialize-a-new-arduino-flavour">
+<h3>initialize a new arduino flavour<a class="headerlink" href="#initialize-a-new-arduino-flavour" title="Permalink to this headline">¶</a></h3>
+<p>The following steps are needed to initialize a new project in ino style:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span>$ mkdir purpose-transport-protocol                    # make new project directory, following our naming convention
+$ cd purpose-transport-protocol                       # change dir
+$ ino init                                            # creates a src/ and lib/ folder. Alternativly do it manual
+$ rmdir lib/                                          # removes lib/ ;)
+$ cd ..                                               # change dir to repository root
+$ ln -sr libraries/ purpose-transport-protocol/lib    # create a relative symlink to the repositories library folder
+</pre></div>
+</div>
+</div>
+<div class="section" id="adding-new-libraries">
+<h3>adding new libraries<a class="headerlink" href="#adding-new-libraries" title="Permalink to this headline">¶</a></h3>
+<p>The libraries a central organized as git submodules in <cite>libraries/</cite> . To add new submodules do the followling:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span>$ cd arduino/
+$ git submodule add https://mightbegithub.com/author/repo-name libraries/repo-name
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Hiveeyes Arduino</a><ul>
+<li><a class="reference internal" href="#cloning-the-repository">Cloning the repository</a></li>
+<li><a class="reference internal" href="#setup-inotool-using-phytons-virtualenv">Setup inotool - using phytons virtualenv</a></li>
+<li><a class="reference internal" href="#libraries">Libraries</a></li>
+<li><a class="reference internal" href="#hacking">Hacking</a><ul>
+<li><a class="reference internal" href="#initialize-a-new-arduino-flavour">initialize a new arduino flavour</a></li>
+<li><a class="reference internal" href="#adding-new-libraries">adding new libraries</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/README.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016, Hiveeyes Developers.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.3.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.7</a>
+      
+      |
+      <a href="_sources/README.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
