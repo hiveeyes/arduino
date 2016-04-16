@@ -35,7 +35,7 @@
    over a RFM69 radio module to a gateway, which sends the data over
    the internet or collects it in a own database.
 
-   The sensor data could be temperature (via DS18B20 or DHT) sensors,
+   The sensor data could be temperature (via DS18B20 or DHT),
    humidity (DHT) or a load cell (H30A with HX711). Other sensors can 
    easily be added. 
 
@@ -57,16 +57,18 @@
 
    Futher informations can be obtained at:
 
-   hiveeyes 										https://hiveeyes.org/
-   documentation 								https://swarm.hiveeyes.org/docs/
-   repository										https://github.com/hiveeyes/
-   beradio											https://hiveeyes.org/docs/beradio/
+   hiveeyes                     https://hiveeyes.org/
+   documentation                https://swarm.hiveeyes.org/docs/
+   repository                   https://github.com/hiveeyes/
+   beradio                      https://hiveeyes.org/docs/beradio/
 
 -------------------------------------------------------------------------   
 
 */
 
-// TODO:  * put all settings into "#define" header (e.g. scale)
+// TODO:  
+//        * put all settings into "#define" header (e.g. scale)
+//        * fix #define DEBUG-switch issue
 
 // Libraries 
 
@@ -82,7 +84,6 @@
 #include <DHT.h>                        // https://github.com/markruys/arduino-DHT
 #include <OneWire.h>                    // https://github.com/PaulStoffregen/OneWire
 #include <DallasTemperature.h>          // https://github.com/milesburton/Arduino-Temperature-Control-Library
-
 
 // Defines //
 

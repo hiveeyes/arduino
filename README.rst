@@ -14,7 +14,7 @@ The reporitory is designed for use it with ino-tool, see: inotool.org . Ino-tool
 Cloning the repository
 ======================
 
-If you use ino-tool, you can start right over after cloning the repository recursiv::
+If you use ino-tool, you can start right over after cloning the repository recursive::
 
     $ git clone --recursive https://github.com/hiveeyes/arduino
 
@@ -37,35 +37,35 @@ Setup inotool - using phytons virtualenv
 
 or visit http://inotool.org/#installation
 
-*********
+=========
 Libraries
-*********
+=========
 
 The libraries for this arduino repository are organized on a central place; `libraries/` and are symlinked into the flavours lib folders 
 To clone the repository with the all the libraries do::
 
     $ git clone --recursive https://github.com/hiveeyes/arduino
 
-*******
+=======
 Hacking
-*******
+=======
 
-===============================
-intialize a new arduino flavour
-===============================
+********************************
+initialize a new arduino flavour
+********************************
 
-The following steps are needed to intitialize a new project in ino style::
+The following steps are needed to initialize a new project in ino style::
 
     $ mkdir purpose-transport-protocol                    # make new project directory, following our naming convention
     $ cd purpose-transport-protocol                       # change dir
     $ ino init                                            # creates a src/ and lib/ folder. Alternativly do it manual
-    $ rmdir lib/                                          # removes lib/
+    $ rmdir lib/                                          # removes lib/ ;)
     $ cd ..                                               # change dir to repository root
     $ ln -sr libraries/ purpose-transport-protocol/lib    # create a relative symlink to the repositories library folder
 
-====================
+********************
 adding new libraries
-====================
+********************
 
 The libraries a central organized as git submodules in `libraries/` . To add new submodules do the followling::
 
