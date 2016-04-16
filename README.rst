@@ -2,11 +2,11 @@
 Hiveeyes Arduino
 ################
 
-This is the hiveeyes arduino reporitory. All Arduino based code (including ESP8266) of the project can be found here. To allow different flavours the naming convention is `purpose-transport-protocol`.
+This is the hiveeyes arduino repository. All Arduino based code (including ESP8266) of the project can be found here. To allow different flavours the naming convention is ``purpose-transport-protocol``.
 
-* `purpose`   could be either node or gateway
-* `transport` could be the physical transport mechanism, e.g. like RFM69-radio, LoRa-radio, GSM or WiFi 
-* `protocol`  aimes for the protocol the following communication instance would be connected with
+* ``purpose``   could be either node or gateway
+* ``transport`` could be the physical transport mechanism, e.g. like RFM69-radio, LoRa-radio, GSM or WiFi 
+* ``protocol``  aimes for the protocol the following communication instance would be connected with
 
 The reporitory is designed for use it with ino-tool, see: inotool.org . Ino-tool is a alternative to the Arduino IDE, which let you use your favourite editor and compile from the commandline. To start over you simply install ino-tool for your linux and recursivly clone this repository.
 
