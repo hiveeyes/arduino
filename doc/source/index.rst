@@ -3,18 +3,44 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to Hiveeyes Arduino's documentation!
-============================================
+##############################
+Hiveeyes Arduino documentation
+##############################
 
-Contents:
+
+******
+README
+******
 
 .. toctree::
     :maxdepth: 2
     :glob:
 
     README
+
+
+***********
+Development
+***********
+
+.. toctree::
+    :maxdepth: 1
+    :glob:
+
     CHANGES
-    *
+    TODO
+
+
+libberadio
+==========
+
+.. toctree::
+    :maxdepth: 1
+    :glob:
+
+    libberadio/README
+    libberadio/research
+    libberadio/firmware-size
 
 
 Indices and tables

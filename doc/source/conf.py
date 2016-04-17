@@ -288,5 +288,9 @@ texinfo_documents = [
 #texinfo_no_detailmenu = False
 
 
-# Example configuration for intersphinx: refer to the Python standard library.
-intersphinx_mapping = {'https://docs.python.org/': None}
+# Link with Hiveeyes, BERadio and Kotori projects
+intersphinx_mapping = {
+    'hiveeyes': ('https://swarm.hiveeyes.org/docs/', None),
+    'beradio':  ('https://hiveeyes.org/docs/beradio/', None),
+    'kotori':   ('https://getkotori.org/docs/', None),
+}

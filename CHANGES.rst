@@ -1,3 +1,5 @@
+.. include:: resources.rst
+
 ########################
 Hiveeyes Arduino Changes
 ########################
@@ -5,6 +7,9 @@ Hiveeyes Arduino Changes
 
 develop
 -------
+2016-04-16 0.5.1
+----------------
+- Add Sphinx for documentation
 
 
 2016-04-16 0.5.0

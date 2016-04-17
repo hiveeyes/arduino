@@ -10,11 +10,17 @@ Code
 - [o] Add :ref:`libberadio` spike and associated documentation from :ref:`beradio`
 - [o] Add HX711 calibration sketch
 
+libberadio
+----------
+- [o] Send ``embencode.patch`` upstream
+- [o] Integrate ``StandardCplusplus`` via git submodule
+- [o] Try to use it from regular sketches. Watch the firmware sizes!
+
 
 Documentation
 =============
 - [x] Add Sphinx for documentation
-- [o] Purge docs/build from git repository
+- [x] Purge docs/build from git repository
 - [o] Publish at https://hiveeyes.org/docs/arduino/
 - [o] Interlink Sphinx (conf.py) with swarm, beradio and maybe kotori docs
 - [o] Add "Howto use inotool" to README
