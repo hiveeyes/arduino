@@ -10,7 +10,7 @@
 # build sphinx documentation
 
 docs-html: virtualenv
-		export SPHINXBUILD="`pwd`/.venv27/bin/sphinx-build"; cd docs; make html
+		export SPHINXBUILD="`pwd`/.venv27/bin/sphinx-build"; cd doc; make html
 
 virtualenv:
 		test -e .venv27/bin/python || `command -v virtualenv` --python=`command -v python2.7` --no-site-packages --verbose .venv27
