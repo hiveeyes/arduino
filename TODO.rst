@@ -5,7 +5,7 @@ Hiveeyes Arduino Todo
 
 Code
 ====
-- [o] Add Arduino gateway code, e.g. ``gateway-rfm69-beradio``
+- [x] Add Arduino gateway code, e.g. ``gateway-rfm69-beradio``
 - [o] Add ``node-wifi-mqtt`` from Clemens
 - [o] Add :ref:`libberadio` spike and associated documentation from :ref:`beradio`
 - [o] Add HX711 calibration sketch
@@ -23,7 +23,7 @@ Documentation
 - [x] Purge docs/build from git repository
 - [o] Publish at https://hiveeyes.org/docs/arduino/
 - [o] Interlink Sphinx (conf.py) with swarm, beradio and maybe kotori docs
-- [o] Add "Howto use inotool" to README
+- [x] Add "Howto use inotool" to README
 - [o] Check out different Sphinx theme
 
 
@@ -35,3 +35,4 @@ For more tooling like distribution package building, see :ref:`beradio` and :ref
 - [x] Add bumpversion for release cutting
 - [o] Project packaging (tarball, zip?) and publishing
 - [o] Add ``git push github master`` to ``make release``. Don't miss the tags!
+- [o] find more modern command line driven Arduino IDE replacement

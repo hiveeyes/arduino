@@ -63,6 +63,39 @@ Build a sketch from the commandline::
 
 After a successful build, find the firmware at ``node-rfm69-beradio/.build/uno/firmware.hex``.
 
+Ino-tool
+========
+
+You can also use ino tool directly to make it compile and upload your code::
+
+    $ ino list-models
+    $ ino build -m BOARD_MODEL
+    $ ino upload -m BOARD_MODEL -p SERIAL_PORT
+
+To get the serial output from the arduino, do::
+
+    $ ino serial -p SERIAL_PORT -b BAUD_RATE
+
+The code directory may contain a `ino.ini` file, in which the settings may be set::
+
+     [build]
+     board-model = pro328
+
+     [upload]
+     board-model = pro328
+     serial-port = /dev/ttyUSB1
+
+     [serial]
+     serial-port = /dev/ttyUSB1
+     baud-rate = 115200
+
+To build, upload and print the serial output at once, just run::
+
+    $ make
+
+Further information about ino are found at http://inotool.org/
+
+
 
 Libraries
 =========
