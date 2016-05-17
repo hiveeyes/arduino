@@ -1,24 +1,35 @@
+.. include:: resources.rst
+
 ################
 Hiveeyes Arduino
 ################
 
-This is the hiveeyes arduino repository. All Arduino based code (including ESP8266) of the project can be found here. To allow different flavours the naming convention is ``purpose-transport-protocol``.
+*****
+Setup
+*****
+
+Intro
+=====
+This is the Hiveeyes Arduino repository. All Arduino based code (for ATmega328_ and ESP8266_) of the project can be found here.
+To allow different flavours, the directory naming convention is ``<purpose>-<transport>-<protocol>``.
 
 * ``purpose``   could be either node or gateway
 * ``transport`` could be the physical transport mechanism, e.g. like RFM69-radio, LoRa-radio, GSM or WiFi 
 * ``protocol``  aimes for the protocol the following communication instance would be connected with
 
-The reporitory is designed for use it with ino-tool, see: inotool.org . Ino-tool is a alternative to the Arduino IDE, which let you use your favourite editor and compile from the commandline. To start over you simply install ino-tool for your linux and recursivly clone this repository.
+The repository is designed for use it with Ino_, a command line toolkit for working with Arduino hardware.
+Ino_ is an alternative to the Arduino IDE, which let you use your favourite editor and compile from the commandline.
+To start over you simply install Ino_ on your system and recursively clone this repository.
 
-======================
-Cloning the repository
-======================
 
-If you use ino-tool, you can start right over after cloning the repository recursive::
+Clone the repository
+====================
+
+If you use Ino_, you can start right over after cloning the repository recursively::
 
     $ git clone --recursive https://github.com/hiveeyes/arduino
 
-Otherwise, if you want to use the Arduino IDE you have to install all necessary libraries manualy,
+Otherwise, if you want to use the Arduino IDE you have to install all necessary libraries manually,
 see: https://www.arduino.cc/en/Guide/Libraries. The sources of the libraries can be found in the header of each sketch (.ino).
 In this case you clone the repository, in the normal manner::
 
@@ -26,9 +37,9 @@ In this case you clone the repository, in the normal manner::
 
 Or simply copy the needed sketch into your Arduino IDE.
 
-========================================
-Setup inotool - using phytons virtualenv
-========================================
+===========
+Install Ino
+===========
 ::
 
     $ virtualenv-2.7 --no-site-packages .venv27
@@ -37,7 +48,22 @@ Setup inotool - using phytons virtualenv
 
 or visit http://inotool.org/#installation
 
-=========
+
+*******
+Operate
+*******
+
+Sketches
+========
+
+Build a sketch from the commandline::
+
+    cd node-rfm69-beradio
+    make compile
+
+After a successful build, find the firmware at ``node-rfm69-beradio/.build/uno/firmware.hex``.
+
+
 Libraries
 =========
 
@@ -50,14 +76,14 @@ In order to update newly added libraries in submodules do::
 
     $ git submodule update --recursive --init
 
-=======
-Hacking
-=======
 
-********************************
-initialize a new arduino flavour
-********************************
 
+****
+Hack
+****
+
+Initialize a new arduino flavour
+================================
 The following steps are needed to initialize a new project in ino style::
 
     $ mkdir purpose-transport-protocol                    # make new project directory, following our naming convention
@@ -67,13 +93,10 @@ The following steps are needed to initialize a new project in ino style::
     $ cd ..                                               # change dir to repository root
     $ ln -sr libraries/ purpose-transport-protocol/lib    # create a relative symlink to the repositories library folder
 
-********************
-adding new libraries
-********************
-
-The libraries a central organized as git submodules in `libraries/` . To add new submodules do the followling::
+Add new libraries
+=================
+The libraries are organized as git submodules inside the `libraries/` folder. To add new submodules, do the following::
 
     $ cd arduino/
     $ git submodule add https://mightbegithub.com/author/repo-name libraries/repo-name
-
 

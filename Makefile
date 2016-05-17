@@ -1,34 +1,24 @@
 # ==========================================
-# #                 utilities
-# # ==========================================
+#                 utilities
+# ==========================================
 #
-# # ------------------------------------------
-# #                   misc
-# # ------------------------------------------
-# #
-# # Miscellaneous tools:
-# # Ino-tool, Documentation building
-# #
-
-# build sketches, flash binaries and show serial output
-
-run: flash 
-	ino serial
-
-compile: 
-	ino build
-
-flash: compile
-	ino upload
+# ------------------------------------------
+#               documentation
+# ------------------------------------------
+#
 
 # build sphinx documentation
 
 docs-html: virtualenv
-		export SPHINXBUILD="`pwd`/.venv27/bin/sphinx-build"; cd docs; make html
+	export SPHINXBUILD="`pwd`/.venv27/bin/sphinx-build"; cd doc; make html
 
 virtualenv:
-		test -e .venv27/bin/python || `command -v virtualenv` --python=`command -v python2.7` --no-site-packages --verbose .venv27
-		.venv27/bin/pip install --requirement requirements-dev.txt
+
+	@echo Setup or update virtualenv
+	@test -e .venv27/bin/python || `command -v virtualenv` --python=`command -v python2.7` --no-site-packages .venv27
+
+	@echo Install packages from requirements-dev.txt
+	@.venv27/bin/pip --quiet install --requirement requirements-dev.txt
 
 
 # ------------------------------------------

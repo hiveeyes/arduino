@@ -4,3 +4,4 @@
 ino.ini
 *.swp
 tags
+/doc/build
