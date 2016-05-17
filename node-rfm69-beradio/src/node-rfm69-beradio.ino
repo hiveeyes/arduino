@@ -71,6 +71,7 @@
 // TODO:  
 //        * put all settings into "#define" header (e.g. scale)
 //        * fix #define DEBUG-switch issue
+//        * clean up code
 
 // Libraries 
 

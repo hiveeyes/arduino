@@ -6,7 +6,7 @@ Hiveeyes Arduino Todo
 Code
 ====
 - [x] Add Arduino gateway code, e.g. ``gateway-rfm69-beradio``
-- [o] Add ``node-wifi-mqtt`` from Clemens
+- [x] Add ``node-wifi-mqtt`` from Clemens
 - [o] Add :ref:`libberadio` spike and associated documentation from :ref:`beradio`
 - [o] Add HX711 calibration sketch
 
