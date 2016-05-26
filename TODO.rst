@@ -1,6 +1,6 @@
-#####################
-Hiveeyes Arduino Todo
-#####################
+####
+TODO
+####
 
 
 Code
@@ -35,4 +35,14 @@ For more tooling like distribution package building, see :ref:`beradio` and :ref
 - [x] Add bumpversion for release cutting
 - [o] Project packaging (tarball, zip?) and publishing
 - [o] Add ``git push github master`` to ``make release``. Don't miss the tags!
-- [o] find more modern command line driven Arduino IDE replacement
+- [o] Find other modern command line driven Arduino IDE replacement, maybe just use ArduinoMk
+- [o] Use http://platformio.org/
+
+    - http://platformio.org/lib/show/92/RFM69
+    - http://platformio.org/lib/show/276/AESLib
+    - http://docs.platformio.org/en/latest/librarymanager/config.html#dependencies
+    - http://docs.platformio.org/en/latest/librarymanager/config.html#library-json
+    - http://docs.platformio.org/en/latest/librarymanager/creating.html#library-creating-examples
+    - http://docs.platformio.org/en/latest/userguide/lib/cmd_install.html#cmd-lib-install
+    - http://docs.platformio.org/en/latest/platforms/atmelavr.html#packages
+

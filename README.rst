@@ -1,8 +1,8 @@
 .. include:: resources.rst
 
-################
-Hiveeyes Arduino
-################
+######
+README
+######
 
 *****
 Setup

@@ -28,6 +28,12 @@ The ATmega328_ has 32 KB ISP flash memory and 2 KB SRAM.
 Tech
 ====
 
+Main readings
+-------------
+- http://www.stroustrup.com/C++11FAQ.html#init-list
+- http://www.stroustrup.com/C++11FAQ.html#uniform-init
+- http://www.stroustrup.com/C++11FAQ.html#variadic-templates
+
 Variable-Length Argument Lists
 ------------------------------
 - http://c-faq.com/varargs/

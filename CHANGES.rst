@@ -1,14 +1,15 @@
 .. include:: resources.rst
 
-########################
-Hiveeyes Arduino Changes
-########################
+#######
+CHANGES
+#######
 
 
-develop
--------
+in-progress
+-----------
 - Add :ref:`libberadio` to evaluate whether a Standard C++ based firmware
   will still fit into the 32 KB flash memory of the little ATmega328_.
+- Get Sphinx documentation in shape
 
 
 2016-04-16 0.5.1

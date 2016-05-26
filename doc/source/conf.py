@@ -51,7 +51,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'Hiveeyes Arduino'
-copyright = u'2016, Hiveeyes Developers'
+copyright = u'2014-2016, Hiveeyes Developers'
 author = u'Hiveeyes Developers'
 
 # The version info for the project you're documenting, acts as replacement for
@@ -112,7 +112,8 @@ todo_include_todos = True
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
-html_theme = 'alabaster'
+#html_theme = 'alabaster'
+html_theme = 'sphinx_rtd_theme'
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
@@ -288,9 +289,21 @@ texinfo_documents = [
 #texinfo_no_detailmenu = False
 
 
+# -- Custom options -------------------------------------------
+
+# Layout
+#html_logo = '_static/img/arduino-community-logo.svg'
+
+# Activate more functionality
+def setup(app):
+
+    # https://github.com/snide/sphinx_rtd_theme/issues/117#issuecomment-41571653
+    app.add_stylesheet("css/sphinx-cicerops.css")
+    app.add_stylesheet("css/sphinx-arduino.css")
+
 # Link with Hiveeyes, BERadio and Kotori projects
 intersphinx_mapping = {
-    'hiveeyes': ('https://swarm.hiveeyes.org/docs/', None),
-    'beradio':  ('https://hiveeyes.org/docs/beradio/', None),
-    'kotori':   ('https://getkotori.org/docs/', None),
+    'hiveeyes': ('https://hiveeyes.org/docs/system', None),
+    'beradio':  ('https://hiveeyes.org/docs/beradio', None),
+    'kotori':   ('https://getkotori.org/docs', None),
 }
