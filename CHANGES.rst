@@ -9,6 +9,9 @@ in-progress
 -----------
 - Fix make target “docs-html”
 - Upgrade to Sphinx 1.4.1
+- Add “sphinx_rtf_theme==0.1.9” to requirements-dev.txt, because
+
+    .. error:: sphinx_rtd_theme is no longer a hard dependency since version 1.4.0. Please install it manually.
 
 2016-05-26 0.5.2
 ----------------
