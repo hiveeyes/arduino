@@ -7,12 +7,12 @@ Code
 ====
 - [x] Add Arduino gateway code, e.g. ``gateway-rfm69-beradio``
 - [x] Add ``node-wifi-mqtt`` from Clemens
-- [o] Add :ref:`libberadio` spike and associated documentation from :ref:`beradio`
+- [x] Add :ref:`libberadio` spike and associated documentation from :ref:`beradio`
 - [o] Add HX711 calibration sketch
 
 libberadio
 ----------
-- [o] Send ``embencode.patch`` upstream
+- [o] Send ``embencode.patch`` upstream to enable OO-based composition
 - [o] Integrate ``StandardCplusplus`` via git submodule
 - [o] Try to use it from regular sketches. Watch the firmware sizes!
 
@@ -21,10 +21,11 @@ Documentation
 =============
 - [x] Add Sphinx for documentation
 - [x] Purge docs/build from git repository
-- [o] Publish at https://hiveeyes.org/docs/arduino/
-- [o] Interlink Sphinx (conf.py) with swarm, beradio and maybe kotori docs
+- [x] Interlink Sphinx (conf.py) with hiveeyes, beradio kotori docs
 - [x] Add "Howto use inotool" to README
-- [o] Check out different Sphinx theme
+- [x] Check out different Sphinx theme
+- [o] Publish at https://hiveeyes.org/docs/arduino/
+- [o] Display license in documentation
 
 
 Infrastructure
