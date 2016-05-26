@@ -10,15 +10,15 @@
 # build sphinx documentation
 
 docs-html: virtualenv
-	export SPHINXBUILD="`pwd`/.venv27/bin/sphinx-build"; cd doc; make html
+	export SPHINXBUILD="`pwd`/.venv/bin/sphinx-build"; cd doc; make html
 
 virtualenv:
 
 	@echo Setup or update virtualenv
-	@test -e .venv27/bin/python || `command -v virtualenv` --python=`command -v python2.7` --no-site-packages .venv27
+	@test -e .venv/bin/python || `command -v virtualenv` --python=`command -v python2.7` --no-site-packages .venv
 
 	@echo Install packages from requirements-dev.txt
-	@.venv27/bin/pip --quiet install --requirement requirements-dev.txt
+	@.venv/bin/pip --quiet install --requirement requirements-dev.txt
 
 
 # ------------------------------------------
@@ -33,7 +33,7 @@ virtualenv:
 #
 
 bumpversion: 
-	bumpversion $(bump)
+	.venv/bin/bumpversion $(bump)
 
 push:
 	git push && git push --tags

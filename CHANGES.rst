@@ -7,6 +7,11 @@ CHANGES
 
 in-progress
 -----------
+- Fix make target “docs-html”
+- Upgrade to Sphinx 1.4.1
+
+2016-05-26 0.5.2
+----------------
 - Add :ref:`libberadio` to evaluate whether a Standard C++ based firmware
   will still fit into the 32 KB flash memory of the little ATmega328_.
 - Get Sphinx documentation in shape
