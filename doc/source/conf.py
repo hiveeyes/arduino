@@ -307,3 +307,8 @@ intersphinx_mapping = {
     'beradio':  ('https://hiveeyes.org/docs/beradio', None),
     'kotori':   ('https://getkotori.org/docs', None),
 }
+
+# Disable caching remote inventories completely
+# http://www.sphinx-doc.org/en/stable/ext/intersphinx.html#confval-intersphinx_cache_limit
+intersphinx_cache_limit = 0
+

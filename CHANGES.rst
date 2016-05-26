@@ -1,5 +1,7 @@
 .. include:: resources.rst
 
+.. _changes:
+
 #######
 CHANGES
 #######
@@ -14,7 +16,8 @@ in-progress
     .. error:: sphinx_rtd_theme is no longer a hard dependency since version 1.4.0. Please install it manually.
 
 - Add label :ref:`hiveeyes-arduino` to documentation for referencing from other Sphinx instances
-
+- Add label to CHANGES.rst
+- Disable caching of remote intersphinx inventories
 
 2016-05-26 0.5.2
 ----------------
