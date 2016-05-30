@@ -6,7 +6,7 @@
     
    Software release 0.5.1
 
-   Copyright (C) 2014-2016  Clemens Gruber <mail@clemens-gruber.de>
+   Copyright (C) 2014-2016  The Hiveeyes developers
 
    <https://hiveeyes.org>   
 
@@ -48,7 +48,7 @@
    Futher informations can be obtained at:
 
    hiveeyes                     https://hiveeyes.org/
-   documentation                https://swarm.hiveeyes.org/docs/
+   documentation                https://hiveeyes.org/docs/system/
    repository                   https://github.com/hiveeyes/
    beradio                      https://hiveeyes.org/docs/beradio/
 

@@ -52,7 +52,7 @@
    Futher informations can be obtained at:
 
    hiveeyes                     https://hiveeyes.org/
-   documentation                https://swarm.hiveeyes.org/docs/
+   documentation                https://hiveeyes.org/docs/system/
    repository                   https://github.com/hiveeyes/
    beradio                      https://hiveeyes.org/docs/beradio/
 
