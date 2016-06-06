@@ -31,3 +31,9 @@
 [submodule "tools/Bare-Arduino-Project"]
 	path = tools/Bare-Arduino-Project
 	url = https://github.com/ladislas/Bare-Arduino-Project
+[submodule "libraries/ArduinoJson"]
+	path = libraries/ArduinoJson
+	url = https://github.com/bblanchon/ArduinoJson
+[submodule "libraries/GPRSbee"]
+	path = libraries/GPRSbee
+	url = https://github.com/SodaqMoja/GPRSbee

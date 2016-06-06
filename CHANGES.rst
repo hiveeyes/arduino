@@ -9,6 +9,23 @@ CHANGES
 
 in-progress
 -----------
+General
+-------
+- Add project tooling as git submodules under ``tools/``
+
+    - https://github.com/sudar/Arduino-Makefile
+    - https://github.com/ladislas/Bare-Arduino-Project
+
+Open Hive GPRSbee
+-----------------
+- Add dependency libraries as git submodules under ``libraries/``
+
+    - https://github.com/bblanchon/ArduinoJson
+    - https://github.com/SodaqMoja/GPRSbee
+
+
+Documentation
+-------------
 - Fix make target “docs-html”
 - Upgrade to Sphinx 1.4.1
 - Add “sphinx_rtf_theme==0.1.9” to requirements-dev.txt due to
@@ -18,10 +35,6 @@ in-progress
 - Add label :ref:`hiveeyes-arduino` to documentation for referencing from other Sphinx instances
 - Add label to CHANGES.rst
 - Disable caching of remote intersphinx inventories
-- Add git submodules
-
-    - https://github.com/sudar/Arduino-Makefile
-    - https://github.com/ladislas/Bare-Arduino-Project
 
 
 2016-05-26 0.5.2
