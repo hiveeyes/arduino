@@ -115,9 +115,11 @@ In order to update newly added libraries in submodules do::
 Hack
 ****
 
-Initialize a new arduino flavour
+Initialize a new Arduino flavour
 ================================
-The following steps are needed to initialize a new project in ino style::
+The following steps are needed to initialize a new project.
+
+Using ``ino``::
 
     $ mkdir purpose-transport-protocol                    # make new project directory, following our naming convention
     $ cd purpose-transport-protocol                       # change dir
@@ -125,6 +127,12 @@ The following steps are needed to initialize a new project in ino style::
     $ rmdir lib/                                          # removes lib/ ;)
     $ cd ..                                               # change dir to repository root
     $ ln -sr libraries/ purpose-transport-protocol/lib    # create a relative symlink to the repositories library folder
+
+Using Arduino-Makefile::
+
+    $ mkdir purpose-transport-protocol                    # make new project directory, following our naming convention
+    $ cp tools/Bare-Arduino-Project/Makefile-* node-gprs-any/  # install tooling
+
 
 Add new libraries
 =================
