@@ -25,3 +25,9 @@
 [submodule "libraries/WirelessProgramming"]
 	path = libraries/WirelessProgramming
 	url = https://github.com/einsiedlerkrebs/WirelessProgramming
+[submodule "tools/Arduino-Makefile"]
+	path = tools/Arduino-Makefile
+	url = https://github.com/sudar/Arduino-Makefile
+[submodule "tools/Bare-Arduino-Project"]
+	path = tools/Bare-Arduino-Project
+	url = https://github.com/ladislas/Bare-Arduino-Project

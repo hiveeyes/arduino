@@ -18,6 +18,11 @@ in-progress
 - Add label :ref:`hiveeyes-arduino` to documentation for referencing from other Sphinx instances
 - Add label to CHANGES.rst
 - Disable caching of remote intersphinx inventories
+- Add git submodules
+
+    - https://github.com/sudar/Arduino-Makefile
+    - https://github.com/ladislas/Bare-Arduino-Project
+
 
 2016-05-26 0.5.2
 ----------------
