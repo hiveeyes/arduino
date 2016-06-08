@@ -34,3 +34,6 @@
 [submodule "libraries/ArduinoJson"]
 	path = libraries/ArduinoJson
 	url = https://github.com/bblanchon/ArduinoJson
+[submodule "libraries/GPRSbee"]
+	path = libraries/GPRSbee
+	url = https://github.com/SodaqMoja/GPRSbee
