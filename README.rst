@@ -53,8 +53,22 @@ or visit http://inotool.org/#installation
 Operate
 *******
 
-Sketches
-========
+Arduino-Makefile
+================
+
+Compile
+-------
+::
+
+    cd node-gprs-any
+    make --file Makefile-OSX.mk
+
+
+Inotool
+=======
+
+Compile
+-------
 
 Build a sketch from the commandline::
 
@@ -63,8 +77,8 @@ Build a sketch from the commandline::
 
 After a successful build, find the firmware at ``node-rfm69-beradio/.build/uno/firmware.hex``.
 
-Ino-tool
-========
+Upload
+------
 
 You can also use ino tool directly to make it compile and upload your code::
 
