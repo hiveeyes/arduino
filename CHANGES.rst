@@ -33,6 +33,9 @@ Open Hive GPRSbee
 - Add example sketch ``node-gprs-any`` demonstrating HTTP+JSON
   communication with the Hiveeyes backend over GPRSbee
 
+- Use non-SSL endpoint http://swarm.hiveeyes.org/api/,
+  the default GPRSbee devices don't do SSL
+
 
 Documentation
 -------------

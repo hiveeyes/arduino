@@ -84,7 +84,7 @@ Todo
 
 // Telemetry
 // ---------
-#define HE_API_URL      "https://swarm.hiveeyes.org/api"
+#define HE_API_URL      "http://swarm.hiveeyes.org/api/"
 #define HE_USER         "testdrive"
 #define HE_SITE         "area-42"
 #define HE_HIVE         "gprs-workbench"
