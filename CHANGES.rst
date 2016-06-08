@@ -30,6 +30,9 @@ Open Hive GPRSbee
     - https://github.com/bblanchon/ArduinoJson
     - https://github.com/SodaqMoja/GPRSbee
 
+- Add example sketch ``node-gprs-any`` demonstrating HTTP+JSON
+  communication with the Hiveeyes backend over GPRSbee
+
 
 Documentation
 -------------
