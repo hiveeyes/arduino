@@ -56,6 +56,15 @@ Operate
 Arduino-Makefile
 ================
 
+Archlinux-install 
+-----------------
+
+Packages
+________
+
+* aur/arduino 1:1.6.8
+* community/avr-libc
+
 Compile
 -------
 ::
