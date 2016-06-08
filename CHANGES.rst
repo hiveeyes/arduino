@@ -19,6 +19,9 @@ General
 
 - Adapt vanilla Makefiles from Bare-Arduino-Project for vendor ``node-gprs-any``
 
+- Add Hiveeyes foundation libraries as proposal
+  for decoupling sensor and transmitter domains
+
 
 Open Hive GPRSbee
 -----------------
