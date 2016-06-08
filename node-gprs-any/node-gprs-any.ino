@@ -64,8 +64,8 @@
 ----
 Todo
 ----
-- HTTP -> HTTPS reverse proxy on the backend side
-- Add code for "Open Hive Seeedunio Stalker" sensors
+- Allow (non-SSL) HTTP on the backend side
+- Add code for reading sensors of "Open Hive Seeedunio Stalker"
 - Try to stay in sync with "node-rfm69-beradio.ino"
 
     - Put all settings into "#define" header (e.g. scale)
@@ -149,34 +149,18 @@ using namespace OpenHive;
 // ******************************************
 
 
-// Variables
+// Main telemetry API
 TelemetryNode *telemetry;
 
 // Forward declarations
-TelemetryNode& setup_telemetry_gprsbee();
+TelemetryNode& setup_telemetry_gprsbee(bool wait_usb);
+
 
 // Setup function
 void setup() {
 
-    // Derived from https://github.com/SodaqMoja/GPRSbee/blob/master/examples/httpget/httpget.ino
-    // TODO: For debugging machinery, see httpget.ino
-
-    // GPRS setup
-    Serial.begin(19200);          // Serial is connected to SIM900 GPRSbee
-
-    // Initialize GPRSbee device
-    gprsbee.initAutonomoSIM800(Serial, GPRSBEE_VCC, GPRSBEE_ONOFF, GPRSBEE_STATUS);
-
-    Serial.println(F("Program start"));
-
-    // 1. Telemetry setup
-    telemetry = &setup_telemetry_gprsbee();
-
-    // Make sure the GPRSbee is switched off when starting up
-    gprsbee.off();
-    Serial.println(F("Please disconnect USB"));
-    delay(4000);
-
+    // Telemetry setup
+    telemetry = &setup_telemetry_gprsbee(true);
 
     // Sensor setup
     // FIXME: No sensors yet. This is just a telemetry demo program.
@@ -185,6 +169,7 @@ void setup() {
 
 // Main loop
 void loop() {
+
 
     // 1. Read sensors
 
@@ -213,11 +198,28 @@ void loop() {
  * Setup function for initializing a TelemetryNode instance
  * with appropriate components in individual setups.
  *
- * Here, we instruct the machinery to communicate
- * using a Sodaq GPRSbee device.
+ * Here, the machinery is instructed to
+ * communicate using a Sodaq GPRSbee device.
  *
 **/
-TelemetryNode& setup_telemetry_gprsbee() {
+TelemetryNode& setup_telemetry_gprsbee(bool wait_usb = false) {
+
+
+    /* Setup transmitter hardware */
+
+    // GPRS setup
+    Serial.begin(19200);          // Serial is connected to SIM900 GPRSbee
+
+    // Initialize GPRSbee device
+    gprsbee.initAutonomoSIM800(Serial, GPRSBEE_VCC, GPRSBEE_ONOFF, GPRSBEE_STATUS);
+
+    // Make sure the GPRSbee is switched off when starting up
+    gprsbee.off();
+    if (wait_usb) {
+        Serial.println(F("Please disconnect USB within 5 seconds."));
+        delay(5000);
+    }
+
 
     /* Setup telemetry client with pluggable components */
 
