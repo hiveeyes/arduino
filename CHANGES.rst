@@ -36,6 +36,9 @@ Open Hive GPRSbee
 - Use non-SSL endpoint http://swarm.hiveeyes.org/api/,
   the default GPRSbee devices don't do SSL
 
+- ``node-gprs-any.ino``: Update ``HE_API_URL`` to use different url
+  for non-TLS communication: http://swarm.hiveeyes.org/api-notls/
+
 
 Documentation
 -------------
