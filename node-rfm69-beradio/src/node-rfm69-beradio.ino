@@ -32,14 +32,14 @@
 
    Hiveeyes node sketch for Arduino based platforms   
 
-   This is a arduino sketch for the hiveeyes bee monitoring system.
+   This is an Arduino sketch for the Hiveeyes bee monitoring system.
    The purpose is to collect vital data of a bee hive and transmit it
    over a RFM69 radio module to a gateway, which sends the data over
    the internet or collects it in a own database.
 
    The sensor data could be temperature (via DS18B20 or DHT),
    humidity (DHT) or a load cell (H30A with HX711). Other sensors can 
-   easily be added. 
+   easily be added.
 
    After the sensor data is collected, it gets encapsulated in a
    BERadio character string, which will be the transmitted payload. 
@@ -126,7 +126,7 @@
 
 // common defines
 
-// Debuging                             // uncomment if you want to have Serial verbose Serial output
+// Debugging                             // uncomment if you want to have Serial verbose Serial output
 /*
 #define DEBUG
 #define DEBUG_RADIO
