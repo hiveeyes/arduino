@@ -149,6 +149,17 @@
 #define HX711_SCK A0                    // SCK pin of hx711 
 #define HX711_DT A1                     // DT pin fo hx711
 
+
+// forward declarations //
+
+void requestOneWire();
+void requestDHT(int nr);
+void requestScale();
+void encodeSomeData(int BERfamily);
+void sendData();
+void Sleep(int minutes);
+void Blink(byte, int);
+
 // device initiation //
 
 #ifdef ENABLE_ATC
