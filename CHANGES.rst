@@ -22,6 +22,12 @@ General
 - Add Hiveeyes foundation libraries as proposal
   for decoupling sensor and transmitter domains
 
+- Add convention for automated firmware builder that
+  ``make --file Makefile-Xyz.mk firmware-info`` should
+  output the path to the target ELF file, e.g.::
+
+      TARGET_ELF: ../bin/node-gprs-any/pro328/node-gprs-any.elf
+
 
 Open Hive GPRSbee
 -----------------

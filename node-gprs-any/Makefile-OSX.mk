@@ -15,7 +15,7 @@ AVR_TOOLS_DIR     = /opt/local
 
 ### AVR_GCC_VERSION
 ### Check if the version is equal or higher than 4.9
-AVR_GCC_VERSION  := $(shell expr `$AVR_TOOLS_DIR/bin/avr-gcc -dumpversion | cut -f1` \>= 4.9)
+AVR_GCC_VERSION  := $(shell expr `$(AVR_TOOLS_DIR)/bin/avr-gcc -dumpversion | cut -f1` \>= 4.9)
 
 ### ARDMK_DIR
 ### Path to the Arduino-Makefile directory.
@@ -76,4 +76,9 @@ OBJDIR            = $(PROJECT_DIR)/bin/$(CURRENT_DIR)/$(BOARD_TAG)
 
 ### path to Arduino.mk, inside the ARDMK_DIR, don't touch.
 include $(ARDMK_DIR)/Arduino.mk
+
+### FWBUILDER_DIR
+### Include helpers from Firmware-Builder directory.
+FWBUILDER_DIR     = $(PROJECT_DIR)/tools/Firmware-Builder
+include $(FWBUILDER_DIR)/Helper.mk
 
