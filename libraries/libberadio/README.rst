@@ -64,3 +64,4 @@ Q: You are getting exceptions like::
     /Users/amo/dev/hiveeyes/sources/arduino/libraries/libberadio/examples/message/../../beradio.cpp:36: undefined reference to `EmBencode::PushChar(char)'
 
 A: Apply the required patch to embencode, see above.
+

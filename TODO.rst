@@ -47,3 +47,11 @@ For more tooling like distribution package building, see :ref:`beradio` and :ref
     - http://docs.platformio.org/en/latest/userguide/lib/cmd_install.html#cmd-lib-install
     - http://docs.platformio.org/en/latest/platforms/atmelavr.html#packages
 
+
+ESP8266
+=======
+- https://github.com/plerup/makeEspArduino
+- https://github.com/esp8266/Arduino
+- https://github.com/esp8266/Arduino/blob/master/boards.txt
+- https://github.com/esp8266/Arduino/blob/master/platform.txt
+-
