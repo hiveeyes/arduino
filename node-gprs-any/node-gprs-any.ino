@@ -95,7 +95,11 @@ Todo
 
 // GPRSbee
 // -------
-#define GPRSBEE_APN     "internet.eplus.de"     // https://en.wikipedia.org/wiki/Access_Point_Name
+#define GPRSBEE_AP_NAME     "internet.eplus.de"     // https://en.wikipedia.org/wiki/Access_Point_Name
+#define GPRSBEE_AP_AUTH     true
+#define GPRSBEE_AP_USER     "testuser"
+#define GPRSBEE_AP_PASS     "12345"
+
 #define GPRSBEE_VCC     7    // 23
 #define GPRSBEE_ONOFF   -1
 #define GPRSBEE_STATUS  8
@@ -227,8 +231,11 @@ TelemetryNode& setup_telemetry_gprsbee(bool wait_usb = false) {
     /* Setup telemetry client with pluggable components */
 
     // Transmitter
-    const char *apn = GPRSBEE_APN;
-    GPRSbeeTransmitter transmitter(gprsbee, apn);
+    #if GPRSBEE_AP_AUTH
+        GPRSbeeTransmitter transmitter(gprsbee, GPRSBEE_AP_NAME, GPRSBEE_AP_USER, GPRSBEE_AP_PASS);
+    #else
+        GPRSbeeTransmitter transmitter(gprsbee, GPRSBEE_AP_NAME);
+    #endif
 
     // Telemetry manager
     TelemetryManager manager(transmitter, HE_API_URL);

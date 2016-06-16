@@ -7,6 +7,9 @@ CHANGES
 #######
 
 
+2016-06-16 0.6.0
+================
+
 in-progress
 ===========
 
@@ -23,9 +26,10 @@ General
   for decoupling sensor and transmitter domains
 
 - Add convention for automated firmware builder that
-  ``make --file Makefile-Xyz.mk firmware-info`` should
-  output the path to the target ELF file, e.g.::
+  ``make --file Makefile-Xyz.mk all-plus-firmware-info`` should
+  output the path to the target HEX- and ELF files, e.g.::
 
+      TARGET_HEX: ../bin/node-gprs-any/pro328/node-gprs-any.hex
       TARGET_ELF: ../bin/node-gprs-any/pro328/node-gprs-any.elf
 
 
@@ -36,14 +40,17 @@ Open Hive GPRSbee
     - https://github.com/bblanchon/ArduinoJson
     - https://github.com/SodaqMoja/GPRSbee
 
-- Add example sketch ``node-gprs-any`` demonstrating HTTP+JSON
-  communication with the Hiveeyes backend over GPRSbee
+- Add example sketch ``node-gprs-any.ino`` demonstrating
+  simple HTTP+JSON communication over GPRSbee
 
-- Use non-SSL endpoint http://swarm.hiveeyes.org/api/,
-  the default GPRSbee devices don't do SSL
+- Update ``HE_API_URL`` to use different url for non-TLS
+  communication: http://swarm.hiveeyes.org/api-notls/
+  The default GPRSbee devices don't do SSL.
 
-- ``node-gprs-any.ino``: Update ``HE_API_URL`` to use different url
-  for non-TLS communication: http://swarm.hiveeyes.org/api-notls/
+- Connect to access point with authentication by default,
+  using ``GPRSBEE_AP_USER`` and ``GPRSBEE_AP_PASS``.
+  Disable authenticated mode by setting ``GPRSBEE_AP_AUTH``
+  to ``false``.
 
 
 Documentation

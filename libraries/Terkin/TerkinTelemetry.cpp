@@ -143,7 +143,8 @@ bool TelemetryManager::transmit(const char *address_path, JsonObject& data) {
 GPRSbeeTransmitter::GPRSbeeTransmitter(GPRSbeeClass& driver, const char *apn)
     :
     _driver(driver),
-    _apn(apn)
+    _apn(apn),
+    _authenticated(false)
 {}
 
 // Initialize with APN authentication
