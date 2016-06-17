@@ -5,7 +5,7 @@
    Collect sensor data, serialize as JSON and send it through GPRSbee.
    HTTP is preferred, however FTP, SMS, TCP and MQTT will be at your service.
     
-   Software release 0.6.0
+   Software release 0.6.1
 
    Copyright (C) 2015-2016  Andreas Motl <andreas.motl@elmyra.de>
    Copyright (C) 2015-2016  Clemens Gruber <mail@clemens-gruber.de>
