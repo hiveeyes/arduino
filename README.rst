@@ -35,9 +35,9 @@ In this case you clone the repository, in the normal manner::
 
     $ git clone https://github.com/hiveeyes/arduino
 
-Or simply copy the needed sketch into your Arduino IDE.
+Or simply copy the desired sketch into your Arduino IDE.
 
-===========
+
 Install Ino
 ===========
 ::
@@ -56,12 +56,8 @@ Operate
 Arduino-Makefile
 ================
 
-Archlinux-install 
------------------
-
-Packages
-________
-
+Archlinux packages
+------------------
 * aur/arduino 1:1.6.8
 * community/avr-libc
 

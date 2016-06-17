@@ -4,6 +4,8 @@
 
 .. Tools
 .. _Ino: http://inotool.org
+.. _Arduino-Makefile: https://github.com/sudar/Arduino-Makefile
+.. _Bare-Arduino-Project: https://github.com/ladislas/Bare-Arduino-Project
 
 .. Atmel
 .. _ATmega328: https://en.wikipedia.org/wiki/ATmega328
@@ -12,12 +14,15 @@
 .. _ESP8266: https://en.wikipedia.org/wiki/ESP8266
 .. _RFM69 to MQTT gateway using ESP8266: https://harizanov.com/2015/11/rfm69-to-mqtt-gateway-using-esp8266/
 
+.. _GPRSbee: http://gprsbee.com/
 
 .. Hiveeyes
 .. _Hiveeyes: https://swarm.hiveeyes.org/
 .. _Hiveeyes platform: https://swarm.hiveeyes.org/
 .. _Hiveeyes project: https://hiveeyes.org/
-.. _Bencode: https://en.wikipedia.org/wiki/Bencode
+.. _node-gprs-any.ino: https://github.com/hiveeyes/arduino/blob/master/node-gprs-any/node-gprs-any.ino
+.. _node-rfm69-beradio.ino: https://github.com/hiveeyes/arduino/blob/master/node-rfm69-beradio/src/node-rfm69-beradio.ino
+.. _gateway-rfm69-beradio.ino: https://github.com/hiveeyes/arduino/blob/master/gateway-rfm69-beradio/src/gateway-rfm69-beradio.ino
 .. _Kotori: https://getkotori.org/docs/
 
 .. computourist
@@ -27,18 +32,12 @@
 .. LowPowerLab
 .. _LowPowerLab: https://lowpowerlab.com/
 .. _Felix Rusu: https://github.com/LowPowerLab
-.. _RFM69: https://github.com/LowPowerLab/RFM69
-.. _RFM69 library: https://github.com/LowPowerLab/RFM69
-.. _RFM69.h#L35: https://github.com/LowPowerLab/RFM69/blob/master/RFM69.h#L35
 
 .. JeeLabs
 .. _JeeLabs: http://jeelabs.org/
 .. _Jean-Claude Wippler: https://github.com/jcw
 .. _JeeLink v3c: http://jeelabs.net/projects/hardware/wiki/JeeLink#JeeLink-v3c
 .. _JeeLink v3c shop: http://www.digitalsmarties.net/products/jeelink
-.. _EmBencode: https://github.com/jcw/embencode
-.. _EmBencode encoding bug: https://github.com/jcw/embencode/pull/2
-.. _EmBencode documentation: http://jeelabs.net/pub/docs/embencode/
 
 .. Foundation technologies, protocols and subsystem services
 .. _Bencode: https://en.wikipedia.org/wiki/Bencode
@@ -51,3 +50,13 @@
 .. _Andy Piper: http://andypiper.co.uk
 .. _Didier Donsez: http://lig-membres.imag.fr/donsez/
 .. _A Python script to push serial data to MQTT: http://air.imag.fr/index.php/Mosquitto#Publication_en_Python
+
+.. Libraries
+.. _RFM69: https://github.com/LowPowerLab/RFM69
+.. _RFM69 library: https://github.com/LowPowerLab/RFM69
+.. _RFM69.h#L35: https://github.com/LowPowerLab/RFM69/blob/master/RFM69.h#L35
+.. _EmBencode: https://github.com/jcw/embencode
+.. _EmBencode encoding bug: https://github.com/jcw/embencode/pull/2
+.. _EmBencode documentation: http://jeelabs.net/pub/docs/embencode/
+.. _ArduinoJson: https://github.com/bblanchon/ArduinoJson
+.. _GPRSbee library: https://github.com/SodaqMoja/GPRSbee
