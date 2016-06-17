@@ -20,6 +20,7 @@
 .. _Hiveeyes: https://swarm.hiveeyes.org/
 .. _Hiveeyes platform: https://swarm.hiveeyes.org/
 .. _Hiveeyes project: https://hiveeyes.org/
+.. _Hiveeyes Arduino repository: https://github.com/hiveeyes/arduino/
 .. _node-gprs-any.ino: https://github.com/hiveeyes/arduino/blob/master/node-gprs-any/node-gprs-any.ino
 .. _node-rfm69-beradio.ino: https://github.com/hiveeyes/arduino/blob/master/node-rfm69-beradio/src/node-rfm69-beradio.ino
 .. _gateway-rfm69-beradio.ino: https://github.com/hiveeyes/arduino/blob/master/gateway-rfm69-beradio/src/gateway-rfm69-beradio.ino
@@ -45,6 +46,7 @@
 .. _MQTT: http://mqtt.org/
 .. _UUID4: https://en.wikipedia.org/wiki/Universally_unique_identifier#Version_4_.28random.29
 .. _Arduino: https://www.arduino.cc/
+.. _ELF: https://en.wikipedia.org/wiki/Executable_and_Linkable_Format
 
 .. MQTT
 .. _Andy Piper: http://andypiper.co.uk

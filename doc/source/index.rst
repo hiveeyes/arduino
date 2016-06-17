@@ -19,6 +19,7 @@ README
     :glob:
 
     README
+    firmware-builder
 
 
 ***********

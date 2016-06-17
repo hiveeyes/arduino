@@ -9,6 +9,7 @@ CHANGES
 
 in-progress
 ===========
+- Add firmware builder documentation
 
 
 2016-06-17 0.6.1
@@ -117,8 +118,8 @@ Documentation
 
 2015-02-03 0.1.0
 ================
-- Switch to RFM69, see `node-rfm69-beradio.ino`_
-  This supports the :ref:`HEnode` hardware implementing a sensor node
+- Switch to RFM69, see `node-rfm69-beradio.ino`_.
+  This supports the :ref:`HEnode` hardware implementing a sensor node.
 
 
 2014-11-04 0.0.0
