@@ -78,22 +78,9 @@
 //#include "config.h"
 
 // Libraries 
-#ifdef HE_RFM69
-    #include <RFM69.h>                      // https://github.com/LowPowerLab/RFM69
-#endif
 
-#include <HX711.h>
-#include <DHT.h>
-#include <RFM69_ATC.h>                  //https://github.com/LowPowerLab/RFM69
-#include <SPI.h>                  
-#include <SPIFlash.h>                   // https://github.com/LowPowerLab/SPIFlash
 #include <avr/wdt.h>
 #include <WirelessHEX69.h>              // https://github.com/einsiedlerkrebs/WirelessProgramming 
-#include <EmBencode.h>                  // https://github.com/jcw/embencode
-#include <LowPower.h>                   // https://github.com/LowPowerLab/LowPower
-#include <HX711.h>                      // https://github.com/bogde/HX711
-#include <OneWire.h>                    // https://github.com/PaulStoffregen/OneWire
-#include <DallasTemperature.h>          // https://github.com/milesburton/Arduino-Temperature-Control-Library
 
 
 // forward declarations //
@@ -102,51 +89,63 @@
 
 // device initiation //
 
-#ifdef ENABLE_ATC
+#if ENABLE_ATC
+    #include <RFM69.h>                      // https://github.com/LowPowerLab/RFM69
+    #include <RFM69_ATC.h>                  //https://github.com/LowPowerLab/RFM69
     RFM69_ATC radio;
 #else
+    #include <RFM69.h>                      // https://github.com/LowPowerLab/RFM69
     RFM69 radio;
 #endif
 
 
-#ifdef HE_TEMPERATURE
+#if HE_TEMPERATURE
+    #include <OneWire.h>                    // https://github.com/PaulStoffregen/OneWire
+    #include <DallasTemperature.h>          // https://github.com/milesburton/Arduino-Temperature-Control-Library
     void requestOneWire();
     OneWire oneWire(DS18B20_BUS);
     DallasTemperature sensors(&oneWire);
     float temp0 = 0, temp1 = 0, temp2 = 0, temp3 = 0, temp4 = 0;
 #endif
-#ifdef HE_HUMIDITY
+#if HE_HUMIDITY
+    #include <DHT.h>
     DHT dht;
     void requestDHT(int nr);
     float hum0 = 0, hum1 = 0;
     float temp5 = 0, temp6 = 0, temp7 = 0, temp8 = 0;
 #endif 
-#ifdef HE_SCALE
+#if HE_SCALE
+    #include <HX711.h>                      // https://github.com/bogde/HX711
     void requestScale();
     float wght0 = 0, wght1 = 0;
 #endif
-#ifdef HE_BERadio
+#if HE_BERadio
+    #include <EmBencode.h>                  // https://github.com/jcw/embencode
     void encodeSomeData(int BERfamily);
     int  BERfamily = 0;                     // the HE_BERadio family switch initiation payload fragmentation purpose. Later it uses "1" for temperature, "2" for humidity and "3" for weight and ifrastructural information.
 
 #endif
-#ifdef HE_RFM69 
+#if HE_RFM69 
     void sendData();
     byte sendSize=0;
     boolean requestACK = false;
     int rACK = 0;
 #endif
-#ifdef HE_SLEEP
+#if HE_SLEEP
+    #include <LowPower.h>                   // https://github.com/LowPowerLab/LowPower
     void Sleep(int minutes);
 #endif
 
     void Blink(byte, int);
 
-#ifdef HE_SCALE
+#if HE_SCALE
+    #include <HX711.h>
     HX711 scale(HX711_DT, HX711_SCK);
 #endif
 
-#ifdef SPI_FLASH
+#if SPI_FLASH
+    #include <SPI.h>                  
+    #include <SPIFlash.h>                   // https://github.com/LowPowerLab/SPIFlash
     SPIFlash flash(FLASH_SS, FLASH_MANUFACTURER_ID);
 #endif
 
@@ -176,32 +175,32 @@ void setup(){
     //dht.begin();
 
     // radio setup
-    #ifdef DEBUG
+    #if DEBUG
         Serial.println();
         Serial.println("Start Hiveeyes node...");
         Serial.println();
         Serial.println("setting up radio");
     #endif
 
-    #ifdef HE_RFM69 
+    #if HE_RFM69 
         radio.initialize(RFM69_FREQUENCY,RFM69_NODE_ID,RFM69_NETWORK_ID);
         radio.encrypt(RFM69_ENCRYPTKEY);          //OPTIONAL
         char buff[50];
-        #ifdef IS_RFM69HW
+        #if IS_RFM69HW
             radio.setHighPower();               //only for RFM69HW!
         #endif
-        #ifdef RADIO_STATIC_POWER
+        #if RADIO_STATIC_POWER
             radio.setPowerLevel(RFM69_POWERLEVEL);
         #endif
 
-        #ifdef ENABLE_ATC 
+        #if ENABLE_ATC 
             radio.enableAutoPower(RFM69_TARGET_RSSI);
-            #ifdef DEBUG_RADIO
+            #if DEBUG_RADIO
                 Serial.println("RFM69_ATC Enabled (Auto Transmission Control)");
             #endif
         #endif
         radio.sleep();
-        #ifdef DEBUG_RADIO                   
+        #if DEBUG_RADIO                   
             sprintf(buff, "Transmitting at %d Mhz...", RFM69_FREQUENCY==RF69_433MHZ ? 433 : RFM69_FREQUENCY==RF69_868MHZ ? 868 : 915);
             Serial.println(buff);
         #endif
@@ -210,16 +209,16 @@ void setup(){
 
     // SPI Flash setup
   
-    #ifdef SPI_FLASH
-        #ifdef DEBUG_SPI_FLASH
+    #if SPI_FLASH
+        #if DEBUG_SPI_FLASH
             Serial.println("\nsetting up SPI Flash");
         #endif
         if (flash.initialize()){
-            #ifdef DEBUG_SPI_FLASH
+            #if DEBUG_SPI_FLASH
                 Serial.print("SPI Flash Init OK ... UniqueID (MAC): ");
             #endif
             flash.readUniqueId();
-            #ifdef DEBUG_SPI_FLASH
+            #if DEBUG_SPI_FLASH
                 for (byte i=0;i<8;i++){
                     Serial.print(flash.UNIQUEID[i], HEX);
                     Serial.print(' ');
@@ -228,38 +227,38 @@ void setup(){
             #endif 
             }
         else
-        #ifdef DEBUG_SPI_FLASH
+        #if DEBUG_SPI_FLASH
         Serial.println("SPI Flash Init FAIL! (is chip present?)");
         #endif
     #endif
     // Sensor setup
-    #ifdef DEBUG_SENSORS
+    #if DEBUG_SENSORS
         Serial.println("\nsetting up Sensors");
     #endif
     #ifdef HE_TEMPERATUR
         sensors.begin();
     #endif
-    #ifdef DEBUG_SENSORS
+    #if DEBUG_SENSORS
         Serial.println("OneWire set");
     #endif
-    #ifdef HE_SCALE
+    #if HE_SCALE
         scale.set_offset(HX711_OFFSET);          // the offset of the scale, is raw output without any weight, get this first and then do set.scale  
         scale.set_scale(HX711_KNOWN_WEIGHT);           // this is the difference between the raw data of a known weight and an emprty scale 
-        #ifdef DEBUG_SENSORS
+        #if DEBUG_SENSORS
             Serial.println("scale set");
         #endif
     #endif
 }
 void loop(){
 
-    #ifdef DEBUG
+    #if DEBUG
         Serial.println();
         Serial.println("\n main loop begins here:");
     #endif
     // This part is optional, useful for some debugging.
     // Handle serial input (to allow basic DEBUGGING of FLASH chip)
     // ie: display first 256 bytes in FLASH, erase chip, write bytes at first 10 positions, etc
-    #ifdef DEBUG_SERIAL
+    #if DEBUG_SERIAL
         if (Serial.available() > 0) {
             input = Serial.read();
             if (input == 'd') //d=dump first page
@@ -307,47 +306,55 @@ void loop(){
 
     // get sensor data 
 
-    #ifdef HE_TEMPERATURE
+    #if HE_TEMPERATURE
         requestOneWire();
     #endif
-    #ifdef HE_HUMIDITY
+
+    #if HE_HUMIDITY
         requestDHT(1);
         requestDHT(2);
     #endif
-    #ifdef HE_SCALE
+
+    #if HE_SCALE
         requestScale();
     #endif
     // beradio encode and send
-    #ifdef HE_BERadio
-        encodeSomeData(1);
+    #if HE_BERadio
+        #if HE_TEMPERATUR
+            encodeSomeData(1);
+        #endif
     #endif
-    #ifdef RADIO
+    #if HE_RADIO
         sendData();
         memset(&theData.buff[0], 0, sizeof(theData.buff));
     #endif
-    #ifdef HE_BERadio
-        encodeSomeData(2);
+    #if HE_BERadio
+        #if HE_HUMIDITY
+            encodeSomeData(2);
+        #endif
     #endif
-    #ifdef RADIO
+    #if HE_RADIO
         sendData();
         memset(&theData.buff[0], 0, sizeof(theData.buff));
     #endif
-    #ifdef HE_BERadio
-        encodeSomeData(3);
+    #if HE_BERadio
+        #if HE_SCALE
+            encodeSomeData(3);
+        #endif
     #endif
-    #ifdef RADIO
+    #if HE_RADIO
         sendData();
         memset(&theData.buff[0], 0, sizeof(theData.buff));
     #endif
 
-    #ifdef DEBUG_RADIO 
+    #if DEBUG_RADIO 
         Serial.print("   [RX_RSSI:");Serial.print(radio.RSSI);Serial.print("]");
     #endif
-    #ifdef DEBUG
+    #if DEBUG
         Serial.println("main loop ends here");
     #endif
     delay(100); 
-    #ifdef HE_SLEEP
+    #if HE_SLEEP
         Sleep(SLEEP_MINUTES);
     #endif
 
@@ -356,110 +363,123 @@ void loop(){
 // get OneWire data //
 
 void requestOneWire() {
-    #ifdef DEBUG_SENSORS
-    Serial.println();
-    Serial.println("requesting OneWire devices");
-    #endif
-    sensors.requestTemperatures();
-    temp0 = sensors.getTempCByIndex(0);
-    temp1 = sensors.getTempCByIndex(1);
-    temp2 = sensors.getTempCByIndex(2);
-    temp3 = sensors.getTempCByIndex(3);
-    #ifdef DEBUG_SENSORS
-    Serial.println("Readings:");
-    Serial.print(temp0, 3);
-    Serial.print("\t");
-    Serial.print(temp1, 3);
-    Serial.print("\t");
-    Serial.print(temp2, 3);
-    Serial.print("\t");
-    Serial.print(temp3, 3);
-    Serial.print("\t");
-    Serial.println();
+    #if HE_TEMPERATURE
+        #if DEBUG_SENSORS
+            Serial.println();
+            Serial.println("requesting OneWire devices");
+        #endif
+            sensors.requestTemperatures();
+            temp0 = sensors.getTempCByIndex(0);
+            temp1 = sensors.getTempCByIndex(1);
+            temp2 = sensors.getTempCByIndex(2);
+            temp3 = sensors.getTempCByIndex(3);
+        #if DEBUG_SENSORS
+            Serial.println("Readings:");
+            Serial.print(temp0, 3);
+            Serial.print("\t");
+            Serial.print(temp1, 3);
+            Serial.print("\t");
+            Serial.print(temp2, 3);
+            Serial.print("\t");
+            Serial.print(temp3, 3);
+            Serial.print("\t");
+            Serial.println();
+        #endif
     #endif
 }
 
 // get weight data //
 
 void requestScale(){
-    #ifdef DEBUG_SENSORS
-    Serial.println();
-    Serial.println("\nrequesting HX711 scale");
-    #endif
-    scale.power_up();
-    wght0 = scale.read_average(3);              // get the raw data of the scale
-    wght1 = scale.get_units(3);                 // get the scaled data
-    
-    scale.power_down();
-    #ifdef DEBUG_SENSORS
-    Serial.println("Readings:");
-    Serial.println(wght1, 3);
-    Serial.println(wght1);
+    #if HE_SCALE
+        #ifdef DEBUG_SENSORS
+        Serial.println();
+        Serial.println("\nrequesting HX711 scale");
+        #endif
+        scale.power_up();
+        wght0 = scale.read_average(3);              // get the raw data of the scale
+        wght1 = scale.get_units(3);                 // get the scaled data
+        
+        scale.power_down();
+        #ifdef DEBUG_SENSORS
+        Serial.println("Readings:");
+        Serial.println(wght1, 3);
+        Serial.println(wght1);
+        #endif
     #endif
 }
 
 //  embencode encoding 
 
 void encodeSomeData (int BERfamily) {           // this function encodes the values to a valid HE_BERadio character string with embencode
-    EmBencode encoder;
-    theData.lenght = 0;
-    encoder.startDict();                        // start the dictionary as marking point of the payload string
-	  encoder.push("_");                          // "_" marks the HE_BERadio profile
-	  encoder.push(BERadio_profile);              
-	  encoder.push("#");                          // "#" marks the Node/hive in your setup
-	  encoder.push(HE_NODE_ID);
-	  if (BERfamily == 1) {                       // beradio family switches to send a list of temp, or humidity or weight with infrastructural
-	  	 encoder.push("t");                       // "t" marks the value source (temp) of the following list
-		   encoder.startList();                     // starts a list
-		       encoder.push(temp0 * 10000);         // embencode only send intergers. Float are multiplied by 10^x and divided by the HE_BERadioprotocoll,  see: https://hiveeyes.org/docs/beradio/
-		       encoder.push(temp1 * 10000);
-		       encoder.push(temp2 * 10000);
-		       encoder.push(temp3 * 10000);
-           if (isfinite(temp6)){
-		           encoder.push(temp6 * 10000);
-           }  
-	     encoder.endList();                       // ends a list
-	  }
-	 else if (BERfamily == 2) {
-	     encoder.push("h");                       // "h" marks the value source (humidity)
-	     encoder.startList();
-           if (isfinite(hum0)){
-	             encoder.push(hum0 * 100);
-           }  
-           if (isfinite(hum1)){
-	             encoder.push(hum1 * 100);
-           }  
-	         encoder.endList();
-	 }
-	 else if (BERfamily == 3) {
-	     encoder.push("w");                       // "w" marks the value source (weight)
-		   encoder.startList();
-		       encoder.push(wght0);                 // encodes the raw output of the hx711
-		       encoder.push(wght1 * 1000);          // encodes the scaled output of hx711 and un-floats it
-	     encoder.endList();
-       encoder.push("r");                       // "r" marks the value source (RSSI)
-		   encoder.push(radio.RSSI);
-	     encoder.push("a");                       // "a" marks the value source (rACK)
-		   encoder.push(rACK);
-   }
-   encoder.endDict();                           // ends the dictionary
-   //#ifdef DEBUG_ENCODE
-   Serial.println();
-   Serial.println(theData.buff);
-   //#endif
+    #if HE_BERADIO
+        EmBencode encoder;
+        theData.lenght = 0;
+        encoder.startDict();                        // start the dictionary as marking point of the payload string
+    	  encoder.push("_");                          // "_" marks the HE_BERadio profile
+    	  encoder.push(BERadio_profile);              
+    	  encoder.push("#");                          // "#" marks the Node/hive in your setup
+    	  encoder.push(HE_NODE_ID);
+        #if HE_TEMPERATUR
+        	  if (BERfamily == 1) {                       // beradio family switches to send a list of temp, or humidity or weight with infrastructural
+        	  	 encoder.push("t");                       // "t" marks the value source (temp) of the following list
+        		   encoder.startList();                     // starts a list
+        		       encoder.push(temp0 * 10000);         // embencode only send intergers. Float are multiplied by 10^x and divided by the HE_BERadioprotocoll,  see: https://hiveeyes.org/docs/beradio/
+        		       encoder.push(temp1 * 10000);
+        		       encoder.push(temp2 * 10000);
+        		       encoder.push(temp3 * 10000);
+                   if (isfinite(temp6)){
+        		           encoder.push(temp6 * 10000);
+                   }  
+        	     encoder.endList();                       // ends a list
+        	  }
+        #endif
+        #if HE_HUMIDITY
+        	 else if (BERfamily == 2) {
+        	     encoder.push("h");                       // "h" marks the value source (humidity)
+        	     encoder.startList();
+                   if (isfinite(hum0)){
+        	             encoder.push(hum0 * 100);
+                   }  
+                   if (isfinite(hum1)){
+        	             encoder.push(hum1 * 100);
+                   }  
+        	         encoder.endList();
+        	 }
+        #endif
+        #if HE_SCALE
+          	else if (BERfamily == 3) {
+             	  encoder.push("w");                       // "w" marks the value source (weight)
+             		encoder.startList();
+             		    encoder.push(wght0);                 // encodes the raw output of the hx711
+             		    encoder.push(wght1 * 1000);          // encodes the scaled output of hx711 and un-floats it
+             	  encoder.endList();
+                encoder.push("r");                       // "r" marks the value source (RSSI)
+             		     encoder.push(radio.RSSI);
+             	       encoder.push("a");                       // "a" marks the value source (rACK)
+             		     encoder.push(rACK);
+                }
+            #endif
+        encoder.endDict();                           // ends the dictionary
+        //#ifdef DEBUG_ENCODE
+        Serial.println();
+        Serial.println(theData.buff);
+        //#endif
+    #endif
 }
 
 // embencode vs. PAYLOAD control 
 
-void EmBencode::PushChar (char ch) {          
-    if (theData.lenght >= RFM69_MAX_PAYLOAD_LENGTH){
-        Serial.println("theData.lenght limit reached, aborting");
-        return;
+#if HE_BERadio
+    void EmBencode::PushChar (char ch) {          
+        if (theData.lenght >= RFM69_MAX_PAYLOAD_LENGTH){
+            Serial.println("theData.lenght limit reached, aborting");
+            return;
+        }
+        theData.buff[theData.lenght] = ch;
+        theData.lenght +=1;
     }
-    theData.buff[theData.lenght] = ch;
-    theData.lenght +=1;
-}
-
+#endif
 //    Wireless Updates via radio
 
 /*
@@ -487,8 +507,9 @@ void wirelessUpdate(){
     radio.sleep();
     #endif
 }
+*/
 void sendData(){
-    if (radio.sendWithRetry(GATEWAYID, (const void*)(&theData.buff), sizeof(theData))){
+    if (radio.sendWithRetry(RFM69_GATEWAY_ID, (const void*)(&theData.buff), sizeof(theData))){
         radio.sleep();
         rACK = 1;
         //#ifdef DEBUG_RADIO
@@ -536,82 +557,85 @@ void Blink(byte PIN, int DELAY_MS){
    digitalWrite(PIN,LOW);
 }
 
-*/
+
 //   Sleeping 
 
 void Sleep(int minutes ){
-   int var = 0;
-   float cycles = 0;
-   cycles = minutes * 7.5;
-   while(var < cycles){
-       #ifdef DEBUG
-       Serial.print("starting sleep cycle");
-       delay(100);
-       #endif
-       // do something for SLEEP_TIMES
-       var++;
-       // put the processor to sleep for 8 seconds
-       LowPower.powerDown(SLEEP_8S, ADC_OFF, BOD_OFF);
-       #ifdef DEBUG
-       Serial.print("stopping sleep cycle");
-       #endif
-   }
+    #if HE_SLEEP
+        int var = 0;
+        float cycles = 0;
+        cycles = minutes * 7.5;
+        while(var < cycles){
+            #ifdef DEBUG
+            Serial.print("starting sleep cycle");
+            delay(100);
+            #endif
+            // do something for SLEEP_TIMES
+            var++;
+            // put the processor to sleep for 8 seconds
+            LowPower.powerDown(SLEEP_8S, ADC_OFF, BOD_OFF);
+            #ifdef DEBUG
+            Serial.print("stopping sleep cycle");
+            #endif
+        }
+    #endif
 }
 
 //   Getting DHT Data
 
 void requestDHT(int nr){
-   //DHT dht;
-   int var = 1;
-   if (nr == 1){
-       dht.setup(DHT_PIN1);
-       delay(2000);
-       hum0 = dht.getHumidity();
-       temp5 = dht.getTemperature();
-       if (isnan(hum0) || isnan(temp5)) {
-           while(var <= 5){
-               var++;
-               delay(2000);
-               hum0 = dht.getHumidity();
-               temp5 = dht.getTemperature();
-               #ifdef DEBUG_SENSORS
-               Serial.println("\nFailed to read from DHT sensor!");
-               #endif
+    #if HE_HUMIDITY
+       int var = 1;
+       if (nr == 1){
+           dht.setup(DHT_PIN1);
+           delay(2000);
+           hum0 = dht.getHumidity();
+           temp5 = dht.getTemperature();
+           if (isnan(hum0) || isnan(temp5)) {
+               while(var <= 5){
+                   var++;
+                   delay(2000);
+                   hum0 = dht.getHumidity();
+                   temp5 = dht.getTemperature();
+                   #ifdef DEBUG_SENSORS
+                       Serial.println("\nFailed to read from DHT sensor!");
+                   #endif
+               }
            }
-       }
-       #ifdef DEBUG_SENSORS
-       Serial.print("Humidity: ");
-       Serial.print(hum0);
-       Serial.print(" %\t");
-       Serial.print("Temperature: ");
-       Serial.print(temp5);
-       Serial.println();
-       #endif
-   } 
-   else 
-   if (nr == 2){
-       dht.setup(DHT_PIN2);
-       delay(2000);
-       hum1 = dht.getHumidity();
-       temp6 = dht.getTemperature();
-       if (isnan(hum1) || isnan(temp6)) {
-           while(var <= 5){
-               var++;
-               delay(2000);
-               hum1 = dht.getHumidity();
-               temp6 = dht.getTemperature();
-               #ifdef DEBUG_SENSORS
-               Serial.println("\nFailed to read from DHT sensor!");
-               #endif
-            }
-       }
-       #ifdef DEBUG_SENSORS
-       Serial.print("Humidity: ");
-       Serial.print(hum1);
-       Serial.print(" %\t");
-       Serial.print("Temperature: ");
-       Serial.print(temp6);
-       Serial.println();
-       #endif
-   } 
+           #ifdef DEBUG_SENSORS
+               Serial.print("Humidity: ");
+               Serial.print(hum0);
+               Serial.print(" %\t");
+               Serial.print("Temperature: ");
+               Serial.print(temp5);
+               Serial.println();
+           #endif
+       } 
+       else 
+       if (nr == 2){
+           dht.setup(DHT_PIN2);
+           delay(2000);
+           hum1 = dht.getHumidity();
+           temp6 = dht.getTemperature();
+           if (isnan(hum1) || isnan(temp6)) {
+               while(var <= 5){
+                   var++;
+                   delay(2000);
+                   hum1 = dht.getHumidity();
+                   temp6 = dht.getTemperature();
+                   #ifdef DEBUG_SENSORS
+                   Serial.println("\nFailed to read from DHT sensor!");
+                   #endif
+                }
+           }
+           #ifdef DEBUG_SENSORS
+               Serial.print("Humidity: ");
+               Serial.print(hum1);
+               Serial.print(" %\t");
+               Serial.print("Temperature: ");
+               Serial.print(temp6);
+               Serial.println();
+           #endif
+       } 
+    #endif
 }

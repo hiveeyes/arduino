@@ -2,23 +2,24 @@
 // all settings are made in this file, most      ***       interface settings         ***
 //        relevant ones are above                ***             * * *                **/
 
-#define HE_DEBUG                     1              // turn on debug output and choose below
+#define HE_DEBUG                  true               // turn on debug output and choose below
 #define SERIAL_BAUD               115200         // serial baud rate
 #define BLINKPERIOD               500            // LED blinking period in ms
-#define HE_SLEEP                     1              // set to 1 for sleeping
-#define HE_SCALE            
-#define HE_HUMIDITY 
-#define HE_TEMPERATURE
+#define HE_SLEEP                  true              // set to 1 for sleeping
+#define HE_SCALE                  true 
+#define HE_HUMIDITY               true 
+#define HE_TEMPERATURE            true
 //#define HE_RFM69_OTA           
-#define  HE_BERadio
-#define HE_RADIO
-#ifdef HE_DEBUG                                 /**    fine grade debug settings     ***
+#define HE_BERadio                true 
+#define HE_RADIO                  true 
+
+#if HE_DEBUG                                  /**    fine grade debug settings     ***
                                                  ***              * *                 **/
 
-    #define DEBUG_RADIO           0              // set to 1 for radio debug
-    #define DEBUG_SPI_FLASH       0              // set to 1 for SPI-flash debug
-    #define DEBUG_SENSORS         0              // set to 1 for sensor debug
-    #define DEBUG_BERadio         0              // set to 1 for  HE_BERadio degub
+    #define DEBUG_RADIO           true              // set to 1 for radio debug
+    #define DEBUG_SPI_FLASH       false              // set to 1 for SPI-flash debug
+    #define DEBUG_SENSORS         true              // set to 1 for sensor debug
+    #define DEBUG_BERadio         true              // set to 1 for  HE_BERadio degub
 
 #endif                                           /**              * *                 **/
 
@@ -36,10 +37,10 @@
                                                  ***        hardware switches         ***
                                                  ***             * * *                **/
 
-#define HE_RFM69                                    // set to 1 for lowpowerlab's HE_RFM69 lib 
-//#define HE_RH69                   0              // set to 1 for RadioHeads rf69 lib
-//#define HE_RH95                   0              // set to 1 for RadioHeads rf95 lib
-//#define SPI_FLASH               0              // set to 1 for using SPI-flash
+#define HE_RFM69                  true            // set to 1 for lowpowerlab's HE_RFM69 lib 
+#define HE_RH69                   false              // set to 1 for RadioHeads rf69 lib
+#define HE_RH95                   false              // set to 1 for RadioHeads rf95 lib
+#define SPI_FLASH                 false              // set to 1 for using SPI-flash
 
                                                  /**            * * * *               *** 
                                                  ***    sensor pinning & settings     ***
