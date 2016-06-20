@@ -21,7 +21,7 @@ ARDUINO_DIR       = /usr/share/arduino
 
 ### USER_LIB_PATH
 ### Path to where the your project's libraries are stored.
-USER_LIB_PATH     :=  $(realpath $(PROJECT_DIR)/libraries)
+USER_LIB_PATH     =  $(realpath $(PROJECT_DIR)/libraries)
 
 ### BOARD_TAG & BOARD_SUB
 ### For Arduino IDE 1.0.x
