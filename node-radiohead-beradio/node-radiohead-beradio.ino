@@ -2,8 +2,8 @@
    
                   Hiveeyes node-rfm69-beradio
  
-   Code collects sensor data encodes them with BERadio protocol 
-   and sends it through RFM69 radio module to a gateway.
+   Code collects sensor data encodes them with HE_BERadio protocol 
+   and sends it through HE_RFM69radio module to a gateway.
     
    Software release 0.5.3
 
@@ -34,7 +34,7 @@
 
    This is an Arduino sketch for the Hiveeyes bee monitoring system.
    The purpose is to collect vital data of a bee hive and transmit it
-   over a RFM69 radio module to a gateway, which sends the data over
+   over a HE_RFM69radio module to a gateway, which sends the data over
    the internet or collects it in a own database.
 
    The sensor data could be temperature (via DS18B20 or DHT),
@@ -42,11 +42,11 @@
    easily be added.
 
    After the sensor data is collected, it gets encapsulated in a
-   BERadio character string, which will be the transmitted payload. 
-   BERadio is a wrapper that makes use of EmBeEncode dictrionaries and 
+   HE_BERadio character string, which will be the transmitted payload. 
+   HE_BERadio is a wrapper that makes use of EmBeEncode dictrionaries and 
    lists and adds some infrastructural metadata to it.
  
-   This code is for use with BERadio at the gateway side, e.g.
+   This code is for use with HE_BERadio at the gateway side, e.g.
    as a forwarder from serial to mqtt.
 
    The creation of this code is strongly influenced by other projects, so
@@ -73,12 +73,17 @@
 //        * fix #define DEBUG-switch issue
 //        * clean up code
 
-// Defines //
 #include "config.h"
+// Defines //
+//#include "config.h"
 
 // Libraries 
+#ifdef HE_RFM69
+    #include <RFM69.h>                      // https://github.com/LowPowerLab/RFM69
+#endif
 
-#include <RFM69.h>                      // https://github.com/LowPowerLab/RFM69
+#include <HX711.h>
+#include <DHT.h>
 #include <RFM69_ATC.h>                  //https://github.com/LowPowerLab/RFM69
 #include <SPI.h>                  
 #include <SPIFlash.h>                   // https://github.com/LowPowerLab/SPIFlash
@@ -87,52 +92,77 @@
 #include <EmBencode.h>                  // https://github.com/jcw/embencode
 #include <LowPower.h>                   // https://github.com/LowPowerLab/LowPower
 #include <HX711.h>                      // https://github.com/bogde/HX711
-#include <DHT.h>                        // https://github.com/markruys/arduino-DHT
 #include <OneWire.h>                    // https://github.com/PaulStoffregen/OneWire
 #include <DallasTemperature.h>          // https://github.com/milesburton/Arduino-Temperature-Control-Library
 
+
 // forward declarations //
 
-void requestOneWire();
-void requestDHT(int nr);
-void requestScale()95void encodeSomeData(int BERfamily);
-void sendData();
-void Sleep(int minutes);
-void Blink(byte, int);
+
 
 // device initiation //
 
 #ifdef ENABLE_ATC
-RFM69_ATC radio;
+    RFM69_ATC radio;
 #else
-RFM69 radio;
+    RFM69 radio;
 #endif
-HX711 scale(HX711_DT, HX711_SCK);
-SPIFlash flash(FLASH_SS, FLASH_MANUFACTURER_ID);
-OneWire oneWire(ONE_WIRE_BUS);
-DallasTemperature sensors(&oneWire);
+
+
+#ifdef HE_TEMPERATURE
+    void requestOneWire();
+    OneWire oneWire(DS18B20_BUS);
+    DallasTemperature sensors(&oneWire);
+    float temp0 = 0, temp1 = 0, temp2 = 0, temp3 = 0, temp4 = 0;
+#endif
+#ifdef HE_HUMIDITY
+    DHT dht;
+    void requestDHT(int nr);
+    float hum0 = 0, hum1 = 0;
+    float temp5 = 0, temp6 = 0, temp7 = 0, temp8 = 0;
+#endif 
+#ifdef HE_SCALE
+    void requestScale();
+    float wght0 = 0, wght1 = 0;
+#endif
+#ifdef HE_BERadio
+    void encodeSomeData(int BERfamily);
+    int  BERfamily = 0;                     // the HE_BERadio family switch initiation payload fragmentation purpose. Later it uses "1" for temperature, "2" for humidity and "3" for weight and ifrastructural information.
+
+#endif
+#ifdef HE_RFM69 
+    void sendData();
+    byte sendSize=0;
+    boolean requestACK = false;
+    int rACK = 0;
+#endif
+#ifdef HE_SLEEP
+    void Sleep(int minutes);
+#endif
+
+    void Blink(byte, int);
+
+#ifdef HE_SCALE
+    HX711 scale(HX711_DT, HX711_SCK);
+#endif
+
+#ifdef SPI_FLASH
+    SPIFlash flash(FLASH_SS, FLASH_MANUFACTURER_ID);
+#endif
 
 // variables //
 
 // common
 char input = 0;
-int  BERfamily = 0;                     // the BERadio family switch initiation payload fragmentation purpose. Later it uses "1" for temperature, "2" for humidity and "3" for weight and ifrastructural information.
 // radio
-byte sendSize=0;
-boolean requestACK = false;
 // long lastPeriod = -1;                // use in case of a time controled radio transmit routine
 int TRANSMITPERIOD = 300;               //transmit a packet to gateway so often (in ms)
 
 // Sensor variables
-float temp0 = 0, temp1 = 0, temp2 = 0, temp3 = 0, temp4 = 0;
-float temp5 = 0, temp6 = 0, temp7 = 0, temp8 = 0;
-float hum0 = 0, hum1 = 0;
-float wght0 = 0, wght1 = 0;
-int rACK = 0;
 
 // Payload
 typedef struct {
-    char  buff[MAX_PAYLOAD_LENGTH];
+    char  buff[RFM69_MAX_PAYLOAD_LENGTH];
     int lenght;
 } Payload;
 Payload theData;
@@ -143,155 +173,182 @@ void setup(){
     pinMode(LED, OUTPUT);               // setup onboard LED
     Serial.begin(SERIAL_BAUD);          // setup serial
 
-  //dht.begin();
+    //dht.begin();
 
-// radio setup
+    // radio setup
     #ifdef DEBUG
-    Serial.println();
-    Serial.println("Start Hiveeyes node...");
-    Serial.println();
-    Serial.println("setting up radio");
-    #endif
-    radio.initialize(FREQUENCY,NODEID,NETWORKID);
-    radio.encrypt(ENCRYPTKEY);          //OPTIONAL
-    #ifdef IS_RFM69HW
-    radio.setHighPower();               //only for RFM69HW!
-    #endif
-    #ifdef RADIO_STATIC_POWER
-    radio.setPowerLevel(POWERLEVEL);
-    #endif
-
-    #ifdef ENABLE_ATC 
-    radio.enableAutoPower(TARGET_RSSI);
-    Serial.println("RFM69_ATC Enabled (Auto Transmission Control)");
-    #endif
-    radio.sleep();
-    #ifdef DEBUG_RADIO                   
-    char buff[50];
-    sprintf(buff, "Transmitting at %d Mhz...", FREQUENCY==RF69_433MHZ ? 433 : FREQUENCY==RF69_868MHZ ? 868 : 915);
-    Serial.println(buff);
-    #endif
-
-
-// SPI Flash setup
-  
-    #ifdef DEBUG
-    Serial.println("\nsetting up SPI Flash");
-    #endif
-
-    #ifdef DEBUG_SPI_FLASH
-    if (flash.initialize()){
-        Serial.print("SPI Flash Init OK ... UniqueID (MAC): ");
-        flash.readUniqueId();
-        for (byte i=0;i<8;i++){
-            Serial.print(flash.UNIQUEID[i], HEX);
-            Serial.print(' ');
-            }
         Serial.println();
-    }
-    else
-    Serial.println("SPI Flash Init FAIL! (is chip present?)");
+        Serial.println("Start Hiveeyes node...");
+        Serial.println();
+        Serial.println("setting up radio");
     #endif
 
-// Sensor setup
-    #ifdef DEBUG
-    Serial.println("\nsetting up Sensors");
-    #endif
-    sensors.begin();
+    #ifdef HE_RFM69 
+        radio.initialize(RFM69_FREQUENCY,RFM69_NODE_ID,RFM69_NETWORK_ID);
+        radio.encrypt(RFM69_ENCRYPTKEY);          //OPTIONAL
+        char buff[50];
+        #ifdef IS_RFM69HW
+            radio.setHighPower();               //only for RFM69HW!
+        #endif
+        #ifdef RADIO_STATIC_POWER
+            radio.setPowerLevel(RFM69_POWERLEVEL);
+        #endif
 
-    #ifdef DEBUG_SENSORS
-    Serial.println("OneWire set");
+        #ifdef ENABLE_ATC 
+            radio.enableAutoPower(RFM69_TARGET_RSSI);
+            #ifdef DEBUG_RADIO
+                Serial.println("RFM69_ATC Enabled (Auto Transmission Control)");
+            #endif
+        #endif
+        radio.sleep();
+        #ifdef DEBUG_RADIO                   
+            sprintf(buff, "Transmitting at %d Mhz...", RFM69_FREQUENCY==RF69_433MHZ ? 433 : RFM69_FREQUENCY==RF69_868MHZ ? 868 : 915);
+            Serial.println(buff);
+        #endif
     #endif
-    scale.set_offset(8361975);          // the offset of the scale, is raw output without any weight, get this first and then do set.scale  
-    scale.set_scale(21901.f);           // this is the difference between the raw data of a known weight and an emprty scale 
+
+
+    // SPI Flash setup
+  
+    #ifdef SPI_FLASH
+        #ifdef DEBUG_SPI_FLASH
+            Serial.println("\nsetting up SPI Flash");
+        #endif
+        if (flash.initialize()){
+            #ifdef DEBUG_SPI_FLASH
+                Serial.print("SPI Flash Init OK ... UniqueID (MAC): ");
+            #endif
+            flash.readUniqueId();
+            #ifdef DEBUG_SPI_FLASH
+                for (byte i=0;i<8;i++){
+                    Serial.print(flash.UNIQUEID[i], HEX);
+                    Serial.print(' ');
+                    }
+                Serial.println();
+            #endif 
+            }
+        else
+        #ifdef DEBUG_SPI_FLASH
+        Serial.println("SPI Flash Init FAIL! (is chip present?)");
+        #endif
+    #endif
+    // Sensor setup
     #ifdef DEBUG_SENSORS
-    Serial.println("scale set");
+        Serial.println("\nsetting up Sensors");
+    #endif
+    #ifdef HE_TEMPERATUR
+        sensors.begin();
+    #endif
+    #ifdef DEBUG_SENSORS
+        Serial.println("OneWire set");
+    #endif
+    #ifdef HE_SCALE
+        scale.set_offset(HX711_OFFSET);          // the offset of the scale, is raw output without any weight, get this first and then do set.scale  
+        scale.set_scale(HX711_KNOWN_WEIGHT);           // this is the difference between the raw data of a known weight and an emprty scale 
+        #ifdef DEBUG_SENSORS
+            Serial.println("scale set");
+        #endif
     #endif
 }
-
 void loop(){
 
     #ifdef DEBUG
-    Serial.println();
-    Serial.println("\n main loop begins here:");
+        Serial.println();
+        Serial.println("\n main loop begins here:");
     #endif
     // This part is optional, useful for some debugging.
     // Handle serial input (to allow basic DEBUGGING of FLASH chip)
     // ie: display first 256 bytes in FLASH, erase chip, write bytes at first 10 positions, etc
     #ifdef DEBUG_SERIAL
-    if (Serial.available() > 0) {
-        input = Serial.read();
-        if (input == 'd') //d=dump first page
+        if (Serial.available() > 0) {
+            input = Serial.read();
+            if (input == 'd') //d=dump first page
+            {
+                Serial.println("Flash content:");
+                uint16_t counter = 0;
+                Serial.print("0-256: ");
+                while(counter<=256){
+                Serial.print(flash.readByte(counter++), HEX);
+                Serial.print('.');
+                }
+             while(flash.busy());
+             Serial.println();
+        }
+        else if (input == 'e')
         {
-            Serial.println("Flash content:");
-            uint16_t counter = 0;
-            Serial.print("0-256: ");
-            while(counter<=256){
-            Serial.print(flash.readByte(counter++), HEX);
-            Serial.print('.');
+            Serial.print("Erasing Flash chip ... ");
+            flash.chipErase();
+            while(flash.busy());
+            Serial.println("DONE");
             }
-         while(flash.busy());
-         Serial.println();
-    }
-    else if (input == 'e')
-    {
-        Serial.print("Erasing Flash chip ... ");
-        flash.chipErase();
-        while(flash.busy());
-        Serial.println("DONE");
+        else if (input == 'i')
+        {
+            Serial.print("DeviceID: ");
+            word jedecid = flash.readDeviceId();
+            Serial.println(jedecid, HEX);
+            }
+        else if (input == 'r')
+        {
+            Serial.print("Rebooting");
+            resetUsingWatchdog(true);
+            }
+        else if (input == 'R')
+        {
+            Serial.print("HE_RFM69registers:");
+            radio.readAllRegs();
+            }
+        else if (input >= 48 && input <= 57) //0-9
+        {
+            Serial.print("\nWriteByte("); Serial.print(input); Serial.print(")");
+            flash.writeByte(input-48, millis()%2 ? 0xaa : 0xbb);
+            }
         }
-    else if (input == 'i')
-    {
-        Serial.print("DeviceID: ");
-        word jedecid = flash.readDeviceId();
-        Serial.println(jedecid, HEX);
-        }
-    else if (input == 'r')
-    {
-        Serial.print("Rebooting");
-        resetUsingWatchdog(true);
-        }
-    else if (input == 'R')
-    {
-        Serial.print("RFM69 registers:");
-        radio.readAllRegs();
-        }
-    else if (input >= 48 && input <= 57) //0-9
-    {
-        Serial.print("\nWriteByte("); Serial.print(input); Serial.print(")");
-        flash.writeByte(input-48, millis()%2 ? 0xaa : 0xbb);
-        }
-    }
     #endif
 
-// get sensor data 
+    // get sensor data 
 
-    requestOneWire();
-    requestDHT(1);
-    requestDHT(2);
-    requestScale();
-
-// beradio encode and send
-
-    encodeSomeData(1);
-    sendData();
-    memset(&theData.buff[0], 0, sizeof(theData.buff));
-    encodeSomeData(2);
-    sendData();
-    memset(&theData.buff[0], 0, sizeof(theData.buff));
-    encodeSomeData(3);
-    sendData();
-    memset(&theData.buff[0], 0, sizeof(theData.buff));
+    #ifdef HE_TEMPERATURE
+        requestOneWire();
+    #endif
+    #ifdef HE_HUMIDITY
+        requestDHT(1);
+        requestDHT(2);
+    #endif
+    #ifdef HE_SCALE
+        requestScale();
+    #endif
+    // beradio encode and send
+    #ifdef HE_BERadio
+        encodeSomeData(1);
+    #endif
+    #ifdef RADIO
+        sendData();
+        memset(&theData.buff[0], 0, sizeof(theData.buff));
+    #endif
+    #ifdef HE_BERadio
+        encodeSomeData(2);
+    #endif
+    #ifdef RADIO
+        sendData();
+        memset(&theData.buff[0], 0, sizeof(theData.buff));
+    #endif
+    #ifdef HE_BERadio
+        encodeSomeData(3);
+    #endif
+    #ifdef RADIO
+        sendData();
+        memset(&theData.buff[0], 0, sizeof(theData.buff));
+    #endif
 
     #ifdef DEBUG_RADIO 
-    Serial.print("   [RX_RSSI:");Serial.print(radio.RSSI);Serial.print("]");
+        Serial.print("   [RX_RSSI:");Serial.print(radio.RSSI);Serial.print("]");
     #endif
     #ifdef DEBUG
-    Serial.println("main loop ends here");
+        Serial.println("main loop ends here");
     #endif
     delay(100); 
-    #ifdef SLEEP
-    Sleep(SLEEP_MINUTES);
+    #ifdef HE_SLEEP
+        Sleep(SLEEP_MINUTES);
     #endif
 
 }
@@ -343,18 +400,18 @@ void requestScale(){
 
 //  embencode encoding 
 
-void encodeSomeData (int BERfamily) {           // this function encodes the values to a valid BERadio character string with embencode
+void encodeSomeData (int BERfamily) {           // this function encodes the values to a valid HE_BERadio character string with embencode
     EmBencode encoder;
     theData.lenght = 0;
     encoder.startDict();                        // start the dictionary as marking point of the payload string
-	  encoder.push("_");                          // "_" marks the BERadio profile
+	  encoder.push("_");                          // "_" marks the HE_BERadio profile
 	  encoder.push(BERadio_profile);              
 	  encoder.push("#");                          // "#" marks the Node/hive in your setup
-	  encoder.push(NODEID);
+	  encoder.push(HE_NODE_ID);
 	  if (BERfamily == 1) {                       // beradio family switches to send a list of temp, or humidity or weight with infrastructural
 	  	 encoder.push("t");                       // "t" marks the value source (temp) of the following list
 		   encoder.startList();                     // starts a list
-		       encoder.push(temp0 * 10000);         // embencode only send intergers. Float are multiplied by 10^x and divided by the BERadioprotocoll,  see: https://hiveeyes.org/docs/beradio/
+		       encoder.push(temp0 * 10000);         // embencode only send intergers. Float are multiplied by 10^x and divided by the HE_BERadioprotocoll,  see: https://hiveeyes.org/docs/beradio/
 		       encoder.push(temp1 * 10000);
 		       encoder.push(temp2 * 10000);
 		       encoder.push(temp3 * 10000);
@@ -395,7 +452,7 @@ void encodeSomeData (int BERfamily) {           // this function encodes the val
 // embencode vs. PAYLOAD control 
 
 void EmBencode::PushChar (char ch) {          
-    if (theData.lenght >= MAX_PAYLOAD_LENGTH){
+    if (theData.lenght >= RFM69_MAX_PAYLOAD_LENGTH){
         Serial.println("theData.lenght limit reached, aborting");
         return;
     }
@@ -405,6 +462,7 @@ void EmBencode::PushChar (char ch) {
 
 //    Wireless Updates via radio
 
+/*
 void wirelessUpdate(){
     // Check for existing RF data, potentially for a new sketch wireless upload  
     // For this to work this check has to be done often enough to be
@@ -444,7 +502,7 @@ void sendData(){
     rACK = 0;
 }
 
-//   RFM69 receiving
+//   HE_RFM69 receiving
 
 void receivePackages(){
    //check for any received packets
@@ -478,6 +536,7 @@ void Blink(byte PIN, int DELAY_MS){
    digitalWrite(PIN,LOW);
 }
 
+*/
 //   Sleeping 
 
 void Sleep(int minutes ){
@@ -502,7 +561,7 @@ void Sleep(int minutes ){
 //   Getting DHT Data
 
 void requestDHT(int nr){
-   DHT dht;
+   //DHT dht;
    int var = 1;
    if (nr == 1){
        dht.setup(DHT_PIN1);
