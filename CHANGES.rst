@@ -11,6 +11,7 @@ in-progress
 ===========
 - Add firmware builder documentation
 - Switch from vanilla EmBencode to Hiveeyes fork
+- Switched to branch “oo-improvements” of EmBencode fork
 
 
 2016-06-17 0.6.1
