@@ -21,7 +21,7 @@ ARDUINO_DIR       = /usr/share/arduino
 
 ### USER_LIB_PATH
 ### Path to where the your project's libraries are stored.
-USER_LIB_PATH     :=  $(realpath $(PROJECT_DIR)/libraries)
+USER_LIB_PATH     =  $(realpath $(PROJECT_DIR)/libraries)
 
 ### BOARD_TAG & BOARD_SUB
 ### For Arduino IDE 1.0.x
@@ -30,8 +30,8 @@ USER_LIB_PATH     :=  $(realpath $(PROJECT_DIR)/libraries)
 ### For Arduino IDE 1.6.x
 ### Both BOARD_TAG and BOARD_SUB are needed. They must be set to the board you are currently using. (i.e BOARD_TAG = uno, mega, etc. & BOARD_SUB = atmega2560, etc.)
 ### Note: for the Arduino Uno, only BOARD_TAG is mandatory and BOARD_SUB can be equal to anything
-BOARD_TAG         = pro328
-BOARD_SUB         = atmega328p
+BOARD_TAG         = pro
+BOARD_SUB         = 8MHzatmega328 
 
 ### MONITOR_BAUDRATE
 ### It must be set to Serial baudrate value you are using.
@@ -49,7 +49,7 @@ AVRDDUDE          = /usr/bin/avrdude
 CFLAGS_STD        = -std=gnu11
 
 ### CXXFLAGS_STD
-CXXFLAGS_STD      = -std=gnu++11
+CXXFLAGS_STD      = -std=gnu++14
 
 ### CPPFLAGS
 ### Flags you might want to set for debugging purpose. Comment to stop.
@@ -57,7 +57,7 @@ CXXFLAGS         = -pedantic -Wall -Wextra
 
 ### If avr-gcc -v is higher than 4.9, activate coloring of the output
 ifeq "$(AVR_GCC_VERSION)" "1"
-    CXXFLAGS += -fdiagnostics-color
+    CXXFLAGS += -fdiagnostics-color -fno-use-cxa-atexit -Wno-sized-deallocation
 endif
 
 ### MONITOR_PORT
@@ -72,11 +72,6 @@ CURRENT_DIR       = $(shell basename $(CURDIR))
 CURRENT_DIR       = $(shell basename $(CURDIR))
 OBJDIR            = $(PROJECT_DIR)/bin/$(CURRENT_DIR)/$(BOARD_TAG)
 
+
 ### path to Arduino.mk, inside the ARDMK_DIR, don't touch.
 include $(ARDMK_DIR)/Arduino.mk
-
-### FWBUILDER_DIR
-### Include helpers from Firmware-Builder directory.
-FWBUILDER_DIR     = $(PROJECT_DIR)/tools/Firmware-Builder
-include $(FWBUILDER_DIR)/Helper.mk
-

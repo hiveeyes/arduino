@@ -11,7 +11,7 @@
 #define HE_TEMPERATURE            true
 //#define HE_RFM69_OTA           
 #define HE_BERadio                true 
-#define HE_RADIO                  true 
+#define HE_RADIO                  false 
 
 #if HE_DEBUG                                  /**    fine grade debug settings     ***
                                                  ***              * *                 **/

@@ -22,9 +22,9 @@ or write to the Free Software Foundation,
 Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA
 
 */
-#include <beradio.h>
+#include <BERadio.h>
 #include <EmBencode.h>
-#include <simulavr.h>
+//#include <simulavr.h>
 
 #define NODEID      999
 //#define MAX_PAYLOAD_LENGTH 61
@@ -33,8 +33,8 @@ Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA
 
 void BERadioMessage::debug(bool enabled) {
     DEBUG = enabled;
-    _l("Node id: "); _d(nodeid);
-    _l("Profile: "); _d(profile);
+    //_l("Node id: "); _d(nodeid);
+    //_l("Profile: "); _d(profile);
 }
 
 void BERadioMessage::temperature(FloatList values) {
@@ -44,7 +44,7 @@ void BERadioMessage::temperature(FloatList values) {
 
     // debugging
     if (DEBUG) {
-        dump_vector("temp", d_temperatures);
+        //dump_vector("temp", d_temperatures);
     }
 
 }
@@ -56,7 +56,7 @@ void BERadioMessage::something(IntegerList values) {
 
     // debugging
     if (DEBUG) {
-        dump_vector("something", d_something);
+        //dump_vector("something", d_something);
     }
 
 }
@@ -119,7 +119,7 @@ std::string BERadioMessage::encode() {
     return payload;
 }
 
-
+/*
 template<typename T>
 void dump_vector(std::string item_prefix, std::vector<T> vec) {
 
@@ -139,3 +139,4 @@ void dump_vector(std::string item_prefix, std::vector<T> vec) {
     }
 
 }
+*/

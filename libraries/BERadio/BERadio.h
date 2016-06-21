@@ -27,8 +27,7 @@ Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA
 #include <string>
 #include <vector>
 #include <iterator>
-#include <simulavr.h>
-
+//#include <simulavr.h>
 
 // Macro for supporting variadic argument processing.
 // Drives the "varargs" template to convert a variable list
@@ -40,8 +39,9 @@ Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA
 #define IntegerList std::vector<int>
 
 // Generic "dump vector" utility function
-template<typename T>
-void dump_vector(std::string prefix, std::vector<T> vec);
+//
+//template<typename T>
+//void dump_vector(std::string prefix, std::vector<T> vec);
 
 
 class BERadioMessage {
