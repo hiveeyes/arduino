@@ -14,6 +14,7 @@ in-progress
 - Switched to branch “oo-improvements” of EmBencode fork
 - Add "Standard C++ for Arduino" library from
   https://github.com/maniacbug/StandardCplusplus
+- Bring libberadio in shape as BERadio(.h|.cpp)
 
 
 2016-06-17 0.6.1
