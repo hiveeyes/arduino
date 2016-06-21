@@ -37,3 +37,6 @@
 [submodule "libraries/EmBencode"]
 	path = libraries/EmBencode
 	url = https://github.com/hiveeyes/embencode
+[submodule "libraries/StandardCplusplus"]
+	path = libraries/StandardCplusplus
+	url = https://github.com/maniacbug/StandardCplusplus.git
