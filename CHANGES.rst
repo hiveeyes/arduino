@@ -15,6 +15,9 @@ in-progress
 - Add "Standard C++ for Arduino" library from
   https://github.com/maniacbug/StandardCplusplus
 - Bring libberadio in shape as BERadio(.h|.cpp)
+- Add example sketch using BERadio at play-libberadio
+- Switch from vanilla StandardCplusplus to Hiveeyes fork
+  fixing an issue with gcc5.
 
 
 2016-06-17 0.6.1
