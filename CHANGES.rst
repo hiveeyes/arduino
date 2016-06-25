@@ -18,6 +18,7 @@ in-progress
 - Add example sketch using BERadio at play-libberadio
 - Switch from vanilla StandardCplusplus to Hiveeyes fork
   fixing an issue with gcc5.
+- Switch “libraries/EmBencode” to branch “oo-improvements”
 
 
 2016-06-17 0.6.1
