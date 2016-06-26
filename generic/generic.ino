@@ -79,12 +79,6 @@
 
 // Libraries 
 
-#include <avr/wdt.h>
-#include <WirelessHEX69.h>              // https://github.com/einsiedlerkrebs/WirelessProgramming 
-
-
-// forward declarations //
-
 
 
 // device initiation //
@@ -116,6 +110,7 @@
 #endif 
 #if HE_SCALE
     #include <HX711.h>                      // https://github.com/bogde/HX711
+    HX711 scale(HX711_DT, HX711_SCK);
     void requestScale();
     float wght0 = 0, wght1 = 0;
 #endif
@@ -130,6 +125,12 @@
     byte sendSize=0;
     boolean requestACK = false;
     int rACK = 0;
+    // Payload
+    typedef struct {
+        char  buff[RFM69_MAX_MESSAGE_LENGTH];
+        int lenght;
+    } Payload;
+    Payload theData;
 #endif
 #if HE_SLEEP
     #include <LowPower.h>                   // https://github.com/LowPowerLab/LowPower
@@ -138,15 +139,44 @@
 
     void Blink(byte, int);
 
-#if HE_SCALE
-    #include <HX711.h>
-    HX711 scale(HX711_DT, HX711_SCK);
-#endif
 
-#if SPI_FLASH
+
+#if HE_FLASH
     #include <SPI.h>                  
     #include <SPIFlash.h>                   // https://github.com/LowPowerLab/SPIFlash
     SPIFlash flash(FLASH_SS, FLASH_MANUFACTURER_ID);
+#endif
+
+#if HE_RH95
+    #include <RH_RF95.h>
+    #include <RHReliableDatagram.h>
+    #include <SPI.h>
+    RH_RF95 rh95(RH95_SS, RH95_IRQ);
+    uint8_t buf95[RH_RF95_MAX_MESSAGE_LEN];
+    #if RH95_IS_TRANSCEIVER
+        void Transceive();
+        RHReliableDatagram manager95(rh95, RH95_TRANSCEIVER_ID);
+    #elif RH95_IS_GATEWAY
+        RHReliableDatagram manager95(rh95, RH95_GATEWAY_ID);
+    #else
+        RHReliableDatagram manager95(rh95, RH95_NODE_ID);
+    #endif
+#endif
+
+#if HE_RH69
+    #include <RH_RF69.h>
+    #include <RHReliableDatagram.h>
+    #include <SPI.h>
+    RH_RF69 rh69(RH69_SS, RH69_IRQ);
+    uint8_t buf69[RH_RF69_MAX_MESSAGE_LEN];
+    #if RH69_IS_TRANSCEIVER
+        void Transceive();
+        RHReliableDatagram manager69(rh69, RH69_TRANSCEIVER_ID);
+    #elif RH69_IS_GATEWAY
+        RHReliableDatagram manager69(rh69, RH69_GATEWAY_ID);
+    #else
+        RHReliableDatagram manager69(rh69, RH69_NODE_ID);
+    #endif
 #endif
 
 // variables //
@@ -159,14 +189,9 @@ int TRANSMITPERIOD = 300;               //transmit a packet to gateway so often 
 
 // Sensor variables
 
-// Payload
-typedef struct {
-    char  buff[RFM69_MAX_PAYLOAD_LENGTH];
-    int lenght;
-} Payload;
-Payload theData;
-
-// setup function
+/*+++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
+//                  setup function#
+/*+++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
 
 void setup(){
     pinMode(LED, OUTPUT);               // setup onboard LED
@@ -174,7 +199,6 @@ void setup(){
 
     //dht.begin();
 
-    // radio setup
     #if DEBUG
         Serial.println();
         Serial.println("Start Hiveeyes node...");
@@ -182,6 +206,7 @@ void setup(){
         Serial.println("setting up radio");
     #endif
 
+    // radio setup
     #if HE_RFM69 
         radio.initialize(RFM69_FREQUENCY,RFM69_NODE_ID,RFM69_NETWORK_ID);
         radio.encrypt(RFM69_ENCRYPTKEY);          //OPTIONAL
@@ -193,7 +218,7 @@ void setup(){
             radio.setPowerLevel(RFM69_POWERLEVEL);
         #endif
 
-        #if ENABLE_ATC 
+        #if ENABLE_ATC 	
             radio.enableAutoPower(RFM69_TARGET_RSSI);
             #if DEBUG_RADIO
                 Serial.println("RFM69_ATC Enabled (Auto Transmission Control)");
@@ -205,11 +230,37 @@ void setup(){
             Serial.println(buff);
         #endif
     #endif
-
-
+    #if DEBUG_RADIO
+        #if HE_RH69
+            if (!manager69.init())
+                Serial.println("init failed");
+            else Serial.println("init rh69 done");
+    
+            if (!rh69.setFrequency(RH69_FREQUENCY))
+                Serial.println("set Frequency failed");
+            else Serial.println("rh69 frequency set");
+        #elif HE_RH95
+            if (!manager95.init())
+                Serial.println("init failed");
+            else Serial.println("init rh95 done");
+    
+            if (!rh95.setFrequency(RH95_FREQUENCY))
+                Serial.println("set Frequency failed");
+            else Serial.println("rh95 frequency set");
+        #endif
+    #elif 
+        #if HE_RH69
+            manager69.init()
+            rh69.setFrequency(RH69_FREQUENCY)
+        #elif HE_RH95
+            manager95.init()
+            rh95.setFrequency(RH95_FREQUENCY)
+        #endif
+    #endif
+ 
     // SPI Flash setup
   
-    #if SPI_FLASH
+    #if HE_FLASH
         #if DEBUG_SPI_FLASH
             Serial.println("\nsetting up SPI Flash");
         #endif
@@ -249,6 +300,9 @@ void setup(){
         #endif
     #endif
 }
+/*+++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
+//                  loop function#
+/*+++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
 void loop(){
 
     #if DEBUG
@@ -324,7 +378,7 @@ void loop(){
             encodeSomeData(1);
         #endif
     #endif
-    #if HE_RADIO
+    #if HE_RFM69 
         sendData();
         memset(&theData.buff[0], 0, sizeof(theData.buff));
     #endif
@@ -333,7 +387,7 @@ void loop(){
             encodeSomeData(2);
         #endif
     #endif
-    #if HE_RADIO
+    #if HE_RFM69 
         sendData();
         memset(&theData.buff[0], 0, sizeof(theData.buff));
     #endif
@@ -342,7 +396,7 @@ void loop(){
             encodeSomeData(3);
         #endif
     #endif
-    #if HE_RADIO
+    #if HE_RFM69 
         sendData();
         memset(&theData.buff[0], 0, sizeof(theData.buff));
     #endif
@@ -360,6 +414,9 @@ void loop(){
 
 }
 
+/*+++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
+//                  user functions
+/*+++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
 // get OneWire data //
 
 void requestOneWire() {
@@ -472,7 +529,7 @@ void encodeSomeData (int BERfamily) {           // this function encodes the val
 
 #if HE_BERadio
     void EmBencode::PushChar (char ch) {          
-        if (theData.lenght >= RFM69_MAX_PAYLOAD_LENGTH){
+        if (theData.lenght >= RFM69_MAX_MESSAGE_LENGTH){
             Serial.println("theData.lenght limit reached, aborting");
             return;
         }
@@ -508,21 +565,22 @@ void wirelessUpdate(){
     #endif
 }
 */
-void sendData(){
-    if (radio.sendWithRetry(RFM69_GATEWAY_ID, (const void*)(&theData.buff), sizeof(theData))){
-        radio.sleep();
-        rACK = 1;
+#if HE_RFM69
+    void sendData(){
+        if (radio.sendWithRetry(RFM69_GATEWAY_ID, (const void*)(&theData.buff), sizeof(theData))){
+            radio.sleep();
+            rACK = 1;
+            //#ifdef DEBUG_RADIO
+            Serial.println(" sending done");
+            //#endif
+        }
         //#ifdef DEBUG_RADIO
-        Serial.println(" sending done");
+        else Serial.print(" not send");
         //#endif
+        radio.sleep();
+        rACK = 0;
     }
-    //#ifdef DEBUG_RADIO
-    else Serial.print(" not send");
-    //#endif
-    radio.sleep();
-    rACK = 0;
-}
-
+#endif
 //   HE_RFM69 receiving
 
 void receivePackages(){
@@ -624,7 +682,7 @@ void requestDHT(int nr){
                    hum1 = dht.getHumidity();
                    temp6 = dht.getTemperature();
                    #ifdef DEBUG_SENSORS
-                   Serial.println("\nFailed to read from DHT sensor!");
+                       Serial.println("\nFailed to read from DHT sensor!");
                    #endif
                 }
            }
@@ -639,3 +697,90 @@ void requestDHT(int nr){
        } 
     #endif
 }
+
+#if RH95_IS_TRANSCEIVER && RH69_IS_TRANSCEIVER
+    void transceive(){ 
+        digitalWrite(9, HIGH);  //disable rf95 slave select
+        if (manager69.available()){
+            // Wait for a message addressed to us from the client
+            uint8_t len69 = sizeof(buf69);
+            uint8_t len95 = sizeof(buf95);
+            uint8_t from;
+            if (manager69.recvfromAck(buf69, &len69, &from)){
+                Serial.print("got message from node: 0x");
+                Serial.print(from, HEX);
+                Serial.print(": ");
+                Serial.println((char*)buf69);
+                // Send a reply back to the originator node 
+                uint8_t answerData[] = "And hello back to you";
+                if (!manager69.sendtoWait(answerData, sizeof(answerData), from))
+                    Serial.println("sendto69Wait failed");
+                //transceive the message to gateway
+                if (manager95.sendtoWait(buf69, sizeof(buf69), RH69_GATEWAY_ID)){
+                    if (manager95.recvfromAckTimeout(buf95, &len95, 1000, &from)){
+                        Serial.print("got message from gateway: 0x");
+                        Serial.print(from, HEX);
+                        Serial.print(": ");
+                        Serial.println((char*)buf95);
+                    }
+                    else Serial.println("No reply from gateway");
+                }
+                Serial.println();
+            }
+        }
+    }
+#endif
+
+#if RH69_IS_NODE
+    void nodeSend(char buf69){
+        // Send a message to manager_server
+        #if RADIO_DEBUG
+            if (manager69.sendtoWait(buf69, sizeof(buf69), RH69_GATEWAY_ID)){
+                  // Now wait for a reply from the server
+                  uint8_t len = sizeof(buf69);
+                  uint8_t from;   
+                  if (manager69.recvfromAckTimeout(buf69, &len, 2000, &from)){
+                        Serial.print("got reply from : 0x");
+                        Serial.print(from, HEX);
+                        Serial.print(": ");
+                        Serial.println((char*)buf69);
+                  }
+                  else{
+                        Serial.println("No reply, is rf95_reliable_datagram_server running?");
+                  }
+            }
+            else
+            Serial.println("sendtoWait failed");
+        #else
+        manager69.sendtoWait(buf69, sizeof(buf69), RH69_GATEWAY_ID);
+        #endif
+    }
+#endif
+
+#if RH95_IS_GATEWAY
+    void gatewayReceive(){
+        uint8_t len = sizeof(buf95);
+        uint8_t from;
+        #if RADIO_DEBUG
+        if (manager95.available()){
+              // Wait for a message addressed to us from the client
+              if (manager95.recvfromAck(buf95, &len, &from)){
+                    Serial.print("got message from transmitter: 0x");
+                    Serial.print(from, HEX);
+                    Serial.print(": ");
+                    Serial.println((char*)buf95);
+              
+                    // Send a reply back to the originator client
+                    if (!manager95.sendtoWait(answerForwardData, sizeof(answerForwardData), from))
+                      Serial.println("sendtoWait95 failed");
+                  }
+              Serial.println();
+        }
+        #else
+        manager95.available();
+        if (manager95.recvfromAck(buf95, &len, &from)){
+            Serial.println((char*)buf95);
+        }
+        #endif
+    }        
+#endif

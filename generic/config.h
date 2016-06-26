@@ -6,12 +6,12 @@
 #define SERIAL_BAUD               115200         // serial baud rate
 #define BLINKPERIOD               500            // LED blinking period in ms
 #define HE_SLEEP                  true              // set to 1 for sleeping
-#define HE_SCALE                  true 
+#define HE_SCALE                  true
 #define HE_HUMIDITY               true 
 #define HE_TEMPERATURE            true
 //#define HE_RFM69_OTA           
 #define HE_BERadio                true 
-#define HE_RADIO                  false 
+#define HE_RADIO                  true 
 
 #if HE_DEBUG                                  /**    fine grade debug settings     ***
                                                  ***              * *                 **/
@@ -26,7 +26,7 @@
 
 #ifdef  HE_BERadio
     #define  BERadio_profile           "h1"           //  HE_BERadio profile
-    #define  HE_NODE_ID                2
+    #define  HE_HIVE_ID                2
 #endif
 
 #ifdef HE_SLEEP
@@ -37,10 +37,10 @@
                                                  ***        hardware switches         ***
                                                  ***             * * *                **/
 
-#define HE_RFM69                  true            // set to 1 for lowpowerlab's HE_RFM69 lib 
-#define HE_RH69                   false              // set to 1 for RadioHeads rf69 lib
+#define HE_RFM69                  false            // set to 1 for lowpowerlab's HE_RFM69 lib 
+#define HE_RH69                   true              // set to 1 for RadioHeads rf69 lib
 #define HE_RH95                   false              // set to 1 for RadioHeads rf95 lib
-#define SPI_FLASH                 false              // set to 1 for using SPI-flash
+#define HE_FLASH                  false              // set to 1 for using SPI-flash
 
                                                  /**            * * * *               *** 
                                                  ***    sensor pinning & settings     ***
@@ -72,31 +72,44 @@
     #ifdef HE_RH69                                     /**   RadioHead's HE_RH69radio lib     **/
         #define RH69_NODE_ID          99             //    
         #define RH69_GATEWAY_ID       1              // radio topology
-        #define RH69_TRANSMITTER_ID   3              //
+        #define RH69_TRANSCEIVER_ID   3              //
     
-        #define RH69_IRQ              10             // radio pins
-        #define RH69_SS               2              //
+        #define RH69_IRQ              2             // radio pins
+        #define RH69_SS               10              //
     
-        #define RH69_FREQUENCY        868MHZ         // modem settings
+        #define RH69_FREQUENCY        868.0         // modem settings
     
+
+        #define RH69_IS_NODE                true
+        #define RH69_IS_GATEWAY             true
+        #define RH69_IS_TRANSCEIVER         false 
+
     #endif                                           /**              * *                 **/
     
     #ifdef HE_RH95                                     /**     RadioHead's HE_RH95radio lib   **/
-        #define RH95_NODE_ID          99             //    
+
+        #define RH95_IS_NODE                false
+        #define RH95_IS_GATEWAY             false 
+        #define RH95_IS_TRANSCEIVER         true 
         #define RH95_NODE_ID          99             // 
         #define RH95_GATEWAY_ID       1              // radio topology 
-        #define RH95_TRANSMITTER_ID   3              //
+        #define RH95_TRANSCEIVER_ID   3              //
     
-        #define RH95_IRQ              10             // radio pins
-        #define RH95_SS               2              //
+        #define RH95_IRQ              5             // radio pins
+        #define RH95_SS               3              //
     
-        #define RH95_FREQUENCY        868MHZ         // modem settings
+        #define RH95_FREQUENCY        868.0         // modem settings
+        
     
     #endif                                           /**              * *                 **/
     
     #ifdef HE_RFM69                                     /**     HE_RFM69 lib from lowpowerlab   **/
         //#include <HE_RFM69.h>                           /**              * *                 **/
     
+        #define RFM69_IS_NODE                false
+        #define RFM69_IS_GATEWAY             false
+        #define RFM69_IS_TRANSCEIVER         false
+
         #define RFM69_NODE_ID         2              //
         #define RFM69_NETWORK_ID      100            // radio topology
         #define RFM69_GATEWAY_ID      1              //
@@ -111,12 +124,16 @@
         #endif
         #define RFM69_ENCRYPTKEY      "www.hiveeyes.org"   // same 16 characters/bytes everywhere
         #define RFM69_ACK_TIME              30             // acknowledge timeout in ms 
-        #define RFM69_MAX_PAYLOAD_LENGTH    61             // Payload limitation HE_RFM69 
+        #define RFM69_MAX_MESSAGE_LENGTH    61             // Payload limitation HE_RFM69 
     
+        #define RFM69_IS_NODE                false
+        #define RFM69_IS_GATEWAY             false
+        #define RFM69_IS_TRANSCEIVER         false
+        
     #endif                                           /**              * *                 **/
 #endif
 
-#ifdef SPI_FLASH                                 /**           SPI-Flash              **/
+#ifdef HE_FLASH                                 /**           SPI-Flash              **/
     #define FLASH_MANUFACTURER_ID 0x0102         // MANUFACTURER_ID 
                                                  // 0x1F44 for adesto(ex atmel) 4mbit flash
                                                  // 0xEF30 for windbond 4mbit flash
