@@ -40,3 +40,6 @@
 [submodule "libraries/StandardCplusplus"]
 	path = libraries/StandardCplusplus
 	url = https://github.com/hiveeyes/StandardCplusplus
+[submodule "libraries/RadioHead"]
+	path = libraries/RadioHead
+	url = https://github.com/Yveaux/RadioHead
