@@ -37,9 +37,11 @@
 [submodule "libraries/EmBencode"]
 	path = libraries/EmBencode
 	url = https://github.com/hiveeyes/embencode
+	branch = oo-improvements
 [submodule "libraries/StandardCplusplus"]
 	path = libraries/StandardCplusplus
 	url = https://github.com/hiveeyes/StandardCplusplus
+	branch = gcc5-fixups
 [submodule "libraries/RadioHead"]
 	path = libraries/RadioHead
 	url = https://github.com/Yveaux/RadioHead
