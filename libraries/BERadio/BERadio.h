@@ -29,8 +29,9 @@ Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA
 #include <varargs.h>
 #include <string>
 #include <vector>
+#include <map>
 #include <iterator>
-//#include <simulavr.h>
+#include <simulavr.h>
 
 // Macro for supporting variadic argument processing.
 // Drives the "varargs" template to convert a variable list
@@ -51,6 +52,9 @@ class BERadioMessage {
 
     public:
 
+        int nodeid;
+        std::string profile;
+
         // constructor
         BERadioMessage(int nodeid, std::string profile="h1") {
             this->nodeid  = nodeid;
@@ -60,6 +64,8 @@ class BERadioMessage {
         // enable/disable debugging
         void debug(bool enabled);
 
+        void add(std::string family, FloatList values);
+
         // measure multiple temperatures
         void temperature(FloatList values);
         void something(IntegerList values);
@@ -68,10 +74,10 @@ class BERadioMessage {
 
     private:
         bool DEBUG = false;
-        int nodeid;
-        std::string profile;
 
         // internal data store
+        std::map<std::string, std::vector<double>> _store;
+
         FloatList d_temperatures;
         IntegerList d_something;
 

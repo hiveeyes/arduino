@@ -24,10 +24,9 @@ Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA
 */
 #include <BERadio.h>
 #include <EmBencode.h>
-//#include <simulavr.h>
+#include <simulavr.h>
 
-#define NODEID      999
-//#define MAX_PAYLOAD_LENGTH 61
+//#define MAX_PAYLOAD_LENGTH 25
 #define MAX_PAYLOAD_LENGTH 256
 
 
@@ -35,6 +34,10 @@ void BERadioMessage::debug(bool enabled) {
     DEBUG = enabled;
     //_l("Node id: "); _d(nodeid);
     //_l("Profile: "); _d(profile);
+}
+
+void BERadioMessage::add(std::string family, std::vector<double> values) {
+    _store[family] = values;
 }
 
 void BERadioMessage::temperature(FloatList values) {
@@ -76,8 +79,10 @@ class BERadioEncoder: public EmBencode {
 
             // discard overflow data. this is bad
             // TODO: automatically fragment message
-            if (length >= MAX_PAYLOAD_LENGTH)
+            if (length >= MAX_PAYLOAD_LENGTH) {
+                _d("Payload limit reached, aborting serialization");
                 return;
+            }
 
             buffer[length] = ch;
             length += 1;
@@ -87,35 +92,67 @@ class BERadioEncoder: public EmBencode {
 
 std::string BERadioMessage::encode() {
 
-    // encoder machinery
+    // Encoder machinery wrapping EmBencode
     BERadioEncoder encoder;
 
-    // open envelope
+    // Open envelope
     encoder.startDict();
 
-    // add node identifier
+    // Add node identifier (integer)
     encoder.push("#");
-    encoder.push(NODEID);
+    encoder.push(nodeid);
 
-    // add profile identifier
+    // Add profile identifier (string)
     encoder.push("_");
     encoder.push(profile.c_str());
 
-    // encode list of temperature values, apply forward-scaling by *100
-    encoder.push("t");
-    encoder.startList();
-    for (double value: d_temperatures) {
-        encoder.push(value * 100);
-    }
-    encoder.endList();
+    // Encode internal data store
+    for (auto iterator = _store.begin(); iterator != _store.end(); iterator++) {
 
-    // close envelope
+        // iterator->first  = key
+        // iterator->second = value
+
+        // Decode family identifier and list of values from map element (key/value pair)
+        std::string family         = iterator->first;
+        std::vector<double> values = iterator->second;
+
+        // Number of elements in value list
+        int length = values.size();
+
+        // Skip empty lists
+        if (length == 0) {
+            continue;
+        }
+
+        // Encode the family identifier of this value list
+        encoder.push(family.c_str());
+
+        // Encode list of values, apply forward-scaling by * 100
+
+        if (length == 1) {
+            // List compression: Lists with just one element don't
+            // need to be wrapped into Bencode list containers.
+            encoder.push(values[0] * 100);
+
+        } else {
+            // Lists with two or more elements
+            encoder.startList();
+            for (double value: values) {
+                encoder.push(value * 100);
+            }
+            encoder.endList();
+
+        }
+
+    }
+
+    // Close envelope
     encoder.endDict();
 
-    // convert character buffer of known length to standard string
+    // Convert character buffer of known length to standard string
     std::string payload(encoder.buffer, encoder.length);
 
-    // ready to send
+    // Ready.
     return payload;
 }
 

@@ -14,12 +14,13 @@
 #include <func_exception.cpp>
 
 // main program
-#include <beradio.h>
+#include <BERadio.h>
+#include <simulavr.h>
 
 int main() {
 
     // message object with nodeid=999
-    BERadioMessage message(999);
+    BERadioMessage message(88);
 
     // enable debugging
     message.debug(true);
@@ -28,10 +29,13 @@ int main() {
     FloatList temperature = collect(21.63, 19.25, 10.92, 13.54);
     FloatList humidity    = collect(488.0, 572.0);
     FloatList weight      = collect(106.77);
+    FloatList radar;
 
     // transfer measurements to message
-    message.temperature(temperature);
-    //message.add("t", temperature);
+    message.add("t", temperature);
+    message.add("h", humidity);
+    message.add("w", weight);
+    message.add("r", radar);
 
     std::string payload = message.encode();
     _l("payload: ");
