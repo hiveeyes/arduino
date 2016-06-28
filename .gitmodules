@@ -37,7 +37,7 @@
 [submodule "libraries/EmBencode"]
 	path = libraries/EmBencode
 	url = https://github.com/hiveeyes/embencode
-	branch = oo-improvements
+	branch = header-guard
 [submodule "libraries/StandardCplusplus"]
 	path = libraries/StandardCplusplus
 	url = https://github.com/hiveeyes/StandardCplusplus
