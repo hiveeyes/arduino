@@ -9,16 +9,37 @@ CHANGES
 
 in-progress
 ===========
-- Add firmware builder documentation
+
+Programs
+--------
+- Add example sketch using BERadio at play-libberadio
+- Add "generic" sketch being a module composition breadboard
+- BERadio: Bring libberadio in shape as BERadio(.h|.cpp)
+- BERadio: Generic BERadioMessage to EmBencode serialization using
+  a map for holding sensor family values
+- BERadio: Automatic message fragmentation based on MTU (maximum
+  transfer unit) size for BERadioMessage
+
+Libraries
+---------
+- Add RadioHead library
 - Switch from vanilla EmBencode to Hiveeyes fork
-- Switched to branch “oo-improvements” of EmBencode fork
+- Switch to branch “oo-improvements” of EmBencode fork
 - Add "Standard C++ for Arduino" library from
   https://github.com/maniacbug/StandardCplusplus
-- Bring libberadio in shape as BERadio(.h|.cpp)
-- Add example sketch using BERadio at play-libberadio
 - Switch from vanilla StandardCplusplus to Hiveeyes fork
   fixing an issue with gcc5.
 - Switch “libraries/EmBencode” to branch “oo-improvements”
+- Make submodules EmBencode and StandardCplusplus track
+  specific feature branches of Hiveeyes forks
+- Switch submodule “EmBencode” to branch “header-guard”
+  fixing “redefinition of 'class EmBencode’” errors
+- Add guard to BERadio header file fixing “redefinition
+  of 'class BERadioMessage’” errors
+
+Documentation
+-------------
+- Add firmware builder documentation
 
 
 2016-06-17 0.6.1

@@ -1,9 +1,9 @@
 /* -*- coding: utf-8 -*-
 
-libberadio: Convenient and flexible telemetry messaging for Hiveeyes
+BERadio: Convenient and flexible telemetry messaging for Hiveeyes
 
-Copyright (C) 2015  Andreas Motl <andreas.motl@elmyra.de>
-Copyright (C) 2015  Richard Pobering <einsiedlerkrebs@ginnungagap.org>
+Copyright (C) 2015-2016  Andreas Motl <andreas.motl@elmyra.de>
+Copyright (C) 2015-2016  Richard Pobering <einsiedlerkrebs@ginnungagap.org>
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -33,6 +33,8 @@ Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA
 #include <iterator>
 #include <simulavr.h>
 
+#include <EmBencode.h>
+
 // Macro for supporting variadic argument processing.
 // Drives the "varargs" template to convert a variable list
 // of function arguments into a vector containing all items.
@@ -42,11 +44,27 @@ Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA
 #define FloatList std::vector<double>
 #define IntegerList std::vector<int>
 
+// Maximum of transmission payloads, used for static buffer
+#define MTU_SIZE_MAX 256
+
 // Generic "dump vector" utility function
-//
 //template<typename T>
 //void dump_vector(std::string prefix, std::vector<T> vec);
 
+class BERadioEncoder: public EmBencode {
+    /*
+    Inherits the "EmBencode" class and implements the "PushChar" method.
+    Provides public accessible "buffer" and "length" attributes.
+    */
+
+    public:
+        char buffer[MTU_SIZE_MAX];
+        int length = 0;
+        void reset();
+
+    protected:
+        void PushChar(char ch);
+};
 
 class BERadioMessage {
 
@@ -54,32 +72,43 @@ class BERadioMessage {
 
         int nodeid;
         std::string profile;
+        // TODO: TelemetryTransmitter transmitter;
+        int mtu_size;
 
-        // constructor
-        BERadioMessage(int nodeid, std::string profile="h1") {
+        // Constructor variants
+        BERadioMessage(int nodeid) : BERadioMessage(nodeid, "h1", 61) {}
+        BERadioMessage(int nodeid, std::string profile) : BERadioMessage(nodeid, profile, 61) {}
+        BERadioMessage(int nodeid, std::string profile, int mtu_size) {
             this->nodeid  = nodeid;
             this->profile = profile;
+            this->mtu_size = mtu_size;
         };
 
-        // enable/disable debugging
+        // Enable/disable debugging
         void debug(bool enabled);
 
+        // Set MTU (maximum transfer unit) size
+        void set_mtu_size(int size);
+
+        // Add list of measurement values
         void add(std::string family, FloatList values);
 
-        // measure multiple temperatures
-        void temperature(FloatList values);
-        void something(IntegerList values);
+        // Call to trigger the encoding and transmission process
+        void encode_and_transmit();
 
-        std::string encode();
+        // Get called with serialized payload to put on the wire
+        void send(std::string payload);
 
     private:
         bool DEBUG = false;
 
-        // internal data store
+        // Internal data store
         std::map<std::string, std::vector<double>> _store;
 
-        FloatList d_temperatures;
-        IntegerList d_something;
+        // Start message envelope
+        void start_message(BERadioEncoder &encoder);
+        void fragment_and_send(BERadioEncoder &encoder);
+        void continue_list(BERadioEncoder &encoder, std::string family, int index);
 
 };
 
