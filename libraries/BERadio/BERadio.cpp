@@ -49,7 +49,7 @@ void BERadioMessage::set_mtu_size(int size) {
     mtu_size = size;
 }
 
-void BERadioMessage::add(std::string family, std::vector<double> values) {
+void BERadioMessage::add(std::string family, std::vector<double> &values) {
     // Store list of values into map, keyed by single char family identifier (t, h, w, r)
     _store[family] = values;
 }
@@ -214,7 +214,7 @@ void BERadioMessage::fragment_and_send(BERadioEncoder &encoder) {
 
     // Transmit message before starting with new one
     send(*payload);
-    dprint(payload->c_str());
+    //dprint(payload->c_str());
 
     delete payload;
 
@@ -225,7 +225,7 @@ void BERadioMessage::continue_list(BERadioEncoder &encoder, std::string family, 
     // Augment family identifier with current index, e.g. "t3"
 
     // FIXME: How to convert from Integer to String more conveniently?
-    char intbuf[10];
+    char intbuf[3];
     std::sprintf(intbuf, "%d", index);
 
     std::string family_with_index = family + std::string(intbuf);

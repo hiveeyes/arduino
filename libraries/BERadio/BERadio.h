@@ -100,7 +100,7 @@ class BERadioMessage {
         void set_mtu_size(int size);
 
         // Add list of measurement values
-        void add(std::string family, FloatList values);
+        void add(std::string family, FloatList &values);
 
         // Call to trigger the encoding and transmission process
         void encode_and_transmit();

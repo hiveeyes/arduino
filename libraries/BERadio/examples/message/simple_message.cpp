@@ -48,7 +48,7 @@ void BERadioMessage::dprint(int value) {
 void BERadioMessage::send(std::string &payload) {
 
     //_d("abc");
-    //dprint("Sending payload: ");
+    dprint("Sending payload: ");
     dprint(payload.c_str());
 
     /*
@@ -103,16 +103,16 @@ int main() {
     //dprint("Setup message");
 
     // Message object with nodeid=999
-    BERadioMessage message(999);
+    BERadioMessage *message = new BERadioMessage(999);
 
     // Enable debugging
-    message.debug(true);
+    message->debug(true);
 
     // Configure auto fragmentation by setting MTU size (maximum transfer unit)
     // The default is 61 bytes, suitable for sending via RFM69
-    //message.set_mtu_size(96);
+    //message->set_mtu_size(96);
 
-    message.dprint("Read sensors");
+    message->dprint("Read sensors");
 
     // Collect some measurements en bloc
     /*
@@ -123,24 +123,35 @@ int main() {
     */
 
     // Add yet another value
-    FloatList weight;
-    weight.push_back(1234567.1234);
+    FloatList *weight = new FloatList();
+    weight->push_back(1234567.1234);
+    weight->push_back(1234567.1234);
+    weight->push_back(1234567.1234);
+    weight->push_back(1234567.1234);
+    weight->push_back(1234567.1234);
+    weight->push_back(1234567.1234);
+    weight->push_back(1234567.1234);
+    weight->push_back(1234567.1234);
+    weight->push_back(1234567.1234);
 
     // Empty lists won't get serialized
-    FloatList radar;
+    //FloatList radar;
 
     // Add measurement values to message
-    message.dprint("Values to message");
+    message->dprint("Values to message");
     /*
-    message.add("t", temperature);
-    message.add("h", humidity);
+    message->add("t", temperature);
+    message->add("h", humidity);
+    message->add("r", radar);
     */
-    message.add("w", weight);
-    //message.add("r", radar);
+    message->add("w", *weight);
 
     // Yak shaving
-    message.dprint("Transmit message");
-    message.encode_and_transmit();
+    message->dprint("Transmit message");
+    message->encode_and_transmit();
+
+    delete weight;
+    delete message;
 
     return 0;
 
