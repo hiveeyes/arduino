@@ -1,20 +1,26 @@
+.. include:: resources.rst
+
 ####
 TODO
 ####
 
 
-Code
+Main
 ====
 - [x] Add Arduino gateway code, e.g. ``gateway-rfm69-beradio``
 - [x] Add ``node-wifi-mqtt`` from Clemens
 - [x] Add :ref:`libberadio` spike and associated documentation from :ref:`beradio`
 - [o] Add HX711 calibration sketch
+- [o] Add sketch from Clemens
 
-libberadio
-----------
-- [o] Send ``embencode.patch`` upstream to enable OO-based composition
-- [o] Integrate ``StandardCplusplus`` via git submodule
-- [o] Try to use it from regular sketches. Watch the firmware sizes!
+BERadio
+-------
+- [x] Send ``embencode.patch`` upstream to enable OO-based composition
+- [x] Integrate ``StandardCplusplus`` via git submodule
+- [x] Try to use it from regular sketches. Watch the firmware sizes!
+- [o] Integrate BERadio with Terkin transmitter infrastructure
+- [o] Send data through RadioHead's RH_TCP driver to :ref:`Kotori`
+- [o] Check char* to uint8_t conversion with RadioHead's ``manager69.sendtoWait(buf69, sizeof(buf69), RH69_TRANSCEIVER_ID);``
 
 
 Documentation
