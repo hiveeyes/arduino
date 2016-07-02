@@ -36,6 +36,7 @@ define INCLUDE
 		-I/Applications/Arduino.app/Contents/Resources/Java/hardware/arduino/variants/standard \
 		-I../../../StandardCplusplus \
 		-I../../../EmBencode \
+		-I../../../RadioHead/RadioHead \
 		-I../..
 endef
 

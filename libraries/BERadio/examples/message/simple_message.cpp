@@ -17,6 +17,19 @@
 #include <BERadio.h>
 #include <simulavr.h>
 
+// Radio
+/*
+#include <RH_RF95.h>
+#include <RHReliableDatagram.h>
+#include <SPI.h>
+*/
+
+
+bool sendtoWait(uint8_t* buf, uint8_t len, uint8_t address) {
+    //
+}
+
+
 void BERadioMessage::send(std::string payload) {
 
     _l("Sending payload: "); _d(payload);
@@ -34,7 +47,27 @@ void BERadioMessage::send(std::string payload) {
     */
 
     // TODO: Pluck this into RadioHead
-    //transmitter.send(payload);
+    //RH_RF69 driver;
+    //RH_RF69 driver(15, 16); // For RF69 on PJRC breakout board with Teensy 3.1
+    //RH_RF69 rf69(4, 2); // For MoteinoMEGA https://lowpowerlab.com/shop/moteinomega
+
+    // Class to manage message delivery and receipt, using the driver declared above
+    //RHReliableDatagram manager(driver, CLIENT_ADDRESS);
+
+
+    // Convert from std::string to mutable (not “const”) C char array to pass from C++ into C code
+    /*
+    char *buf69 = new char[payload.length() + 1];
+    strcpy(buf69, payload.c_str());
+    */
+
+    // Pointer magic: Is this really correct?
+    // https://stackoverflow.com/questions/25360893/convert-char-to-uint8-t/25365098#25365098
+    //uint8_t cc = *buf69;
+
+    // Convert from char * to uint8_t
+    uint8_t payload_c = *(payload.c_str());
+    sendtoWait(&payload_c, payload.length(), 5);
 
 }
 
