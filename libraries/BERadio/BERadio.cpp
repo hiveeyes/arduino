@@ -120,6 +120,11 @@ void BERadioMessage::encode_and_transmit() {
                 // Compute whether message should be fragmented right here
                 int close_padding = 2;       // Two levels of nestedness: dict / list
                 do_fragment = encoder->length + shadow->length + close_padding >= mtu_size;
+                if (do_fragment) {
+                    dprint("========= FRAGMENTING");
+                    dprint(encoder->length);
+                    dprint(shadow->length);
+                }
 
                 if (do_fragment) {
 

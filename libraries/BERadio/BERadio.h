@@ -109,6 +109,7 @@ class BERadioMessage {
         void send(std::string &payload);
 
         void dprint(const char *message);
+        void dprint(int value);
 
     private:
         bool DEBUG = false;

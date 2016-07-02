@@ -37,12 +37,19 @@ void BERadioMessage::dprint(const char *message) {
         Serial.println(message);
     #endif
 }
+void BERadioMessage::dprint(int value) {
+    #ifdef SIMULAVR
+        _d(value);
+    #else
+        Serial.println(value);
+    #endif
+}
 
 void BERadioMessage::send(std::string &payload) {
 
     //_d("abc");
     //dprint("Sending payload: ");
-    //dprint(payload.c_str());
+    dprint(payload.c_str());
 
     /*
     Currently, this will yield three valid payload fragments:
@@ -108,13 +115,15 @@ int main() {
     message.dprint("Read sensors");
 
     // Collect some measurements en bloc
+    /*
     FloatList temperature = collect(21.63, 19.25, 10.92, 13.54, 42.42);
     FloatList humidity    = collect(488.0, 572.0, 78.23);
     //FloatList weight      = collect(106.77, 99.22);
     FloatList weight      = collect(106.77, 99.22, 234.4);
+    */
 
     // Add yet another value
-    //FloatList weight;
+    FloatList weight;
     weight.push_back(1234567.1234);
 
     // Empty lists won't get serialized
@@ -122,10 +131,12 @@ int main() {
 
     // Add measurement values to message
     message.dprint("Values to message");
+    /*
     message.add("t", temperature);
     message.add("h", humidity);
+    */
     message.add("w", weight);
-    message.add("r", radar);
+    //message.add("r", radar);
 
     // Yak shaving
     message.dprint("Transmit message");
