@@ -37,11 +37,12 @@ define INCLUDE
 		-I../../../StandardCplusplus \
 		-I../../../EmBencode \
 		-I../../../RadioHead/RadioHead \
+		-I../../../MemoryFree \
 		-I../..
 endef
 
 simulavr          := /Users/amo/dev/foss/open.nshare.de/simulavr/src/simulavr
-simulavr_options  := --verbose --cpufrequency 8000000 --device atmega328
+simulavr_options  := --verbose --cpufrequency 8000000 --device atmega328 #-c warnread
 simulavr_hook     := --terminate=exit --writetopipe=0x91,- --writetoabort=0x95 --writetoexit=0x96
 
 avr-objcopy  := /opt/local/bin/avr-objcopy

@@ -10,4 +10,7 @@ void _d(double val);
 void _d(const char *str);
 void _d(std::string str);
 
+void dprint(int val);
+void dprint(const char *str);
+
 #endif

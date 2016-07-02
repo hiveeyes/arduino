@@ -49,6 +49,13 @@ void _d(std::string str) {
 }
 
 
+void dprint(int val) {
+    _d(val);
+}
+void dprint(const char *str) {
+    _d(str);
+}
+
 #else
 
 // Bypass added functionality
@@ -62,5 +69,12 @@ void _d(int val) {}
 void _d(double val) {}
 void _d(const char *str) {}
 void _d(std::string str) {}
+
+void dprint(int val) {
+    Serial.println(val);
+}
+void dprint(const char *str) {
+    Serial.println(str);
+}
 
 #endif

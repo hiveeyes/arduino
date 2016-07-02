@@ -16,6 +16,7 @@
 // Main program
 #include <BERadio.h>
 #include <simulavr.h>
+#include <MemoryFree.h>
 
 // Radio
 /*
@@ -66,12 +67,24 @@ void BERadioMessage::send(std::string payload) {
     //uint8_t cc = *buf69;
 
     // Convert from char * to uint8_t
-    uint8_t payload_c = *(payload.c_str());
-    sendtoWait(&payload_c, payload.length(), 5);
+    //uint8_t payload_c = *(payload.c_str());
+    //sendtoWait(&payload_c, payload.length(), 5);
 
 }
 
 int main() {
+
+    dprint("Start program");
+
+
+    dprint("Hello world");
+
+    //int fm = freeMemory();
+
+    //_l("freeMemory"); dprint(freeMemory());
+
+
+    dprint("Setup message");
 
     // Message object with nodeid=999
     BERadioMessage message(999);
@@ -83,6 +96,8 @@ int main() {
     // The default is 61 bytes, suitable for sending via RFM69
     //message.set_mtu_size(96);
 
+    dprint("Read sensors");
+
     // Collect some measurements en bloc
     FloatList temperature = collect(21.63, 19.25, 10.92, 13.54, 42.42);
     FloatList humidity    = collect(488.0, 572.0, 78.23);
@@ -90,18 +105,21 @@ int main() {
     FloatList weight      = collect(106.77, 99.22, 234.4);
 
     // Add yet another value
+    //FloatList weight;
     weight.push_back(1234567.1234);
 
     // Empty lists won't get serialized
     FloatList radar;
 
     // Add measurement values to message
+    dprint("Values to message");
     message.add("t", temperature);
     message.add("h", humidity);
     message.add("w", weight);
     message.add("r", radar);
 
     // Yak shaving
+    dprint("Transmit message");
     message.encode_and_transmit();
 
     return 0;
