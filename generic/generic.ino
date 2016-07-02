@@ -380,7 +380,7 @@ void loop(){
     #endif
         //BERadioMessage message(HE_HIVE_ID);
         #if DEBUG_BERadio
-             Serial.println("filling floatlists\n");
+             Serial.println("encoding floatlists\n");
              delay(200);
         #endif
         //message.add("t", tempL);
@@ -391,7 +391,7 @@ void loop(){
         Serial.println(freeMemory());
     #endif
         #if DEBUG_BERadio
-             Serial.println("Floatlists filled\n");
+             Serial.println("Floatlists encoded\n");
              delay(200);
         #endif
         message.encode_and_transmit();
@@ -401,7 +401,7 @@ void loop(){
     #endif
     #if HE_DEBUG
         Serial.println(" main loop ends here:\n");
-        Serial.println("-----------------------\n");
+        Serial.println("#####################\n");
     #endif
     #if HE_SLEEP
         delay(100); 
@@ -475,6 +475,7 @@ void loop(){
             Serial.println();
             Serial.println("requesting HX711 scale\n");
         #endif
+        wghtL.clear();
         scale.power_up();
         wghtL.push_back(scale.read_average(3));              // get the raw data of the scale
         wghtL.push_back(scale.get_units(3));                 // get the scaled data
