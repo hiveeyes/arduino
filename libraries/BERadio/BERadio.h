@@ -45,7 +45,7 @@ Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA
 #define IntegerList std::vector<int>
 
 // Maximum of transmission payloads, used for static buffer
-#define MTU_SIZE_MAX 256
+#define MTU_SIZE_MAX 61 
 
 // Generic "dump vector" utility function
 //template<typename T>

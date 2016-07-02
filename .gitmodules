@@ -45,3 +45,6 @@
 [submodule "libraries/RadioHead"]
 	path = libraries/RadioHead
 	url = https://github.com/Yveaux/RadioHead
+[submodule "libraries/MemoryFree"]
+	path = libraries/MemoryFree
+	url = https://github.com/McNeight/MemoryFree

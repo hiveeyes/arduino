@@ -24,7 +24,7 @@ Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA
 */
 #include <BERadio.h>
 #include <simulavr.h>
-
+#include <Arduino.h>
 
 
 void BERadioEncoder::reset() {
@@ -57,7 +57,6 @@ void BERadioMessage::add(std::string family, std::vector<double> values) {
 void BERadioMessage::encode_and_transmit() {
 
     // Encoder machinery wrapping EmBencode
-
     // Main message encoder
     BERadioEncoder encoder;
 
@@ -72,6 +71,7 @@ void BERadioMessage::encode_and_transmit() {
 
     // Iterate data store mapping single-char family identifiers to value lists
     for (auto iterator = _store.begin(); iterator != _store.end(); iterator++) {
+    Serial.print("iterator || \n");
 
         // iterator->first  = key
         // iterator->second = value
@@ -90,7 +90,7 @@ void BERadioMessage::encode_and_transmit() {
 
         // Encode the family identifier of this value list
         encoder.push(family.c_str());
-
+        Serial.print("family || \n");
         // Encode list of values, apply forward-scaling by * 100
 
         if (length == 1) {
@@ -110,6 +110,8 @@ void BERadioMessage::encode_and_transmit() {
                 // Get list index and value from iterator
                 int index = value_iterator - values.begin();
                 double value = *value_iterator;
+                Serial.println("took values");
+
 
                 // Simulate Bencode serialization to compute length of encoded element
                 shadow.reset();
@@ -122,15 +124,20 @@ void BERadioMessage::encode_and_transmit() {
                 if (do_fragment) {
 
                     // Close current list
+                    Serial.print("do_fragment \n");
                     encoder.endList();
 
                     // Send out data
+                    Serial.println("about to enter fragment_and_send\n");
+                    delay(200);
                     fragment_and_send(encoder);
 
                     // Start new message
+                    Serial.println("about to enter start_message\n");
                     start_message(encoder);
 
                     // Open new list context where we currently left off
+                    Serial.println("about to enter continue_list\n");
                     continue_list(encoder, family, index);
 
                 }
@@ -186,6 +193,8 @@ void BERadioMessage::start_message(BERadioEncoder &encoder) {
 void BERadioMessage::fragment_and_send(BERadioEncoder &encoder) {
 
     // Close envelope
+    Serial.println("inside fragment_and_send\n");
+    delay(200);
     encoder.endDict();
 
     // Convert character buffer of known length to standard string
@@ -196,6 +205,7 @@ void BERadioMessage::fragment_and_send(BERadioEncoder &encoder) {
 
     // Transmit message before starting with new one
     send(payload);
+    Serial.println(payload.c_str());
 
 }
 
