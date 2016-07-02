@@ -30,10 +30,19 @@ bool sendtoWait(uint8_t* buf, uint8_t len, uint8_t address) {
     //
 }
 
+void BERadioMessage::dprint(const char *message) {
+    #ifdef SIMULAVR
+        _d(message);
+    #else
+        Serial.println(message);
+    #endif
+}
 
 void BERadioMessage::send(std::string &payload) {
 
-    _l("Sending payload: "); _d(payload);
+    //_d("abc");
+    //dprint("Sending payload: ");
+    //dprint(payload.c_str());
 
     /*
     Currently, this will yield three valid payload fragments:
@@ -74,17 +83,17 @@ void BERadioMessage::send(std::string &payload) {
 
 int main() {
 
-    dprint("Start program");
+    //dprint("Start program");
 
 
-    dprint("Hello world");
+    //dprint("Hello world");
 
     //int fm = freeMemory();
 
     //_l("freeMemory"); dprint(freeMemory());
 
 
-    dprint("Setup message");
+    //dprint("Setup message");
 
     // Message object with nodeid=999
     BERadioMessage message(999);
@@ -96,7 +105,7 @@ int main() {
     // The default is 61 bytes, suitable for sending via RFM69
     //message.set_mtu_size(96);
 
-    dprint("Read sensors");
+    message.dprint("Read sensors");
 
     // Collect some measurements en bloc
     FloatList temperature = collect(21.63, 19.25, 10.92, 13.54, 42.42);
@@ -112,14 +121,14 @@ int main() {
     FloatList radar;
 
     // Add measurement values to message
-    dprint("Values to message");
+    message.dprint("Values to message");
     message.add("t", temperature);
     message.add("h", humidity);
     message.add("w", weight);
     message.add("r", radar);
 
     // Yak shaving
-    dprint("Transmit message");
+    message.dprint("Transmit message");
     message.encode_and_transmit();
 
     return 0;

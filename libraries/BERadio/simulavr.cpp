@@ -1,10 +1,9 @@
 // http://www.nongnu.org/simulavr/intro.html
 // https://github.com/Traumflug/simulavr/blob/traumflug/examples/simple_ex1/fred.c
+#include <simulavr.h>
 
 // Hook SimulAVR into the runtime
 #ifdef SIMULAVR
-
-#include <simulavr.h>
 
 /* This port correponds to the "--writetopipe=0x91,-" command line option. */
 #define special_output_port (*((volatile char *)0x91))
@@ -49,18 +48,11 @@ void _d(std::string str) {
 }
 
 
-void dprint(int val) {
-    _d(val);
-}
-void dprint(const char *str) {
-    _d(str);
-}
 
 #else
 
 // Bypass added functionality
-
-#include <iterator>
+//#include <iterator>
 #include <string>
 
 // empty wrappers
@@ -69,12 +61,5 @@ void _d(int val) {}
 void _d(double val) {}
 void _d(const char *str) {}
 void _d(std::string str) {}
-
-void dprint(int val) {
-    Serial.println(val);
-}
-void dprint(const char *str) {
-    Serial.println(str);
-}
 
 #endif

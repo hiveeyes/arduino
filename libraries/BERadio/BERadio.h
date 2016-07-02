@@ -31,7 +31,6 @@ Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA
 #include <vector>
 #include <map>
 #include <iterator>
-#include <simulavr.h>
 
 #include <EmBencode.h>
 
@@ -108,6 +107,8 @@ class BERadioMessage {
 
         // Get called with serialized payload to put on the wire
         void send(std::string &payload);
+
+        void dprint(const char *message);
 
     private:
         bool DEBUG = false;
