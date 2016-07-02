@@ -21,7 +21,7 @@ ARDUINO_DIR       = /usr/share/arduino
 
 ### USER_LIB_PATH
 ### Path to where the your project's libraries are stored.
-USER_LIB_PATH     :=  $(realpath $(PROJECT_DIR)/libraries)
+USER_LIB_PATH     =  $(realpath $(PROJECT_DIR)/libraries)
 
 ### BOARD_TAG & BOARD_SUB
 ### For Arduino IDE 1.0.x
@@ -45,6 +45,9 @@ AVR_TOOLS_DIR     = /usr
 ### Path to avrdude directory.
 AVRDDUDE          = /usr/bin/avrdude
 
+
+AVRDUDE_CONF = /etc/avrdude.conf
+
 ### CFLAGS_STD
 CFLAGS_STD        = -std=gnu11
 
@@ -62,7 +65,7 @@ endif
 
 ### MONITOR_PORT
 ### The port your board is connected to. Using an '*' tries all the ports and finds the right one.
-MONITOR_PORT      = /dev/tty.usbmodem*
+MONITOR_PORT      = /dev/ttyUSB0
 
 ### don't touch this
 CURRENT_DIR       = $(shell basename $(CURDIR))
@@ -72,7 +75,6 @@ CURRENT_DIR       = $(shell basename $(CURDIR))
 CURRENT_DIR       = $(shell basename $(CURDIR))
 OBJDIR            = $(PROJECT_DIR)/bin/$(CURRENT_DIR)/$(BOARD_TAG)
 
-#include mymake.mk
 
 ### path to Arduino.mk, inside the ARDMK_DIR, don't touch.
 include $(ARDMK_DIR)/Arduino.mk
