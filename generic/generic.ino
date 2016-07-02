@@ -133,7 +133,7 @@
 #if HE_BERadio
     #include <EmBencode.h>                  // https://github.com/jcw/embencode
     #include <BERadio.h>
-    BERadioMessage message(HE_HIVE_ID, "h1", 61);
+    BERadioMessage *message= new BERadioMessage(HE_HIVE_ID, "h1", 61);
 #endif
 
 
@@ -385,7 +385,7 @@ void loop(){
         #endif
         //message.add("t", tempL);
         //message.add("h", humL);
-        message.add("w", wghtL);
+        message->add("w", wghtL);
     #if DEBUG_MEMORY
         Serial.print("freeMemory()=");
         Serial.println(freeMemory());
@@ -394,7 +394,7 @@ void loop(){
              Serial.println("Floatlists encoded\n");
              delay(200);
         #endif
-        message.encode_and_transmit();
+        message->encode_and_transmit();
     #endif
     #if RH69_IS_TRANSCEIVER
         transceive();
@@ -475,10 +475,11 @@ void loop(){
             Serial.println();
             Serial.println("requesting HX711 scale\n");
         #endif
-        wghtL.clear();
+        //wghtL.clear();
+        delete wghtL;
         scale.power_up();
-        wghtL.push_back(scale.read_average(3));              // get the raw data of the scale
-        wghtL.push_back(scale.get_units(3));                 // get the scaled data
+        wghtL->push_back(scale.read_average(3));              // get the raw data of the scale
+        wghtL->push_back(scale.get_units(3));                 // get the scaled data
         scale.power_down();
         #ifdef DEBUG_SENSORS
             Serial.println("Readings:");
@@ -652,7 +653,7 @@ void Blink(byte PIN, int DELAY_MS){
 #endif
 
 #if HE_BERadio
-    void BERadioMessage::send(std::string payload) {
+    void BERadioMessage::send(std::string &payload) {
         #if DEBUG_BERadio
              Serial.println("enter message send\n");
              Serial.println("payload:\n");
@@ -669,9 +670,26 @@ void Blink(byte PIN, int DELAY_MS){
        
         //uint8_t payload_c = *(payload.c_str());
         #if DEBUG_BERadio
-        //    Serial.println(payload.c_str());
+            //dprint(payload.c_str());
         #endif
         //manager69.sendtoWait(&payload_c, payload.length(), RH69_TRANSCEIVER_ID);
         //delete [] &payload_c;
     }
 #endif
+
+
+void BERadioMessage::dprint(const char *message) {
+    #ifdef SIMULAVR
+        _d(message);
+    #else
+        Serial.println(message);
+    #endif
+}
+
+void BERadioMessage::dprint(int value) {
+    #ifdef SIMULAVR
+        _d(value);
+    #else
+        Serial.println(value);
+    #endif
+}
