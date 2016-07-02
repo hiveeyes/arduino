@@ -5,13 +5,14 @@
 #define HE_DEBUG                  true               // turn on debug output and choose below
 #define SERIAL_BAUD               115200         // serial baud rate
 #define BLINKPERIOD               500            // LED blinking period in ms
-#define HE_SLEEP                  true              // set to 1 for sleeping
+#define HE_SLEEP                  false              // set to 1 for sleeping
 #define HE_SCALE                  true
-#define HE_HUMIDITY               true 
+#define HE_HUMIDITY               false 
 #define HE_TEMPERATURE            true
 //#define HE_RFM69_OTA           
 #define HE_BERadio                true 
-#define HE_RADIO                  true 
+#define HE_RADIO                  true
+//#define HE_CONTAINERS             false
 
 #if HE_DEBUG                                  /**    fine grade debug settings     ***
                                                  ***              * *                 **/
@@ -20,6 +21,7 @@
     #define DEBUG_SPI_FLASH       false              // set to 1 for SPI-flash debug
     #define DEBUG_SENSORS         true              // set to 1 for sensor debug
     #define DEBUG_BERadio         true              // set to 1 for  HE_BERadio degub
+    #define DEBUG_MEMORY          true
 
 #endif                                           /**              * *                 **/
 
@@ -27,6 +29,10 @@
 #ifdef  HE_BERadio
     #define  BERadio_profile           "h1"           //  HE_BERadio profile
     #define  HE_HIVE_ID                2
+    #define  BAD_VALUE             273.15
+    #if HE_CONTAINERS == false
+        #define HE_CONTAINERS      true
+    #endif
 #endif
 
 #ifdef HE_SLEEP
@@ -49,12 +55,22 @@
 #ifdef HE_TEMPERATURE
     #define DS18B20_BUS           9              // DS18B20 data pin
     #define TEMP_PRECISION        9              // DS18B20 value resolution
+    #if HE_CONTAINERS
+        #define CONT_HUM            true
+    #endif
 #endif
 
 #ifdef  HE_HUMIDITY 
+    #define DHT_AMOUNT                1
     #define DHT_PIN1                  7              // DHT pin #1
     #define DHT_PIN2                  6              // DHT pin #2
     #define DHT_TYPE                  DHT22          // DHT type (dht22)
+    #if HE_CONTAINERS
+        #define CONT_HUM             true
+        #ifndef CONT_TEMP            
+            #define CONT_TEMP        true
+        #endif
+    #endif
 #endif
 
 #ifdef HE_SCALE
@@ -63,6 +79,9 @@
     #define HX711_OFFSET          8361975
 
     #define HX711_KNOWN_WEIGHT     21901.f
+    #ifdef HE_CONTAINERS
+        #define CONT_WGHT        true
+    #endif
 #endif
 
                                                  /**            * * * *               *** 
@@ -81,7 +100,7 @@
     
 
         #define RH69_IS_NODE                true
-        #define RH69_IS_GATEWAY             true
+        #define RH69_IS_GATEWAY             false
         #define RH69_IS_TRANSCEIVER         false 
 
     #endif                                           /**              * *                 **/
@@ -90,7 +109,7 @@
 
         #define RH95_IS_NODE                false
         #define RH95_IS_GATEWAY             false 
-        #define RH95_IS_TRANSCEIVER         true 
+        #define RH95_IS_TRANSCEIVER         false 
         #define RH95_NODE_ID          99             // 
         #define RH95_GATEWAY_ID       1              // radio topology 
         #define RH95_TRANSCEIVER_ID   3              //

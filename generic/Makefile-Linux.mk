@@ -36,7 +36,7 @@ BOARD_SUB         = 8MHzatmega328
 ### MONITOR_BAUDRATE
 ### It must be set to Serial baudrate value you are using.
 MONITOR_BAUDRATE  = 115200
-
+MONITOR_CMD = picocom
 ### AVR_TOOLS_DIR
 ### Path to the AVR tools directory such as avr-gcc, avr-g++, etc.
 AVR_TOOLS_DIR     = /usr
@@ -44,6 +44,9 @@ AVR_TOOLS_DIR     = /usr
 ### AVRDDUDE
 ### Path to avrdude directory.
 AVRDDUDE          = /usr/bin/avrdude
+
+
+AVRDUDE_CONF = /etc/avrdude.conf
 
 ### CFLAGS_STD
 CFLAGS_STD        = -std=gnu11
@@ -62,7 +65,7 @@ endif
 
 ### MONITOR_PORT
 ### The port your board is connected to. Using an '*' tries all the ports and finds the right one.
-MONITOR_PORT      = /dev/tty.usbmodem*
+MONITOR_PORT      = /dev/ttyUSB0
 
 ### don't touch this
 CURRENT_DIR       = $(shell basename $(CURDIR))
