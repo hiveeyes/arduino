@@ -58,13 +58,13 @@ void BERadioMessage::encode_and_transmit() {
 
     // Encoder machinery wrapping EmBencode
     // Main message encoder
-    BERadioEncoder encoder;
+    BERadioEncoder *encoder = new BERadioEncoder();
 
     // Shadow encoder for serializing single elements
-    BERadioEncoder shadow;
+    BERadioEncoder *shadow = new BERadioShadowEncoder();
 
     // Initialize message, add header
-    start_message(encoder);
+    start_message(*encoder);
 
     // Encode internal data store
     bool do_fragment = false;
@@ -77,8 +77,8 @@ void BERadioMessage::encode_and_transmit() {
         // iterator->second = value
 
         // Decode family identifier and list of values from map element (key/value pair)
-        std::string family         = iterator->first;
-        std::vector<double> values = iterator->second;
+        std::string &family         = iterator->first;
+        std::vector<double> &values = iterator->second;
 
         // Number of elements in value list
         int length = values.size();
@@ -89,7 +89,7 @@ void BERadioMessage::encode_and_transmit() {
         }
 
         // Encode the family identifier of this value list
-        encoder.push(family.c_str());
+        encoder->push(family.c_str());
         dprint("family || \n");
         // Encode list of values, apply forward-scaling by * 100
 
@@ -97,12 +97,12 @@ void BERadioMessage::encode_and_transmit() {
             // List compression: Lists with just one element don't
             // need to be wrapped into Bencode list containers.
             // TODO: Also care about fragmentation here
-            encoder.push(values[0] * 100);
+            encoder->push(values[0] * 100);
 
         } else {
 
             // Lists with two or more elements
-            encoder.startList();
+            encoder->startList();
 
             // Iterate list of measurement values
             for (auto value_iterator = values.begin(); value_iterator != values.end(); value_iterator++) {
@@ -114,43 +114,43 @@ void BERadioMessage::encode_and_transmit() {
 
 
                 // Simulate Bencode serialization to compute length of encoded element
-                shadow.reset();
-                shadow.push(value * 100);
+                shadow->reset();
+                shadow->push(value * 100);
 
                 // Compute whether message should be fragmented right here
                 int close_padding = 2;       // Two levels of nestedness: dict / list
-                do_fragment = encoder.length + shadow.length + close_padding >= mtu_size;
+                do_fragment = encoder->length + shadow->length + close_padding >= mtu_size;
 
                 if (do_fragment) {
 
                     // Close current list
-                    encoder.endList();
                     dprint("do_fragment \n");
+                    encoder->endList();
 
                     // Send out data
-                    delay(200);
-                    fragment_and_send(encoder);
                     dprint("about to enter fragment_and_send\n");
+                    //delay(200);
+                    fragment_and_send(*encoder);
 
                     // Start new message
-                    start_message(encoder);
                     dprint("about to enter start_message\n");
+                    start_message(*encoder);
 
                     // Open new list context where we currently left off
-                    continue_list(encoder, family, index);
                     dprint("about to enter continue_list\n");
+                    continue_list(*encoder, family, index);
 
                 }
 
                 // Just push if it's safe
-                encoder.push(value * 100);
+                encoder->push(value * 100);
 
                 // Refresh "do_fragment" state
                 // TODO: This must be run here, but the source code is redundant. => Refactor to function.
-                do_fragment = encoder.length + shadow.length + close_padding >= mtu_size;
+                do_fragment = encoder->length + shadow->length + close_padding >= mtu_size;
 
             }
-            encoder.endList();
+            encoder->endList();
 
         }
 
@@ -158,10 +158,10 @@ void BERadioMessage::encode_and_transmit() {
         if (do_fragment) {
 
             // Send out data
-            fragment_and_send(encoder);
+            fragment_and_send(*encoder);
 
             // Start new message
-            start_message(encoder);
+            start_message(*encoder);
         }
 
     }
@@ -169,8 +169,11 @@ void BERadioMessage::encode_and_transmit() {
     // Regular ending
     if (!do_fragment) {
         // Send out data
-        fragment_and_send(encoder);
+        fragment_and_send(*encoder);
     }
+
+    delete encoder;
+    delete shadow;
 
     // Ready.
 }
@@ -194,19 +197,21 @@ void BERadioMessage::start_message(BERadioEncoder &encoder) {
 void BERadioMessage::fragment_and_send(BERadioEncoder &encoder) {
 
     // Close envelope
-    delay(200);
     dprint("inside fragment_and_send\n");
+    //delay(200);
     encoder.endDict();
 
     // Convert character buffer of known length to standard string
-    std::string payload(encoder.buffer, encoder.length);
+    std::string *payload = new std::string(encoder.buffer, encoder.length);
 
     // Debugging
     //_l("payload: "); _d(payload);
 
     // Transmit message before starting with new one
-    send(payload);
+    send(*payload);
     dprint(payload->c_str());
+
+    delete payload;
 
 }
 

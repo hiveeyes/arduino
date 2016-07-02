@@ -66,6 +66,16 @@ class BERadioEncoder: public EmBencode {
         void PushChar(char ch);
 };
 
+class BERadioShadowEncoder: public BERadioEncoder {
+    /*
+    Same as BERadioEncoder but with smaller buffer size.
+    */
+
+    public:
+        char buffer[15];
+
+};
+
 class BERadioMessage {
 
     public:
@@ -97,7 +107,7 @@ class BERadioMessage {
         void encode_and_transmit();
 
         // Get called with serialized payload to put on the wire
-        void send(std::string payload);
+        void send(std::string &payload);
 
     private:
         bool DEBUG = false;

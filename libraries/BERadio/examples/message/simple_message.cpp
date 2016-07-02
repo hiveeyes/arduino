@@ -31,7 +31,7 @@ bool sendtoWait(uint8_t* buf, uint8_t len, uint8_t address) {
 }
 
 
-void BERadioMessage::send(std::string payload) {
+void BERadioMessage::send(std::string &payload) {
 
     _l("Sending payload: "); _d(payload);
 
