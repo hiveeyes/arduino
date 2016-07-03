@@ -5,13 +5,18 @@ TODO
 ####
 
 
+Infrastructure
+==============
+- [o] Fix git submodule dependency when cloning freshly, still does not track feature branches.
+
+
 Main
 ====
 - [x] Add Arduino gateway code, e.g. ``gateway-rfm69-beradio``
 - [x] Add ``node-wifi-mqtt`` from Clemens
 - [x] Add :ref:`libberadio` spike and associated documentation from :ref:`beradio`
-- [o] Add HX711 calibration sketch
 - [o] Add sketch from Clemens
+- [o] Add HX711 calibration sketch
 
 BERadio
 -------
