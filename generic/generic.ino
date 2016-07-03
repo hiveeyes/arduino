@@ -1,9 +1,10 @@
 // vim: tabstop=8 expandtab shiftwidth=4 softtabstop=4
 /*
 
-                  Hiveeyes node-rfm69-beradio
- 
-   Code collects sensor data encodes them with HE_BERadio protocol 
+                  Hiveeyes generic software breadboard
+                  for nodes, transceivers and gateways.
+
+   Code collects sensor data encodes them with HE_BERadio protocol
    and sends it through HE_RFM69radio module to a gateway.
     
    Software release 0.5.3
@@ -138,13 +139,13 @@
 
 
 #if CONT_HUM
-    FloatList humL;
+    FloatList *humL = new FloatList();
 #endif
 #if CONT_WGHT
-    FloatList wghtL;
+    FloatList *wghtL = new FloatList();
 #endif
 #if CONT_TEMP
-    FloatList tempL;
+    FloatList *tempL = new FloatList();
 #endif
 
 #if HE_RFM69 
@@ -219,26 +220,26 @@ int TRANSMITPERIOD = 300;               //transmit a packet to gateway so often 
 /*+++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
 //                  setup function#
 /*+++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
+std::string separator = std::string(42, '=');
 
 void setup(){
+    Serial.begin(SERIAL_BAUD);          // setup serial
     #if HE_DEBUG
-        Serial.println(" setup begins here:\n");
-        Serial.println("-----------------------\n");
+        Serial.println(separator.c_str());
+        Serial.println("SETUP");
+        Serial.println(separator.c_str());
     #endif
     pinMode(LED, OUTPUT);               // setup onboard LED
-    Serial.begin(SERIAL_BAUD);          // setup serial
     #if DEBUG_MEMORY
-        Serial.print("freeMemory()=");
+        Serial.print("free: ");
         Serial.println(freeMemory());
     #endif
 
     //dht.begin();
 
     #if HE_DEBUG
-        Serial.println();
-        Serial.println("Start Hiveeyes node...");
-        Serial.println();
-        Serial.println("setting up radio");
+        Serial.println("BOOT");
+        Serial.println("Radio setup");
     #endif
 
     // radio setup
@@ -256,7 +257,7 @@ void setup(){
         #if ENABLE_ATC 	
             radio.enableAutoPower(RFM69_TARGET_RSSI);
             #if DEBUG_RADIO
-                Serial.println("RFM69_ATC Enabled (Auto Transmission Control)");
+                Serial.println("RFM69 ATC enabled");
             #endif
         #endif
         radio.sleep();
@@ -285,11 +286,11 @@ void setup(){
         #endif
     #else 
         #if HE_RH69
-            manager69.init()
-            rh69.setFrequency(RH69_FREQUENCY)
+            manager69.init();
+            rh69.setFrequency(RH69_FREQUENCY);
         #elif HE_RH95
-            manager95.init()
-            rh95.setFrequency(RH95_FREQUENCY)
+            manager95.init();
+            rh95.setFrequency(RH95_FREQUENCY);
         #endif
     #endif
  
@@ -297,7 +298,7 @@ void setup(){
   
     #if HE_FLASH
         #if DEBUG_SPI_FLASH
-            Serial.println("\nsetting up SPI Flash");
+            Serial.println("SPI Flash setup");
         #endif
         if (flash.initialize()){
             #if DEBUG_SPI_FLASH
@@ -319,26 +320,26 @@ void setup(){
     #endif
     // Sensor setup
     #if DEBUG_SENSORS
-        Serial.println("\nsetting up Sensors");
+        Serial.println("Sensor setup");
     #endif
     #ifdef HE_TEMPERATUR
         sensors.begin();
     #endif
     #if DEBUG_SENSORS
-        Serial.println("Onewire set\n");
+        Serial.println("Onewire setup");
     #endif
     #if HE_HUMIDITY
         dht1.setup(DHT_PIN1);
         dht2.setup(DHT_PIN2);
     #endif
     #if DEBUG_SENSORS
-        Serial.println("DHT set\n");
+        Serial.println("DHT setup");
     #endif
     #if HE_SCALE
         scale.set_offset(HX711_OFFSET);          // the offset of the scale, is raw output without any weight, get this first and then do set.scale  
         scale.set_scale(HX711_KNOWN_WEIGHT);           // this is the difference between the raw data of a known weight and an emprty scale 
         #if DEBUG_SENSORS
-            Serial.println("scale set\n");
+            Serial.println("Scale setup");
         #endif
     #endif
     #if BERadio
@@ -353,16 +354,29 @@ void setup(){
 //                  loop function
 /*+++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
 void loop(){
+    #if HE_DEBUG
+        Serial.println(separator.c_str());
+        Serial.println("MAIN");
+        Serial.println(separator.c_str());
+    #endif
     #if DEBUG_MEMORY
-        Serial.print("freeMemory()=");
+        Serial.print("free: ");
         Serial.println(freeMemory());
     #endif
-    #if HE_DEBUG
-        Serial.println(" main loop begins here:\n");
-        Serial.println("-----------------------\n");
+
+    // get sensor data
+
+    #if CONT_TEMP
+        tempL->clear();
+    #endif
+    #if CONT_HUM
+        tempL->clear();
+        humL->clear();
+    #endif
+    #if CONT_WGHT
+        wghtL->clear();
     #endif
 
-    // get sensor data 
     #if HE_TEMPERATURE
         readTemperature();
     #endif
@@ -372,40 +386,39 @@ void loop(){
     #if HE_SCALE
         readScale();
     #endif
-    // serialize and transmitt data
+    // serialize and transmit data
     #if HE_BERadio
     #if DEBUG_MEMORY
-        Serial.print("freeMemory()=");
+        Serial.print("free: ");
         Serial.println(freeMemory());
     #endif
-        //BERadioMessage message(HE_HIVE_ID);
+
         #if DEBUG_BERadio
-             Serial.println("encoding floatlists\n");
+             Serial.println("cSb");
              delay(200);
         #endif
-        //message.add("t", tempL);
-        //message.add("h", humL);
-        message->add("w", wghtL);
+
+        message->add("t", *tempL);
+        message->add("h", *humL);
+        message->add("w", *wghtL);
+
     #if DEBUG_MEMORY
-        Serial.print("freeMemory()=");
+        Serial.print("free: ");
         Serial.println(freeMemory());
     #endif
         #if DEBUG_BERadio
-             Serial.println("Floatlists encoded\n");
+             Serial.println("cSe");
              delay(200);
         #endif
         message->encode_and_transmit();
     #endif
     #if RH69_IS_TRANSCEIVER
-        transceive();
-    #endif
-    #if HE_DEBUG
-        Serial.println(" main loop ends here:\n");
-        Serial.println("#####################\n");
+        // TODO: Enable again
+        //transceive();
     #endif
     #if HE_SLEEP
         delay(100); 
-        Sleep(SLEEP_MINUTES);
+        //Sleep(SLEEP_MINUTES);
     #endif
 
 }
@@ -418,16 +431,16 @@ void loop(){
 #if HE_TEMPERATURE
     void readTemperature() {
         #if DEBUG_SENSORS
-            Serial.println();
-            Serial.println("requesting OneWire devices");
+            Serial.println("rT");
         #endif
         sensors.requestTemperatures();
-        tempL.push_back(sensors.getTempCByIndex(0));
-        tempL.push_back(sensors.getTempCByIndex(1));
-        tempL.push_back(sensors.getTempCByIndex(2));
-        tempL.push_back(sensors.getTempCByIndex(3));
+        tempL->push_back(sensors.getTempCByIndex(0));
+        tempL->push_back(sensors.getTempCByIndex(1));
+        tempL->push_back(sensors.getTempCByIndex(2));
+        tempL->push_back(sensors.getTempCByIndex(3));
         #if DEBUG_SENSORS
-            for (double value: tempL){
+            Serial.println("dT");
+            for (double value: *tempL){
                 Serial.println(value);
             }
         #endif
@@ -436,54 +449,63 @@ void loop(){
 
 #if HE_HUMIDITY
     void readHumidity(){
+        #if DEBUG_SENSORS
+            Serial.println("rHT");
+        #endif
         dht1.getHumidity();          // the first reading of DHT is the last one.
         dht1.getTemperature();          // the first reading of DHT is the last one.
         float humbuf0;
         float tempbuf0;
         humbuf0 = dht1.getHumidity();
         tempbuf0 = dht1.getTemperature();
+
+        Serial.print("...");
         delay(2000);
+
         for(int i=0; i<=3; i++){
             if (!isnan(humbuf0) || !isnan(tempbuf0)){
                 break;
             }
+            Serial.print(".");
             delay(2000);
         }
+        Serial.println();
         if (!isnan(humbuf0) || !isnan(tempbuf0)){
-            humL.push_back(humbuf0);
-            tempL.push_back(tempbuf0);
+            humL->push_back(humbuf0);
+            tempL->push_back(tempbuf0);
         }
         else{
-            humL.push_back(BAD_VALUE);
-            tempL.push_back(BAD_VALUE);
+            humL->push_back(BAD_VALUE);
+            tempL->push_back(BAD_VALUE);
             #if DEBUG_SENSORS
-                for (double value: tempL){
-                    Serial.println(value);
-                }
-                for (double value: humL){
-                    Serial.println(value);
-                }
-                Serial.println("could not get humidity\n");
+                Serial.println("rHTna");
             #endif
-        } 
+        }
+        #if DEBUG_SENSORS
+            Serial.println("dH");
+            for (double value: *humL){
+                Serial.println(value);
+            }
+            Serial.println("dT");
+            for (double value: *tempL){
+                Serial.println(value);
+            }
+        #endif
     }
 #endif
 // get weight data //
 #if HE_SCALE
     void readScale(){
         #ifdef DEBUG_SENSORS
-            Serial.println();
-            Serial.println("requesting HX711 scale\n");
+            Serial.println("rS");
         #endif
-        //wghtL.clear();
-        delete wghtL;
         scale.power_up();
         wghtL->push_back(scale.read_average(3));              // get the raw data of the scale
         wghtL->push_back(scale.get_units(3));                 // get the scaled data
         scale.power_down();
-        #ifdef DEBUG_SENSORS
-            Serial.println("Readings:");
-            for (double value: wghtL){
+        #if DEBUG_SENSORS
+            Serial.println("dS");
+            for (double value: *wghtL){
                 Serial.println(value);
             }
         #endif
@@ -653,26 +675,34 @@ void Blink(byte PIN, int DELAY_MS){
 #endif
 
 #if HE_BERadio
-    void BERadioMessage::send(std::string &payload) {
+    void BERadioMessage::send(char* buffer, int length) {
         #if DEBUG_BERadio
-             Serial.println("enter message send\n");
-             Serial.println("payload:\n");
-             //printf((std::string*)payload); 
+            dprint(buffer);
+            //Serial.println("enter message send\n");
+            //Serial.println("payload:\n");
+            //printf((std::string*)payload);
         #endif
         //const uint8_t[] = payload.c_str();
         //buf69[0] = (uint8_t)atoi(payload);
         //manager69.sendtoWait(buf69, sizeof(buf69), RH69_TRANSCEIVER_ID);
         //manager69.sendtoWait(payload.c_str(), payload.length(), RH69_TRANSCEIVER_ID);
+
+        // C++ std::string
         //uint8_t *buf69 = new uint8_t[payload.length() + 1];
         //strcpy(buf69, payload.c_str());
+
+        // C buffer
+        //uint8_t *buf69 = new uint8_t[length + 1];
+        //strcpy(buf69, buffer);
+
         //char payload;
-          // Convert from char * to uint8_t
+        // Convert from char * to uint8_t
        
         //uint8_t payload_c = *(payload.c_str());
         #if DEBUG_BERadio
             //dprint(payload.c_str());
         #endif
-        //manager69.sendtoWait(&payload_c, payload.length(), RH69_TRANSCEIVER_ID);
+        //manager69.sendtoWait(buffer, length, RH69_TRANSCEIVER_ID);
         //delete [] &payload_c;
     }
 #endif
@@ -683,6 +713,7 @@ void BERadioMessage::dprint(const char *message) {
         _d(message);
     #else
         Serial.println(message);
+        delay(150);
     #endif
 }
 
@@ -691,5 +722,6 @@ void BERadioMessage::dprint(int value) {
         _d(value);
     #else
         Serial.println(value);
+        delay(150);
     #endif
 }

@@ -7,7 +7,7 @@
 #define BLINKPERIOD               500            // LED blinking period in ms
 #define HE_SLEEP                  false              // set to 1 for sleeping
 #define HE_SCALE                  true
-#define HE_HUMIDITY               false 
+#define HE_HUMIDITY               true
 #define HE_TEMPERATURE            true
 //#define HE_RFM69_OTA           
 #define HE_BERadio                true 
@@ -17,7 +17,7 @@
 #if HE_DEBUG                                  /**    fine grade debug settings     ***
                                                  ***              * *                 **/
 
-    #define DEBUG_RADIO           true              // set to 1 for radio debug
+    #define DEBUG_RADIO           false              // set to 1 for radio debug
     #define DEBUG_SPI_FLASH       false              // set to 1 for SPI-flash debug
     #define DEBUG_SENSORS         true              // set to 1 for sensor debug
     #define DEBUG_BERadio         true              // set to 1 for  HE_BERadio degub

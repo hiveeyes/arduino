@@ -43,13 +43,26 @@ void BERadioEncoder::PushChar(char ch) {
     length += 1;
 }
 
+/*
+void BERadioShadowEncoder::PushChar(char ch) {
+
+    // Discard overflow data. This is bad.
+    if (length >= 10) {
+        //_d("Payload limit reached, aborting serialization");
+        return;
+    }
+
+    buffer[length] = ch;
+    length += 1;
+}
+*/
 
 void BERadioMessage::set_mtu_size(int size) {
     // Set maximum transfer unit (MTU) size
     mtu_size = size;
 }
 
-void BERadioMessage::add(std::string family, std::vector<double> &values) {
+void BERadioMessage::add(char *family, std::vector<double> &values) {
     // Store list of values into map, keyed by single char family identifier (t, h, w, r)
     _store[family] = values;
 }
@@ -61,7 +74,7 @@ void BERadioMessage::encode_and_transmit() {
     BERadioEncoder *encoder = new BERadioEncoder();
 
     // Shadow encoder for serializing single elements
-    BERadioEncoder *shadow = new BERadioShadowEncoder();
+    BERadioEncoder *shadow = new BERadioEncoder();
 
     // Initialize message, add header
     start_message(*encoder);
@@ -71,13 +84,12 @@ void BERadioMessage::encode_and_transmit() {
 
     // Iterate data store mapping single-char family identifiers to value lists
     for (auto iterator = _store.begin(); iterator != _store.end(); iterator++) {
-    dprint("iterator || \n");
 
         // iterator->first  = key
         // iterator->second = value
 
         // Decode family identifier and list of values from map element (key/value pair)
-        std::string &family         = iterator->first;
+        char *family                = iterator->first;
         std::vector<double> &values = iterator->second;
 
         // Number of elements in value list
@@ -88,16 +100,19 @@ void BERadioMessage::encode_and_transmit() {
             continue;
         }
 
+
         // Encode the family identifier of this value list
-        encoder->push(family.c_str());
-        dprint("family || \n");
+        encoder->push(family);
+
         // Encode list of values, apply forward-scaling by * 100
 
-        if (length == 1) {
+        // Fast-path: Compress lists with single elements
+        // TODO: Also care about fragmentation here, currently disabled
+        if (false && length == 1) {
             // List compression: Lists with just one element don't
             // need to be wrapped into Bencode list containers.
-            // TODO: Also care about fragmentation here
-            encoder->push(values[0] * 100);
+            long real_value = (long)(values[0] * 100);
+            encoder->push(real_value);
 
         } else {
 
@@ -105,54 +120,46 @@ void BERadioMessage::encode_and_transmit() {
             encoder->startList();
 
             // Iterate list of measurement values
-            for (auto value_iterator = values.begin(); value_iterator != values.end(); value_iterator++) {
+            for (int index = 0; index < values.size(); index++) {
 
-                // Get list index and value from iterator
-                int index = value_iterator - values.begin();
-                double value = *value_iterator;
-                dprint("took values");
-
+                // Decode element
+                double value = values[index];
+                long real_value = (long)(value * 100);
 
                 // Simulate Bencode serialization to compute length of encoded element
                 shadow->reset();
-                shadow->push(value * 100);
+                shadow->push(real_value);
 
                 // Compute whether message should be fragmented right here
                 int close_padding = 2;       // Two levels of nestedness: dict / list
-                do_fragment = encoder->length + shadow->length + close_padding >= mtu_size;
-                if (do_fragment) {
-                    dprint("========= FRAGMENTING");
-                    dprint(encoder->length);
-                    dprint(shadow->length);
-                }
+                int current_size = encoder->length + shadow->length + close_padding;
+                do_fragment = (bool)(current_size >= mtu_size);
 
                 if (do_fragment) {
+
+                    dprint("fL");
 
                     // Close current list
-                    dprint("do_fragment \n");
                     encoder->endList();
 
                     // Send out data
-                    dprint("about to enter fragment_and_send\n");
-                    //delay(200);
                     fragment_and_send(*encoder);
 
                     // Start new message
-                    dprint("about to enter start_message\n");
                     start_message(*encoder);
 
                     // Open new list context where we currently left off
-                    dprint("about to enter continue_list\n");
+                    dprint("fLc");
                     continue_list(*encoder, family, index);
 
                 }
 
                 // Just push if it's safe
-                encoder->push(value * 100);
+                encoder->push(real_value);
 
                 // Refresh "do_fragment" state
                 // TODO: This must be run here, but the source code is redundant. => Refactor to function.
-                do_fragment = encoder->length + shadow->length + close_padding >= mtu_size;
+                do_fragment = (bool)((encoder->length + shadow->length + close_padding) >= mtu_size);
 
             }
             encoder->endList();
@@ -197,26 +204,32 @@ void BERadioMessage::start_message(BERadioEncoder &encoder) {
     // Add profile identifier (string)
     encoder.push("_");
     encoder.push(profile.c_str());
+
 }
 
 void BERadioMessage::fragment_and_send(BERadioEncoder &encoder) {
 
     // Close envelope
-    dprint("inside fragment_and_send\n");
-    //delay(200);
     encoder.endDict();
 
     // Convert character buffer of known length to standard string
-    std::string *payload = new std::string(encoder.buffer, encoder.length);
+    // TODO: Check if we can use std::string alternatively
+    //std::string payload(encoder.buffer, encoder.length);
+    //std::string payload(encoder.buffer, encoder.length);
+    //std::string *payload = new std::string(encoder.buffer, encoder.length);
+
+    //dprint(payload.c_str());
+    //delete payload;
 
     // Debugging
     //_l("payload: "); _d(payload);
 
     // Transmit message before starting with new one
-    send(*payload);
+    encoder.buffer[encoder.length] = '\0';
+    send(encoder.buffer, encoder.length);
     //dprint(payload->c_str());
 
-    delete payload;
+    //delete payload;
 
 }
 

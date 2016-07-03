@@ -44,7 +44,7 @@ Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA
 #define IntegerList std::vector<int>
 
 // Maximum of transmission payloads, used for static buffer
-#define MTU_SIZE_MAX 61 
+#define MTU_SIZE_MAX 61
 
 // Generic "dump vector" utility function
 //template<typename T>
@@ -71,7 +71,13 @@ class BERadioShadowEncoder: public BERadioEncoder {
     */
 
     public:
-        char buffer[15];
+        // Note: Encoding a maximum representable float like -1234567.1234
+        // takes 9 bytes plus prefix (i) and suffix (e) = 11 bytes.
+        // The machinery needs one more character for placing a nullbyte
+        // at the end of the buffer, so the buffer size needs to be 11.
+        char buffer[11];
+        int length = 0;
+        void reset();
 
 };
 
@@ -100,13 +106,14 @@ class BERadioMessage {
         void set_mtu_size(int size);
 
         // Add list of measurement values
-        void add(std::string family, FloatList &values);
+        void add(char *family, FloatList &values);
 
         // Call to trigger the encoding and transmission process
         void encode_and_transmit();
 
         // Get called with serialized payload to put on the wire
         void send(std::string &payload);
+        void send(char* buffer, int length);
 
         void dprint(const char *message);
         void dprint(int value);
@@ -115,7 +122,7 @@ class BERadioMessage {
         bool DEBUG = false;
 
         // Internal data store
-        std::map<std::string, std::vector<double>> _store;
+        std::map<char *, std::vector<double>> _store;
 
         // Start message envelope
         void start_message(BERadioEncoder &encoder);
