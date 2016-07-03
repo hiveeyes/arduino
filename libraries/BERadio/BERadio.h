@@ -25,47 +25,17 @@ Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA
 #ifndef BERadio_h
 #define BERadio_h
 
-#include <execvf.h>
-#include <varargs.h>
 #include <string>
 #include <vector>
 #include <map>
 #include <iterator>
 
-#if defined(__unix__)
-    #include <sstream>
-    namespace std {
-        std::string to_string(size_t n) {
-            std::ostringstream s;
-            s << n;
-            return s.str();
-        }
-    }
-#endif
-#if defined(__unix__)
-    extern char *ultoa(unsigned long int __val, char *__s, int __radix) {
-        snprintf(__s, __radix, "%d", __val);
-        return __s;
-    }
-#endif
-
 #include <EmBencode.h>
-
-// Macro for supporting variadic argument processing.
-// Drives the "varargs" template to convert a variable list
-// of function arguments into a vector containing all items.
-#define collect(...) varargs(VA_LENGTH(__VA_ARGS__), __VA_ARGS__)
-
-// Shortcuts for standard vectors containing items of various types
-#define FloatList std::vector<double>
-#define IntegerList std::vector<int>
+#include <Terrine.h>
 
 // Maximum of transmission payloads, used for static buffer
 #define MTU_SIZE_MAX 61
 
-// Generic "dump vector" utility function
-//template<typename T>
-//void dump_vector(std::string prefix, std::vector<T> vec);
 
 class BERadioEncoder: public EmBencode {
     /*

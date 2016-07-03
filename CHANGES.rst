@@ -22,6 +22,9 @@ Programs
 - BERadio: For real
 - Last mile from BERadio message to radio transmission,
   use RadioHead RH_TCP driver on Unix
+- BERadio: Move non-BERadio code to Terrine
+- Add Terrine, an application boilerplate for convenient MCU development
+
 
 Libraries
 ---------
