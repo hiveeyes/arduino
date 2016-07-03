@@ -24,8 +24,11 @@ Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA
 */
 #include <BERadio.h>
 #include <simulavr.h>
+#if HE_ARDUINO
 #include <Arduino.h>
-
+#else
+#include <RHutil/simulator.h>
+#endif
 
 void BERadioEncoder::reset() {
     length = 0;
@@ -67,7 +70,7 @@ void BERadioMessage::add(char *family, std::vector<double> &values) {
     _store[family] = values;
 }
 
-void BERadioMessage::encode_and_transmit() {
+void BERadioMessage::transmit() {
 
     // Encoder machinery wrapping EmBencode
     // Main message encoder
@@ -120,7 +123,7 @@ void BERadioMessage::encode_and_transmit() {
             encoder->startList();
 
             // Iterate list of measurement values
-            for (int index = 0; index < values.size(); index++) {
+            for (unsigned long index = 0; index < values.size(); index++) {
 
                 // Decode element
                 double value = values[index];

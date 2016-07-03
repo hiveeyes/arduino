@@ -9,7 +9,8 @@
 #define HE_SCALE                  true
 #define HE_HUMIDITY               true
 #define HE_TEMPERATURE            true
-//#define HE_RFM69_OTA           
+#define HE_DEMODATA               false
+#define HE_RFM69_OTA              false
 #define HE_BERadio                true 
 #define HE_RADIO                  true
 //#define HE_CONTAINERS             false
@@ -26,7 +27,7 @@
 #endif                                           /**              * *                 **/
 
 
-#ifdef  HE_BERadio
+#if HE_BERadio
     #define  BERadio_profile           "h1"           //  HE_BERadio profile
     #define  HE_HIVE_ID                2
     #define  BAD_VALUE             273.15
@@ -35,7 +36,7 @@
     #endif
 #endif
 
-#ifdef HE_SLEEP
+#if HE_SLEEP
     #define SLEEP_MINUTES             15             // sleeptime in about minutes
 #endif
 
@@ -43,10 +44,26 @@
                                                  ***        hardware switches         ***
                                                  ***             * * *                **/
 
-#define HE_RFM69                  false            // set to 1 for lowpowerlab's HE_RFM69 lib 
-#define HE_RH69                   true              // set to 1 for RadioHeads rf69 lib
-#define HE_RH95                   false              // set to 1 for RadioHeads rf95 lib
-#define HE_FLASH                  false              // set to 1 for using SPI-flash
+#define HE_RFM69                  false              // LowPowerLab RFM69 library
+#define HE_RH69                   false              // RadioHead RH_RF69 driver
+#define HE_RH95                   false              // RadioHead RH_RF95 driver
+#define HE_RHTCP                  false               // RadioHead RH_TCP driver
+#define HE_FLASH                  false              // Enable SPI-flash
+
+#ifndef HE_ARDUINO
+    #define HE_ARDUINO              true
+#endif
+#ifdef __unix__
+    #define HE_ARDUINO              false
+    #define DEBUG_MEMORY            false
+    #define HE_RH69                 false
+    #define HE_RHTCP                true
+    #define HE_SCALE                false
+    #define HE_HUMIDITY             false
+    #define HE_TEMPERATURE          false
+    #define HE_DEMODATA             true
+#endif
+
 
                                                  /**            * * * *               *** 
                                                  ***    sensor pinning & settings     ***
@@ -88,7 +105,7 @@
                                                  ***    specific hardware defines     ***
                                                  ***             * * *                **/
 #ifdef HE_RADIO
-    #ifdef HE_RH69                                     /**   RadioHead's HE_RH69radio lib     **/
+    #if HE_RH69                                     /**   RadioHead's HE_RH69radio lib     **/
         #define RH69_NODE_ID          99             //    
         #define RH69_GATEWAY_ID       1              // radio topology
         #define RH69_TRANSCEIVER_ID   3              //
@@ -105,7 +122,7 @@
 
     #endif                                           /**              * *                 **/
     
-    #ifdef HE_RH95                                     /**     RadioHead's HE_RH95radio lib   **/
+    #if HE_RH95                                     /**     RadioHead's HE_RH95radio lib   **/
 
         #define RH95_IS_NODE                false
         #define RH95_IS_GATEWAY             false 
@@ -119,10 +136,15 @@
     
         #define RH95_FREQUENCY        868.0         // modem settings
         
-    
     #endif                                           /**              * *                 **/
-    
-    #ifdef HE_RFM69                                     /**     HE_RFM69 lib from lowpowerlab   **/
+
+    // RadioHead HE_TCP driver
+    #if HE_RHTCP
+        #define RHTCP_NODE_ID         99
+        #define RHTCP_GATEWAY_ID      1
+    #endif
+
+    #if HE_RFM69                                     /**     HE_RFM69 lib from lowpowerlab   **/
         //#include <HE_RFM69.h>                           /**              * *                 **/
     
         #define RFM69_IS_NODE                false
@@ -152,13 +174,13 @@
     #endif                                           /**              * *                 **/
 #endif
 
-#ifdef HE_FLASH                                 /**           SPI-Flash              **/
+#if HE_FLASH                                 /**           SPI-Flash              **/
     #define FLASH_MANUFACTURER_ID 0x0102         // MANUFACTURER_ID 
                                                  // 0x1F44 for adesto(ex atmel) 4mbit flash
                                                  // 0xEF30 for windbond 4mbit flash
                                                  // 0xEF40 for windbond 16/64mbit flash
                                                  // 0x0102 for Spansion S25FL032P 32-Mbit 
-    #ifdef HE_RFM69_OTA
+    #if HE_RFM69_OTA
         #include <WirelessHEX69.h>
     #endif
 

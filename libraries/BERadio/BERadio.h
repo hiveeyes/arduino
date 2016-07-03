@@ -32,6 +32,23 @@ Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA
 #include <map>
 #include <iterator>
 
+#if defined(__unix__)
+    #include <sstream>
+    namespace std {
+        std::string to_string(size_t n) {
+            std::ostringstream s;
+            s << n;
+            return s.str();
+        }
+    }
+#endif
+#if defined(__unix__)
+    extern char *ultoa(unsigned long int __val, char *__s, int __radix) {
+        snprintf(__s, __radix, "%d", __val);
+        return __s;
+    }
+#endif
+
 #include <EmBencode.h>
 
 // Macro for supporting variadic argument processing.
@@ -109,20 +126,21 @@ class BERadioMessage {
         void add(char *family, FloatList &values);
 
         // Call to trigger the encoding and transmission process
-        void encode_and_transmit();
+        void transmit();
 
         // Get called with serialized payload to put on the wire
         void send(std::string &payload);
         void send(char* buffer, int length);
 
-        void dprint(const char *message);
+        //void dprint(const char *message);
+        void dprint(const char *message, bool newline=true);
         void dprint(int value);
 
     private:
         bool DEBUG = false;
 
         // Internal data store
-        std::map<char *, std::vector<double>> _store;
+        std::map< char *, std::vector<double> > _store;
 
         // Start message envelope
         void start_message(BERadioEncoder &encoder);

@@ -21,6 +21,8 @@ BERadio
 - [o] Integrate BERadio with Terkin transmitter infrastructure
 - [o] Send data through RadioHead's RH_TCP driver to :ref:`Kotori`
 - [o] Check char* to uint8_t conversion with RadioHead's ``manager69.sendtoWait(buf69, sizeof(buf69), RH69_TRANSCEIVER_ID);``
+- [o] Debugging Infrastructure (dprint, memfree)
+- [o] Pluck into RadioHead, finally (char* to uint8_t* geschwummse)
 
 
 Documentation

@@ -24,8 +24,7 @@ To start over you simply install Ino_ on your system and recursively clone this 
 
 Clone the repository
 ====================
-
-If you use Ino_, you can start right over after cloning the repository recursively::
+::
 
     $ git clone --recursive https://github.com/hiveeyes/arduino
 
@@ -38,15 +37,6 @@ In this case you clone the repository, in the normal manner::
 Or simply copy the desired sketch into your Arduino IDE.
 
 
-Install Ino
-===========
-::
-
-    $ virtualenv-2.7 --no-site-packages .venv27
-    $ source .venv27/bin/activate
-    $ pip install ino
-
-or visit http://inotool.org/#installation
 
 
 *******
@@ -84,42 +74,32 @@ After a successful build, find the firmware at ``node-rfm69-beradio/.build/uno/f
 
 Upload
 ------
-
-You can also use ino tool directly to make it compile and upload your code::
-
-    $ ino list-models
-    $ ino build -m BOARD_MODEL
-    $ ino upload -m BOARD_MODEL -p SERIAL_PORT
-
-To get the serial output from the arduino, do::
-
-    $ ino serial -p SERIAL_PORT -b BAUD_RATE
-
-The code directory may contain a `ino.ini` file, in which the settings may be set::
-
-     [build]
-     board-model = pro328
-
-     [upload]
-     board-model = pro328
-     serial-port = /dev/ttyUSB1
-
-     [serial]
-     serial-port = /dev/ttyUSB1
-     baud-rate = 115200
-
 To build, upload and print the serial output at once, just run::
 
-    $ make
+    cd generic
+    make upload && make monitor
 
-Further information about ino are found at http://inotool.org/
+
+Run on Unix
+-----------
+::
+
+    cd generic
+
+    # Build arch=x86_64, not Arduino
+    ./sim/build generic.ino
+
+    # Receive data on localhost:4000
+    socat tcp-listen:4000,reuseaddr -
+
+    # Run on local workstation, will send data to localhost:4000
+    ./sim/generic
 
 
 
 Libraries
 =========
-
-The libraries for this arduino repository are organized on a central place; `libraries/` and are symlinked into the flavours lib folders 
+The libraries for this arduino repository are organized in a central place ``libraries/``.
 To clone the repository with the all the libraries do::
 
     $ git clone --recursive https://github.com/hiveeyes/arduino

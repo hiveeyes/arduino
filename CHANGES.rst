@@ -19,6 +19,9 @@ Programs
   a map for holding sensor family values
 - BERadio: Automatic message fragmentation based on MTU (maximum
   transfer unit) size for BERadioMessage
+- BERadio: For real
+- Last mile from BERadio message to radio transmission,
+  use RadioHead RH_TCP driver on Unix
 
 Libraries
 ---------
@@ -36,6 +39,7 @@ Libraries
   fixing “redefinition of 'class EmBencode’” errors
 - Add guard to BERadio header file fixing “redefinition
   of 'class BERadioMessage’” errors
+- Switch to EmBencode branch "fix-typeinfo-reference"
 
 Documentation
 -------------

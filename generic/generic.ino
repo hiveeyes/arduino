@@ -87,19 +87,22 @@
 
 // device initiation //
 
-#if ENABLE_ATC
+#if HE_RFM69
     #include <RFM69.h>                      // https://github.com/LowPowerLab/RFM69
-    #include <RFM69_ATC.h>                  //https://github.com/LowPowerLab/RFM69
-    RFM69_ATC radio;
-#else
-    #include <RFM69.h>                      // https://github.com/LowPowerLab/RFM69
-    RFM69 radio;
+    #if ENABLE_ATC
+        #include <RFM69_ATC.h>              // https://github.com/LowPowerLab/RFM69
+        RFM69_ATC radio;
+    #else
+        RFM69 radio;
+    #endif
 #endif
 
 #if HE_CONTAINERS
-    #include <new.cpp>
-    #include <StandardCplusplus.h>
-    #include <func_exception.cpp>
+    #if HE_ARDUINO
+        #include <new.cpp>
+        #include <StandardCplusplus.h>
+        #include <func_exception.cpp>
+    #endif
     #include <BERadio.h>
 #endif
 
@@ -132,9 +135,13 @@
     #endif
 #endif
 #if HE_BERadio
-    #include <EmBencode.h>                  // https://github.com/jcw/embencode
     #include <BERadio.h>
-    BERadioMessage *message= new BERadioMessage(HE_HIVE_ID, "h1", 61);
+    #include <EmBencode.h>                  // https://github.com/jcw/embencode
+    // Fix against "Undefined symbols for architecture x86_64: BERadioMessage::encode_and_transmit()"
+    #ifdef __unix__
+        #include <BERadio.cpp>
+    #endif
+    BERadioMessage *message = new BERadioMessage(HE_HIVE_ID, "h1", 61);
 #endif
 
 
@@ -165,7 +172,18 @@
     void Sleep(int minutes);
 #endif
 
+
+#if HE_ARDUINO
     void Blink(byte, int);
+#else
+    #include <tools/simMain.cpp>
+    #define OUTPUT 5
+#endif
+
+// variables //
+#if DEBUG_MEMORY
+    void memfree();
+#endif
 
 
 
@@ -207,7 +225,13 @@
     #endif
 #endif
 
-// variables //
+#if HE_RHTCP
+    #include <RH_TCP.h>
+    #include <RHReliableDatagram.h>
+    RH_TCP rh_tcp("localhost:4000");
+    RHReliableDatagram managerTCP(rh_tcp, RHTCP_NODE_ID);
+#endif
+
 
 // common
 char input = 0;
@@ -229,10 +253,11 @@ void setup(){
         Serial.println("SETUP");
         Serial.println(separator.c_str());
     #endif
-    pinMode(LED, OUTPUT);               // setup onboard LED
+    #if HE_ARDUINO
+        pinMode(LED, OUTPUT);               // setup onboard LED
+    #endif
     #if DEBUG_MEMORY
-        Serial.print("free: ");
-        Serial.println(freeMemory());
+        memfree();
     #endif
 
     //dht.begin();
@@ -283,6 +308,10 @@ void setup(){
             if (!rh95.setFrequency(RH95_FREQUENCY))
                 Serial.println("set Frequency failed");
             else Serial.println("rh95 frequency set");
+        #elif HE_RHTCP
+            if (!managerTCP.init())
+                Serial.println("init failed");
+            else Serial.println("init rhTCP done");
         #endif
     #else 
         #if HE_RH69
@@ -291,6 +320,8 @@ void setup(){
         #elif HE_RH95
             manager95.init();
             rh95.setFrequency(RH95_FREQUENCY);
+        #elif HE_RHTCP
+            managerTCP.init();
         #endif
     #endif
  
@@ -360,8 +391,7 @@ void loop(){
         Serial.println(separator.c_str());
     #endif
     #if DEBUG_MEMORY
-        Serial.print("free: ");
-        Serial.println(freeMemory());
+        memfree();
     #endif
 
     // get sensor data
@@ -388,30 +418,43 @@ void loop(){
     #endif
     // serialize and transmit data
     #if HE_BERadio
-    #if DEBUG_MEMORY
-        Serial.print("free: ");
-        Serial.println(freeMemory());
-    #endif
+
+        #if DEBUG_MEMORY
+            memfree();
+        #endif
 
         #if DEBUG_BERadio
              Serial.println("cSb");
              delay(200);
         #endif
 
+        #if HE_DEMODATA
+            tempL->push_back(42.42);
+            tempL->push_back(84.84);
+            tempL->push_back(21.21);
+            humL->push_back(55);
+            humL->push_back(77.1);
+            wghtL->push_back(63);
+        #endif
+
         message->add("t", *tempL);
         message->add("h", *humL);
         message->add("w", *wghtL);
 
-    #if DEBUG_MEMORY
-        Serial.print("free: ");
-        Serial.println(freeMemory());
-    #endif
+        #if DEBUG_MEMORY
+            memfree();
+        #endif
+
         #if DEBUG_BERadio
              Serial.println("cSe");
              delay(200);
         #endif
-        message->encode_and_transmit();
+
+        // Encode, fragment and transmit message
+        message->transmit();
+
     #endif
+
     #if RH69_IS_TRANSCEIVER
         // TODO: Enable again
         //transceive();
@@ -531,6 +574,7 @@ void loop(){
 
 void receivePackages(){
    //check for any received packets
+   #if HE_RFM69
    if (radio.receiveDone()){
        #ifdef DEBUG_RADIO
        Serial.print('[');Serial.print(radio.SENDERID, DEC);Serial.print("] ");
@@ -544,22 +588,26 @@ void receivePackages(){
            Serial.print(" - ACK sent");
            #endif
            }
+       #if HE_ARDUINO
        Blink(LED,3);
+       #endif
        #ifdef DEBUG_RADIO
        Serial.println();
        #endif
        }
    radio.sleep();
+   #endif
 }
 
-//   LED Blink
-
-void Blink(byte PIN, int DELAY_MS){
-   pinMode(PIN, OUTPUT);
-   digitalWrite(PIN,HIGH);
-   delay(DELAY_MS);
-   digitalWrite(PIN,LOW);
-}
+#if HE_ARDUINO
+    //   LED Blink
+    void Blink(byte PIN, int DELAY_MS){
+       pinMode(PIN, OUTPUT);
+       digitalWrite(PIN,HIGH);
+       delay(DELAY_MS);
+       digitalWrite(PIN,LOW);
+    }
+#endif
 
 
 //   Sleeping 
@@ -676,15 +724,13 @@ void Blink(byte PIN, int DELAY_MS){
 
 #if HE_BERadio
     void BERadioMessage::send(char* buffer, int length) {
+
         #if DEBUG_BERadio
+            dprint("msg: ", false);
             dprint(buffer);
-            //Serial.println("enter message send\n");
-            //Serial.println("payload:\n");
-            //printf((std::string*)payload);
+            //dprint(payload.c_str());
         #endif
-        //const uint8_t[] = payload.c_str();
-        //buf69[0] = (uint8_t)atoi(payload);
-        //manager69.sendtoWait(buf69, sizeof(buf69), RH69_TRANSCEIVER_ID);
+
         //manager69.sendtoWait(payload.c_str(), payload.length(), RH69_TRANSCEIVER_ID);
 
         // C++ std::string
@@ -692,27 +738,36 @@ void Blink(byte PIN, int DELAY_MS){
         //strcpy(buf69, payload.c_str());
 
         // C buffer
-        //uint8_t *buf69 = new uint8_t[length + 1];
-        //strcpy(buf69, buffer);
+        // https://stackoverflow.com/questions/25360893/convert-char-to-uint8-t/25360996#25360996
+        uint8_t *rh_buffer = new uint8_t[length + 1];
+        memcpy(rh_buffer, (const char*)buffer, length);
 
-        //char payload;
-        // Convert from char * to uint8_t
-       
-        //uint8_t payload_c = *(payload.c_str());
-        #if DEBUG_BERadio
-            //dprint(payload.c_str());
+        // Radio transmission
+        #if HE_RH69
+            manager69.sendtoWait(rh_buffer, length, RH69_TRANSCEIVER_ID);
+        #elif HE_RHTCP
+            managerTCP.sendtoWait(rh_buffer, length, RHTCP_GATEWAY_ID);
         #endif
-        //manager69.sendtoWait(buffer, length, RH69_TRANSCEIVER_ID);
-        //delete [] &payload_c;
+
+        // Clean up
+        delete rh_buffer;
     }
 #endif
 
 
-void BERadioMessage::dprint(const char *message) {
+// --------------
+// Debug printers
+// --------------
+
+void BERadioMessage::dprint(const char *message, bool newline) {
     #ifdef SIMULAVR
         _d(message);
     #else
-        Serial.println(message);
+        if (newline) {
+            Serial.println(message);
+        } else {
+            Serial.print(message);
+        }
         delay(150);
     #endif
 }
@@ -721,7 +776,23 @@ void BERadioMessage::dprint(int value) {
     #ifdef SIMULAVR
         _d(value);
     #else
-        Serial.println(value);
-        delay(150);
+        #if HE_ARDUINO
+            Serial.println(value);
+            delay(150);
+        #else
+            Serial.println(std::to_string(value).c_str());
+        #endif
     #endif
 }
+
+#if DEBUG_MEMORY
+    void memfree() {
+        Serial.print("free: ");
+        #if HE_ARDUINO
+            Serial.println(freeMemory());
+            delay(150);
+        #else
+            Serial.println(std::to_string(freeMemory()).c_str());
+        #endif
+    }
+#endif
