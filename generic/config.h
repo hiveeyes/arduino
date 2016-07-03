@@ -18,7 +18,7 @@
 #if HE_DEBUG                                  /**    fine grade debug settings     ***
                                                  ***              * *                 **/
 
-    #define DEBUG_RADIO           false              // set to 1 for radio debug
+    #define DEBUG_RADIO           true              // set to 1 for radio debug
     #define DEBUG_SPI_FLASH       false              // set to 1 for SPI-flash debug
     #define DEBUG_SENSORS         true              // set to 1 for sensor debug
     #define DEBUG_BERadio         true              // set to 1 for  HE_BERadio degub
@@ -57,6 +57,7 @@
     #define HE_ARDUINO              false
     #define DEBUG_MEMORY            false
     #define HE_RH69                 false
+    #define HE_RH95                 false
     #define HE_RHTCP                true
     #define HE_SCALE                false
     #define HE_HUMIDITY             false

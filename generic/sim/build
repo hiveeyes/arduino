@@ -13,7 +13,7 @@ OUTPUT=$(basename $INPUT ".ino")
 PROJECT_DIR=".."
 RADIOHEAD="${PROJECT_DIR}/libraries/RadioHead/RadioHead"
 BERADIO="${PROJECT_DIR}/libraries/BERadio"
-INCLUDE="-I${PROJECT_DIR}/libraries/BERadio -I$RADIOHEAD -I${PROJECT_DIR}/libraries/RFM69 -I${PROJECT_DIR}/libraries/DHT -I${PROJECT_DIR}/libraries/DallasTemperature -I${PROJECT_DIR}/libraries/EmBencode -I${PROJECT_DIR}/libraries/HX711 -I${PROJECT_DIR}/libraries/LowPower -I${PROJECT_DIR}/libraries/MemoryFree -I${PROJECT_DIR}/libraries/OneWire"
+INCLUDE="-I${PROJECT_DIR}/libraries/Terrine -I${PROJECT_DIR}/libraries/BERadio -I$RADIOHEAD -I${PROJECT_DIR}/libraries/RFM69 -I${PROJECT_DIR}/libraries/DHT -I${PROJECT_DIR}/libraries/DallasTemperature -I${PROJECT_DIR}/libraries/EmBencode -I${PROJECT_DIR}/libraries/HX711 -I${PROJECT_DIR}/libraries/LowPower -I${PROJECT_DIR}/libraries/MemoryFree -I${PROJECT_DIR}/libraries/OneWire"
 
 #CPP=g++
 #CPP=clang++
@@ -23,10 +23,10 @@ INCLUDE="-I${PROJECT_DIR}/libraries/BERadio -I$RADIOHEAD -I${PROJECT_DIR}/librar
 CPP=/opt/local/bin/clang++-mp-3.4
 
 # ./sim/compat.h
-CPP_FLAGS="-Wall -ffunction-sections -fdata-sections -Os -pedantic -Wno-builtin-macro-redefined"
-CPP_FLAGS_MORE="-Wextra -fno-exceptions -lstdc++ -fpermissive -fdiagnostics-color -std=gnu++11 -lstdc++"
+CPP_FLAGS="-x c++ -lstdc++ -std=gnu++11 -Os -fno-exceptions -ffunction-sections -fdata-sections -pedantic -fpermissive"
+CPP_FLAGS_MORE="-Wall -Wextra -Wno-builtin-macro-redefined -fdiagnostics-color"
 
-$CPP -g -I. -I$RADIOHEAD/RHutil $INCLUDE -x c++ $CPP_FLAGS $CPP_FLAGS_MORE -DHE_ARDUINO=false -D__unix__ \
+$CPP -g -I. -I$RADIOHEAD/RHutil $INCLUDE $CPP_FLAGS $CPP_FLAGS_MORE -DHE_ARDUINO=false -D__unix__ \
     $INPUT \
     $RADIOHEAD/RHGenericDriver.cpp $RADIOHEAD/RHMesh.cpp $RADIOHEAD/RHRouter.cpp $RADIOHEAD/RHReliableDatagram.cpp $RADIOHEAD/RHDatagram.cpp $RADIOHEAD/RH_TCP.cpp $RADIOHEAD/RH_Serial.cpp $RADIOHEAD/RHCRC.cpp $RADIOHEAD/RHutil/HardwareSerial.cpp \
     -o ./sim/$OUTPUT
