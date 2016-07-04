@@ -103,6 +103,9 @@ finally start a serial port monitor, do::
 
     cd generic
 
+    # Prepare appropriate Makefile
+    ln -s Makefile-OSX.mk Makefile
+
     # Compile and upload to chip
     make upload
 
