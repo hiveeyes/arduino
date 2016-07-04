@@ -20,11 +20,19 @@
 .. _Hiveeyes: https://swarm.hiveeyes.org/
 .. _Hiveeyes platform: https://swarm.hiveeyes.org/
 .. _Hiveeyes project: https://hiveeyes.org/
+.. _Kotori: https://getkotori.org/docs/
+
+.. Hiveeyes Arduino
 .. _Hiveeyes Arduino repository: https://github.com/hiveeyes/arduino/
 .. _node-gprs-any.ino: https://github.com/hiveeyes/arduino/blob/master/node-gprs-any/node-gprs-any.ino
 .. _node-rfm69-beradio.ino: https://github.com/hiveeyes/arduino/blob/master/node-rfm69-beradio/src/node-rfm69-beradio.ino
 .. _gateway-rfm69-beradio.ino: https://github.com/hiveeyes/arduino/blob/master/gateway-rfm69-beradio/src/gateway-rfm69-beradio.ino
-.. _Kotori: https://getkotori.org/docs/
+.. _generic.ino: https://github.com/hiveeyes/arduino/blob/develop/generic/generic.ino
+.. _Terrine: https://github.com/hiveeyes/arduino/tree/develop/libraries/Terrine
+.. _Terkin: https://github.com/hiveeyes/arduino/tree/develop/libraries/Terkin
+.. _Hiveeyes-Lib: https://github.com/hiveeyes/arduino/tree/develop/libraries/Hiveeyes
+.. _OpenHive-Lib: https://github.com/hiveeyes/arduino/tree/develop/libraries/OpenHive
+.. _BERadio-Lib: https://github.com/hiveeyes/arduino/tree/develop/libraries/BERadio
 
 .. computourist
 .. _computourist: https://github.com/computourist
@@ -62,3 +70,8 @@
 .. _EmBencode documentation: http://jeelabs.net/pub/docs/embencode/
 .. _ArduinoJson: https://github.com/bblanchon/ArduinoJson
 .. _GPRSbee library: https://github.com/SodaqMoja/GPRSbee
+.. _RadioHead: http://www.airspayce.com/mikem/arduino/RadioHead/
+.. _RH_RF69: http://www.airspayce.com/mikem/arduino/RadioHead/classRH__RF69.html
+.. _RH_RF95: http://www.airspayce.com/mikem/arduino/RadioHead/classRH__RF95.html
+.. _RH_TCP: http://www.airspayce.com/mikem/arduino/RadioHead/classRH__TCP.html
+.. _StandardCplusplus: https://github.com/maniacbug/StandardCplusplus

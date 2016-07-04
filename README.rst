@@ -1,9 +1,16 @@
 .. include:: resources.rst
 
+.. _README:
+
 ######
 README
 ######
 
+.. contents::
+   :local:
+   :depth: 1
+
+----
 
 *****
 Intro
@@ -34,6 +41,21 @@ Get source code with all dependency libraries and tools::
 
     $ git clone --recursive https://github.com/hiveeyes/arduino
 
+Toolchain
+=========
+
+Debian packages
+---------------
+::
+
+    apt-get install arduino-core
+
+
+Archlinux packages
+------------------
+* aur/arduino 1:1.6.8
+* community/avr-libc
+
 
 Details
 =======
@@ -45,38 +67,27 @@ In order to update newly added libraries in submodules do::
 
     $ git submodule update --recursive --init
 
-Otherwise, if you want to use the Arduino IDE you have to install all necessary libraries manually,
-see: https://www.arduino.cc/en/Guide/Libraries. The sources of the libraries can be found in the header of each sketch (.ino).
-In this case you clone the repository, in the normal manner::
+Arduino IDE
+-----------
+If you want to use the Arduino IDE, you have to install all necessary libraries manually.
+The sources of the libraries can be found in the header of each sketch (.ino).
+In this case, clone the repository without fetching git submodule contents::
 
     $ git clone https://github.com/hiveeyes/arduino
 
 Or simply copy the desired sketch into your Arduino IDE.
 
-
-Dependency libraries and tools
-==============================
-To clone the repository with the all the libraries do::
-
-    $ git clone --recursive https://github.com/hiveeyes/arduino
-
-
+.. seealso:: https://www.arduino.cc/en/Guide/Libraries
 
 
 *******
 Operate
 *******
+For operative tasks like compiling, `Arduino-Makefile`_ is in the loop.
 
-Arduino-Makefile
-================
-
-Archlinux packages
-------------------
-* aur/arduino 1:1.6.8
-* community/avr-libc
 
 Compile
--------
+=======
 ::
 
     cd node-gprs-any
@@ -85,9 +96,10 @@ Compile
 After a successful build, find the firmware at ``bin/node-gprs-any/pro328/node-gprs-any.hex``.
 
 
-Upload
-------
-To build, upload and print the serial output at once, just run::
+Run on chip
+===========
+To build a firmware hex file, upload it to the MCU and
+finally start a serial port monitor, do::
 
     cd generic
 
@@ -99,7 +111,7 @@ To build, upload and print the serial output at once, just run::
 
 
 Run on Unix
------------
+===========
 ::
 
     cd generic
@@ -115,7 +127,7 @@ Run on Unix
 
 
 Run in SimulAVR
----------------
+===============
 ::
 
     cd libraries/BERadio/examples/message
@@ -128,9 +140,9 @@ Run in SimulAVR
 
 
 
-****
-Hack
-****
+********
+Appendix
+********
 
 Initialize a new Arduino flavour
 ================================

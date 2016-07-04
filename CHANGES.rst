@@ -10,48 +10,53 @@ CHANGES
 in-progress
 ===========
 
-Programs
---------
-- Add example sketch using BERadio at play-libberadio
-- Add "generic" sketch being a module composition breadboard
-- BERadio: Bring libberadio in shape as BERadio(.h|.cpp)
-- BERadio: Generic BERadioMessage to EmBencode serialization using
-  a map for holding sensor family values
-- BERadio: Automatic message fragmentation based on MTU (maximum
-  transfer unit) size for BERadioMessage
-- BERadio: For real
-- Last mile from BERadio message to radio transmission,
-  use RadioHead RH_TCP driver on Unix
-- BERadio: Move non-BERadio code to Terrine
-- Add Terrine, an application boilerplate for convenient MCU development
+2016-07-04 0.7.1
+================
+- Improve documentation at :ref:`README`, :ref:`beradio-c++` and :ref:`firmware-builder`.
 
+
+2016-07-04 0.7.0
+================
+
+General
+-------
+- Add sketch `generic.ino`_ as a module composition breadboard.
+- Add Terrine_, an application boilerplate for convenient MCU development.
+- Run generic sketch on x86_64 incl. pseudo radio link
+  communication using RadioHead RH_TCP driver.
+
+BERadio
+-------
+- Bring libberadio in shape as `BERadio C++ <BERadio-Lib_>`_.
+- *BERadioMessage* does generic Bencode_ serialization on top
+  of EmBencode_ using a map for holding sensor family values.
+- Automatic message fragmentation based on MTU (maximum
+  transfer unit) size for BERadioMessage.
+- Last mile from BERadio message to radio transmission,
+  use RadioHead RH_TCP_ driver on Unix.
+- Move non-BERadio code to Terrine.
 
 Libraries
 ---------
-- Add RadioHead library
-- Switch from vanilla EmBencode to Hiveeyes fork
-- Switch to branch “oo-improvements” of EmBencode fork
-- Add "Standard C++ for Arduino" library from
-  https://github.com/maniacbug/StandardCplusplus
-- Switch from vanilla StandardCplusplus to Hiveeyes fork
+- Add RadioHead_ library, we are using the RH_RF69_ and RH_RF95_ drivers.
+- Switch from vanilla EmBencode_ to Hiveeyes fork.
+- Switch to branch “oo-improvements” of EmBencode fork.
+- Add "Standard C++ for Arduino" library StandardCplusplus_.
+- Switch from vanilla StandardCplusplus_ to Hiveeyes fork
   fixing an issue with gcc5.
-- Switch “libraries/EmBencode” to branch “oo-improvements”
+- Switch submodule EmBencode_ to branch “oo-improvements”
 - Make submodules EmBencode and StandardCplusplus track
-  specific feature branches of Hiveeyes forks
-- Switch submodule “EmBencode” to branch “header-guard”
-  fixing “redefinition of 'class EmBencode’” errors
-- Add guard to BERadio header file fixing “redefinition
-  of 'class BERadioMessage’” errors
-- Switch to EmBencode branch "fix-typeinfo-reference"
-
-Documentation
--------------
-- Add firmware builder documentation
+  specific feature branches of Hiveeyes forks.
+- Switch submodule EmBencode_ to branch “header-guard”
+  fixing ``redefinition of 'class EmBencode’`` errors.
+- Add guard to BERadio header file fixing ``redefinition
+  of 'class BERadioMessage’`` errors.
+- Switch to EmBencode branch "fix-typeinfo-reference".
 
 
 2016-06-17 0.6.1
 ================
-- Add Firmware-Builder helper to Linux Makefile for node-gprs-any.
+- Add Firmware-Builder helper to Linux Makefile for `node-gprs-any.ino`_.
 - Update docs.
 
 
@@ -77,7 +82,9 @@ General
 
 Open Hive GPRSbee
 -----------------
-This piece of software supports the :ref:`openhive-seeeduino-stalker` carrying a GPRSbee_ transceiver.
+This piece of software supports the :ref:`openhive-seeeduino-stalker`
+carrying a GPRSbee_ transceiver using the software components
+Terkin_, `Hiveeyes-Lib`_ and `OpenHive-Lib`_.
 
 - Add ArduinoJson_ and `GPRSbee library`_ as git submodules under ``libraries/``.
 
