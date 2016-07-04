@@ -26,6 +26,8 @@ The repository is designed for use it with Ino_, a command line toolkit for work
 Ino_ is an alternative to the Arduino IDE, which let you use your favourite editor and compile from the commandline.
 To start over you simply install Ino_ on your system and recursively clone this repository.
 
+.. todo:: We don't use Ino any more, but switched to `Arduino-Makefile`_ instead.
+
 .. todo:: List and describe current flavors.
 
 

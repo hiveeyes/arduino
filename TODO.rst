@@ -20,6 +20,7 @@ Bugs
   still does not track feature branches.
 - [o] Try to use BERadioShadowEncoder again
 - [o] message.set_mtu_size(96); (!!!)
+- [o] Add warning message if BERadioMessage overflows buffer of EmBencode
 
 Features
 ========
