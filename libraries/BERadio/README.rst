@@ -12,14 +12,13 @@ BERadio C++
 *****
 Intro
 *****
-`BERadio C++ <BERadio-Lib_>`_ is a software library
+`BERadio C++`_ is a software library
 for transmitting telemetry data over radio links with
 narrow bandwidth, all on embedded low-power devices.
-It implements the `BERadio specification <BERadio-Spec_>`_
-and provides convenient API methods and data
-structures.
+It implements the `BERadio specification`_ and provides
+convenient API methods and data structures.
 
-`BERadio C++ <BERadio-Lib_>`_ was tested successfully on
+`BERadio C++`_ was tested successfully on
 Arduino (ATmega328p Pro/Uno), SimulAVR and x86_64 (both Mac OS X).
 It compiles with *avr-g++ 4.9 and 5.2* and *clang++ 3.4*
 on Mac OS X and Archlinux.
@@ -76,5 +75,6 @@ Terrine
     | https://github.com/hiveeyes/arduino/tree/master/libraries/Terrine
 
 
-.. _BERadio-Lib: https://github.com/hiveeyes/arduino/tree/master/libraries/BERadio
-.. _BERadio-Spec: https://hiveeyes.org/docs/beradio/
+.. _BERadio C++: https://github.com/hiveeyes/arduino/tree/master/libraries/BERadio
+.. _BERadio specification: https://hiveeyes.org/docs/beradio/
+
