@@ -22,13 +22,16 @@ or write to the Free Software Foundation,
 Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA
 
 */
+#include <Terrine.h>
 #include <BERadio.h>
+/*
 #include <simulavr.h>
 #if HE_ARDUINO
 #include <Arduino.h>
 #else
 #include <RHutil/simulator.h>
 #endif
+*/
 
 void BERadioEncoder::reset() {
     length = 0;
@@ -261,27 +264,3 @@ void BERadioMessage::debug(bool enabled) {
     //_l("Node id: "); _d(nodeid);
     //_l("Profile: "); _d(profile);
 }
-
-
-
-/*
-template<typename T>
-void dump_vector(std::string item_prefix, std::vector<T> vec) {
-
-    typename std::vector<T>::const_iterator it;
-    int i = 1;
-    for (it = vec.begin(); it != vec.end(); it++) {
-
-        // FIXME: How large should this buffer actually be made?
-        char buffer[100];
-        sprintf(buffer, "%s%d: ", item_prefix.c_str(), i);
-        _l(buffer);
-
-        T value = *it;
-        _d(value);
-
-        i++;
-    }
-
-}
-*/

@@ -11,20 +11,24 @@ Hiveeyes Arduino documentation
 
 
 ******
-README
+Topics
 ******
 
 .. toctree::
-    :maxdepth: 2
+    :maxdepth: 1
     :glob:
 
     README
+    BERadio/README
     firmware-builder
 
 
-***********
+*******
+Details
+*******
+
 Development
-***********
+===========
 
 .. toctree::
     :maxdepth: 1
@@ -34,16 +38,17 @@ Development
     TODO
 
 
-libberadio
-==========
+Research
+========
 
 .. toctree::
     :maxdepth: 1
     :glob:
 
-    libberadio/README
-    libberadio/research
-    libberadio/firmware-size
+    BERadio/research
+    BERadio/firmware-size
+
+.. seealso:: Specification and more at :ref:`beradio`.
 
 
 .. Indices and tables

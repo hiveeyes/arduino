@@ -1,6 +1,6 @@
-###############################
-libberadio c++ library research
-###############################
+############################
+BERadio C++ library research
+############################
 
 **********
 Foundation
@@ -8,10 +8,10 @@ Foundation
 
 avr-stl
 =======
-| The Standard Template Library (STL) for AVR with C++ streams
-| Version 1.1.1 (most recent as of 2015-11-01)
-| http://andybrown.me.uk/2011/01/15/the-standard-template-library-stl-for-avr-with-c-streams/
-| https://drive.google.com/uc?export=download&id=0B9Zobp2aWUKzb2xvZ0Y2VGd1RTQ
+    | The Standard Template Library (STL) for AVR with C++ streams
+    | Version 1.1.1 (most recent as of 2015-11-01)
+    | http://andybrown.me.uk/2011/01/15/the-standard-template-library-stl-for-avr-with-c-streams/
+    | https://drive.google.com/uc?export=download&id=0B9Zobp2aWUKzb2xvZ0Y2VGd1RTQ
 
 
 ***************************************

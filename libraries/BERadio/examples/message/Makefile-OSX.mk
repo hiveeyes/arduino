@@ -5,7 +5,7 @@
 
 ### PROJECT_DIR
 ### This is the path to where you have created/cloned your project
-PROJECT_DIR       = ..
+PROJECT_DIR       = ../../../..
 # PROJECT_DIR       = $(HOME)/dev/arduino/bare-arduino-project
 
 ### AVR_TOOLS_DIR
@@ -39,16 +39,19 @@ USER_LIB_PATH     :=  $(realpath $(PROJECT_DIR)/libraries)
 ### For Arduino IDE 1.6.x
 ### Both BOARD_TAG and BOARD_SUB are needed. They must be set to the board you are currently using. (i.e BOARD_TAG = uno, mega, etc. & BOARD_SUB = atmega2560, etc.)
 ### Note: for the Arduino Uno, only BOARD_TAG is mandatory and BOARD_SUB can be equal to anything
-BOARD_TAG         = pro328
+BOARD_TAG         = uno
 BOARD_SUB         = atmega328p
 
 ### MONITOR_BAUDRATE
 ### It must be set to Serial baudrate value you are using.
 MONITOR_BAUDRATE  = 115200
 
-### AVRDDUDE
+MONITOR_CMD       = picocom
+
+### AVRDUDE
 ### Path to avrdude directory.
-AVRDDUDE          = /usr/local/bin/avrdude
+AVRDUDE           = /opt/local/bin/avrdude
+AVRDUDE_CONF      = /opt/local/etc/avrdude.conf
 
 ### CFLAGS_STD
 CFLAGS_STD        = -std=gnu11
@@ -67,7 +70,7 @@ endif
 
 ### MONITOR_PORT
 ### The port your board is connected to. Using an '*' tries all the ports and finds the right one.
-MONITOR_PORT      = /dev/tty.usbmodem*
+MONITOR_PORT      = /dev/tty.usbserial-AL006Q8G
 
 ### OBJDIR
 ### This is were you put the binaries you just compile using 'make'

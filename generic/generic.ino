@@ -61,48 +61,73 @@
 
    Futher informations can be obtained at:
 
-   hiveeyes                     https://hiveeyes.org/
-   documentation                https://hiveeyes.org/docs/system/
-   repository                   https://github.com/hiveeyes/
-   beradio                      https://hiveeyes.org/docs/beradio/
+   Project                      https://hiveeyes.org/
+   Source code                  https://github.com/hiveeyes/
+
+   Documentation
+   System                       https://hiveeyes.org/docs/system/
+   Arduino                      https://hiveeyes.org/docs/arduino/
+   BERadio                      https://hiveeyes.org/docs/beradio/
 
 -------------------------------------------------------------------------   
 
 */
 
-// TODO:  
-//        * put all settings into "#define" header (e.g. scale)
-//        * fix #define DEBUG-switch issue
-//        * clean up code
 
+// --------------------
+// Device configuration
+// --------------------
 #include "config.h"
-// Defines //
-//#include "config.h"
 
-// Libraries 
 
-#if DEBUG_MEMORY
+
+// --------
+// Platform
+// --------
+
+#ifdef ARDUINO
+
+    // Arduino platform
+    #include <Arduino.h>
+
+    // Standard C++ for Arduino
+    #include <new.cpp>
+    #include <StandardCplusplus.h>
+    #include <func_exception.cpp>
     #include <MemoryFree.h>
+
 #endif
 
-// device initiation //
+// Terrine: Application boilerplate for convenient MCU development
+#include <Terrine.h>
 
-#if HE_RFM69
-    #include <RFM69.h>                      // https://github.com/LowPowerLab/RFM69
-    #if ENABLE_ATC
-        #include <RFM69_ATC.h>              // https://github.com/LowPowerLab/RFM69
-        RFM69_ATC radio;
-    #else
-        RFM69 radio;
-    #endif
+//extern "C" Terrine terrine;
+Terrine terrine;
+
+
+
+// -----------------
+// Platform features
+// -----------------
+
+#if HE_ARDUINO
+    void Blink(byte, int);
+#else
+    #include <tools/simMain.cpp>
+    #define OUTPUT 5
 #endif
+
+#if HE_SLEEP
+    #include <LowPower.h>                   // https://github.com/LowPowerLab/LowPower
+    void Sleep(int minutes);
+#endif
+
+
+// -------
+// Sensors
+// -------
 
 #if HE_CONTAINERS
-    #if HE_ARDUINO
-        #include <new.cpp>
-        #include <StandardCplusplus.h>
-        #include <func_exception.cpp>
-    #endif
     #include <BERadio.h>
 #endif
 
@@ -137,13 +162,19 @@
 #if HE_BERadio
     #include <BERadio.h>
     #include <EmBencode.h>                  // https://github.com/jcw/embencode
-    // Fix against "Undefined symbols for architecture x86_64: BERadioMessage::encode_and_transmit()"
+    // Fix against "Undefined symbols for architecture x86_64"
     #ifdef __unix__
+        #include <Terrine.cpp>
         #include <BERadio.cpp>
     #endif
     BERadioMessage *message = new BERadioMessage(HE_HIVE_ID, "h1", 61);
 #endif
 
+
+
+// ----
+// Data
+// ----
 
 #if CONT_HUM
     FloatList *humL = new FloatList();
@@ -155,7 +186,23 @@
     FloatList *tempL = new FloatList();
 #endif
 
-#if HE_RFM69 
+
+
+// -----
+// Radio
+// -----
+
+// LowPowerLab RFM69 driver
+#if HE_RFM69
+    #include <RFM69.h>                      // https://github.com/LowPowerLab/RFM69
+    #if ENABLE_ATC
+        #include <RFM69_ATC.h>              // https://github.com/LowPowerLab/RFM69
+        RFM69_ATC radio;
+    #else
+        RFM69 radio;
+    #endif
+#endif
+#if HE_RFM69
     void sendData();
     byte sendSize=0;
     boolean requestACK = false;
@@ -167,32 +214,9 @@
     } Payload;
     Payload theData;
 #endif
-#if HE_SLEEP
-    #include <LowPower.h>                   // https://github.com/LowPowerLab/LowPower
-    void Sleep(int minutes);
-#endif
 
 
-#if HE_ARDUINO
-    void Blink(byte, int);
-#else
-    #include <tools/simMain.cpp>
-    #define OUTPUT 5
-#endif
-
-// variables //
-#if DEBUG_MEMORY
-    void memfree();
-#endif
-
-
-
-#if HE_FLASH
-    #include <SPI.h>                  
-    #include <SPIFlash.h>                   // https://github.com/LowPowerLab/SPIFlash
-    SPIFlash flash(FLASH_SS, FLASH_MANUFACTURER_ID);
-#endif
-
+// RadioHead subsystem
 #if HE_RH95
     #include <RH_RF95.h>
     #include <RHReliableDatagram.h>
@@ -233,42 +257,92 @@
 #endif
 
 
+// -----------
+// Peripherals
+// -----------
+
+#if HE_FLASH
+    #include <SPI.h>
+    #include <SPIFlash.h>                   // https://github.com/LowPowerLab/SPIFlash
+    SPIFlash flash(FLASH_SS, FLASH_MANUFACTURER_ID);
+#endif
+
+
+// ----------------
+// Global variables
+// ----------------
+// TODO: Review regularly and try to get rid of them.
+
 // common
 char input = 0;
 // radio
 // long lastPeriod = -1;                // use in case of a time controled radio transmit routine
 int TRANSMITPERIOD = 300;               //transmit a packet to gateway so often (in ms)
+bool is_online = false;
+std::string separator = std::string(42, '=');
 
-// Sensor variables
+
 
 /*+++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
 //                  setup function#
 /*+++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
-std::string separator = std::string(42, '=');
+void setup() {
 
-void setup(){
+
+    // -------------
+    // Bootstrapping
+    // -------------
     Serial.begin(SERIAL_BAUD);          // setup serial
     #if HE_DEBUG
-        Serial.println(separator.c_str());
-        Serial.println("SETUP");
-        Serial.println(separator.c_str());
+        terrine.log(separator.c_str());
+        terrine.log("SETUP");
+        terrine.log(separator.c_str());
     #endif
     #if HE_ARDUINO
         pinMode(LED, OUTPUT);               // setup onboard LED
     #endif
     #if DEBUG_MEMORY
-        memfree();
+        terrine.logmem();
     #endif
 
     //dht.begin();
 
     #if HE_DEBUG
-        Serial.println("BOOT");
-        Serial.println("Radio setup");
+        terrine.log("Boot...");
     #endif
 
-    // radio setup
-    #if HE_RFM69 
+
+    // ---------
+    // Telemetry
+    // ---------
+
+    #if BERadio
+        message.set_mtu_size(61);
+    #endif
+
+
+    // -----
+    // Radio
+    // -----
+
+    #if HE_DEBUG
+        terrine.log("# Radio");
+    #endif
+
+    // Inform user about radio device configuration
+    #if DEBUG_RADIO
+        terrine.log("RFM69: ", false);
+        terrine.log(HE_RFM69);
+        terrine.log("RH69:  ", false);
+        terrine.log(HE_RH69);
+        terrine.log("RH95:  ", false);
+        terrine.log(HE_RH95);
+        terrine.log("RHTCP: ", false);
+        terrine.log(HE_RHTCP);
+    #endif
+
+    // LowPowerLab RFM69 driver
+    #if HE_RFM69
         radio.initialize(RFM69_FREQUENCY,RFM69_NODE_ID,RFM69_NETWORK_ID);
         radio.encrypt(RFM69_ENCRYPTKEY);          //OPTIONAL
         char buff[50];
@@ -291,42 +365,61 @@ void setup(){
             Serial.println(buff);
         #endif
     #endif
-    #if DEBUG_RADIO
-        #if HE_RH69
-            if (!manager69.init())
-                Serial.println("init failed");
-            else Serial.println("init rh69 done");
-    
-            if (!rh69.setFrequency(RH69_FREQUENCY))
-                Serial.println("set Frequency failed");
-            else Serial.println("rh69 frequency set");
-        #elif HE_RH95
-            if (!manager95.init())
-                Serial.println("init failed");
-            else Serial.println("init rh95 done");
-    
-            if (!rh95.setFrequency(RH95_FREQUENCY))
-                Serial.println("set Frequency failed");
-            else Serial.println("rh95 frequency set");
-        #elif HE_RHTCP
-            if (!managerTCP.init())
-                Serial.println("init failed");
-            else Serial.println("init rhTCP done");
-        #endif
-    #else 
-        #if HE_RH69
-            manager69.init();
-            rh69.setFrequency(RH69_FREQUENCY);
-        #elif HE_RH95
-            manager95.init();
-            rh95.setFrequency(RH95_FREQUENCY);
-        #elif HE_RHTCP
-            managerTCP.init();
-        #endif
+
+    // RadioHead subsystem
+    bool freq_ack = false;
+    #if HE_RH69
+        is_online = manager69.init();
+        freq_ack  = rh69.setFrequency(RH69_FREQUENCY);
+    #elif HE_RH95
+        is_online = manager95.init();
+        freq_ack  = rh95.setFrequency(RH95_FREQUENCY);
+    #elif HE_RHTCP
+        is_online = managerTCP.init();
+        freq_ack  = -1;
     #endif
- 
-    // SPI Flash setup
-  
+
+    #if DEBUG_RADIO
+        terrine.log("is_online: ", false);
+        terrine.log(is_online);
+        terrine.log("freq_ack: ", false);
+        terrine.log(freq_ack);
+    #endif
+
+
+    // -------
+    // Sensors
+    // -------
+    #if DEBUG_SENSORS
+        terrine.log("# Sensors");
+    #endif
+
+    #if HE_TEMPERATURE
+        #if DEBUG_SENSORS
+            terrine.log("Temp OW");
+        #endif
+        sensors.begin();
+    #endif
+
+    #if HE_HUMIDITY
+        #if DEBUG_SENSORS
+            terrine.log("Hum");
+        #endif
+        dht1.setup(DHT_PIN1);
+        dht2.setup(DHT_PIN2);
+    #endif
+    #if HE_SCALE
+        #if DEBUG_SENSORS
+            terrine.log("Scale");
+        #endif
+        scale.set_offset(HX711_OFFSET);          // the offset of the scale, is raw output without any weight, get this first and then do set.scale
+        scale.set_scale(HX711_KNOWN_WEIGHT);           // this is the difference between the raw data of a known weight and an emprty scale 
+    #endif
+
+
+    // ---------
+    // SPI Flash
+    // ---------
     #if HE_FLASH
         #if DEBUG_SPI_FLASH
             Serial.println("SPI Flash setup");
@@ -342,56 +435,31 @@ void setup(){
                     Serial.print(' ');
                     }
                 Serial.println();
-            #endif 
+            #endif
             }
         else
         #if DEBUG_SPI_FLASH
         Serial.println("SPI Flash Init FAIL! (is chip present?)");
         #endif
     #endif
-    // Sensor setup
-    #if DEBUG_SENSORS
-        Serial.println("Sensor setup");
-    #endif
-    #ifdef HE_TEMPERATUR
-        sensors.begin();
-    #endif
-    #if DEBUG_SENSORS
-        Serial.println("Onewire setup");
-    #endif
-    #if HE_HUMIDITY
-        dht1.setup(DHT_PIN1);
-        dht2.setup(DHT_PIN2);
-    #endif
-    #if DEBUG_SENSORS
-        Serial.println("DHT setup");
-    #endif
-    #if HE_SCALE
-        scale.set_offset(HX711_OFFSET);          // the offset of the scale, is raw output without any weight, get this first and then do set.scale  
-        scale.set_scale(HX711_KNOWN_WEIGHT);           // this is the difference between the raw data of a known weight and an emprty scale 
-        #if DEBUG_SENSORS
-            Serial.println("Scale setup");
-        #endif
-    #endif
-    #if BERadio
-        message.set_mtu_size(61);
-    #endif
+
+
     #if HE_DEBUG
-        Serial.println(" setup ends here:\n");
-        Serial.println("-----------------------\n");
+        terrine.log("Ready.");
     #endif
+
 }
 /*+++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
 //                  loop function
 /*+++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
-void loop(){
+void loop() {
     #if HE_DEBUG
-        Serial.println(separator.c_str());
-        Serial.println("MAIN");
-        Serial.println(separator.c_str());
+        terrine.log(separator.c_str());
+        terrine.log("MAIN");
+        terrine.log(separator.c_str());
     #endif
     #if DEBUG_MEMORY
-        memfree();
+        terrine.logmem();
     #endif
 
     // get sensor data
@@ -420,7 +488,7 @@ void loop(){
     #if HE_BERadio
 
         #if DEBUG_MEMORY
-            memfree();
+            terrine.logmem();
         #endif
 
         #if DEBUG_BERadio
@@ -442,7 +510,7 @@ void loop(){
         message->add("w", *wghtL);
 
         #if DEBUG_MEMORY
-            memfree();
+            terrine.logmem();
         #endif
 
         #if DEBUG_BERadio
@@ -459,8 +527,10 @@ void loop(){
         // TODO: Enable again
         //transceive();
     #endif
+
     #if HE_SLEEP
         delay(100); 
+        // TODO: Enable again
         //Sleep(SLEEP_MINUTES);
     #endif
 
@@ -743,11 +813,15 @@ void receivePackages(){
         memcpy(rh_buffer, (const char*)buffer, length);
 
         // Radio transmission
-        #if HE_RH69
-            manager69.sendtoWait(rh_buffer, length, RH69_TRANSCEIVER_ID);
-        #elif HE_RHTCP
-            managerTCP.sendtoWait(rh_buffer, length, RHTCP_GATEWAY_ID);
-        #endif
+        if (is_online) {
+            #if HE_RH69
+                manager69.sendtoWait(rh_buffer, length, RH69_TRANSCEIVER_ID);
+            #elif HE_RHTCP
+                managerTCP.sendtoWait(rh_buffer, length, RHTCP_GATEWAY_ID);
+            #endif
+        } else {
+            terrine.log("WARN: Offline");
+        }
 
         // Clean up
         delete rh_buffer;
@@ -755,44 +829,10 @@ void receivePackages(){
 #endif
 
 
-// --------------
-// Debug printers
-// --------------
-
 void BERadioMessage::dprint(const char *message, bool newline) {
-    #ifdef SIMULAVR
-        _d(message);
-    #else
-        if (newline) {
-            Serial.println(message);
-        } else {
-            Serial.print(message);
-        }
-        delay(150);
-    #endif
+    terrine.log(message, newline);
 }
 
 void BERadioMessage::dprint(int value) {
-    #ifdef SIMULAVR
-        _d(value);
-    #else
-        #if HE_ARDUINO
-            Serial.println(value);
-            delay(150);
-        #else
-            Serial.println(std::to_string(value).c_str());
-        #endif
-    #endif
+    terrine.log(value);
 }
-
-#if DEBUG_MEMORY
-    void memfree() {
-        Serial.print("free: ");
-        #if HE_ARDUINO
-            Serial.println(freeMemory());
-            delay(150);
-        #else
-            Serial.println(std::to_string(freeMemory()).c_str());
-        #endif
-    }
-#endif
