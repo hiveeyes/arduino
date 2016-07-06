@@ -122,13 +122,19 @@ Run on Unix
     cd generic
 
     # Build arch=x86_64, not Arduino
-    ./sim/build generic.ino
+    ./sim/build
 
-    # Receive data on localhost:4000
+    # Receive data on localhost:4000 (TCP)
     socat tcp-listen:4000,reuseaddr -
 
-    # Run on local workstation, will send data to localhost:4000
+    # Run "generic" program on local workstation, it
+    # will send data to localhost:4000 through RH_TCP.
     ./sim/generic
+
+::
+
+    file ./sim/generic
+    sim/generic: Mach-O 64-bit x86_64 executable
 
 
 Run in SimulAVR

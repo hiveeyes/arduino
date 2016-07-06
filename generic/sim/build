@@ -7,8 +7,11 @@
 # usage: simBuild sketchname.pde
 # The executable will be saved in the current directory
 
-INPUT=$1
-OUTPUT=$(basename $INPUT ".ino")
+#INPUT=$1
+#OUTPUT=$(basename $INPUT ".ino")
+
+INPUT=generic.ino
+OUTPUT=generic
 
 PROJECT_DIR=".."
 RADIOHEAD="${PROJECT_DIR}/libraries/RadioHead/RadioHead"
