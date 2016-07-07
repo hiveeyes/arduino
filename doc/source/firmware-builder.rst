@@ -77,3 +77,27 @@ to distinguish different build artifacts from each other.
     - Windows: http://m8051.blogspot.de/2015/01/avrdude-on-windows-long-time-after.html
     - Mac OS X: https://www.pololu.com/docs/0J36/5.c, https://www.obdev.at/products/crosspack/
 
+
+********
+Appendix
+********
+
+Arduino 1.0.x vs. 1.6.x
+
+1.0.x::
+
+    BOARD_TAG         = pro328
+    BOARD_SUB         = atmega328p
+
+1.6.x::
+
+    BOARD_TAG         = pro
+    BOARD_SUB         = 8MHzatmega328
+
+On the server, there's currently Arduino 1.0.5::
+
+    root@elbanco:~# aptitude show arduino-core | grep Version
+    Version: 2:1.0.5+dfsg2-4
+
+So the appropriate settings for Arduino 1.0.x show be used.
+
