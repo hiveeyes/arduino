@@ -303,9 +303,9 @@ def setup(app):
 
 # Link with Hiveeyes, BERadio and Kotori projects
 intersphinx_mapping = {
-    'hiveeyes': ('https://hiveeyes.org/docs/system', None),
-    'beradio':  ('https://hiveeyes.org/docs/beradio', None),
-    'kotori':   ('https://getkotori.org/docs', None),
+    'hiveeyes': ('https://hiveeyes.org/docs/system/', None),
+    'beradio':  ('https://hiveeyes.org/docs/beradio/', None),
+    'kotori':   ('https://getkotori.org/docs/', None),
 }
 
 # Disable caching remote inventories completely

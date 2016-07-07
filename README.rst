@@ -12,23 +12,80 @@ README
 
 ----
 
-*****
-Intro
-*****
-This is the Hiveeyes Arduino repository. All Arduino based code (for ATmega328_ and ESP8266_) of the project can be found here.
-To allow different flavours, the directory naming convention is ``<purpose>-<transport>-<protocol>``.
+************
+Introduction
+************
+This is the documentation for the `Hiveeyes Arduino repository`_.
 
-* ``purpose``   could be either node or gateway
-* ``transport`` could be the physical transport mechanism, e.g. like RFM69-radio, LoRa-radio, GSM or WiFi
-* ``protocol``  aimes for the protocol the following communication instance would be connected with
+All Arduino based code (for ATmega328_ and ESP8266_) is living here.
+We support different hardware, so there are different flavors
+of the firmware, reflected by the directory naming convention
+``<purpose>-<transport>-<protocol>``.
 
-The repository is designed for use it with Ino_, a command line toolkit for working with Arduino hardware.
-Ino_ is an alternative to the Arduino IDE, which let you use your favourite editor and compile from the commandline.
-To start over you simply install Ino_ on your system and recursively clone this repository.
+* ``purpose``   role name, either *node* or *gateway*
+* ``transport`` name of the physical transport mechanism, e.g. *rfm69* or *gprs*
+* ``protocol``  name of the transmission protocol, e.g. *beradio*, *http* or *any*
 
-.. todo:: We don't use Ino any more, but switched to `Arduino-Makefile`_ instead.
+Most programs use `Arduino-Makefile`_ for building while there are still some based on Ino_.
 
-.. todo:: List and describe current flavors.
+
+*********
+Firmwares
+*********
+
+Radio-based
+===========
+.. list-table:: List of radio-based firmwares, in order of appearance
+    :widths: 12 40
+    :header-rows: 1
+    :class: table-generous
+
+    * - Name
+      - Description
+
+    * - node-rfm69-beradio
+      - `node-rfm69-beradio.ino`_ collects sensor data, encodes it with
+        BERadio and sends it through a RFM69 radio transceiver module
+        to a gateway.
+
+        This is the first version of the firmware running on
+        :ref:`hiveeyes:hiveeyes-one` since February 2016.
+
+    * - gateway-rfm69-beradio
+      - `gateway-rfm69-beradio.ino`_ receives sensor data over radio
+        and forwards it to the UART interface, which is connected to
+        the serial port of the gateway machine.
+        In turn, :ref:`beradio-python <beradio:beradio-python>` reads
+        this data, decodes the :ref:`beradio:beradio` protocol and
+        forwards it to the MQTT_ bus.
+
+    * - generic
+      - We started working on `generic.ino`_, a flexible software breadboard
+        for nodes, transceivers and gateways on June 26, 2016.
+
+
+GPRS-based
+==========
+.. list-table:: List of GPRS-based firmwares, in order of appearance
+    :widths: 12 40
+    :header-rows: 1
+    :class: table-generous
+
+    * - Name
+      - Description
+
+    * - node-gprs-http
+      - `node-gprs-http.ino`_ is the firmware source code powering
+        the `Open Hive Box`_. It transmits sensor data using HTTP
+        over a GPRSbee_ GPRS modem.
+
+        While already in the making for some time, we finally
+        integrated the code into the repository on July 7, 2016.
+
+    * - node-gprs-any
+      - We started working on `node-gprs-any.ino`_, a playground sketch
+        for building a generic transmitter machinery on June 8, 2016.
+
 
 
 *****
