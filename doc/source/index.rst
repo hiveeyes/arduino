@@ -35,6 +35,7 @@ Firmwares
     :maxdepth: 1
     :glob:
 
+    firmware/generic/README
     firmware/node-gprs-http/README
     firmware/scale-adjust/README
 

@@ -9,6 +9,7 @@ CHANGES
 
 in-progress
 ===========
+- Add documentation about the new :ref:`generic-firmware`.
 
 
 2016-07-08 0.8.0
