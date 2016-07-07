@@ -150,7 +150,8 @@ ADS1231 loadCell;  // create ADS1231 object
 #include <RunningMedian.h>
 RunningMedian weightSamples = RunningMedian(weightSamplesNumber);  // create RunningMedian object
 
-// humidity and temperature / DHTxx
+// Humidity and temperature based on DHTlib 0.1.13 by Rob Tillart
+// TODO: Upgrade to recent version named "libDHT", see https://github.com/RobTillaart/libDHT
 #include <dht.h>
 dht DHT;  // create DHT object
 
@@ -190,6 +191,14 @@ char uploadPath[
   +sizeof(uploadNode)
 ] = "";
 
+
+// Forward declarations
+void getTimestamp();
+void getWeight();
+void getHumidityTemperature();
+void getTemperature();
+void getVoltage();
+void wakeUp();
 
 
 void setup () {
