@@ -20,6 +20,7 @@ Bugs
   still does not track feature branches.
 - [o] BERadio: Try to use BERadioShadowEncoder again
 - [o] BERadio: message.set_mtu_size(96); (!!!)
+- [o] generic.ino-gateway: put delay, to allow serial interrupt
 - [o] BERadio: Add warning message if BERadioMessage overflows
   buffer of EmBencode (display only once!)
 
