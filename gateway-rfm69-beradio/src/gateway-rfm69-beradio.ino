@@ -1,16 +1,16 @@
 /*
-   
+
                   Hiveeyes gateway-rfm69-beradio
- 
-   Code collects sensor data encodes them with BERadio protocol 
-   and sends it through RFM69 radio module to a gateway.
-    
+
+   Receives sensor data over radio and forward it to the UART interface,
+   which is connected to the serial port of the gateway machine.
+
    Software release 0.5.1
 
    Copyright (C) 2014-2016  Richard Pobering <einsiedlerkrebs@ginnungagap.org>
    Copyright (C) 2014-2016  Andreas Motl <andreas.motl@elmyra.de>
 
-   <https://hiveeyes.org>   
+   <https://hiveeyes.org>
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -23,31 +23,31 @@
    GNU General Public License for more details.
 
    You should have received a copy of the GNU General Public License
-   along with this program; if not, see: 
-   <http://www.gnu.org/licenses/gpl-3.0.txt>, 
+   along with this program; if not, see:
+   <http://www.gnu.org/licenses/gpl-3.0.txt>,
    or write to the Free Software Foundation,
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA
 
--------------------------------------------------------------------------   
+-------------------------------------------------------------------------
 
-   Hiveeyes gateway sketch for Arduino based platforms   
+   Hiveeyes gateway sketch for Arduino based platforms
 
    This is a arduino sketch for the hiveeyes bee monitoring system.
-   The purpose is to receive data strings over a RFM69 radio module 
+   The purpose is to receive data strings over a RFM69 radio module
    and print them into serial out (RS-232), for further processing.
 
-   Since the data is are encapsulated in a BERadio character string 
+   Since the data is are encapsulated in a BERadio character string
    the next hop needs to read, unwrap it and send it to a data sink.
    One option is BERadio pyhton module, which runs on arm's and send
    the data further via MQTT as a json payload.
-   
+
    The creation of this code is strongly influenced by other projects, so
-   credits goes to 
-   them: <https://hiveeyes.org/docs/beradio/README.html#credits> 
+   credits goes to
+   them: <https://hiveeyes.org/docs/beradio/README.html#credits>
 
    Feel free to adapt this code to your own needs.
 
--------------------------------------------------------------------------   
+-------------------------------------------------------------------------
 
    Futher informations can be obtained at:
 
@@ -56,7 +56,7 @@
    repository                   https://github.com/hiveeyes/
    beradio                      https://hiveeyes.org/docs/beradio/
 
--------------------------------------------------------------------------   
+-------------------------------------------------------------------------
 
 */
 
@@ -88,14 +88,14 @@
 bool promiscuousMode = false;           //set to 'true' to sniff all packets on the same network
 
 
-typedef struct {		
+typedef struct {
   int           nodeId;                 //store this nodeId
   char  buff[MAX_PAYLOAD_LENGTH];
   unsigned long uptime;                 //uptime in ms
-  long         temp;                    
+  long         temp;
   int lenght;
 } Payload;
-Payload theData;  
+Payload theData;
 
 void setup() {
   Serial.begin(SERIAL_BAUD);
@@ -115,7 +115,7 @@ void setup() {
 #ifdef DEBUG
   sprintf(buff, "\nListening at %d Mhz...", FREQUENCY==RF69_433MHZ ? 433 : FREQUENCY==RF69_868MHZ ? 868 : 915);
   Serial.println(buff);
-#endif 
+#endif
 }
 
 byte ackCount=0;
@@ -141,20 +141,20 @@ void loop() {
 		 and also send a packet requesting an ACK (every 3rd one only)
 		 This way both TX/RX NODE functions are tested on 1 end at the GATEWAY
 		 */
-#endif 
+#endif
 #ifdef DEBUG
     Serial.print('[');Serial.print(radio.SENDERID, DEC);Serial.print("] ");
     Serial.print(" [RX_RSSI:");Serial.print(radio.readRSSI());Serial.print("]");
-#endif 
+#endif
 /*
     if (promiscuousMode)
    {
 #ifdef DEBUG
       Serial.print("to [");Serial.print(radio.TARGETID, DEC);Serial.print("] ");
-#endif 
+#endif
     }
 */
-   
+
 /*   if (radio.DATALEN != sizeof(Payload))
      Serial.print("Invalid payload received, not matching Payload struct!");
    else
@@ -183,7 +183,7 @@ void loop() {
 		 Serial.println("start Decoding");
 		 data_decode();
 		 Serial.println("\n decoding done");
-#endif    
+#endif
 
 
 /*
@@ -193,35 +193,35 @@ void loop() {
 		   Serial.print(" Pinging node ");
 		   Serial.print(theNodeID);
 		   Serial.print(" - ACK...");
-#endif 
+#endif
 		   delay(3); //need this when sending right after reception .. ?
 #ifdef DEBUG
 		   if (radio.sendWithRetry(theNodeID, "ACK TEST", 8, 0))  // 0 = only 1 attempt, no retries
 			 Serial.print("ok!");
 		   else Serial.print("nothing");
-#endif 
+#endif
 		   }
 	   }
 */
 	   Serial.println();
    }
-}  
- 
+}
+
 void data_decode() {
    Serial.print("foo");
-   
+
   uint8_t bytes = 0;
    Serial.print(radio.DATALEN);
    for(byte i = 0; i < radio.DATALEN; i++) {
 
 
        bytes = decoder.process(theData.buff[i]);
-   
+
 	  if (bytes > 0) {
       Serial.print(" => ");
       Serial.print((int) bytes);
      Serial.println(" bytes");
-	 
+
       for (;;) {
         uint8_t token = decoder.nextToken();
         if (token == EmBdecode::T_END)
@@ -248,6 +248,6 @@ void data_decode() {
       }
       decoder.reset();
      }
-    
+
   }
 }
