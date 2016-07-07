@@ -22,6 +22,16 @@ Topics
     BERadio/README
     firmware-builder
 
+*********
+Firmwares
+*********
+
+.. toctree::
+    :maxdepth: 1
+    :glob:
+
+    firmware/node-gprs-http/README
+
 
 *******
 Details

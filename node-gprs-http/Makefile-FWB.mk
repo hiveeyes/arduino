@@ -6,16 +6,10 @@
 ### PROJECT_DIR
 ### This is the path to where you have created/cloned your project
 PROJECT_DIR       = ..
-# PROJECT_DIR       = $(HOME)/dev/arduino/bare-arduino-project
-
-### AVR_TOOLS_DIR
-### Path to the AVR tools directory such as avr-gcc, avr-g++, etc.
-AVR_TOOLS_DIR     = /opt/local
-#AVR_TOOLS_DIR     = /Applications/Arduino.app/Contents/Resources/Java/hardware/tools/avr
 
 ### AVR_GCC_VERSION
 ### Check if the version is equal or higher than 4.9
-AVR_GCC_VERSION  := $(shell expr `$(AVR_TOOLS_DIR)/bin/avr-gcc -dumpversion | cut -f1` \>= 4.9)
+AVR_GCC_VERSION  := $(shell expr `avr-gcc -dumpversion | cut -f1` \>= 4.9)
 
 ### ARDMK_DIR
 ### Path to the Arduino-Makefile directory.
@@ -23,14 +17,11 @@ ARDMK_DIR         = $(PROJECT_DIR)/tools/Arduino-Makefile
 
 ### ARDUINO_DIR
 ### Path to the Arduino application and ressources directory.
-### For Arduino IDE 1.0.x
-ARDUINO_DIR       = /Applications/Arduino.app/Contents/Resources/Java
-### For Arduino IDE 1.6.x
-# ARDUINO_DIR       = /Applications/Arduino.app/Contents/Java
+ARDUINO_DIR       = /usr/share/arduino
 
 ### USER_LIB_PATH
 ### Path to where the your project's libraries are stored.
-USER_LIB_PATH     :=  $(realpath $(PROJECT_DIR)/libraries)
+USER_LIB_PATH     =  $(realpath $(PROJECT_DIR)/libraries)
 
 ### BOARD_TAG & BOARD_SUB
 
@@ -49,10 +40,17 @@ BOARD_SUB         = atmega328p
 ### MONITOR_BAUDRATE
 ### It must be set to Serial baudrate value you are using.
 MONITOR_BAUDRATE  = 115200
+MONITOR_CMD = picocom
+### AVR_TOOLS_DIR
+### Path to the AVR tools directory such as avr-gcc, avr-g++, etc.
+AVR_TOOLS_DIR     = /usr
 
 ### AVRDDUDE
 ### Path to avrdude directory.
-AVRDDUDE          = /usr/local/bin/avrdude
+AVRDDUDE          = /usr/bin/avrdude
+
+
+AVRDUDE_CONF = /etc/avrdude.conf
 
 ### CFLAGS_STD
 CFLAGS_STD        = -std=gnu11
@@ -62,7 +60,7 @@ CXXFLAGS_STD      = -std=gnu++11
 
 ### CPPFLAGS
 ### Flags you might want to set for debugging purpose. Comment to stop.
-CXXFLAGS         = -pedantic -Wall -Wextra
+CXXFLAGS         = -pedantic -Wall -Wextra -fno-use-cxa-atexit
 
 ### If avr-gcc -v is higher than 4.9, activate coloring of the output
 ifeq "$(AVR_GCC_VERSION)" "1"
@@ -71,7 +69,10 @@ endif
 
 ### MONITOR_PORT
 ### The port your board is connected to. Using an '*' tries all the ports and finds the right one.
-MONITOR_PORT      = /dev/tty.usbmodem*
+MONITOR_PORT      = /dev/ttyUSB0
+
+### don't touch this
+CURRENT_DIR       = $(shell basename $(CURDIR))
 
 ### OBJDIR
 ### This is were you put the binaries you just compile using 'make'

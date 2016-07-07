@@ -12,6 +12,7 @@ in-progress
 - Make building “generic” sketch for x86_64 a bit easier, just do ``cd generic; ./sim/build``.
 - Add vanilla Open Hive sensor node sketch from Clemens Gruber as “node-gprs-http.ino”. Thanks, Clemens!
 - Satisfy dependencies of “node-gprs-http” per git submodules (mostly), accompanied by Arduino Makefile yak shaving
+- Add documentation about “node-gprs-http” at :ref:`open-hive-firmware`.
 - finishing restructuring work on "generic". Proof-of-Concept: node69-transmitter69x95-gateway95 is workings
 
 

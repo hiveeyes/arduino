@@ -20,7 +20,7 @@ convenient API methods and data structures.
 
 `BERadio C++`_ was tested successfully on
 Arduino (ATmega328p Pro/Uno), SimulAVR and x86_64 (both Mac OS X).
-It compiles with *avr-g++ 4.9 and 5.2* and *clang++ 3.4*
+It compiles with *avr-g++ 4.8, 4.9 and 5.2* and *clang++ 3.4*
 on Mac OS X and Archlinux.
 
 
