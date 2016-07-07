@@ -7,7 +7,7 @@
    Code collects sensor data encodes them with HE_BERadio protocol
    and sends it through HE_RFM69radio module to a gateway.
     
-   Software release 0.7.1
+   Software release 0.7.2
 
    Copyright (C) 2014-2016  Richard Pobering <einsiedlerkrebs@ginnungagap.org>
    Copyright (C) 2014-2016  Andreas Motl <andreas.motl@elmyra.de>
