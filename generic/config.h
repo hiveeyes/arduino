@@ -2,7 +2,7 @@
 // all settings are made in this file, most      ***       interface settings         ***
 //        relevant ones are above                ***             * * *                **/
 
-//      Software release 0.7.2
+//      Software release 0.8.0
 
 #define HE_DEBUG                  true               // turn on debug output and choose below
 #define SERIAL_BAUD               115200         // serial baud rate
