@@ -36,6 +36,7 @@ Firmwares
     :glob:
 
     firmware/node-gprs-http/README
+    firmware/scale-adjust/README
 
 
 *******

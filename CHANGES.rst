@@ -13,6 +13,7 @@ in-progress
 - Add vanilla Open Hive sensor node sketch from Clemens Gruber as “node-gprs-http.ino”. Thanks, Clemens!
 - Satisfy dependencies of “node-gprs-http” per git submodules (mostly), accompanied by Arduino Makefile yak shaving.
 - Add documentation about “node-gprs-http” at :ref:`open-hive-firmware`.
+- Add load cell adjustment sketches. Thanks again, Clemens!
 
 
 2016-07-04 0.7.1
