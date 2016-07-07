@@ -2,27 +2,43 @@
 // all settings are made in this file, most      ***       interface settings         ***
 //        relevant ones are above                ***             * * *                **/
 
+//      Software release 0.7.1
+
 #define HE_DEBUG                  true               // turn on debug output and choose below
 #define SERIAL_BAUD               115200         // serial baud rate
 #define BLINKPERIOD               500            // LED blinking period in ms
 #define HE_SLEEP                  false              // set to 1 for sleeping
-#define HE_SCALE                  true
-#define HE_HUMIDITY               true
-#define HE_TEMPERATURE            true
+#define HE_SCALE                  false
+#define HE_HUMIDITY               false
+#define HE_TEMPERATURE            false
 #define HE_DEMODATA               false
 #define HE_RFM69_OTA              false
-#define HE_BERadio                true 
-#define HE_RADIO                  true
+#define HE_BERadio                false 
+#define HE_RADIO                  false
 //#define HE_CONTAINERS             false
+
+
+#define IS_NODE                   false
+#define IS_TRANSCEIVER            false
+#define IS_GATEWAY                true
+
+
+#define HE_RFM69                  false              // LowPowerLab RFM69 library
+#define HE_RH69                   false              // RadioHead RH_RF69 driver
+#define HE_RH95                   true              // RadioHead RH_RF95 driver
+#define HE_RHTCP                  false               // RadioHead RH_TCP driver
+#define HE_FLASH                  false              // Enable SPI-flash
+
+
 
 #if HE_DEBUG                                  /**    fine grade debug settings     ***
                                                  ***              * *                 **/
-
+    #define DEBUG_FRAME           false
     #define DEBUG_RADIO           true              // set to 1 for radio debug
     #define DEBUG_SPI_FLASH       false              // set to 1 for SPI-flash debug
-    #define DEBUG_SENSORS         true              // set to 1 for sensor debug
+    #define DEBUG_SENSORS         false              // set to 1 for sensor debug
     #define DEBUG_BERadio         true              // set to 1 for  HE_BERadio degub
-    #define DEBUG_MEMORY          true
+    #define DEBUG_MEMORY          false
 
 #endif                                           /**              * *                 **/
 
@@ -31,6 +47,7 @@
     #define  BERadio_profile           "h1"           //  HE_BERadio profile
     #define  HE_HIVE_ID                2
     #define  BAD_VALUE             273.15
+    #define  BERadio_DELAY         500
     #if HE_CONTAINERS == false
         #define HE_CONTAINERS      true
     #endif
@@ -44,11 +61,6 @@
                                                  ***        hardware switches         ***
                                                  ***             * * *                **/
 
-#define HE_RFM69                  false              // LowPowerLab RFM69 library
-#define HE_RH69                   false              // RadioHead RH_RF69 driver
-#define HE_RH95                   false              // RadioHead RH_RF95 driver
-#define HE_RHTCP                  false               // RadioHead RH_TCP driver
-#define HE_FLASH                  false              // Enable SPI-flash
 
 #ifndef HE_ARDUINO
     #define HE_ARDUINO              true
@@ -66,6 +78,18 @@
 #endif
 
 
+/*
+#if IS_TRANSCEIVER
+    #define IS_NODE                false
+    #define IS_GATEWAY             false
+#elif IS_GATEWAY
+    #define IS_NODE                false
+    #define IS_TRANSCEIVER         false
+#elif IS_NODE                
+    #define IS_TRANSCEIVER         false
+    #define IS_GATEWAY             false
+#endif
+*/
                                                  /**            * * * *               *** 
                                                  ***    sensor pinning & settings     ***
                                                  ***             * * *                **/
@@ -106,6 +130,7 @@
                                                  ***    specific hardware defines     ***
                                                  ***             * * *                **/
 #ifdef HE_RADIO
+    #define RH_ACK_TIMEOUT           200 
     #if HE_RH69                                     /**   RadioHead's HE_RH69radio lib     **/
         #define RH69_NODE_ID          99             //    
         #define RH69_GATEWAY_ID       1              // radio topology
@@ -115,27 +140,28 @@
         #define RH69_SS               10              //
     
         #define RH69_FREQUENCY        868.0         // modem settings
+        #define RH69_MAX_MESSAGE_LEN 61
     
 
-        #define RH69_IS_NODE                true
-        #define RH69_IS_GATEWAY             false
-        #define RH69_IS_TRANSCEIVER         false 
 
     #endif                                           /**              * *                 **/
     
     #if HE_RH95                                     /**     RadioHead's HE_RH95radio lib   **/
 
-        #define RH95_IS_NODE                false
-        #define RH95_IS_GATEWAY             false 
-        #define RH95_IS_TRANSCEIVER         false 
         #define RH95_NODE_ID          99             // 
         #define RH95_GATEWAY_ID       1              // radio topology 
         #define RH95_TRANSCEIVER_ID   3              //
-    
-        #define RH95_IRQ              5             // radio pins
-        #define RH95_SS               3              //
+        #if IS_TRANSCEIVER
+            #define RH95_IRQ              3             // radio pins
+            #define RH95_SS               5              //
+        #elif IS_GATEWAY
+            #define RH95_IRQ              2             // radio pins
+            #define RH95_SS               10              //
+        #endif
+       
     
         #define RH95_FREQUENCY        868.0         // modem settings
+        #define RH95_MAX_MESSAGE_LEN 255
         
     #endif                                           /**              * *                 **/
 
@@ -148,9 +174,6 @@
     #if HE_RFM69                                     /**     HE_RFM69 lib from lowpowerlab   **/
         //#include <HE_RFM69.h>                           /**              * *                 **/
     
-        #define RFM69_IS_NODE                false
-        #define RFM69_IS_GATEWAY             false
-        #define RFM69_IS_TRANSCEIVER         false
 
         #define RFM69_NODE_ID         2              //
         #define RFM69_NETWORK_ID      100            // radio topology
@@ -168,9 +191,6 @@
         #define RFM69_ACK_TIME              30             // acknowledge timeout in ms 
         #define RFM69_MAX_MESSAGE_LENGTH    61             // Payload limitation HE_RFM69 
     
-        #define RFM69_IS_NODE                false
-        #define RFM69_IS_GATEWAY             false
-        #define RFM69_IS_TRANSCEIVER         false
         
     #endif                                           /**              * *                 **/
 #endif
@@ -198,3 +218,6 @@
     #define LED                   13             // Pro328mini has LEDs on D9
     #define FLASH_SS              8              // and FLASH SS on D8
 #endif
+
+
+

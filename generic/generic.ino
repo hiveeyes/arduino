@@ -7,7 +7,7 @@
    Code collects sensor data encodes them with HE_BERadio protocol
    and sends it through HE_RFM69radio module to a gateway.
     
-   Software release 0.5.3
+   Software release 0.7.1
 
    Copyright (C) 2014-2016  Richard Pobering <einsiedlerkrebs@ginnungagap.org>
    Copyright (C) 2014-2016  Andreas Motl <andreas.motl@elmyra.de>
@@ -223,10 +223,11 @@ Terrine terrine;
     #include <SPI.h>
     RH_RF95 rh95(RH95_SS, RH95_IRQ);
     uint8_t buf95[RH_RF95_MAX_MESSAGE_LEN];
-    #if RH95_IS_TRANSCEIVER
+    #if HE_RH95 && IS_TRANSCEIVER
         void transceive();
         RHReliableDatagram manager95(rh95, RH95_TRANSCEIVER_ID);
-    #elif RH95_IS_GATEWAY
+    #elif HE_RH95 && IS_GATEWAY
+        void gatewayReceive();
         RHReliableDatagram manager95(rh95, RH95_GATEWAY_ID);
     #else
         RHReliableDatagram manager95(rh95, RH95_NODE_ID);
@@ -238,11 +239,11 @@ Terrine terrine;
     #include <RHReliableDatagram.h>
     #include <SPI.h>
     RH_RF69 rh69(RH69_SS, RH69_IRQ);
-    uint8_t buf69[RH_RF69_MAX_MESSAGE_LEN];
-    #if RH69_IS_TRANSCEIVER
+    uint8_t buf69[RH69_MAX_MESSAGE_LEN];
+    #if HE_RH69 && IS_TRANSCEIVER
         void transceive();
         RHReliableDatagram manager69(rh69, RH69_TRANSCEIVER_ID);
-    #elif RH69_IS_GATEWAY
+    #elif HE_RH69 && IS_GATEWAY
         RHReliableDatagram manager69(rh69, RH69_GATEWAY_ID);
     #else
         RHReliableDatagram manager69(rh69, RH69_NODE_ID);
@@ -278,7 +279,12 @@ char input = 0;
 // radio
 // long lastPeriod = -1;                // use in case of a time controled radio transmit routine
 int TRANSMITPERIOD = 300;               //transmit a packet to gateway so often (in ms)
-bool is_online = false;
+#if HE_RH69 && HE_RH95
+    bool is_online95 = false;
+    bool is_online69 = false;
+#else    
+    bool is_online = false;
+#endif
 std::string separator = std::string(42, '=');
 
 
@@ -308,7 +314,14 @@ void setup() {
     //dht.begin();
 
     #if HE_DEBUG
-        terrine.log("Boot...");
+        terrine.log("booting: ... ", false);
+        #if IS_NODE
+            terrine.log("Hiveeyes node ");
+        #elif IS_TRANSCEIVER
+            terrine.log("Hiveeyes transceiver ");
+        #else    
+            terrine.log("Hiveeyes gateway ");
+        #endif 
     #endif
 
 
@@ -368,7 +381,16 @@ void setup() {
 
     // RadioHead subsystem
     bool freq_ack = false;
-    #if HE_RH69
+    #if HE_RH95 && HE_RH69
+        bool freq_ack95 = false;
+        digitalWrite(RH69_SS, HIGH);
+        is_online95 = manager95.init();
+        freq_ack95  = rh95.setFrequency(RH95_FREQUENCY);
+        bool freq_ack69 = false;
+        digitalWrite(RH95_SS, HIGH);
+        is_online69 = manager69.init();
+        freq_ack69  = rh69.setFrequency(RH69_FREQUENCY);
+    #elif HE_RH69
         is_online = manager69.init();
         freq_ack  = rh69.setFrequency(RH69_FREQUENCY);
     #elif HE_RH95
@@ -380,10 +402,21 @@ void setup() {
     #endif
 
     #if DEBUG_RADIO
-        terrine.log("is_online: ", false);
-        terrine.log(is_online);
-        terrine.log("freq_ack: ", false);
-        terrine.log(freq_ack);
+        #if HE_RH95 && HE_RH69 == 0
+            terrine.log("is_online: ", false);
+            terrine.log(is_online);
+            terrine.log("freq_ack: ", false);
+            terrine.log(freq_ack);
+        #elif HE_RH95 && HE_RH69
+            terrine.log("is_online95: ", false);
+            terrine.log(is_online95);
+            terrine.log("freq_ack95: ", false);
+            terrine.log(freq_ack95);
+            terrine.log("is_online95: ", false);
+            terrine.log(is_online95);
+            terrine.log("freq_ack69: ", false);
+            terrine.log(freq_ack69);
+        #endif
     #endif
 
 
@@ -445,7 +478,7 @@ void setup() {
 
 
     #if HE_DEBUG
-        terrine.log("Ready.");
+        terrine.log("# ready.");
     #endif
 
 }
@@ -453,7 +486,7 @@ void setup() {
 //                  loop function
 /*+++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
 void loop() {
-    #if HE_DEBUG
+    #if DEBUG_FRAME
         terrine.log(separator.c_str());
         terrine.log("MAIN");
         terrine.log(separator.c_str());
@@ -523,15 +556,17 @@ void loop() {
 
     #endif
 
-    #if RH69_IS_TRANSCEIVER
-        // TODO: Enable again
-        //transceive();
+        
+    #if HE_RH69 && IS_TRANSCEIVER
+        transceive();
+    #endif
+    #if HE_RH95 && IS_GATEWAY
+        gatewayReceive();
     #endif
 
     #if HE_SLEEP
         delay(100); 
-        // TODO: Enable again
-        //Sleep(SLEEP_MINUTES);
+        Sleep(SLEEP_MINUTES);
     #endif
 
 }
@@ -572,14 +607,18 @@ void loop() {
         humbuf0 = dht1.getHumidity();
         tempbuf0 = dht1.getTemperature();
 
-        Serial.print("...");
+        #if DEBUG_SENSORS
+            Serial.print("...");
+        #endif
         delay(2000);
 
         for(int i=0; i<=3; i++){
             if (!isnan(humbuf0) || !isnan(tempbuf0)){
                 break;
             }
-            Serial.print(".");
+            #if DEBUG_SENSORS
+                Serial.print(".");
+            #endif
             delay(2000);
         }
         Serial.println();
@@ -609,7 +648,7 @@ void loop() {
 // get weight data //
 #if HE_SCALE
     void readScale(){
-        #ifdef DEBUG_SENSORS
+        #if DEBUG_SENSORS
             Serial.println("rS");
         #endif
         scale.power_up();
@@ -687,62 +726,33 @@ void receivePackages(){
         int var = 0;
         float cycles = 0;
         cycles = minutes * 7.5;
+        #if HE_DEBUG
+            terrine.log("sleeping ", false);
+        #endif
         while(var < cycles){
-            #ifdef DEBUG
-                Serial.println("starting sleep cycle\n");
-                delay(100);
-            #endif
             var++;
             // put the processor to sleep for 8 seconds
             LowPower.powerDown(SLEEP_8S, ADC_OFF, BOD_OFF);
-            #ifdef DEBUG
-                Serial.println("stopping sleep cycle\n");
+            #if HE_DEBUG
+                terrine.log("... ", false);
             #endif
         }
+        #if HE_DEBUG
+            terrine.log("awake", true);
+        #endif
     }
 #endif
 
 //   Getting DHT Data
 
 
-#if RH95_IS_TRANSCEIVER && RH69_IS_TRANSCEIVER
-    void transceive(){ 
-        digitalWrite(9, HIGH);  //disable rf95 slave select
-        if (manager69.available()){
-            // Wait for a message addressed to us from the client
-            uint8_t len69 = sizeof(buf69);
-            uint8_t len95 = sizeof(buf95);
-            uint8_t from;
-            if (manager69.recvfromAck(buf69, &len69, &from)){
-                Serial.print("got message from node: 0x");
-                Serial.print(from, HEX);
-                Serial.print(": ");
-                Serial.println((char*)buf69);
-                // Send a reply back to the originator node 
-                uint8_t answerData[] = "And hello back to you";
-                if (!manager69.sendtoWait(answerData, sizeof(answerData), from))
-                    Serial.println("sendto69Wait failed");
-                //transceive the message to gateway
-                if (manager95.sendtoWait(buf69, sizeof(buf69), RH69_GATEWAY_ID)){
-                    if (manager95.recvfromAckTimeout(buf95, &len95, 1000, &from)){
-                        Serial.print("got message from gateway: 0x");
-                        Serial.print(from, HEX);
-                        Serial.print(": ");
-                        Serial.println((char*)buf95);
-                    }
-                    else Serial.println("No reply from gateway");
-                }
-                Serial.println();
-            }
-        }
-    }
-#endif
 
-#if RH69_IS_NODE
+/*
+#if HE_RH69 && IS_NODE
     void nodeSend(){
         // Send a message to manager_server
         #if RADIO_DEBUG
-            if (manager69.sendtoWait(buf69, sizeof(buf69), RH69_GATEWAY_ID)){
+            if (manager69.sendtoWait(buf69, sizeof(buf69), HE_RH69_GATEWAY_ID)){
                   // Now wait for a reply from the server
                   uint8_t len = sizeof(buf69);
                   uint8_t from;   
@@ -759,36 +769,71 @@ void receivePackages(){
             else
             Serial.println("sendtoWait failed");
         #else
-            manager69.sendtoWait(buf69, sizeof(buf69), RH69_GATEWAY_ID);
+            manager69.sendtoWait(buf69, sizeof(buf69), HE_RH69_GATEWAY_ID);
         #endif
     }
 #endif
-
-#if RH95_IS_GATEWAY
+*/
+#if HE_RH95 && HE_RH69 && IS_TRANSCEIVER
+    void transceive(){
+        digitalWrite(RH95_SS, HIGH);
+        if (manager69.available()){
+            // Wait for a message addressed to us from the client
+            uint8_t len69 = sizeof(buf69);
+            uint8_t len95 = sizeof(buf95);
+            uint8_t from69;
+            uint8_t from95;
+            // Radio transmission
+            if (is_online69 && is_online95) {
+                #if HE_RH69 && HE_RH95
+                    bool success69 = false;
+                    //bool success69 =  manager69.recvfromAckTimeout(buf69, &len69, RH_ACK_TIMEOUT, &from);               
+                    success69 =  manager69.recvfromAck(buf69, &len69, &from69);               
+                    #if DEBUG_RADIO
+                        terrine.log("SUCCESS69: ", false);
+                        terrine.log(success69);
+                        //terrine.log("recv_msg: ", false);  
+                        //terrine.log((char)buf69);
+                    #endif
+                    //delay(1000);
+                    digitalWrite(RH69_SS, HIGH);
+                    //bool success95 = manager95.sendtoWait(buf69, len69, RH95_GATEWAY_ID);
+                    bool success95 = false;
+                    success95 = manager95.sendtoWait(buf69, len69, RH95_GATEWAY_ID);
+                    #if DEBUG_RADIO
+                        terrine.log("SUCCESS95: ", false);
+                        terrine.log(success95);
+                        terrine.log((char*)buf69);
+                    #endif
+                    memset(&buf69[0], 0, len69);
+                    //memset(&buf95[0], 0, sizeof(len));
+                #endif
+                }
+            else {
+                terrine.log("WARN: Offline");
+            }
+        }
+    }
+#endif
+#if HE_RH95 && IS_GATEWAY
     void gatewayReceive(){
         uint8_t len = sizeof(buf95);
         uint8_t from;
-        #if RADIO_DEBUG
         if (manager95.available()){
-              // Wait for a message addressed to us from the client
-              if (manager95.recvfromAck(buf95, &len, &from)){
-                    Serial.print("got message from transmitter: 0x");
-                    Serial.print(from, HEX);
-                    Serial.print(": ");
-                    Serial.println((char*)buf95);
-              
-                    // Send a reply back to the originator client
-                    if (!manager95.sendtoWait(answerForwardData, sizeof(answerForwardData), from))
-                      Serial.println("sendtoWait95 failed");
-                  }
-              Serial.println();
+        //if (is_online){
+            // Wait for a message addressed to us from the client
+            //bool success = manager95.recvfromAckTimeout(buf95, &len, RH_ACK_TIMEOUT, &from);
+            bool success = manager95.recvfromAck(buf95, &len, &from);
+            //bool success = manager95.recvfromAck(buf95, &len);
+                  #if DEBUG_RADIO
+                      terrine.log("SUCCESS: ", false);
+                      terrine.log(success);
+                      terrine.log("@", false);
+                      terrine.log(from);
+                  #endif
+                  if (success){Serial.println((char*)buf95); Serial.println();}
         }
-        #else
-        manager95.available();
-        if (manager95.recvfromAck(buf95, &len, &from)){
-            Serial.println((char*)buf95);
-        }
-        #endif
+        memset(&buf95[0], 0, len);
     }        
 #endif
 
@@ -801,7 +846,7 @@ void receivePackages(){
             //dprint(payload.c_str());
         #endif
 
-        //manager69.sendtoWait(payload.c_str(), payload.length(), RH69_TRANSCEIVER_ID);
+        //manager69.sendtoWait(payload.c_str(), payload.length(), HE_RH69_TRANSCEIVER_ID);
 
         // C++ std::string
         //uint8_t *buf69 = new uint8_t[payload.length() + 1];
@@ -815,11 +860,17 @@ void receivePackages(){
         // Radio transmission
         if (is_online) {
             #if HE_RH69
-                manager69.sendtoWait(rh_buffer, length, RH69_TRANSCEIVER_ID);
+                bool success = manager69.sendtoWait(rh_buffer, length, RH69_TRANSCEIVER_ID);
+                terrine.log("SUCCESS: ", false);
+                terrine.log(success);  
+                delay(BERadio_DELAY);
             #elif HE_RHTCP
                 managerTCP.sendtoWait(rh_buffer, length, RHTCP_GATEWAY_ID);
+                terrine.log("SUCCESS: ", false);
+                terrine.log(success);  
             #endif
-        } else {
+        } 
+        else {
             terrine.log("WARN: Offline");
         }
 
@@ -828,7 +879,7 @@ void receivePackages(){
     }
 #endif
 
-
+#if HE_BERadio
 void BERadioMessage::dprint(const char *message, bool newline) {
     terrine.log(message, newline);
 }
@@ -836,3 +887,5 @@ void BERadioMessage::dprint(const char *message, bool newline) {
 void BERadioMessage::dprint(int value) {
     terrine.log(value);
 }
+#endif
+
