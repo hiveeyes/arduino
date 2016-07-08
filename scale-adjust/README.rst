@@ -1,3 +1,5 @@
+.. _scale-adjust-firmware:
+
 ##################################
 Firmwares for load cell adjustment
 ##################################

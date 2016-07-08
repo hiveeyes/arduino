@@ -1,8 +1,18 @@
-//              "config.h"                       /**            * * * *               *** 
-// all settings are made in this file, most      ***       interface settings         ***
-//        relevant ones are above                ***             * * *                **/
+/**
+ *
+ * Generic software breadboard for nodes, transceivers and gateways.
+ *
+ * Configuration file: "config.h".
+ * All settings for controlling the behavior and role
+ * of the firmware should be made inside this file.
+ *
+ * Software release 0.8.0
+ *
+ * Copyright (C) 2014-2016  Richard Pobering <einsiedlerkrebs@ginnungagap.org>
+ * Copyright (C) 2014-2016  Andreas Motl <andreas.motl@elmyra.de>
+ *
+**/
 
-//      Software release 0.8.0
 
 #define HE_DEBUG                  true               // turn on debug output and choose below
 #define SERIAL_BAUD               115200         // serial baud rate
@@ -13,7 +23,7 @@
 #define HE_TEMPERATURE            false
 #define HE_DEMODATA               false
 #define HE_RFM69_OTA              false
-#define HE_BERadio                false 
+#define HE_BERadio                false
 #define HE_RADIO                  false
 //#define HE_CONTAINERS             false
 
@@ -57,7 +67,7 @@
     #define SLEEP_MINUTES             15             // sleeptime in about minutes
 #endif
 
-                                                 /**            * * * *               *** 
+                                                 /**            * * * *               ***
                                                  ***        hardware switches         ***
                                                  ***             * * *                **/
 
@@ -85,12 +95,12 @@
 #elif IS_GATEWAY
     #define IS_NODE                false
     #define IS_TRANSCEIVER         false
-#elif IS_NODE                
+#elif IS_NODE
     #define IS_TRANSCEIVER         false
     #define IS_GATEWAY             false
 #endif
 */
-                                                 /**            * * * *               *** 
+                                                 /**            * * * *               ***
                                                  ***    sensor pinning & settings     ***
                                                  ***             * * *                **/
 
@@ -102,21 +112,21 @@
     #endif
 #endif
 
-#ifdef  HE_HUMIDITY 
+#ifdef  HE_HUMIDITY
     #define DHT_AMOUNT                1
     #define DHT_PIN1                  7              // DHT pin #1
     #define DHT_PIN2                  6              // DHT pin #2
     #define DHT_TYPE                  DHT22          // DHT type (dht22)
     #if HE_CONTAINERS
         #define CONT_HUM             true
-        #ifndef CONT_TEMP            
+        #ifndef CONT_TEMP
             #define CONT_TEMP        true
         #endif
     #endif
 #endif
 
 #ifdef HE_SCALE
-    #define HX711_SCK                 A0             // SCK pin of hx711 
+    #define HX711_SCK                 A0             // SCK pin of hx711
     #define HX711_DT                  A1             // DT pin for hx711
     #define HX711_OFFSET          8361975
 
@@ -126,30 +136,30 @@
     #endif
 #endif
 
-                                                 /**            * * * *               *** 
+                                                 /**            * * * *               ***
                                                  ***    specific hardware defines     ***
                                                  ***             * * *                **/
 #ifdef HE_RADIO
-    #define RH_ACK_TIMEOUT           200 
+    #define RH_ACK_TIMEOUT           200
     #if HE_RH69                                     /**   RadioHead's HE_RH69radio lib     **/
-        #define RH69_NODE_ID          99             //    
+        #define RH69_NODE_ID          99             //
         #define RH69_GATEWAY_ID       1              // radio topology
         #define RH69_TRANSCEIVER_ID   3              //
-    
+
         #define RH69_IRQ              2             // radio pins
         #define RH69_SS               10              //
-    
+
         #define RH69_FREQUENCY        868.0         // modem settings
         #define RH69_MAX_MESSAGE_LEN 61
-    
+
 
 
     #endif                                           /**              * *                 **/
-    
+
     #if HE_RH95                                     /**     RadioHead's HE_RH95radio lib   **/
 
-        #define RH95_NODE_ID          99             // 
-        #define RH95_GATEWAY_ID       1              // radio topology 
+        #define RH95_NODE_ID          99             //
+        #define RH95_GATEWAY_ID       1              // radio topology
         #define RH95_TRANSCEIVER_ID   3              //
         #if IS_TRANSCEIVER
             #define RH95_IRQ              3             // radio pins
@@ -158,11 +168,11 @@
             #define RH95_IRQ              2             // radio pins
             #define RH95_SS               10              //
         #endif
-       
-    
+
+
         #define RH95_FREQUENCY        868.0         // modem settings
         #define RH95_MAX_MESSAGE_LEN 255
-        
+
     #endif                                           /**              * *                 **/
 
     // RadioHead HE_TCP driver
@@ -173,34 +183,34 @@
 
     #if HE_RFM69                                     /**     HE_RFM69 lib from lowpowerlab   **/
         //#include <HE_RFM69.h>                           /**              * *                 **/
-    
+
 
         #define RFM69_NODE_ID         2              //
         #define RFM69_NETWORK_ID      100            // radio topology
         #define RFM69_GATEWAY_ID      1              //
-    
+
         #define RFM69_FREQUENCY       RF69_868MHZ         // modem settings
-        #define RFM69_IS_HW            0              // set to 1 for HE_RFM69HW 
+        #define RFM69_IS_HW            0              // set to 1 for HE_RFM69HW
         #define RADIO_STATIC_POWER    0              // set to 1 for static power
         #define RFM69_POWERLEVEL            5              // powerlevel range between 1-24(?)
         //#define ENABLE_ATC                           // 1 for automatic transmission control (ATC)
         #ifdef  RFM69_ENABLE_ATC
-            #define RFM69_TARGET_RSSI       -70            // RSSI 
+            #define RFM69_TARGET_RSSI       -70            // RSSI
         #endif
         #define RFM69_ENCRYPTKEY      "www.hiveeyes.org"   // same 16 characters/bytes everywhere
-        #define RFM69_ACK_TIME              30             // acknowledge timeout in ms 
-        #define RFM69_MAX_MESSAGE_LENGTH    61             // Payload limitation HE_RFM69 
-    
-        
+        #define RFM69_ACK_TIME              30             // acknowledge timeout in ms
+        #define RFM69_MAX_MESSAGE_LENGTH    61             // Payload limitation HE_RFM69
+
+
     #endif                                           /**              * *                 **/
 #endif
 
 #if HE_FLASH                                 /**           SPI-Flash              **/
-    #define FLASH_MANUFACTURER_ID 0x0102         // MANUFACTURER_ID 
+    #define FLASH_MANUFACTURER_ID 0x0102         // MANUFACTURER_ID
                                                  // 0x1F44 for adesto(ex atmel) 4mbit flash
                                                  // 0xEF30 for windbond 4mbit flash
                                                  // 0xEF40 for windbond 16/64mbit flash
-                                                 // 0x0102 for Spansion S25FL032P 32-Mbit 
+                                                 // 0x0102 for Spansion S25FL032P 32-Mbit
     #if HE_RFM69_OTA
         #include <WirelessHEX69.h>
     #endif
@@ -208,7 +218,7 @@
 #endif                                           /**              * *                 **/
 
 
-                                                 /**            * * * *               *** 
+                                                 /**            * * * *               ***
                                                  ***   automatic compiler directives  ***
                                                  ***             * * *                **/
 #ifdef __AVR_ATmega1284P__

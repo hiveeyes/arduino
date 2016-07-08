@@ -1,18 +1,30 @@
 // vim: tabstop=8 expandtab shiftwidth=4 softtabstop=4
 /*
 
-                  Hiveeyes generic software breadboard
-                  for nodes, transceivers and gateways.
+   Generic software breadboard for nodes, transceivers and gateways.
 
-   Code collects sensor data encodes them with HE_BERadio protocol
-   and sends it through HE_RFM69radio module to a gateway.
-    
+   This firmware can satisfy different purposes:
+
+   - A sensor node collects sensor data, encodes it with BERadio
+     and sends it through a RFM69 radio module to a gateway node
+     or a protocol transceiver node.
+
+   - A protocol transceiver node receives radio signals on RFM69
+     and emits them to RFM95 (LoRa). The messages are processed
+     opaque, no decoding takes place here.
+
+   - A gateway node receives radio signals on RFM95 (LoRa) and
+     emits them to its UART interface connected to the gateway
+     SoC (e.g. a RaspberryPi). The decoding will be handled by
+     the downstream gateway software, which in turn forwards
+     received data to the MQTT bus.
+
    Software release 0.8.0
 
    Copyright (C) 2014-2016  Richard Pobering <einsiedlerkrebs@ginnungagap.org>
    Copyright (C) 2014-2016  Andreas Motl <andreas.motl@elmyra.de>
 
-   <https://hiveeyes.org>   
+   <https://hiveeyes.org>
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -25,14 +37,14 @@
    GNU General Public License for more details.
 
    You should have received a copy of the GNU General Public License
-   along with this program; if not, see: 
-   <http://www.gnu.org/licenses/gpl-3.0.txt>, 
+   along with this program; if not, see:
+   <http://www.gnu.org/licenses/gpl-3.0.txt>,
    or write to the Free Software Foundation,
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA
 
--------------------------------------------------------------------------   
+-------------------------------------------------------------------------
 
-   Hiveeyes node sketch for Arduino based platforms   
+   Hiveeyes node sketch for Arduino based platforms
 
    This is an Arduino sketch for the Hiveeyes bee monitoring system.
    The purpose is to collect vital data of a bee hive and transmit it
@@ -40,24 +52,24 @@
    the internet or collects it in a own database.
 
    The sensor data could be temperature (via DS18B20 or DHT),
-   humidity (DHT) or a load cell (H30A with HX711). Other sensors can 
+   humidity (DHT) or a load cell (H30A with HX711). Other sensors can
    easily be added.
 
    After the sensor data is collected, it gets encapsulated in a
-   HE_BERadio character string, which will be the transmitted payload. 
-   HE_BERadio is a wrapper that makes use of EmBeEncode dictrionaries and 
+   HE_BERadio character string, which will be the transmitted payload.
+   HE_BERadio is a wrapper that makes use of EmBeEncode dictrionaries and
    lists and adds some infrastructural metadata to it.
- 
+
    This code is for use with HE_BERadio at the gateway side, e.g.
    as a forwarder from serial to mqtt.
 
    The creation of this code is strongly influenced by other projects, so
-   credits goes to 
-   them: <https://hiveeyes.org/docs/beradio/README.html#credits> 
+   credits goes to
+   them: <https://hiveeyes.org/docs/beradio/README.html#credits>
 
    Feel free to adapt this code to your own needs.
 
--------------------------------------------------------------------------   
+-------------------------------------------------------------------------
 
    Futher informations can be obtained at:
 
@@ -69,7 +81,7 @@
    Arduino                      https://hiveeyes.org/docs/arduino/
    BERadio                      https://hiveeyes.org/docs/beradio/
 
--------------------------------------------------------------------------   
+-------------------------------------------------------------------------
 
 */
 
@@ -144,13 +156,13 @@ Terrine terrine;
 #if HE_HUMIDITY
     #include <DHT.h>
     DHT dht1;
-    DHT dht2; 
+    DHT dht2;
     void readHumidity();
     #ifndef HE_CONTAINERS
         float hum0 = 0, hum1 = 0;
         float temp5 = 0, temp6 = 0, temp7 = 0, temp8 = 0;
     #endif
-#endif 
+#endif
 #if HE_SCALE
     #include <HX711.h>                      // https://github.com/bogde/HX711
     HX711 scale(HX711_DT, HX711_SCK);
@@ -282,7 +294,7 @@ int TRANSMITPERIOD = 300;               //transmit a packet to gateway so often 
 #if HE_RH69 && HE_RH95
     bool is_online95 = false;
     bool is_online69 = false;
-#else    
+#else
     bool is_online = false;
 #endif
 std::string separator = std::string(42, '=');
@@ -319,9 +331,9 @@ void setup() {
             terrine.log("Hiveeyes node ");
         #elif IS_TRANSCEIVER
             terrine.log("Hiveeyes transceiver ");
-        #else    
+        #else
             terrine.log("Hiveeyes gateway ");
-        #endif 
+        #endif
     #endif
 
 
@@ -366,14 +378,14 @@ void setup() {
             radio.setPowerLevel(RFM69_POWERLEVEL);
         #endif
 
-        #if ENABLE_ATC 	
+        #if ENABLE_ATC
             radio.enableAutoPower(RFM69_TARGET_RSSI);
             #if DEBUG_RADIO
                 Serial.println("RFM69 ATC enabled");
             #endif
         #endif
         radio.sleep();
-        #if DEBUG_RADIO                   
+        #if DEBUG_RADIO
             sprintf(buff, "Transmitting at %d Mhz...", RFM69_FREQUENCY==RF69_433MHZ ? 433 : RFM69_FREQUENCY==RF69_868MHZ ? 868 : 915);
             Serial.println(buff);
         #endif
@@ -446,7 +458,7 @@ void setup() {
             terrine.log("Scale");
         #endif
         scale.set_offset(HX711_OFFSET);          // the offset of the scale, is raw output without any weight, get this first and then do set.scale
-        scale.set_scale(HX711_KNOWN_WEIGHT);           // this is the difference between the raw data of a known weight and an emprty scale 
+        scale.set_scale(HX711_KNOWN_WEIGHT);           // this is the difference between the raw data of a known weight and an emprty scale
     #endif
 
 
@@ -556,7 +568,7 @@ void loop() {
 
     #endif
 
-        
+
     #if HE_RH69 && IS_TRANSCEIVER
         transceive();
     #endif
@@ -565,7 +577,7 @@ void loop() {
     #endif
 
     #if HE_SLEEP
-        delay(100); 
+        delay(100);
         Sleep(SLEEP_MINUTES);
     #endif
 
@@ -719,7 +731,7 @@ void receivePackages(){
 #endif
 
 
-//   Sleeping 
+//   Sleeping
 
 #if HE_SLEEP
     void Sleep(int minutes ){
@@ -755,7 +767,7 @@ void receivePackages(){
             if (manager69.sendtoWait(buf69, sizeof(buf69), HE_RH69_GATEWAY_ID)){
                   // Now wait for a reply from the server
                   uint8_t len = sizeof(buf69);
-                  uint8_t from;   
+                  uint8_t from;
                   if (manager69.recvfromAckTimeout(buf69, &len, 2000, &from)){
                         Serial.print("got reply from : 0x");
                         Serial.print(from, HEX);
@@ -787,12 +799,12 @@ void receivePackages(){
             if (is_online69 && is_online95) {
                 #if HE_RH69 && HE_RH95
                     bool success69 = false;
-                    //bool success69 =  manager69.recvfromAckTimeout(buf69, &len69, RH_ACK_TIMEOUT, &from);               
-                    success69 =  manager69.recvfromAck(buf69, &len69, &from69);               
+                    //bool success69 =  manager69.recvfromAckTimeout(buf69, &len69, RH_ACK_TIMEOUT, &from);
+                    success69 =  manager69.recvfromAck(buf69, &len69, &from69);
                     #if DEBUG_RADIO
                         terrine.log("SUCCESS69: ", false);
                         terrine.log(success69);
-                        //terrine.log("recv_msg: ", false);  
+                        //terrine.log("recv_msg: ", false);
                         //terrine.log((char)buf69);
                     #endif
                     //delay(1000);
@@ -834,7 +846,7 @@ void receivePackages(){
                   if (success){Serial.println((char*)buf95); Serial.println();}
         }
         memset(&buf95[0], 0, len);
-    }        
+    }
 #endif
 
 #if HE_BERadio
@@ -862,14 +874,14 @@ void receivePackages(){
             #if HE_RH69
                 bool success = manager69.sendtoWait(rh_buffer, length, RH69_TRANSCEIVER_ID);
                 terrine.log("SUCCESS: ", false);
-                terrine.log(success);  
+                terrine.log(success);
                 delay(BERadio_DELAY);
             #elif HE_RHTCP
                 managerTCP.sendtoWait(rh_buffer, length, RHTCP_GATEWAY_ID);
                 terrine.log("SUCCESS: ", false);
-                terrine.log(success);  
+                terrine.log(success);
             #endif
-        } 
+        }
         else {
             terrine.log("WARN: Offline");
         }

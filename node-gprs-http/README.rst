@@ -49,7 +49,8 @@ Build on your workstation
 Build using the firmware builder
 ================================
 You may build your flavors of the firmware without having any toolchain installed
-on your workstation by issuing a HTTP POST request to the firmware builder subsystem.
+on your workstation by issuing a HTTP POST request to the :ref:`firmware-builder`
+subsystem.
 
 The source code of `node-gprs-http.ino`_ is pulled from the master branch of the
 `Hiveeyes Arduino repository`_ on GitHub. Specify appropriate parameters to match
@@ -81,15 +82,21 @@ Just upload the file ``hiveeyes_node-gprs-http_pro328-atmega328p_*.hex`` to the 
 HttpRequester
 -------------
 Issue a POST request from the command line using the HttpRequester_ add-on for Firefox
-for acquiring a firmware from `Kotori Firmware Builder`_.
+for acquiring a firmware from the :ref:`firmware-builder` (`Kotori Firmware Builder`_).
 Please set the appropriate firmware build- and configuration parameters on the left side.
-As this is currently not documented, please have a look at the source code (`node-gprs-http.ino`_).
 
 .. figure:: https://ptrace.hiveeyes.org/2016-07-07_Kotori%20Firmware%20Builder%20HttpRequester.jpg
     :alt: Kotori Firmware Builder HttpRequester
     :width: 1024px
 
-Just copy/paste the response content on the right side into a .hex file and upload to the MCU.
+After sending the POST request by hitting "Submit", just copy/paste the
+response content on the right side into a .hex file and upload to the MCU.
+
+.. tip::
+
+    As the available configuration parameters and possible values are currently not documented
+    in detail, please have a look at the source code (`node-gprs-http.ino`_). All preprocessor
+    variables (``#define ...``) can be changed through HTTP POST parameters.
 
 
 Upload to MCU
