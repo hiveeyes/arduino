@@ -8,6 +8,13 @@
 BERadio C++
 ###########
 
+.. tip::
+
+    You might want to `read this document on our documentation space <docs-beradio-c++_>`_,
+    all inline links will be working there.
+
+.. _docs-beradio-c++: https://hiveeyes.org/docs/arduino/BERadio/README.html
+
 
 *****
 Intro
@@ -92,8 +99,4 @@ Terrine
 =======
     | Application boilerplate for convenient MCU development
     | https://github.com/hiveeyes/arduino/tree/master/libraries/Terrine
-
-
-.. _BERadio C++: https://github.com/hiveeyes/arduino/tree/master/libraries/BERadio
-.. _BERadio specification: https://hiveeyes.org/docs/beradio/
 

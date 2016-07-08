@@ -17,15 +17,19 @@
 .. _Hiveeyes project: https://hiveeyes.org/
 
 .. Hiveeyes Arduino
-.. _Hiveeyes Arduino repository: https://github.com/hiveeyes/arduino/
+.. _Hiveeyes Arduino repository: https://github.com/hiveeyes/arduino
 .. _node-gprs-any.ino: https://github.com/hiveeyes/arduino/blob/master/node-gprs-any/node-gprs-any.ino
 .. _node-rfm69-beradio.ino: https://github.com/hiveeyes/arduino/blob/master/node-rfm69-beradio/src/node-rfm69-beradio.ino
 .. _gateway-rfm69-beradio.ino: https://github.com/hiveeyes/arduino/blob/master/gateway-rfm69-beradio/src/gateway-rfm69-beradio.ino
 .. _generic.ino: https://github.com/hiveeyes/arduino/blob/master/generic/generic.ino
+.. _config.h: https://github.com/hiveeyes/arduino/blob/master/generic/config.h
 .. _Terrine: https://github.com/hiveeyes/arduino/tree/master/libraries/Terrine
 .. _Terkin: https://github.com/hiveeyes/arduino/tree/master/libraries/Terkin
 .. _Hiveeyes-Lib: https://github.com/hiveeyes/arduino/tree/master/libraries/Hiveeyes
-.. _BERadio-Lib: https://github.com/hiveeyes/arduino/tree/master/libraries/BERadio
+
+.. BERadio
+.. _BERadio C++: https://github.com/hiveeyes/arduino/tree/master/libraries/BERadio
+.. _BERadio specification: https://hiveeyes.org/docs/beradio/
 
 .. Open Hive
 .. _Open Hive Box: https://hiveeyes.org/docs/system/vendor/open-hive/#open-hive-seeeduino-stalker

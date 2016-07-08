@@ -1,3 +1,4 @@
+.. include:: ../../resources.rst
 
 .. _open-hive-firmware:
 
@@ -5,9 +6,17 @@
 Firmware for Open Hive Box
 ##########################
 
-*****
-Intro
-*****
+.. tip::
+
+    You might want to `read this document on our documentation space <docs-open-hive-firmware_>`_,
+    all inline links will be working there.
+
+.. _docs-open-hive-firmware: https://hiveeyes.org/docs/arduino/firmware/node-gprs-http/README.html
+
+
+************
+Introduction
+************
 This firmware runs on the `Open Hive Box`_, a beehive
 monitoring sensor node with GPRS transceiver.
 Telemetry data is transmitted using HTTP.
@@ -15,7 +24,6 @@ Telemetry data is transmitted using HTTP.
 .. figure:: https://ptrace.hiveeyes.org/2016-07-08_open-hive_box-with-electronics.jpg
     :alt: Open Hive Box with electronics
     :width: 640px
-
 
 
 *****
@@ -106,14 +114,4 @@ Upload to MCU
 
     What's the best way to upload the downloaded firmware hex file
     to the MCU, when not having any toolchain installed, actually?
-
-
-.. External resources
-
-.. _Open Hive Box: https://hiveeyes.org/docs/system/vendor/open-hive/#open-hive-seeeduino-stalker
-.. _node-gprs-http.ino: https://github.com/hiveeyes/arduino/blob/master/node-gprs-http/node-gprs-http.ino
-.. _Hiveeyes Arduino repository: https://github.com/hiveeyes/arduino
-.. _Kotori Firmware Builder: https://getkotori.org/docs/applications/firmware.html
-.. _HTTPie: http://httpie.org
-.. _HttpRequester: https://addons.mozilla.org/en-us/firefox/addon/httprequester/
 

@@ -12,6 +12,14 @@ README
 
 ----
 
+.. tip::
+
+    You might want to `read this document on our documentation space <docs-README_>`_,
+    all inline links will be working there.
+
+.. _docs-README: https://hiveeyes.org/docs/arduino/README.html
+
+
 ************
 Introduction
 ************
