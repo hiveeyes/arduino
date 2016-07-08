@@ -6,7 +6,7 @@
  * All settings for controlling the behavior and role
  * of the firmware should be made inside this file.
  *
- * Software release 0.8.0
+ * Software release 0.8.1
  *
  * Copyright (C) 2014-2016  Richard Pobering <einsiedlerkrebs@ginnungagap.org>
  * Copyright (C) 2014-2016  Andreas Motl <andreas.motl@elmyra.de>
