@@ -1,3 +1,4 @@
+.. include:: ../../resources.rst
 
 .. _generic-firmware:
 
@@ -15,15 +16,24 @@ This is currently a work in progress, as of June 2016.
 ********
 Synopsis
 ********
-Generic sketch `generic.ino`_ running on
+Generic sketch `generic.ino`_ using the fine RadioHead_ and
+:ref:`beradio-c++` libraries and a bunch of other ones, running on:
 
-- a sensor node emitting telemetry data via RFM60
+- a sensor node emitting telemetry data via RFM69
 - a transceiver node receiving RFM69 and emitting RFM95 LoRa
 - a gateway node receiving RFM95 LoRa and sending it to the UART interface connected to the gateway SoC
 
+.. figure:: https://ptrace.hiveeyes.org/2016-07-08_Hiveeyes%20RadioHead%20Trio%20-%20RFM69%2CRFM95%2CUART.png
+    :alt: Three nodes, each running the "generic" firmware in different roles.
+    :width: 800px
+
+    Three nodes, each running the "generic" firmware in different roles.
+
 .. figure:: https://ptrace.hiveeyes.org/2016-07-08_Hiveeyes%20generic%20node%20RFM69-to-RFM95%20picocom.png
-    :alt: Three picocom instances connected to each of the three networked nodes
-    :width: 1024px
+    :alt: Three picocom instances connected to each of the three networked nodes.
+    :width: 800px
+
+    Three picocom instances connected to each of the three networked nodes.
 
 
 
