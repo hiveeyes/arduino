@@ -36,7 +36,7 @@ Firmwares
 Radio-based
 ===========
 .. list-table:: List of radio-based firmwares, in order of appearance
-    :widths: 12 40
+    :widths: 20 40
     :header-rows: 1
     :class: table-generous
 
@@ -59,7 +59,7 @@ Radio-based
         this data, decodes the :ref:`beradio:beradio` protocol and
         forwards it to the MQTT_ bus.
 
-    * - generic
+    * - :ref:`generic-firmware`
       - We started working on `generic.ino`_, a flexible software breadboard
         for nodes, transceivers and gateways on June 26, 2016.
 
@@ -67,14 +67,14 @@ Radio-based
 GPRS-based
 ==========
 .. list-table:: List of GPRS-based firmwares, in order of appearance
-    :widths: 12 40
+    :widths: 20 40
     :header-rows: 1
     :class: table-generous
 
     * - Name
       - Description
 
-    * - node-gprs-http
+    * - :ref:`open-hive-firmware`
       - `node-gprs-http.ino`_ is the firmware source code powering
         the `Open Hive Box`_. It transmits sensor data using HTTP
         over a GPRSbee_ GPRS modem.
@@ -86,6 +86,19 @@ GPRS-based
       - We started working on `node-gprs-any.ino`_, a playground sketch
         for building a generic transmitter machinery on June 8, 2016.
 
+
+Tools
+=====
+.. list-table:: List of tool firmware
+    :widths: 20 40
+    :header-rows: 1
+    :class: table-generous
+
+    * - Name
+      - Description
+
+    * - :ref:`scale-adjust-firmware`
+      - Use these firmwares for adjusting the scale / load cell unit.
 
 
 *****
