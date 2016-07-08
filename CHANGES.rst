@@ -9,6 +9,7 @@ CHANGES
 
 in-progress
 ===========
+- Add documentation about :ref:`scale-adjust-firmware`.
 
 
 2016-07-08 0.8.1

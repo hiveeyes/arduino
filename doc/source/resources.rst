@@ -2,22 +2,33 @@
 
 .. Links to external resources
 
-.. Atmel
-.. _ATmega328: https://en.wikipedia.org/wiki/ATmega328
 
-.. ESP8266
-.. _ESP8266: https://en.wikipedia.org/wiki/ESP8266
-.. _RFM69 to MQTT gateway using ESP8266: https://harizanov.com/2015/11/rfm69-to-mqtt-gateway-using-esp8266/
 
-.. _GPRSbee: http://gprsbee.com/
+.. Project
+.. =======
+
+
+.. Main
+.. ----
 
 .. Hiveeyes
 .. _Hiveeyes: https://swarm.hiveeyes.org/
 .. _Hiveeyes platform: https://swarm.hiveeyes.org/
 .. _Hiveeyes project: https://hiveeyes.org/
-
-.. Hiveeyes Arduino
 .. _Hiveeyes Arduino repository: https://github.com/hiveeyes/arduino
+
+
+.. Electronics
+.. -----------
+
+.. Open Hive
+.. _Open Hive Box: https://hiveeyes.org/docs/system/vendor/open-hive/#open-hive-seeeduino-stalker
+
+
+.. Software and protocols
+.. ----------------------
+
+.. Source code
 .. _node-gprs-any.ino: https://github.com/hiveeyes/arduino/blob/master/node-gprs-any/node-gprs-any.ino
 .. _node-rfm69-beradio.ino: https://github.com/hiveeyes/arduino/blob/master/node-rfm69-beradio/src/node-rfm69-beradio.ino
 .. _gateway-rfm69-beradio.ino: https://github.com/hiveeyes/arduino/blob/master/gateway-rfm69-beradio/src/gateway-rfm69-beradio.ino
@@ -32,7 +43,6 @@
 .. _BERadio specification: https://hiveeyes.org/docs/beradio/
 
 .. Open Hive
-.. _Open Hive Box: https://hiveeyes.org/docs/system/vendor/open-hive/#open-hive-seeeduino-stalker
 .. _OpenHive-Lib: https://github.com/hiveeyes/arduino/tree/master/libraries/OpenHive
 .. _node-gprs-http.ino: https://github.com/hiveeyes/arduino/blob/master/node-gprs-http/node-gprs-http.ino
 
@@ -40,19 +50,45 @@
 .. _Kotori: https://getkotori.org/docs/
 .. _Kotori Firmware Builder: https://getkotori.org/docs/applications/firmware.html
 
-.. computourist
-.. _computourist: https://github.com/computourist
-.. _RFM69 based sensors and MQTT gateway: https://github.com/computourist/RFM69-MQTT-client
 
-.. LowPowerLab
-.. _LowPowerLab: https://lowpowerlab.com/
-.. _Felix Rusu: https://github.com/LowPowerLab
+
+
+.. 3rd-party
+.. =========
+
+
+.. Electronics
+.. -----------
+
+.. Atmel
+.. _ATmega328: https://en.wikipedia.org/wiki/ATmega328
+
+.. ESP8266
+.. _ESP8266: https://en.wikipedia.org/wiki/ESP8266
+.. _RFM69 to MQTT gateway using ESP8266: https://harizanov.com/2015/11/rfm69-to-mqtt-gateway-using-esp8266/
 
 .. JeeLabs
 .. _JeeLabs: http://jeelabs.org/
 .. _Jean-Claude Wippler: https://github.com/jcw
 .. _JeeLink v3c: http://jeelabs.net/projects/hardware/wiki/JeeLink#JeeLink-v3c
 .. _JeeLink v3c shop: http://www.digitalsmarties.net/products/jeelink
+
+.. _GPRSbee: http://gprsbee.com/
+
+.. Load cell
+.. _load cell: https://en.wikipedia.org/wiki/Load_cell
+.. _Wheatstone bridge: https://en.wikipedia.org/wiki/Wheatstone_bridge
+.. _HX711: http://www.dfrobot.com/image/data/SEN0160/hx711_english.pdf
+.. _ADS1231: http://www.ti.com/product/ADS1231
+
+
+.. LowPowerLab and computourist
+.. _LowPowerLab: https://lowpowerlab.com/
+.. _RFM69 based sensors and MQTT gateway: https://github.com/computourist/RFM69-MQTT-client
+
+
+.. Software and protocols
+.. ----------------------
 
 .. Foundation technologies, protocols and subsystem services
 .. _Bencode: https://en.wikipedia.org/wiki/Bencode
@@ -68,6 +104,8 @@
 .. _A Python script to push serial data to MQTT: http://air.imag.fr/index.php/Mosquitto#Publication_en_Python
 
 .. Libraries
+.. _Felix Rusu: https://github.com/LowPowerLab
+.. _computourist: https://github.com/computourist
 .. _RFM69: https://github.com/LowPowerLab/RFM69
 .. _RFM69 library: https://github.com/LowPowerLab/RFM69
 .. _RFM69.h#L35: https://github.com/LowPowerLab/RFM69/blob/master/RFM69.h#L35
@@ -88,3 +126,4 @@
 .. _Bare-Arduino-Project: https://github.com/ladislas/Bare-Arduino-Project
 .. _HTTPie: http://httpie.org
 .. _HttpRequester: https://addons.mozilla.org/en-us/firefox/addon/httprequester/
+
