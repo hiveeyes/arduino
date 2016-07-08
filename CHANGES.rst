@@ -9,7 +9,12 @@ CHANGES
 
 in-progress
 ===========
+
+
+2016-07-08 0.8.1
+================
 - Add documentation about the new :ref:`generic-firmware`.
+- Switch “node-gprs-http” sketch from Rob Tillaarts DHTlib to DHTstable, as suggested by Clemens. Thanks again!
 
 
 2016-07-08 0.8.0
