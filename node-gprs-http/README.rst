@@ -8,10 +8,8 @@ Firmware for Open Hive Box
 
 .. tip::
 
-    You might want to `read this document on our documentation space <docs-open-hive-firmware_>`_,
+    You might want to `read this document on our documentation space <https://hiveeyes.org/docs/arduino/firmware/node-gprs-http/README.html>`_,
     all inline links will be working there.
-
-.. _docs-open-hive-firmware: https://hiveeyes.org/docs/arduino/firmware/node-gprs-http/README.html
 
 
 ************

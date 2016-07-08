@@ -10,15 +10,13 @@ BERadio C++
 
 .. tip::
 
-    You might want to `read this document on our documentation space <docs-beradio-c++_>`_,
+    You might want to `read this document on our documentation space <https://hiveeyes.org/docs/arduino/BERadio/README.html>`_,
     all inline links will be working there.
 
-.. _docs-beradio-c++: https://hiveeyes.org/docs/arduino/BERadio/README.html
 
-
-*****
-Intro
-*****
+************
+Introduction
+************
 `BERadio C++`_ is a software library
 for transmitting telemetry data over radio links with
 narrow bandwidth, all on embedded low-power devices.

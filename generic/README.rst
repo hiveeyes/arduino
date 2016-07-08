@@ -8,10 +8,8 @@ Generic firmware
 
 .. tip::
 
-    You might want to `read this document on our documentation space <docs-generic-firmware_>`_,
+    You might want to `read this document on our documentation space <https://hiveeyes.org/docs/arduino/firmware/generic/README.html>`_,
     all inline links will be working there.
-
-.. _docs-generic-firmware: https://hiveeyes.org/docs/arduino/firmware/generic/README.html
 
 
 ************
