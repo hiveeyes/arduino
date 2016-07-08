@@ -78,3 +78,25 @@
 .narrow {
     width: 15em;
 }
+
+
+/* table addons */
+
+.wy-table-responsive table td, .wy-table-responsive table th {
+    white-space: normal;
+}
+
+.wy-table-responsive .table-generous {
+    height: 3em;
+    font-size: larger;
+}
+
+.wy-table-responsive .table-generous td {
+    padding: 1.5em !important;
+    line-height: 1.5em;
+}
+
+.wy-table-responsive .table-generous td p {
+    font-size: inherit;
+    line-height: inherit;
+}

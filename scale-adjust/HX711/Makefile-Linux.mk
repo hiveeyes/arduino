@@ -5,7 +5,7 @@
 
 ### PROJECT_DIR
 ### This is the path to where you have created/cloned your project
-PROJECT_DIR       = ..
+PROJECT_DIR       = ../..
 
 ### AVR_GCC_VERSION
 ### Check if the version is equal or higher than 4.9
@@ -30,9 +30,8 @@ USER_LIB_PATH     =  $(realpath $(PROJECT_DIR)/libraries)
 ### For Arduino IDE 1.6.x
 ### Both BOARD_TAG and BOARD_SUB are needed. They must be set to the board you are currently using. (i.e BOARD_TAG = uno, mega, etc. & BOARD_SUB = atmega2560, etc.)
 ### Note: for the Arduino Uno, only BOARD_TAG is mandatory and BOARD_SUB can be equal to anything
-#BOARD_TAG         = pro
-BOARD_TAG         = uno
-BOARD_SUB         = 8MHzatmega328 
+BOARD_TAG         = pro
+BOARD_SUB         = 8MHzatmega328
 
 ### MONITOR_BAUDRATE
 ### It must be set to Serial baudrate value you are using.
@@ -57,7 +56,7 @@ CXXFLAGS_STD      = -std=gnu++11
 
 ### CPPFLAGS
 ### Flags you might want to set for debugging purpose. Comment to stop.
-CXXFLAGS         = -pedantic -Wall -Wextra -fno-use-cxa-atexit 
+CXXFLAGS         = -pedantic -Wall -Wextra -fno-use-cxa-atexit
 
 ### If avr-gcc -v is higher than 4.9, activate coloring of the output
 ifeq "$(AVR_GCC_VERSION)" "1"
@@ -66,6 +65,7 @@ endif
 
 ### MONITOR_PORT
 ### The port your board is connected to. Using an '*' tries all the ports and finds the right one.
+MONITOR_PORT      = /dev/ttyUSB0
 
 ### don't touch this
 CURRENT_DIR       = $(shell basename $(CURDIR))
@@ -75,6 +75,10 @@ CURRENT_DIR       = $(shell basename $(CURDIR))
 CURRENT_DIR       = $(shell basename $(CURDIR))
 OBJDIR            = $(PROJECT_DIR)/bin/$(CURRENT_DIR)/$(BOARD_TAG)
 
-
 ### path to Arduino.mk, inside the ARDMK_DIR, don't touch.
 include $(ARDMK_DIR)/Arduino.mk
+
+### FWBUILDER_DIR
+### Include helpers from Firmware-Builder directory.
+FWBUILDER_DIR     = $(PROJECT_DIR)/tools/Firmware-Builder
+include $(FWBUILDER_DIR)/Helper.mk

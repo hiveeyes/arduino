@@ -12,15 +12,26 @@ BERadio C++
 *****
 Intro
 *****
-`BERadio C++ <BERadio-Lib_>`_ is a software library
-for transmitting telemetry data over narrow-bandwidth
-radio links, all on embedded low-power devices.
-It implements the :ref:`beradio` specification
-and provides convenient API methods and data
-structures.
+`BERadio C++`_ is a software library
+for transmitting telemetry data over radio links with
+narrow bandwidth, all on embedded low-power devices.
 
-`BERadio C++ <BERadio-Lib_>`_ was tested successfully on
-Arduino (ATmega328p Pro/Uno), SimulAVR and x86_64 (both Mac OS X) .
+Its serialization format is Bencode_ according to the
+`BERadio specification`_, the C++ interface provides
+convenient API methods and container data structures
+for working with variable amounts of measurement
+values.
+
+By featuring automatic message fragmentation, data transmission
+is safe, even when using radio transceivers with constrained
+payloads, yet reasonably compact and still readable by humans
+(8-bit clean).
+
+BERadio C++ was tested successfully on
+Arduino (ATmega328p Pro/Uno), SimulAVR and x86_64 (both Mac OS X).
+It compiles with *avr-g++ 4.8, 4.9 and 5.2* as well as *clang++ 3.4*
+on Mac OS X and Archlinux.
+
 
 
 ********
@@ -28,7 +39,7 @@ Synopsis
 ********
 .. highlight:: cpp
 
-::
+A convenient C++ API for creating and transmitting message objects::
 
     // Message object with node id "999" and communication profile "h1"
     BERadioMessage *message = new BERadioMessage(999, "h1");
@@ -46,6 +57,16 @@ Synopsis
 
     // Free memory
     delete temperatures;
+
+.. highlight:: none
+
+This will serialize measurement values to Bencode_
+using EmBencode_::
+
+    d1:#i999e1:_2:h11:tli2121ei4242eee
+
+In case you are wondering, the scaling factor of ``* 100`` is
+applied to all floating point values, giving a precision of 2 digits.
 
 
 ************
@@ -70,5 +91,9 @@ EmBencode
 Terrine
 =======
     | Application boilerplate for convenient MCU development
-    | https://github.com/hiveeyes/arduino/tree/develop/libraries/Terrine
+    | https://github.com/hiveeyes/arduino/tree/master/libraries/Terrine
+
+
+.. _BERadio C++: https://github.com/hiveeyes/arduino/tree/master/libraries/BERadio
+.. _BERadio specification: https://hiveeyes.org/docs/beradio/
 

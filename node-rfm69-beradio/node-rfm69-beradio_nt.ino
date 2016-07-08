@@ -1,16 +1,16 @@
 /*
-   
+
                   Hiveeyes node-rfm69-beradio
- 
-   Code collects sensor data encodes them with BERadio protocol 
-   and sends it through RFM69 radio module to a gateway.
-    
+
+   Code collects sensor data, encodes it with BERadio
+   and sends it through a RFM69 radio module to a gateway.
+
    Software release 0.5.3
 
    Copyright (C) 2014-2016  Richard Pobering <einsiedlerkrebs@ginnungagap.org>
    Copyright (C) 2014-2016  Andreas Motl <andreas.motl@elmyra.de>
 
-   <https://hiveeyes.org>   
+   <https://hiveeyes.org>
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -23,14 +23,14 @@
    GNU General Public License for more details.
 
    You should have received a copy of the GNU General Public License
-   along with this program; if not, see: 
-   <http://www.gnu.org/licenses/gpl-3.0.txt>, 
+   along with this program; if not, see:
+   <http://www.gnu.org/licenses/gpl-3.0.txt>,
    or write to the Free Software Foundation,
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA
 
--------------------------------------------------------------------------   
+-------------------------------------------------------------------------
 
-   Hiveeyes node sketch for Arduino based platforms   
+   Hiveeyes node sketch for Arduino based platforms
 
    This is an Arduino sketch for the Hiveeyes bee monitoring system.
    The purpose is to collect vital data of a bee hive and transmit it
@@ -38,24 +38,24 @@
    the internet or collects it in a own database.
 
    The sensor data could be temperature (via DS18B20 or DHT),
-   humidity (DHT) or a load cell (H30A with HX711). Other sensors can 
+   humidity (DHT) or a load cell (H30A with HX711). Other sensors can
    easily be added.
 
    After the sensor data is collected, it gets encapsulated in a
-   BERadio character string, which will be the transmitted payload. 
-   BERadio is a wrapper that makes use of EmBeEncode dictrionaries and 
+   BERadio character string, which will be the transmitted payload.
+   BERadio is a wrapper that makes use of EmBeEncode dictrionaries and
    lists and adds some infrastructural metadata to it.
- 
+
    This code is for use with BERadio at the gateway side, e.g.
    as a forwarder from serial to mqtt.
 
    The creation of this code is strongly influenced by other projects, so
-   credits goes to 
-   them: <https://hiveeyes.org/docs/beradio/README.html#credits> 
+   credits goes to
+   them: <https://hiveeyes.org/docs/beradio/README.html#credits>
 
    Feel free to adapt this code to your own needs.
 
--------------------------------------------------------------------------   
+-------------------------------------------------------------------------
 
    Futher informations can be obtained at:
 
@@ -64,23 +64,23 @@
    repository                   https://github.com/hiveeyes/
    beradio                      https://hiveeyes.org/docs/beradio/
 
--------------------------------------------------------------------------   
+-------------------------------------------------------------------------
 
 */
 
-// TODO:  
+// TODO:
 //        * put all settings into "#define" header (e.g. scale)
 //        * fix #define DEBUG-switch issue
 //        * clean up code
 
-// Libraries 
+// Libraries
 
 #include <RFM69.h>                      // https://github.com/LowPowerLab/RFM69
 #include <RFM69_ATC.h>                  //https://github.com/LowPowerLab/RFM69
-#include <SPI.h>                  
+#include <SPI.h>
 #include <SPIFlash.h>                   // https://github.com/LowPowerLab/SPIFlash
 #include <avr/wdt.h>
-#include <WirelessHEX69.h>              // https://github.com/einsiedlerkrebs/WirelessProgramming 
+#include <WirelessHEX69.h>              // https://github.com/einsiedlerkrebs/WirelessProgramming
 #include <EmBencode.h>                  // https://github.com/jcw/embencode
 #include <LowPower.h>                   // https://github.com/LowPowerLab/LowPower
 #include <HX711.h>                      // https://github.com/bogde/HX711
@@ -92,11 +92,11 @@
 
 // BERadio & RFM69 defines
 
-#define NODEID      2 
+#define NODEID      2
 #define NETWORKID   100
 #define GATEWAYID   1
 #define FREQUENCY   RF69_868MHZ         // Match this with the version HopeRF-RFM69 module (others: RF69_433MHZ, RF69_868MHZ)
-//#define IS_RFM69HW                    //uncomment only for RFM69HW! 
+//#define IS_RFM69HW                    //uncomment only for RFM69HW!
 #define ENCRYPTKEY "www.hiveeyes.org"   //has to be same 16 characters/bytes on all nodes, not more not less!
 #define ACK_TIME    30                  // # of ms to wait for an ack
 #define MAX_PAYLOAD_LENGTH 61
@@ -120,9 +120,9 @@
 // MANUFACTURER_ID             0x1F44 for adesto(ex atmel) 4mbit flash
 //                             0xEF30 for windbond 4mbit flash
 //                             0xEF40 for windbond 16/64mbit flash
-//							   0x0102 for Spansion S25FL032P 32-Mbit 
+//							   0x0102 for Spansion S25FL032P 32-Mbit
 
-#define FLASH_MANUFACTURER_ID 0x0102  // set accordingly, if you have a spi-flash on board 
+#define FLASH_MANUFACTURER_ID 0x0102  // set accordingly, if you have a spi-flash on board
 
 // common defines
 
@@ -138,7 +138,7 @@
 #define SERIAL_BAUD 115200              // set your approriate serial baud rate here and accordingly in your terminal
 #define SLEEP                           // uncomment, for none sleeping periods
 #define SLEEP_MINUTES 15                // set you sleeping rhythm, in about minutes
- 
+
 // Sensor defines
 
 #define ONE_WIRE_BUS 9                  // DS18B20 data pin
@@ -146,7 +146,7 @@
 #define DHT_PIN1 7                      // DHT pin #1
 #define DHT_PIN2 6                      // DHT pin #2
 #define DHT_TYPE DHT22                  // DHT type (dht22)
-#define HX711_SCK A0                    // SCK pin of hx711 
+#define HX711_SCK A0                    // SCK pin of hx711
 #define HX711_DT A1                     // DT pin fo hx711
 
 
@@ -221,12 +221,12 @@ void setup(){
     radio.setPowerLevel(POWERLEVEL);
     #endif
 
-    #ifdef ENABLE_ATC 
+    #ifdef ENABLE_ATC
     radio.enableAutoPower(TARGET_RSSI);
     Serial.println("RFM69_ATC Enabled (Auto Transmission Control)");
     #endif
     radio.sleep();
-    #ifdef DEBUG_RADIO                   
+    #ifdef DEBUG_RADIO
     char buff[50];
     sprintf(buff, "Transmitting at %d Mhz...", FREQUENCY==RF69_433MHZ ? 433 : FREQUENCY==RF69_868MHZ ? 868 : 915);
     Serial.println(buff);
@@ -234,7 +234,7 @@ void setup(){
 
 
 // SPI Flash setup
-  
+
     #ifdef DEBUG
     Serial.println("\nsetting up SPI Flash");
     #endif
@@ -262,8 +262,8 @@ void setup(){
     #ifdef DEBUG_SENSORS
     Serial.println("OneWire set");
     #endif
-    scale.set_offset(8361975);          // the offset of the scale, is raw output without any weight, get this first and then do set.scale  
-    scale.set_scale(21901.f);           // this is the difference between the raw data of a known weight and an emprty scale 
+    scale.set_offset(8361975);          // the offset of the scale, is raw output without any weight, get this first and then do set.scale
+    scale.set_scale(21901.f);           // this is the difference between the raw data of a known weight and an emprty scale
     #ifdef DEBUG_SENSORS
     Serial.println("scale set");
     #endif
@@ -324,7 +324,7 @@ void loop(){
     }
     #endif
 
-// get sensor data 
+// get sensor data
 
     requestOneWire();
     requestDHT(1);
@@ -343,13 +343,13 @@ void loop(){
     sendData();
     memset(&theData.buff[0], 0, sizeof(theData.buff));
 
-    #ifdef DEBUG_RADIO 
+    #ifdef DEBUG_RADIO
     Serial.print("   [RX_RSSI:");Serial.print(radio.RSSI);Serial.print("]");
     #endif
     #ifdef DEBUG
     Serial.println("main loop ends here");
     #endif
-    delay(100); 
+    delay(100);
     #ifdef SLEEP
     Sleep(SLEEP_MINUTES);
     #endif
@@ -392,7 +392,7 @@ void requestScale(){
     scale.power_up();
     wght0 = scale.read_average(3);              // get the raw data of the scale
     wght1 = scale.get_units(3);                 // get the scaled data
-    
+
     scale.power_down();
     #ifdef DEBUG_SENSORS
     Serial.println("Readings:");
@@ -401,14 +401,14 @@ void requestScale(){
     #endif
 }
 
-//  embencode encoding 
+//  embencode encoding
 
 void encodeSomeData (int BERfamily) {           // this function encodes the values to a valid BERadio character string with embencode
     EmBencode encoder;
     theData.lenght = 0;
     encoder.startDict();                        // start the dictionary as marking point of the payload string
 	  encoder.push("_");                          // "_" marks the BERadio profile
-	  encoder.push(BERadio_profile);              
+	  encoder.push(BERadio_profile);
 	  encoder.push("#");                          // "#" marks the Node/hive in your setup
 	  encoder.push(NODEID);
 	  if (BERfamily == 1) {                       // beradio family switches to send a list of temp, or humidity or weight with infrastructural
@@ -420,7 +420,7 @@ void encodeSomeData (int BERfamily) {           // this function encodes the val
 		       encoder.push(temp3 * 10000);
            if (isfinite(temp6)){
 		           encoder.push(temp6 * 10000);
-           }  
+           }
 	     encoder.endList();                       // ends a list
 	  }
 	 else if (BERfamily == 2) {
@@ -428,10 +428,10 @@ void encodeSomeData (int BERfamily) {           // this function encodes the val
 	     encoder.startList();
            if (isfinite(hum0)){
 	             encoder.push(hum0 * 100);
-           }  
+           }
            if (isfinite(hum1)){
 	             encoder.push(hum1 * 100);
-           }  
+           }
 	         encoder.endList();
 	 }
 	 else if (BERfamily == 3) {
@@ -452,9 +452,9 @@ void encodeSomeData (int BERfamily) {           // this function encodes the val
    //#endif
 }
 
-// embencode vs. PAYLOAD control 
+// embencode vs. PAYLOAD control
 
-void EmBencode::PushChar (char ch) {          
+void EmBencode::PushChar (char ch) {
     if (theData.lenght >= MAX_PAYLOAD_LENGTH){
         Serial.println("theData.lenght limit reached, aborting");
         return;
@@ -466,7 +466,7 @@ void EmBencode::PushChar (char ch) {
 //    Wireless Updates via radio
 
 void wirelessUpdate(){
-    // Check for existing RF data, potentially for a new sketch wireless upload  
+    // Check for existing RF data, potentially for a new sketch wireless upload
     // For this to work this check has to be done often enough to be
     // picked up when a GATEWAY is trying hard to reach this node for a new sketch wireless upload
     if (radio.receiveDone()){
@@ -538,7 +538,7 @@ void Blink(byte PIN, int DELAY_MS){
    digitalWrite(PIN,LOW);
 }
 
-//   Sleeping 
+//   Sleeping
 
 void Sleep(int minutes ){
    int var = 0;
@@ -588,8 +588,8 @@ void requestDHT(int nr){
        Serial.print(temp5);
        Serial.println();
        #endif
-   } 
-   else 
+   }
+   else
    if (nr == 2){
        dht.setup(DHT_PIN2);
        delay(2000);
@@ -614,5 +614,5 @@ void requestDHT(int nr){
        Serial.print(temp6);
        Serial.println();
        #endif
-   } 
+   }
 }

@@ -2,11 +2,6 @@
 
 .. Links to external resources
 
-.. Tools
-.. _Ino: http://inotool.org
-.. _Arduino-Makefile: https://github.com/sudar/Arduino-Makefile
-.. _Bare-Arduino-Project: https://github.com/ladislas/Bare-Arduino-Project
-
 .. Atmel
 .. _ATmega328: https://en.wikipedia.org/wiki/ATmega328
 
@@ -20,19 +15,26 @@
 .. _Hiveeyes: https://swarm.hiveeyes.org/
 .. _Hiveeyes platform: https://swarm.hiveeyes.org/
 .. _Hiveeyes project: https://hiveeyes.org/
-.. _Kotori: https://getkotori.org/docs/
 
 .. Hiveeyes Arduino
 .. _Hiveeyes Arduino repository: https://github.com/hiveeyes/arduino/
 .. _node-gprs-any.ino: https://github.com/hiveeyes/arduino/blob/master/node-gprs-any/node-gprs-any.ino
 .. _node-rfm69-beradio.ino: https://github.com/hiveeyes/arduino/blob/master/node-rfm69-beradio/src/node-rfm69-beradio.ino
 .. _gateway-rfm69-beradio.ino: https://github.com/hiveeyes/arduino/blob/master/gateway-rfm69-beradio/src/gateway-rfm69-beradio.ino
-.. _generic.ino: https://github.com/hiveeyes/arduino/blob/develop/generic/generic.ino
-.. _Terrine: https://github.com/hiveeyes/arduino/tree/develop/libraries/Terrine
-.. _Terkin: https://github.com/hiveeyes/arduino/tree/develop/libraries/Terkin
-.. _Hiveeyes-Lib: https://github.com/hiveeyes/arduino/tree/develop/libraries/Hiveeyes
-.. _OpenHive-Lib: https://github.com/hiveeyes/arduino/tree/develop/libraries/OpenHive
-.. _BERadio-Lib: https://github.com/hiveeyes/arduino/tree/develop/libraries/BERadio
+.. _generic.ino: https://github.com/hiveeyes/arduino/blob/master/generic/generic.ino
+.. _Terrine: https://github.com/hiveeyes/arduino/tree/master/libraries/Terrine
+.. _Terkin: https://github.com/hiveeyes/arduino/tree/master/libraries/Terkin
+.. _Hiveeyes-Lib: https://github.com/hiveeyes/arduino/tree/master/libraries/Hiveeyes
+.. _BERadio-Lib: https://github.com/hiveeyes/arduino/tree/master/libraries/BERadio
+
+.. Open Hive
+.. _Open Hive Box: https://hiveeyes.org/docs/system/vendor/open-hive/#open-hive-seeeduino-stalker
+.. _OpenHive-Lib: https://github.com/hiveeyes/arduino/tree/master/libraries/OpenHive
+.. _node-gprs-http.ino: https://github.com/hiveeyes/arduino/blob/master/node-gprs-http/node-gprs-http.ino
+
+.. Kotori
+.. _Kotori: https://getkotori.org/docs/
+.. _Kotori Firmware Builder: https://getkotori.org/docs/applications/firmware.html
 
 .. computourist
 .. _computourist: https://github.com/computourist
@@ -75,3 +77,10 @@
 .. _RH_RF95: http://www.airspayce.com/mikem/arduino/RadioHead/classRH__RF95.html
 .. _RH_TCP: http://www.airspayce.com/mikem/arduino/RadioHead/classRH__TCP.html
 .. _StandardCplusplus: https://github.com/maniacbug/StandardCplusplus
+
+.. Tools
+.. _Ino: http://inotool.org
+.. _Arduino-Makefile: https://github.com/sudar/Arduino-Makefile
+.. _Bare-Arduino-Project: https://github.com/ladislas/Bare-Arduino-Project
+.. _HTTPie: http://httpie.org
+.. _HttpRequester: https://addons.mozilla.org/en-us/firefox/addon/httprequester/

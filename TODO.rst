@@ -16,15 +16,19 @@ TODO
 
 Bugs
 ====
-- [o] Fix git submodule dependency when cloning freshly,
+- [x] Fix git submodule dependency when cloning freshly,
   still does not track feature branches.
-- [o] Try to use BERadioShadowEncoder again
-- [o] message.set_mtu_size(96); (!!!)
+- [o] BERadio: Try to use BERadioShadowEncoder again
+- [o] BERadio: message.set_mtu_size(96); (!!!)
+- [o] generic.ino-gateway: put delay, to allow serial interrupt
+- [o] BERadio: Add warning message if BERadioMessage overflows
+  buffer of EmBencode (display only once!)
 
 Features
 ========
-- [o] Add sketch from Clemens
-- [o] Add HX711 calibration sketch
+- [x] Add main sketch from Clemens
+- [o] Automatic firmware building for node-gprs-http
+- [o] Add scale adjustment sketches for ADS1231 and HX711
 
 BERadio
 -------
@@ -35,16 +39,26 @@ BERadio
 - [o] Make :ref:`Kotori` receive data from RH_TCP driver
 - [o] Make std::string to uint8_t conversion available at BERadioMessage::send
 
+Libraries
+---------
+- [o] Move to https://github.com/rocketscream/Low-Power
+
+
 Documentation
 =============
 - [o] Credits and more upstream references
-- [o] Display license in documentation
+- [o] CONTRIBUTORS.rst
+- [o| node-gprs-http/README.rst
+- [o] Display licenses in documentation
+- [o] Properly document BOARD_TAG vs. BOARD_SUB for Arduino 1.0.x vs. 1.6.x
 
 Packaging
 =========
 - [o] Project packaging (tarball, zip?) and publishing
 - [o] Add ``git push github master`` to ``make release``. Don't miss the tags!
 - [o] Also publish to aPlatformIO_
+- [o] Detect when compling against Arduino 1.0.x vs. 1.6.x and adjust
+  BOARD_TAG vs. BOARD_SUB appropriately.
 
 Platforms
 =========
