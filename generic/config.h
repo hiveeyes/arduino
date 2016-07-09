@@ -18,24 +18,24 @@
 #define SERIAL_BAUD               115200         // serial baud rate
 #define BLINKPERIOD               500            // LED blinking period in ms
 #define HE_SLEEP                  false              // set to 1 for sleeping
-#define HE_SCALE                  false
-#define HE_HUMIDITY               false
-#define HE_TEMPERATURE            false
+#define HE_SCALE                  true
+#define HE_HUMIDITY               true
+#define HE_TEMPERATURE            true
 #define HE_DEMODATA               false
 #define HE_RFM69_OTA              false
-#define HE_BERadio                false
-#define HE_RADIO                  false
+#define HE_BERadio                true
+#define HE_RADIO                  true
 //#define HE_CONTAINERS             false
 
 
-#define IS_NODE                   false
+#define IS_NODE                   true
 #define IS_TRANSCEIVER            false
-#define IS_GATEWAY                true
+#define IS_GATEWAY                false
 
 
 #define HE_RFM69                  false              // LowPowerLab RFM69 library
-#define HE_RH69                   false              // RadioHead RH_RF69 driver
-#define HE_RH95                   true              // RadioHead RH_RF95 driver
+#define HE_RH69                   true              // RadioHead RH_RF69 driver
+#define HE_RH95                   false              // RadioHead RH_RF95 driver
 #define HE_RHTCP                  false               // RadioHead RH_TCP driver
 #define HE_FLASH                  false              // Enable SPI-flash
 
@@ -43,21 +43,22 @@
 
 #if HE_DEBUG                                  /**    fine grade debug settings     ***
                                                  ***              * *                 **/
-    #define DEBUG_FRAME           false
+    #define DEBUG_FRAME           true
     #define DEBUG_RADIO           true              // set to 1 for radio debug
-    #define DEBUG_SPI_FLASH       false              // set to 1 for SPI-flash debug
-    #define DEBUG_SENSORS         false              // set to 1 for sensor debug
+    #define DEBUG_SPI_FLASH       true              // set to 1 for SPI-flash debug
+    #define DEBUG_SENSORS         true              // set to 1 for sensor debug
     #define DEBUG_BERadio         true              // set to 1 for  HE_BERadio degub
-    #define DEBUG_MEMORY          false
-
+    #define DEBUG_MEMORY          true
+    #define DEBUG_LED             true
+    #define DEBUG_SEND_INFRA      true
 #endif                                           /**              * *                 **/
 
 
 #if HE_BERadio
     #define  BERadio_profile           "h1"           //  HE_BERadio profile
     #define  HE_HIVE_ID                2
-    #define  BAD_VALUE             273.15
-    #define  BERadio_DELAY         500
+    #define  BAD_VALUE             -273.15
+    #define  BERadio_DELAY         100
     #if HE_CONTAINERS == false
         #define HE_CONTAINERS      true
     #endif
@@ -65,6 +66,10 @@
 
 #if HE_SLEEP
     #define SLEEP_MINUTES             15             // sleeptime in about minutes
+#endif
+
+#if DEBUG_SEND_INFRA && HE_CONTAINERS
+    #define CONT_INFRA               true
 #endif
 
                                                  /**            * * * *               ***
@@ -217,15 +222,17 @@
 
 #endif                                           /**              * *                 **/
 
-
+#if DEBUG_LED
+    #define LED_DELAY                50
+#endif
                                                  /**            * * * *               ***
                                                  ***   automatic compiler directives  ***
                                                  ***             * * *                **/
 #ifdef __AVR_ATmega1284P__
-    #define LED                   15             // most Megas have LEDs on D15
+    #define LED                   15             // most Megas have LED_PINs on D15
     #define FLASH_SS              23             // and FLASH SS on D23
 #else
-    #define LED                   13             // Pro328mini has LEDs on D9
+    #define LED                   13             // Pro328mini has LED_PINs on D9
     #define FLASH_SS              8              // and FLASH SS on D8
 #endif
 

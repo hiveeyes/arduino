@@ -197,7 +197,9 @@ Terrine terrine;
 #if CONT_TEMP
     FloatList *tempL = new FloatList();
 #endif
-
+#if CONT_INFRA    
+    FloatList *infraL = new FloatList();
+#endif
 
 
 // -----
@@ -235,6 +237,7 @@ Terrine terrine;
     #include <SPI.h>
     RH_RF95 rh95(RH95_SS, RH95_IRQ);
     uint8_t buf95[RH_RF95_MAX_MESSAGE_LEN];
+    int rssi95;
     #if HE_RH95 && IS_TRANSCEIVER
         void transceive();
         RHReliableDatagram manager95(rh95, RH95_TRANSCEIVER_ID);
@@ -252,6 +255,8 @@ Terrine terrine;
     #include <SPI.h>
     RH_RF69 rh69(RH69_SS, RH69_IRQ);
     uint8_t buf69[RH69_MAX_MESSAGE_LEN];
+    int rssi69;
+    //int temp69;
     #if HE_RH69 && IS_TRANSCEIVER
         void transceive();
         RHReliableDatagram manager69(rh69, RH69_TRANSCEIVER_ID);
@@ -296,6 +301,10 @@ int TRANSMITPERIOD = 300;               //transmit a packet to gateway so often 
     bool is_online69 = false;
 #else
     bool is_online = false;
+#endif
+#if DEBUG_SEND_INFRA
+    uint8_t boots = 0;
+    uint8_t loops = 0;
 #endif
 std::string separator = std::string(42, '=');
 
@@ -487,9 +496,16 @@ void setup() {
         Serial.println("SPI Flash Init FAIL! (is chip present?)");
         #endif
     #endif
+    #if DEBUG_SEND_INFRA
+        boots++;
+    #endif
 
 
     #if HE_DEBUG
+        #if DEBUG_SEND_INFRA
+            terrine.log("boots ", false);
+            terrine.log(boots);
+        #endif
         terrine.log("# ready.");
     #endif
 
@@ -529,7 +545,24 @@ void loop() {
     #if HE_SCALE
         readScale();
     #endif
-    // serialize and transmit data
+        #if HE_RH69 && IS_TRANSCEIVER
+        transceive();
+    #endif
+    #if HE_RH95 && IS_GATEWAY
+        gatewayReceive();
+    #endif
+
+    #if DEBUG_SEND_INFRA
+        loops++;
+        #if CONT_INFRA
+            infraL->clear();
+            infraL->push_back(boots);
+            infraL->push_back(loops);
+            infraL->push_back(rssi69);
+            //infraL->push_back(temp69);
+        #endif
+    #endif
+// serialize and transmit data
     #if HE_BERadio
 
         #if DEBUG_MEMORY
@@ -553,6 +586,9 @@ void loop() {
         message->add("t", *tempL);
         message->add("h", *humL);
         message->add("w", *wghtL);
+        #if DEBUG_SEND_INFRA
+            message->add("i", *infraL);
+        #endif
 
         #if DEBUG_MEMORY
             terrine.logmem();
@@ -569,18 +605,11 @@ void loop() {
     #endif
 
 
-    #if HE_RH69 && IS_TRANSCEIVER
-        transceive();
-    #endif
-    #if HE_RH95 && IS_GATEWAY
-        gatewayReceive();
-    #endif
 
     #if HE_SLEEP
         delay(100);
         Sleep(SLEEP_MINUTES);
     #endif
-
 }
 
 /*+++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
@@ -727,6 +756,10 @@ void receivePackages(){
        digitalWrite(PIN,HIGH);
        delay(DELAY_MS);
        digitalWrite(PIN,LOW);
+       delay(DELAY_MS);
+       digitalWrite(PIN,HIGH);
+       delay(DELAY_MS);
+       digitalWrite(PIN,LOW);
     }
 #endif
 
@@ -818,6 +851,14 @@ void receivePackages(){
                         terrine.log((char*)buf69);
                     #endif
                     memset(&buf69[0], 0, len69);
+                    bool sleep95 = rh95.sleep();
+                    #if DEBUG_LED
+                        Blink(LED, 100);
+                    #endif
+                    #if DEBUG_RADIO
+                        terrine.log("sleeps95: ", false);
+                        terrine.log(sleep95);
+                    #endif
                     //memset(&buf95[0], 0, sizeof(len));
                 #endif
                 }
@@ -846,6 +887,11 @@ void receivePackages(){
                   if (success){Serial.println((char*)buf95); Serial.println();}
         }
         memset(&buf95[0], 0, len);
+        #if DEBUG_LED
+            Blink(LED, 100);
+        #else
+            delay(100);
+        #endif
     }
 #endif
 
@@ -868,7 +914,6 @@ void receivePackages(){
         // https://stackoverflow.com/questions/25360893/convert-char-to-uint8-t/25360996#25360996
         uint8_t *rh_buffer = new uint8_t[length + 1];
         memcpy(rh_buffer, (const char*)buffer, length);
-
         // Radio transmission
         if (is_online) {
             #if HE_RH69
@@ -880,6 +925,16 @@ void receivePackages(){
                 managerTCP.sendtoWait(rh_buffer, length, RHTCP_GATEWAY_ID);
                 terrine.log("SUCCESS: ", false);
                 terrine.log(success);
+            #endif
+            if (loops >= 1){rssi69 = rh69.lastRssi();}
+            //temp69 = rh69.temperatureRead();
+            bool sleep69 = rh69.sleep();
+            #if DEBUG_LED
+                Blink(LED, 100);
+            #endif
+            #if DEBUG_RADIO
+                terrine.log("sleeps69: ", false);
+                terrine.log(sleep69);
             #endif
         }
         else {

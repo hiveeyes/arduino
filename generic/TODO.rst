@@ -10,11 +10,18 @@ config.h
 generic.ino
 ===========
 
-[o] power savings - radio
-[o] delay in gateway 
-[o] LED-feedback for sending
+[x] power savings - radio
+[x] delay in gateway 
+[x] LED-feedback for sending
+[o] add reed routine for annotation
+[x] send infrastructural data
+[o] fix DHT issue
 
 hardware
 ========
 
 [o] unsolder status-LEDs
+[o] add reed-switch
+[o] casing
+[o] powering
+[o] test sensors
