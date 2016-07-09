@@ -1,0 +1,26 @@
+// Synopsis of the Hiveeyes generic firmware
+digraph generic_firmware_synopsis {
+
+    // Options
+    rankdir=LR;
+    ranksep=0.5;
+
+    // Style
+    node [shape="box", fontname="Verdana"];
+    edge [fontname="Verdana"];
+
+    // Nodes
+    "sensor-1"      [label="Sensor node 1"];
+    "sensor-2"      [label="Sensor node 2"];
+    "sensor-3"      [label="Sensor node 3"];
+    "transceiver"   [label="Protocol transceiver node"];
+    "gateway"       [label="Gateway node"];
+    "soc"           [label="SoC machine", style=dashed];
+
+    // Edges
+    "sensor-1"      -> "transceiver"    [label="RFM69"];
+    "sensor-2"      -> "transceiver";
+    "sensor-3"      -> "transceiver";
+    "transceiver"   -> "gateway"        [label="RFM95\n(LoRa)"];
+    "gateway"       -> "soc"            [label="UART", style=dashed];
+}

@@ -19,7 +19,7 @@
      the downstream gateway software, which in turn forwards
      received data to the MQTT bus.
 
-   Software release 0.8.0
+   Software release 0.8.1
 
    Copyright (C) 2014-2016  Richard Pobering <einsiedlerkrebs@ginnungagap.org>
    Copyright (C) 2014-2016  Andreas Motl <andreas.motl@elmyra.de>

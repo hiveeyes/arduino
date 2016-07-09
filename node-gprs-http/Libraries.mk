@@ -30,7 +30,7 @@
 # TODO: This is an old version, upgrade to the recent version named "libDHT"
 #       https://github.com/RobTillaart/libDHT
 #
-DHT_LIB_PATH        := $(USER_LIB_PATH)/RobTillaart-Arduino/libraries/DHTlib
+DHT_LIB_PATH        := $(USER_LIB_PATH)/RobTillaart-Arduino/libraries/DHTstable
 CPPFLAGS            += -I$(DHT_LIB_PATH)
 LOCAL_CPP_SRCS      += $(wildcard $(DHT_LIB_PATH)/*.cpp)
 

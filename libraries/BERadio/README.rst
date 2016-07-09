@@ -8,10 +8,15 @@
 BERadio C++
 ###########
 
+.. tip::
 
-*****
-Intro
-*****
+    You might want to `read this document on our documentation space <https://hiveeyes.org/docs/arduino/BERadio/README.html>`_,
+    all inline links will be working there.
+
+
+************
+Introduction
+************
 `BERadio C++`_ is a software library
 for transmitting telemetry data over radio links with
 narrow bandwidth, all on embedded low-power devices.
@@ -92,8 +97,4 @@ Terrine
 =======
     | Application boilerplate for convenient MCU development
     | https://github.com/hiveeyes/arduino/tree/master/libraries/Terrine
-
-
-.. _BERadio C++: https://github.com/hiveeyes/arduino/tree/master/libraries/BERadio
-.. _BERadio specification: https://hiveeyes.org/docs/beradio/
 
