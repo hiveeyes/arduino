@@ -13,11 +13,14 @@
      and emits them to RFM95 (LoRa). The messages are processed
      opaque, no decoding takes place here.
 
-   - A gateway node receives radio signals on RFM95 (LoRa) and
-     emits them to its UART interface connected to the gateway
-     SoC (e.g. a RaspberryPi). The decoding will be handled by
-     the downstream gateway software, which in turn forwards
-     received data to the MQTT bus.
+   - A gateway node receives RFM95 (LoRa) radio signals and emits
+     the payloads to its UART interface connected to the gateway
+     SoC (e.g. a RaspberryPi) running the BERadio forwarder.
+
+   The BERadio forwarder will decode the data according
+   to the BERadio specification and forward it to the
+   MQTT bus serialized as JSON dictionary, all of which
+   is beyond the scope of this MCU code.
 
    Software release 0.8.1
 

@@ -6,21 +6,29 @@ digraph generic_firmware_synopsis {
     ranksep=0.5;
 
     // Style
-    node [shape="box", fontname="Verdana"];
+    //graph [splines=ortho];
+    node [pin=true, shape="box", fontname="Verdana"];
     edge [fontname="Verdana"];
 
-    // Nodes
+    // Graph nodes represent hardware node units
     "sensor-1"      [label="Sensor node 1"];
     "sensor-2"      [label="Sensor node 2"];
-    "sensor-3"      [label="Sensor node 3"];
+    "sensor-N"      [label="Sensor node N"];
     "transceiver"   [label="Protocol transceiver node"];
     "gateway"       [label="Gateway node"];
     "soc"           [label="SoC machine", style=dashed];
 
-    // Edges
+    // Graph edges represent radio families and
+    // protocols spoken between node units.
     "sensor-1"      -> "transceiver"    [label="RFM69"];
     "sensor-2"      -> "transceiver";
-    "sensor-3"      -> "transceiver";
+    "sensor-N"      -> "transceiver";
     "transceiver"   -> "gateway"        [label="RFM95\n(LoRa)"];
     "gateway"       -> "soc"            [label="UART", style=dashed];
+
+    // Draw a dotted line between sensor-2
+    // and sensor-N, but retain node positions.
+    "sensor-2"      -> "sensor-N"       [dir=none, style=dotted];
+    {rank=same; "sensor-1"; "sensor-2"; "sensor-N" };
+
 }
