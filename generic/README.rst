@@ -6,12 +6,10 @@
 Generic firmware
 ################
 
-.. ifconfig:: False
+.. tip::
 
-    .. tip::
-
-        You might want to `read this document on our documentation space <https://hiveeyes.org/docs/arduino/firmware/generic/README.html>`_,
-        all inline links will be working there.
+    You might want to `read this document on our documentation space <https://hiveeyes.org/docs/arduino/firmware/generic/README.html>`_,
+    all inline links will be working there.
 
 
 ************
