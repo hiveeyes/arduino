@@ -198,7 +198,9 @@ Terrine terrine;
     FloatList *tempL = new FloatList();
 #endif
 #if CONT_INFRA    
-    FloatList *infraL = new FloatList();
+    //FloatList *bootsL = new FloatList();
+    FloatList *loopsL = new FloatList();
+    FloatList *rssiL = new FloatList();
 #endif
 
 
@@ -555,10 +557,12 @@ void loop() {
     #if DEBUG_SEND_INFRA
         loops++;
         #if CONT_INFRA
-            infraL->clear();
-            infraL->push_back(boots);
-            infraL->push_back(loops);
-            infraL->push_back(rssi69);
+            //bootsL->clear();
+            loopsL->clear();
+            rssiL->clear();
+            //bootsL->push_back(boots);
+            loopsL->push_back(loops);
+            rssiL->push_back(rssi69);
             //infraL->push_back(temp69);
         #endif
     #endif
@@ -586,8 +590,13 @@ void loop() {
         message->add("t", *tempL);
         message->add("h", *humL);
         message->add("w", *wghtL);
+        #if DEBUG_MEMORY
+            terrine.logmem();
+        #endif
         #if DEBUG_SEND_INFRA
-            message->add("i", *infraL);
+            //message->add("b", *bootsL);
+            message->add("l", *loopsL);
+            message->add("r", *rssiL);
         #endif
 
         #if DEBUG_MEMORY
@@ -604,6 +613,9 @@ void loop() {
 
     #endif
 
+    #if IS_NODE 
+        Blink(LED, LED_TIME);
+    #endif 
 
 
     #if HE_SLEEP
@@ -756,10 +768,6 @@ void receivePackages(){
        digitalWrite(PIN,HIGH);
        delay(DELAY_MS);
        digitalWrite(PIN,LOW);
-       delay(DELAY_MS);
-       digitalWrite(PIN,HIGH);
-       delay(DELAY_MS);
-       digitalWrite(PIN,LOW);
     }
 #endif
 
@@ -835,6 +843,11 @@ void receivePackages(){
                     //bool success69 =  manager69.recvfromAckTimeout(buf69, &len69, RH_ACK_TIMEOUT, &from);
                     success69 =  manager69.recvfromAck(buf69, &len69, &from69);
                     #if DEBUG_RADIO
+                        #if DEBUG_SEND_INFRA   
+                            if (loops >= 1){rssi69 = rh69.lastRssi();}
+                            terrine.log("RSSI69: ", false);
+                            terrine.log(rssi69);
+                        #endif
                         terrine.log("SUCCESS69: ", false);
                         terrine.log(success69);
                         //terrine.log("recv_msg: ", false);
@@ -845,6 +858,11 @@ void receivePackages(){
                     //bool success95 = manager95.sendtoWait(buf69, len69, RH95_GATEWAY_ID);
                     bool success95 = false;
                     success95 = manager95.sendtoWait(buf69, len69, RH95_GATEWAY_ID);
+                    #if DEBUG_SEND_INFRA   
+                        if (loops >= 1){rssi95 = rh95.lastRssi();}
+                        terrine.log("RSSI95: ", false);
+                        terrine.log(rssi95);
+                    #endif
                     #if DEBUG_RADIO
                         terrine.log("SUCCESS95: ", false);
                         terrine.log(success95);
@@ -887,6 +905,11 @@ void receivePackages(){
                   if (success){Serial.println((char*)buf95); Serial.println();}
         }
         memset(&buf95[0], 0, len);
+        #if DEBUG_SEND_INFRA   
+            if (loops >= 1){rssi95 = rh95.lastRssi();}
+            terrine.log("RSSI95: ", false);
+            terrine.log(rssi95);
+        #endif
         #if DEBUG_LED
             Blink(LED, 100);
         #else
@@ -926,15 +949,16 @@ void receivePackages(){
                 terrine.log("SUCCESS: ", false);
                 terrine.log(success);
             #endif
-            if (loops >= 1){rssi69 = rh69.lastRssi();}
+            #if DEBUG_SEND_INFRA   
+                if (loops >= 1){rssi69 = rh69.lastRssi();}
+            #endif
             //temp69 = rh69.temperatureRead();
             bool sleep69 = rh69.sleep();
-            #if DEBUG_LED
-                Blink(LED, 100);
-            #endif
             #if DEBUG_RADIO
                 terrine.log("sleeps69: ", false);
                 terrine.log(sleep69);
+                terrine.log("RSSI69: ", false);
+                terrine.log(rssi69);
             #endif
         }
         else {

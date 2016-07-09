@@ -17,12 +17,12 @@
 #define HE_DEBUG                  true               // turn on debug output and choose below
 #define SERIAL_BAUD               115200         // serial baud rate
 #define BLINKPERIOD               500            // LED blinking period in ms
-#define HE_SLEEP                  false              // set to 1 for sleeping
+#define HE_SLEEP                  true              // set to 1 for sleeping
 #define HE_SCALE                  true
 #define HE_HUMIDITY               true
 #define HE_TEMPERATURE            true
-#define HE_DEMODATA               false
-#define HE_RFM69_OTA              false
+#define HE_DEMODATA               true
+#define HE_RFM69_OTA              true
 #define HE_BERadio                true
 #define HE_RADIO                  true
 //#define HE_CONTAINERS             false
@@ -43,12 +43,12 @@
 
 #if HE_DEBUG                                  /**    fine grade debug settings     ***
                                                  ***              * *                 **/
-    #define DEBUG_FRAME           true
+    #define DEBUG_FRAME           false
     #define DEBUG_RADIO           true              // set to 1 for radio debug
-    #define DEBUG_SPI_FLASH       true              // set to 1 for SPI-flash debug
-    #define DEBUG_SENSORS         true              // set to 1 for sensor debug
-    #define DEBUG_BERadio         true              // set to 1 for  HE_BERadio degub
-    #define DEBUG_MEMORY          true
+    #define DEBUG_SPI_FLASH       false              // set to 1 for SPI-flash debug
+    #define DEBUG_SENSORS         false              // set to 1 for sensor debug
+    #define DEBUG_BERadio         false              // set to 1 for  HE_BERadio degub
+    #define DEBUG_MEMORY          false
     #define DEBUG_LED             true
     #define DEBUG_SEND_INFRA      true
 #endif                                           /**              * *                 **/
@@ -58,14 +58,14 @@
     #define  BERadio_profile           "h1"           //  HE_BERadio profile
     #define  HE_HIVE_ID                2
     #define  BAD_VALUE             -273.15
-    #define  BERadio_DELAY         100
+    #define  BERadio_DELAY         50
     #if HE_CONTAINERS == false
         #define HE_CONTAINERS      true
     #endif
 #endif
 
 #if HE_SLEEP
-    #define SLEEP_MINUTES             15             // sleeptime in about minutes
+    #define SLEEP_MINUTES             1             // sleeptime in about minutes
 #endif
 
 #if DEBUG_SEND_INFRA && HE_CONTAINERS
@@ -119,7 +119,7 @@
 
 #ifdef  HE_HUMIDITY
     #define DHT_AMOUNT                1
-    #define DHT_PIN1                  7              // DHT pin #1
+    #define DHT_PIN1                  8              // DHT pin #1
     #define DHT_PIN2                  6              // DHT pin #2
     #define DHT_TYPE                  DHT22          // DHT type (dht22)
     #if HE_CONTAINERS
@@ -223,11 +223,13 @@
 #endif                                           /**              * *                 **/
 
 #if DEBUG_LED
-    #define LED_DELAY                50
+    #define LED_TIME                1000
 #endif
                                                  /**            * * * *               ***
                                                  ***   automatic compiler directives  ***
-                                                 ***             * * *                **/
+
+ 
+                                                  ***             * * *                **/
 #ifdef __AVR_ATmega1284P__
     #define LED                   15             // most Megas have LED_PINs on D15
     #define FLASH_SS              23             // and FLASH SS on D23
@@ -235,6 +237,5 @@
     #define LED                   13             // Pro328mini has LED_PINs on D9
     #define FLASH_SS              8              // and FLASH SS on D8
 #endif
-
 
 
