@@ -104,3 +104,4 @@ TODO
 
 - prevent sending empty lists
 - allow sending plain int's
+- evaluate to send simple values over the wire, to gain free memory
