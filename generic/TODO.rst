@@ -17,6 +17,7 @@ generic.ino
 [x] send infrastructural data
 [x] fix DHT issue
 [o] power saving transceiver
+[o] take out rh69 buffer ifndef IS_TRANSCEIVER || IS_GATEWAY
 
 hardware
 ========
