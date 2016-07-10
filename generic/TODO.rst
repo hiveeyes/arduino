@@ -24,7 +24,7 @@ hardware
 
 [x] unsolder status-LEDs
 [o] add reed-switch
-[o] casing
-[o] powering
+[x] casing
+[x] powering
 [x] test sensors
 [x] antenna

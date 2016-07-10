@@ -17,34 +17,40 @@
 #define HE_DEBUG                  true               // turn on debug output and choose below
 #define SERIAL_BAUD               115200         // serial baud rate
 #define BLINKPERIOD               500            // LED blinking period in ms
+
 #define HE_SLEEP                  true              // set to 1 for sleeping
 #define HE_SCALE                  true
 #define HE_HUMIDITY               true
 #define HE_TEMPERATURE            true
-#define HE_DEMODATA               true
-#define HE_RFM69_OTA              true
 #define HE_BERadio                true
-#define HE_RADIO                  true
-//#define HE_CONTAINERS             false
 
+#define HE_RADIO                  true
 
 #define IS_NODE                   true
 #define IS_TRANSCEIVER            false
 #define IS_GATEWAY                false
 
-
-#define HE_RFM69                  false              // LowPowerLab RFM69 library
 #define HE_RH69                   true              // RadioHead RH_RF69 driver
 #define HE_RH95                   false              // RadioHead RH_RF95 driver
+
+#define HE_RFM69                  false              // LowPowerLab RFM69 library
 #define HE_RHTCP                  false               // RadioHead RH_TCP driver
 #define HE_FLASH                  false              // Enable SPI-flash
+
+#define HE_DEMODATA               false
+#define HE_RFM69_OTA              false
+//#define HE_CONTAINERS             false
+
+
+
+
 
 
 
 #if HE_DEBUG                                  /**    fine grade debug settings     ***
                                                  ***              * *                 **/
     #define DEBUG_FRAME           false
-    #define DEBUG_RADIO           true              // set to 1 for radio debug
+    #define DEBUG_RADIO           false              // set to 1 for radio debug
     #define DEBUG_SPI_FLASH       false              // set to 1 for SPI-flash debug
     #define DEBUG_SENSORS         false              // set to 1 for sensor debug
     #define DEBUG_BERadio         false              // set to 1 for  HE_BERadio degub
@@ -65,7 +71,7 @@
 #endif
 
 #if HE_SLEEP
-    #define SLEEP_MINUTES             1             // sleeptime in about minutes
+    #define SLEEP_MINUTES             15             // sleeptime in about minutes
 #endif
 
 #if DEBUG_SEND_INFRA && HE_CONTAINERS
