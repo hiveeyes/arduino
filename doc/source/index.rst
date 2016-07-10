@@ -53,6 +53,7 @@ Development
 
     CHANGES
     TODO
+    LICENSE
 
 
 Research
