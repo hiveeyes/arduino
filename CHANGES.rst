@@ -10,21 +10,21 @@ CHANGES
 in-progress
 ===========
 - Add documentation about :ref:`scale-adjust-firmware`.
+- Update `node-gprs-http.ino`_: Modularize sensors and debugging. Thanks, Clemens!
 
 
 2016-07-08 0.8.1
 ================
-- Add documentation about the new :ref:`generic-firmware`.
+- Add documentation about the new :ref:`generic-firmware`, "`generic.ino`_".
 - Switch “node-gprs-http” sketch from Rob Tillaarts DHTlib to DHTstable, as suggested by Clemens. Thanks again!
 
 
 2016-07-08 0.8.0
 ================
 - Make building “generic” sketch for x86_64 a bit easier, just do ``cd generic; ./sim/build``.
-- Add vanilla Open Hive sensor node sketch from Clemens Gruber as “node-gprs-http.ino”. Thanks, Clemens!
+- Add :ref:`open-hive-firmware` from Clemens Gruber as "`node-gprs-http.ino`_". Thanks, Clemens!
 - Satisfy dependencies of “node-gprs-http” per git submodules (mostly), accompanied by Arduino Makefile yak shaving.
-- Add documentation about “node-gprs-http” at :ref:`open-hive-firmware`.
-- Add load cell adjustment sketches. Thanks again, Clemens!
+- Add :ref:`scale-adjust-firmware`. Thanks again, Clemens!
 - Finish restructuring work on "generic" sketch. Proof-of-Concept "node69-transceiver69x95-gateway95" is working!
 
 
