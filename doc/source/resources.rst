@@ -40,11 +40,12 @@
 
 .. BERadio
 .. _BERadio C++: https://github.com/hiveeyes/arduino/tree/master/libraries/BERadio
-.. _BERadio specification: https://hiveeyes.org/docs/beradio/
 
 .. Open Hive
 .. _OpenHive-Lib: https://github.com/hiveeyes/arduino/tree/master/libraries/OpenHive
 .. _node-gprs-http.ino: https://github.com/hiveeyes/arduino/blob/master/node-gprs-http/node-gprs-http.ino
+.. _node-rfm69-csv.ino: https://github.com/hiveeyes/arduino/blob/master/node-rfm69-csv/src/node-rfm69-csv.ino
+.. _gateway-rfm69-csv.ino: https://github.com/hiveeyes/arduino/blob/master/gateway-rfm69-csv/src/gateway-rfm69-csv.ino
 
 .. Kotori
 .. _Kotori: https://getkotori.org/docs/

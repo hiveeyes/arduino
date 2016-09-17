@@ -11,62 +11,50 @@
 Hiveeyes Arduino documentation
 ##############################
 
-This is the documentation for the `Hiveeyes Arduino repository`_.
-The firmware source code supports different hardware.
-Feel welcome to explore this space.
-
-******
-Topics
-******
+This is the documentation for the `Hiveeyes Arduino repository`_
+of the `Hiveeyes project`_, a beehive monitoring system made of
+open source software and hardware components.
+Enjoy reading and exploring this space.
 
 .. toctree::
     :maxdepth: 1
-    :glob:
+    :hidden:
 
-    README
-    BERadio/README
+    firmwares
     firmware-builder
+
+    Usage <README>
+    BERadio/README
+    development
+
+    Changelog <CHANGES>
+    LICENSE
+
+
+************
+Introduction
+************
+For an overview about the whole system, please have a look at :ref:`hiveeyes-system`.
+
 
 *********
 Firmwares
 *********
+There are different firmwares for different flavours of sensor nodes.
 
-.. toctree::
-    :maxdepth: 1
-    :glob:
+- :ref:`firmware-overview`
 
-    firmware/generic/README
-    firmware/node-gprs-http/README
-    firmware/scale-adjust/README
+Stable:
 
+- :ref:`GPRS sensor node <open-hive-firmware-gprs>`
+- :ref:`BERadio-based sensor and gateway nodes <firmwares-beradio>`
+- :ref:`scale-adjust-firmware`
 
-*******
-Details
-*******
+In development:
 
-Development
-===========
-
-.. toctree::
-    :maxdepth: 1
-    :glob:
-
-    CHANGES
-    TODO
-    LICENSE
-
-
-Research
-========
-
-.. toctree::
-    :maxdepth: 1
-    :glob:
-
-    BERadio/research
-    BERadio/firmware-size
-
-.. seealso:: Specification and more at :ref:`beradio`.
+- :ref:`generic-firmware`
+- :ref:`open-hive-firmware-rfm69-node`
+- :ref:`open-hive-firmware-rfm69-gateway`
 
 
 .. Indices and tables

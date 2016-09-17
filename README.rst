@@ -14,14 +14,15 @@ README
 
 .. tip::
 
-    You might want to `read this document on our documentation space <https://hiveeyes.org/docs/arduino/README.html>`_,
+    You might want to `continue reading on our documentation space <https://hiveeyes.org/docs/arduino/>`_,
     all inline links will be working there.
 
 
 ************
 Introduction
 ************
-This is the documentation for the `Hiveeyes Arduino repository`_.
+This is the documentation for the `Hiveeyes Arduino repository`_ of the `Hiveeyes project`_,
+a beehive monitoring system. Enjoy reading!
 
 All Arduino based code (for ATmega328_ and ESP8266_) is living here.
 We support different hardware, so there are different flavors
@@ -35,76 +36,6 @@ of the firmware, reflected by the directory naming convention
 Most programs use `Arduino-Makefile`_ for building while there are still some based on Ino_.
 
 
-*********
-Firmwares
-*********
-
-Radio-based
-===========
-.. list-table:: List of radio-based firmwares, in order of appearance
-    :widths: 20 40
-    :header-rows: 1
-    :class: table-generous
-
-    * - Name
-      - Description
-
-    * - node-rfm69-beradio
-      - `node-rfm69-beradio.ino`_ collects sensor data, encodes it with
-        BERadio and sends it through a RFM69 radio transceiver module
-        to a gateway.
-
-        This is the first version of the firmware running on
-        :ref:`hiveeyes:hiveeyes-one` since February 2016.
-
-    * - gateway-rfm69-beradio
-      - `gateway-rfm69-beradio.ino`_ receives sensor data over radio
-        and forwards it to the UART interface, which is connected to
-        the serial port of the gateway machine.
-        In turn, :ref:`beradio-python <beradio:beradio-python>` reads
-        this data, decodes the :ref:`beradio:beradio` protocol and
-        forwards it to the MQTT_ bus.
-
-    * - :ref:`generic-firmware`
-      - We started working on `generic.ino`_, a flexible software breadboard
-        for nodes, transceivers and gateways on June 26, 2016.
-
-
-GPRS-based
-==========
-.. list-table:: List of GPRS-based firmwares, in order of appearance
-    :widths: 20 40
-    :header-rows: 1
-    :class: table-generous
-
-    * - Name
-      - Description
-
-    * - :ref:`open-hive-firmware`
-      - `node-gprs-http.ino`_ is the firmware source code powering
-        the `Open Hive Box`_. It transmits sensor data using HTTP
-        over a GPRSbee_ GPRS modem.
-
-        While already in the making for some time, we finally
-        integrated the code into the repository on July 7, 2016.
-
-    * - node-gprs-any
-      - We started working on `node-gprs-any.ino`_, a playground sketch
-        for building a generic transmitter machinery on June 8, 2016.
-
-
-Tools
-=====
-.. list-table:: List of tool firmware
-    :widths: 20 40
-    :header-rows: 1
-    :class: table-generous
-
-    * - Name
-      - Description
-
-    * - :ref:`scale-adjust-firmware`
-      - Use these firmwares for adjusting the scale / load cell unit.
 
 
 *****

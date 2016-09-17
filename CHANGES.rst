@@ -9,8 +9,18 @@ CHANGES
 
 in-progress
 ===========
+
+
+2016-09-17 0.9.0
+================
 - Add documentation about :ref:`scale-adjust-firmware`.
-- Update `node-gprs-http.ino`_: Modularize sensors and debugging. Thanks, Clemens!
+- Update firmware for :ref:`open-hive-firmware-gprs` "`node-gprs-http.ino`_": Modularize sensors and debugging. Thanks, Clemens!
+- Add firmwares for Open Hive RFM69 tandem with build infrastructure and documentation
+
+    - :ref:`open-hive-firmware-rfm69-node`: `node-rfm69-csv.ino`_
+    - :ref:`open-hive-firmware-rfm69-gateway`: `gateway-rfm69-csv.ino`_
+
+- Improve documentation
 
 
 2016-07-08 0.8.1
@@ -22,7 +32,7 @@ in-progress
 2016-07-08 0.8.0
 ================
 - Make building “generic” sketch for x86_64 a bit easier, just do ``cd generic; ./sim/build``.
-- Add :ref:`open-hive-firmware` from Clemens Gruber as "`node-gprs-http.ino`_". Thanks, Clemens!
+- Add :ref:`open-hive-firmware-gprs` from Clemens Gruber as "`node-gprs-http.ino`_". Thanks, Clemens!
 - Satisfy dependencies of “node-gprs-http” per git submodules (mostly), accompanied by Arduino Makefile yak shaving.
 - Add :ref:`scale-adjust-firmware`. Thanks again, Clemens!
 - Finish restructuring work on "generic" sketch. Proof-of-Concept "node69-transceiver69x95-gateway95" is working!
