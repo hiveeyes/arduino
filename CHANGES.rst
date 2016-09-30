@@ -9,6 +9,7 @@ CHANGES
 
 in-progress
 ===========
+- Add gateway sketch for Open Hive CSV payload transmission and forwarding to UART using a JeeLink
 
 
 2016-09-17 0.9.0
