@@ -70,11 +70,11 @@ bool promiscuousMode = false;           //set to 'true' to sniff all packets on 
 
 void setup() {
 
-    #ifndef SIMULATE
-
     // Setup serial interface
     Serial.begin(SERIAL_BAUD);
     delay(10);
+
+    #ifndef SIMULATE
 
     // Setup radio module
     radio.initialize(FREQUENCY, NODEID, NETWORKID);
