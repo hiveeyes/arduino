@@ -46,6 +46,7 @@ There are different firmwares for different flavours of sensor nodes.
 
 Stable:
 
+- :ref:`WiFi sensor node <node-wifi-mqtt>`
 - :ref:`GPRS sensor node <open-hive-firmware-gprs>`
 - :ref:`Radio sensor and gateway nodes <firmwares-beradio>`
 - :ref:`scale-adjust-firmware`

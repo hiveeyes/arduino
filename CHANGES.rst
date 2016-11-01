@@ -14,8 +14,10 @@ in-progress
 2016-11-01 0.10.0
 =================
 - Add gateway sketch for Open Hive CSV payload transmission and forwarding to UART using a JeeLink
-- Update node-wifi-mqtt sketch (beta release)
 - Update documentation about Open Hive RFM69 trio
+- Update sketch (beta release) and add documentation for:
+
+    - :ref:`node-wifi-mqtt`: `node-wifi-mqtt.ino`_
 
 
 2016-09-17 0.9.0

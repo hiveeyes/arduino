@@ -24,6 +24,24 @@ Stable
 ******
 
 
+WiFi
+====
+List of WiFi-based firmwares.
+
+.. list-table::
+    :widths: 20 40
+    :header-rows: 1
+    :class: table-generous
+
+    * - Name
+      - Description
+
+    * - :ref:`node-wifi-mqtt`
+      - `node-wifi-mqtt.ino`_ is the firmware source code powering
+        the Open Hive `Adafruit Feather HUZZAH`_.
+        It transmits sensor data using WiFi/MQTT.
+
+
 GPRS
 ====
 List of GPRS-based firmwares.
