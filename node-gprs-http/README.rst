@@ -17,10 +17,9 @@ Open Hive GPRS sensor node
 ************
 Introduction
 ************
-This firmware runs on the `Open Hive Box`_, a beehive
-monitoring sensor node with GPRS transceiver.
+The `Open Hive Box`_ is a beehive monitoring sensor node with GPRS transceiver.
 Telemetry data is transmitted using HTTP.
-The most recent version is available at `node-gprs-http.ino`_.
+The most recent firmware version is available at `node-gprs-http.ino`_.
 
 .. figure:: https://ptrace.hiveeyes.org/2016-07-08_open-hive_box-with-electronics.jpg
     :alt: Open Hive Box with electronics

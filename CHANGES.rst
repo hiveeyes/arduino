@@ -15,16 +15,18 @@ in-progress
 =================
 - Add gateway sketch for Open Hive CSV payload transmission and forwarding to UART using a JeeLink
 - Update node-wifi-mqtt sketch (beta release)
+- Update documentation about Open Hive RFM69 trio
 
 
 2016-09-17 0.9.0
 ================
 - Add documentation about :ref:`scale-adjust-firmware`.
 - Update firmware for :ref:`open-hive-firmware-gprs` "`node-gprs-http.ino`_": Modularize sensors and debugging. Thanks, Clemens!
-- Add firmwares for Open Hive RFM69 tandem with build infrastructure and documentation
+- Add firmwares for Open Hive RFM69 trio with build infrastructure and documentation
 
     - :ref:`open-hive-firmware-rfm69-node`: `node-rfm69-csv.ino`_
-    - :ref:`open-hive-firmware-rfm69-gateway`: `gateway-rfm69-csv.ino`_
+    - :ref:`open-hive-firmware-rfm69-gateway-uart`: `gateway-rfm69-csv-uart.ino`_
+    - :ref:`open-hive-firmware-rfm69-gateway-sdcard`: `gateway-rfm69-csv-sdcard.ino`_
 
 - Improve documentation
 

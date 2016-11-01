@@ -45,7 +45,8 @@
 .. _OpenHive-Lib: https://github.com/hiveeyes/arduino/tree/master/libraries/OpenHive
 .. _node-gprs-http.ino: https://github.com/hiveeyes/arduino/blob/master/node-gprs-http/node-gprs-http.ino
 .. _node-rfm69-csv.ino: https://github.com/hiveeyes/arduino/blob/master/node-rfm69-csv/node-rfm69-csv.ino
-.. _gateway-rfm69-csv.ino: https://github.com/hiveeyes/arduino/blob/master/gateway-rfm69-csv/gateway-rfm69-csv.ino
+.. _gateway-rfm69-csv-sdcard.ino: https://github.com/hiveeyes/arduino/blob/master/gateway-rfm69-csv-sdcard/gateway-rfm69-csv-sdcard.ino
+.. _gateway-rfm69-csv-uart.ino: https://github.com/hiveeyes/arduino/blob/master/gateway-rfm69-csv-uart/gateway-rfm69-csv-uart.ino
 
 .. Kotori
 .. _Kotori: https://getkotori.org/docs/

@@ -15,11 +15,15 @@ Open Hive RFM69 sensor node
 ************
 Introduction
 ************
-This firmware runs on the `Open Hive Box`_ RFM69,
-a sensor node transmitting data using radio link communication.
+The `Open Hive Box`_ RFM69 is a sensor node transmitting data using radio link communication.
 Telemetry data is serialized using CSV and transmitted
-to the receiver node :ref:`open-hive-firmware-rfm69-gateway`.
-The most recent version is available at `node-rfm69-csv.ino`_.
+to the receiver node :ref:`open-hive-firmware-rfm69-gateway-sdcard`
+or :ref:`open-hive-firmware-rfm69-gateway-uart`.
+The most recent firmware version is available at `node-rfm69-csv.ino`_.
+
+.. figure:: https://ptrace.hiveeyes.org/2016-07-08_open-hive_box-with-electronics.jpg
+    :alt: Open Hive Box with electronics
+    :width: 640px
 
 .. graphviz:: synopsis.dot
 

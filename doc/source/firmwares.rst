@@ -41,6 +41,7 @@ List of GPRS-based firmwares.
         the `Open Hive Box`_. It transmits sensor data by HTTP
         using a GPRSbee_ GPRS modem.
 
+
 .. _firmwares-beradio:
 
 Radio: BERadio
@@ -88,10 +89,14 @@ List of radio-based firmwares using CSV serialization.
         CSV and sends it through a RFM69 radio
         transceiver module to a gateway node.
 
-    * - :ref:`open-hive-firmware-rfm69-gateway`
-      - `gateway-rfm69-csv.ino`_ receives sensor data over radio
-        and stores it to a SD card on an Arduino Yún.
+    * - :ref:`open-hive-firmware-rfm69-gateway-uart`
+      - `gateway-rfm69-csv-uart.ino`_ receives sensor data over radio
+        and forwards it to the UART interface suitable for further downstreaming
+        to MQTT using the :ref:`beradio-python <beradio:beradio-python>` gateway.
 
+    * - :ref:`open-hive-firmware-rfm69-gateway-sdcard`
+      - `gateway-rfm69-csv-sdcard.ino`_ receives sensor data over radio
+        and stores it to a SD card on an Arduino Yún.
 
 Tools
 =====

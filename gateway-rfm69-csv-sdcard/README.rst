@@ -1,6 +1,6 @@
 .. include:: ../../resources.rst
 
-.. _open-hive-firmware-rfm69-gateway:
+.. _open-hive-firmware-rfm69-gateway-sdcard:
 
 #############################
 Open Hive Arduino Yún gateway
@@ -8,7 +8,7 @@ Open Hive Arduino Yún gateway
 
 .. tip::
 
-    You might want to `read this document on our documentation space <https://hiveeyes.org/docs/arduino/firmware/gateway-rfm69-csv/README.html>`_,
+    You might want to `read this document on our documentation space <https://hiveeyes.org/docs/arduino/firmware/gateway-rfm69-csv-sdcard/README.html>`_,
     all inline links will be working there.
 
 
@@ -19,7 +19,7 @@ This firmware runs on the Open Hive RFM69 Arduino Yún,
 a receiver node using radio link communication.
 Telemetry data is received from the :ref:`open-hive-firmware-rfm69-node`,
 decoded from CSV and stored to a SD card.
-The most recent version is available at `gateway-rfm69-csv.ino`_.
+The most recent version is available at `gateway-rfm69-csv-sdcard.ino`_.
 
 .. graphviz:: ../node-rfm69-csv/synopsis.dot
 
@@ -42,7 +42,7 @@ Build on your workstation
     git clone --recursive https://github.com/hiveeyes/arduino
 
     # Select this firmware
-    cd gateway-rfm69-csv
+    cd gateway-rfm69-csv-sdcard
 
     # Select appropriate Makefile
     ln -s Makefile-Linux.mk Makefile
