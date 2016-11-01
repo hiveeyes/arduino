@@ -1,15 +1,20 @@
 /*
-   
+
                   Hiveeyes node-wifi-mqtt
- 
-   Code collects sensor data and sends via wifi to a mqtt bus. 
-    
-   Software release 0.5.1
 
-   Copyright (C) 2014-2016  The Hiveeyes developers
+   Collect beehive sensor data and transmit via WiFi to a MQTT broker.
 
-   <https://hiveeyes.org>   
+   Copyright (C) 2014-2016  Clemens Gruber
 
+
+   Changes
+   -------
+   2016-05-18 Initial version
+   2016-10-31 Beta release
+
+
+   GNU GPL v3 License
+   ------------------
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
    the Free Software Foundation; either version 3 of the License, or
@@ -21,38 +26,33 @@
    GNU General Public License for more details.
 
    You should have received a copy of the GNU General Public License
-   along with this program; if not, see: 
-   <http://www.gnu.org/licenses/gpl-3.0.txt>, 
+   along with this program; if not, see:
+   <http://www.gnu.org/licenses/gpl-3.0.txt>,
    or write to the Free Software Foundation,
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA
 
--------------------------------------------------------------------------   
+   -------------------------------------------------------------------------
 
-   Hiveeyes node sketch for Arduino based platforms   
+   Hiveeyes node sketch for Arduino based platforms. Here: ESP8266.
 
-   This is a arduino sketch for the hiveeyes bee monitoring system.
-   The purpose is to collect vital data and sends them via wifi to
-   a mqtt bus at swarm.hiveeyes.org:1883.
+   This is a Arduino sketch for the Hiveeyes bee monitoring system.
+   The purpose is to collect vital data and to send it via WiFi to
+   the MQTT bus at swarm.hiveeyes.org:1883.
 
-   This code is derived from the ardafruit esp8266 sensor model.
-   See below.
+   This code is derived from the Adafruit ESP8266 MCU demo sketch,
+   see below.
 
-   The creation of this code is strongly influenced by other projects, so
-   credits goes to 
-   them: <https://hiveeyes.org/docs/beradio/README.html#credits> 
+   Feel free to adapt this code to your own needs. Contributions are welcome!
 
-   Feel free to adapt this code to your own needs.
+   -------------------------------------------------------------------------
 
--------------------------------------------------------------------------   
+   Further information can be obtained at:
 
-   Futher informations can be obtained at:
+   The Hiveeyes Project         https://hiveeyes.org/
+   System documentation         https://hiveeyes.org/docs/system/
+   Code repository              https://github.com/hiveeyes/arduino/
 
-   hiveeyes                     https://hiveeyes.org/
-   documentation                https://hiveeyes.org/docs/system/
-   repository                   https://github.com/hiveeyes/
-   beradio                      https://hiveeyes.org/docs/beradio/
-
--------------------------------------------------------------------------   
+   -------------------------------------------------------------------------
 
 */
 
@@ -89,30 +89,53 @@
 #define AIO_USERNAME    ""
 #define AIO_KEY         ""
 
+// DS18B20
+#include <OneWire.h>            // oneWire for DS18B20
+#include <DallasTemperature.h>  // DS18B20 itself
+
+// number of temperature devices on bus
+const int temperatureNumDevices = 1;
+// order on physical array of temperature devices
+// the order is normally defined by the device id hardcoded in
+// the device, you can physically arrange the DS18B20 in case you
+// know the ID and use here {1,2,3,4 ... or you can tryp out what
+// sensor is on wich position and adusit it herer accordingly
+const int temperatureOrderDevices[temperatureNumDevices] = {0};
+// resolution for all devices (9, 10, 11 or 12 bits)
+const int temperaturePrecision = 12;
+// pin for the temperature sensors
+const int temperaturePin = 5;
+
+OneWire oneWire(temperaturePin);                       // oneWire instance to communicate with any OneWire devices (not just DS18B20)
+DallasTemperature temperatureSensors(&oneWire);        // pass oneWire reference to DallasTemperature
+
+uint8_t deviceAddressArray[temperatureNumDevices][8];  // arrays for device addresses
+char gradC[4]={' ','°','C','\0'};                      // degree sign
+
+
 // DHTxx sensor
-#include <dht.h>                        // https://github.com/RobTillaart/Arduino/tree/master/libraries/DHTlib
+#include <dht.h>
 
 // DHTxx pin(s) / humidity and temperature
 // how much pins have DHTxx devices connected?
 const int humidityNumDevices = 1;
-// pins have DHTxx device, pin 6, pin 7
+// pins have DHTxx device, pin 4
 const int humidityPins[humidityNumDevices+1] = {4};
 
 dht DHT;  // create DHT object
-char gradC[4]={' ','°','C','\0'};  // degree sign
 
 // HX711
-#include "HX711.h"                      // https://github.com/bogde/HX711
+#include "HX711.h"
 
 // HX711.DOUT  - pin #14
-// HX711.PD_SCK - pin #16
+// HX711.PD_SCK - pin #12
 HX711 scale(14,12);   // parameter "gain" is ommited; the default value 128 is used by the library
 
 
 // we need some variable as char to pass it to payload easily
-char temperatureChar[humidityNumDevices][6];  // should handle ±xx.x and null terminator
+char temperatureArrayChar[temperatureNumDevices][6];  // should handle +/-xx.x and null terminator
+char temperatureChar[humidityNumDevices][6];  // should handle +/-xx.x and null terminator
 char humidityChar[humidityNumDevices][6];  // should handle xxx.x and null terminator
-int level;
 char weightChar[9];  // should handle +-xxx.xxx and null terminator
 
 // Functions
@@ -132,30 +155,31 @@ const char MQTT_USERNAME[] PROGMEM  = AIO_USERNAME;
 const char MQTT_PASSWORD[] PROGMEM  = AIO_KEY;
 
 // Setup the MQTT client class by passing in the WiFi client and MQTT server and login details.
-Adafruit_MQTT_Client mqtt(&client, MQTT_SERVER, AIO_SERVERPORT, MQTT_CLIENTID, MQTT_USERNAME, MQTT_PASSWORD);/****************************** Feeds ***************************************/
+Adafruit_MQTT_Client mqtt(&client, MQTT_SERVER, AIO_SERVERPORT, MQTT_CLIENTID, MQTT_USERNAME, MQTT_PASSWORD);
+
+/****************************** Feeds ***************************************/
 
 // Setup feeds for temperature & humidity
-const char WEIGHT_FEED[] PROGMEM = AIO_USERNAME "hiveeyes/xx/test/esp8266-1/measure/weight";
+const char WEIGHT_FEED[] PROGMEM = AIO_USERNAME "hiveeyes/kh/dach/huzzah/measure/weight";
 Adafruit_MQTT_Publish weight = Adafruit_MQTT_Publish(&mqtt, WEIGHT_FEED);
 
-const char TEMPERATURE_FEED[] PROGMEM = AIO_USERNAME "hiveeyes/xx/test/esp8266-1/measure/temperature";
+const char TEMPERATURE_FEED[] PROGMEM = AIO_USERNAME "hiveeyes/kh/dach/huzzah/measure/temperature";
 Adafruit_MQTT_Publish temperature = Adafruit_MQTT_Publish(&mqtt, TEMPERATURE_FEED);
 
-const char HUMIDITY_FEED[] PROGMEM = AIO_USERNAME "hiveeyes/xx/test/esp8266-1/measure/humidity";
+const char HUMIDITY_FEED[] PROGMEM = AIO_USERNAME "hiveeyes/kh/dach/huzzah/measure/humidity";
 Adafruit_MQTT_Publish humidity = Adafruit_MQTT_Publish(&mqtt, HUMIDITY_FEED);
 
-const char BATTERY_FEED[] PROGMEM = AIO_USERNAME "hiveeyes/xx/test/esp8266-1/measure/battery";
-Adafruit_MQTT_Publish battery = Adafruit_MQTT_Publish(&mqtt, BATTERY_FEED);
+const char TEMPERATUREARRAY_FEED[] PROGMEM = AIO_USERNAME "hiveeyes/kh/dach/huzzah/measure/temperaturearray";
+Adafruit_MQTT_Publish temperaturearray = Adafruit_MQTT_Publish(&mqtt, TEMPERATUREARRAY_FEED);
+
+
 /*************************** Sketch Code ************************************/
-
-
 void setup() {
   Serial.begin(9600);
 
   // scale
-  scale.set_scale(-21383.f);  // this value is obtained by calibrating the scale with known weights; see the README for details
-  delay(1000UL*5);
-  scale.set_offset(40645);
+  scale.set_scale(-25144.f);  // this value is obtained by calibrating the scale with known weights; see the README for details
+  scale.set_offset(30775);
 //  scale.tare();             // reset the scale to 0
   yield();
 
@@ -177,10 +201,71 @@ void setup() {
   Serial.println(WiFi.localIP());
   Serial.println();
 
+
+  // temperature array
+  temperatureSensors.begin();  // start DallasTemperature library
+  temperatureSensors.setResolution(temperaturePrecision);  // set resolution of all devices
+
+  // Assign address manually. The addresses below will need to be changed
+  // to valid device addresses on your bus. Device addresses can be retrieved
+  // by using either oneWire.search(deviceAddress) or individually via
+  // temperatureSensors.getAddress(deviceAddress, index)
+  //insideThermometer    = { 0x28, 0x1D, 0x39, 0x31, 0x2, 0x0, 0x0, 0xF0 };
+  //outsideThermometer   = { 0x28, 0x3F, 0x1C, 0x31, 0x2, 0x0, 0x0, 0x2 };
+
+  // Search for devices on the bus and assign based on an index. Ideally,
+  // you would do this to initially discover addresses on the bus and then
+  // use those addresses and manually assign them (see above) once you know
+  // the devices on your bus (and assuming they don't change).
+  //
+  // method 1: by index
+  // change index to order divices as in nature
+  // (an other approach can be to order physical devices ascending to device address on cable)
+  for (int i=0; i<temperatureNumDevices; i++) {
+    if (!temperatureSensors.getAddress(deviceAddressArray[temperatureOrderDevices[i]], i)) {
+      Serial.print(F("Unable to find address for temperature array device "));
+      Serial.print(i);
+      Serial.println();
+    }
+  }
+
+  // method 2: search()
+  // search() looks for the next device. Returns 1 if a new address has been
+  // returned. A zero might mean that the bus is shorted, there are no devices,
+  // or you have already retrieved all of them. It might be a good idea to
+  // check the CRC to make sure you didn't get garbage. The order is
+  // deterministic. You will always get the same devices in the same order
+  //
+  // Must be called before search()
+  //oneWire.reset_search();
+  // assigns the first address found to insideThermometer
+  //if (!oneWire.search(insideThermometer)) Serial.println("Unable to find address for insideThermometer");
+  // assigns the seconds address found to outsideThermometer
+  //if (!oneWire.search(outsideThermometer)) Serial.println("Unable to find address for outsideThermometer");
+
+
   // connect to adafruit io
   connect();
 }
 
+
+// temperature array / DS18B20
+void getTemperature() {
+  // request temperature on all devices on the bus
+  temperatureSensors.setWaitForConversion(false);  // makes it async
+  // initiatie temperature retrieval
+  temperatureSensors.requestTemperatures();
+
+  // wait at least 750 ms for conversion
+  delay(1000);
+
+  // loop through each device, print out temperature
+  for(int i=0; i<temperatureNumDevices; i++) {
+    // print temperature
+    float temperatureC = temperatureSensors.getTempC(deviceAddressArray[i]);
+    dtostrf(temperatureC, 5, 1, temperatureArrayChar[i]);  // write to char array
+  }
+}
 
 // humidity and temperature, DHTxx
 void getHumidityTemperature() {
@@ -228,20 +313,6 @@ void getWeight() {
 }
 
 
-void battery_level() {
-  // read the battery level from the ESP8266 analog in pin.
-  // analog read level is 10 bit 0-1023 (0V-1V).
-  // our 1M & 220K voltage divider takes the max
-  // lipo value of 4.2V and drops it to 0.758V max.
-  // this means our min analog read value should be 580 (3.14V)
-  // and the max analog read value should be 774 (4.2V).
-  level = analogRead(A0);
-
-  // convert battery level to percent
-  level = map(level, 580, 774, 0, 100);
-}
-
-
 void loop() {
   // ping adafruit io a few times to make sure we remain connected
   if(! mqtt.ping(3)) {
@@ -256,8 +327,8 @@ void loop() {
 
   // output humidity and temperature, DHTxx
   getWeight();
+  getTemperature();
   getHumidityTemperature();
-  battery_level();
 
   // Publish data
   if (! weight.publish(weightChar))
@@ -266,6 +337,18 @@ void loop() {
     Serial.print(F("Weight:     "));
     Serial.print(weightChar);
     Serial.print(F(" kg"));
+    Serial.println(F("  -  published!"));
+  };
+
+  // note: only for a single DS18B20 on the bus!!
+  // must be rewritten for more DS18B20
+  if (! temperaturearray.publish(temperatureArrayChar[0]))
+    Serial.println(F("Failed to publish temperatureArray[0]"));
+  else {
+    Serial.print(F("temperatureArray: "));
+    Serial.print(temperatureArrayChar[0]);
+    Serial.print(F(" "));
+    Serial.print(gradC);
     Serial.println(F("  -  published!"));
   };
 
@@ -288,20 +371,9 @@ void loop() {
     Serial.println(F("  -  published!"));
   };
 
-  if (! battery.publish(level))
-    Serial.println(F("Failed to publish battery"));
-  else {
-    Serial.print(F("Battery:      "));
-    Serial.print(level);
-    Serial.print(F(" %"));
-    Serial.println(F("  -  published!"));
-  };
 
-  // Repeat every 10 seconds
-//  delay(10000);
-
-  // sleep
-  ESP.deepSleep(1000000*60*1, WAKE_RF_DEFAULT); // Sleep for 1 sec * 60 sec * 1 min
+  // Repeat every 30 seconds
+  delay(30000);
 }
 
 
@@ -329,4 +401,3 @@ void connect() {
   }
   Serial.println(F("Adafruit IO Connected!"));
 }
-

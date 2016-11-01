@@ -9,7 +9,12 @@ CHANGES
 
 in-progress
 ===========
+
+
+2016-11-01 0.10.0
+=================
 - Add gateway sketch for Open Hive CSV payload transmission and forwarding to UART using a JeeLink
+- Update node-wifi-mqtt sketch (beta release)
 
 
 2016-09-17 0.9.0
