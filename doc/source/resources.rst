@@ -51,7 +51,6 @@
 
 .. Kotori
 .. _Kotori: https://getkotori.org/docs/
-.. _Kotori Firmware Builder: https://getkotori.org/docs/applications/firmware.html
 
 
 

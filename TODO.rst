@@ -14,6 +14,16 @@ TODO
 2016
 ****
 
+Misc
+====
+
+2016-11-01
+----------
+- [o] Add http://platformio.org/
+- [o] Add https://nodemcu-build.com/
+- [o] Add https://www.heise.de/developer/artikel/Auf-Kommando-3361570.html
+
+
 Bugs
 ====
 - [x] Fix git submodule dependency when cloning freshly,

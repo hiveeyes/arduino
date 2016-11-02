@@ -18,7 +18,7 @@ Introduction
 The Open Hive JeeLink radio gateway is a receiver/gateway node using radio link communication
 based on the `JeeLink v3c`_ (`shop <JeeLink v3c shop_>`_).
 Telemetry data is received from the :ref:`open-hive-firmware-rfm69-node`,
-decoded from CSV and forwared to the UART interface suitable for further downstreaming
+decoded from CSV and forwarded to the UART interface suitable for further downstreaming
 to MQTT using the :ref:`beradio-python <beradio:beradio-python>` gateway.
 The most recent firmware version is available at `gateway-rfm69-csv-uart.ino`_.
 

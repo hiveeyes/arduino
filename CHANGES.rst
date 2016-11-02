@@ -9,6 +9,7 @@ CHANGES
 
 in-progress
 ===========
+- Work on documentation
 
 
 2016-11-01 0.10.0
