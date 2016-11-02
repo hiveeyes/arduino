@@ -18,6 +18,9 @@ generic.ino
 [x] fix DHT issue
 [o] power saving transceiver
 [o] take out rh69 buffer ifndef IS_TRANSCEIVER || IS_GATEWAY
+[o] message counter at the node
+[o] gateway - own ifrastructural messages
+[o] simple: print out rssi after got message
 
 hardware
 ========
