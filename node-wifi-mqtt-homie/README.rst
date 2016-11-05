@@ -35,7 +35,7 @@ The most recent firmware version is available at `node-wifi-mqtt-homie.ino`_.
 PCB 
 *****************
 
-The PCB can be downloaded in Frtitzing format from <https://www.imker-nettetal.de>`_
+The PCB can be downloaded in Frtitzing format from https://www.imker-nettetal.de
 
 .. figure:: https://www.imker-nettetal.de/wp-content/gallery/esp8266-beescale/BienenESP_Leiterplatte.png
     :alt: ESP8266 BeeScale PCB - schematics - top view
