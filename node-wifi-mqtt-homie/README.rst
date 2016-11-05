@@ -21,11 +21,12 @@ Open Hive Feather sensor node
 ************
 Introduction
 ************
-A beehive monitoring sensor node based on the `Adafruit Feather HUZZAH`_, featuring an ESP8266_ MCU.
+A beehive monitoring sensor node based on a ESP8266-07 module and a custom made PCB.
+The PCB itslef can be used with or without Homie / Hiveeyes
 Telemetry data is transmitted using WiFi/MQTT.
-The most recent firmware version is available at `node-wifi-mqtt.ino`_.
+The most recent firmware version is available at `node-wifi-mqtt-homie.ino`_.
 
-.. figure:: https://www.imker-nettetal.de/wp-content/gallery/esp8266-beescale/IMG_6685.JPG
+.. figure:: https://www.imker-nettetal.de/wp-content/gallery/esp8266-gh/PCB-Built-in.jpg
     :alt: Open Hive ESP8266 BeeScale
     :width: 640px
 
@@ -42,7 +43,7 @@ PCB
 
 ----
 
-.. figure:: https://www.imker-nettetal.de/wp-content/gallery/esp8266-beescale/IMG_6682.JPG
+.. figure:: https://www.imker-nettetal.de/wp-content/gallery/esp8266-gh/PCB-Front.jpg
     :alt: ESP8266 BeeScale PCB - top view
     :width: 640px
 
@@ -50,7 +51,7 @@ PCB
 
 ----
 
-.. figure:: https://www.imker-nettetal.de/wp-content/gallery/esp8266-beescale/IMG_6683.JPG
+.. figure:: https://www.imker-nettetal.de/wp-content/gallery/esp8266-gh/PCB-Back.jpg
     :alt: ESP8266 BeeScale PCB - bottom view
     :width: 640px
 
