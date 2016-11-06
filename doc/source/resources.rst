@@ -49,6 +49,12 @@
 .. _gateway-rfm69-csv-uart.ino: https://github.com/hiveeyes/arduino/blob/master/gateway-rfm69-csv-uart/gateway-rfm69-csv-uart.ino
 .. _node-wifi-mqtt.ino: https://github.com/hiveeyes/arduino/blob/master/node-wifi-mqtt/node-wifi-mqtt.ino
 
+.. imker-nettetal.de
+.. _ESP8266 Stockwaage – erste Eindrücke: https://www.imker-nettetal.de/esp8266-beescale-erste-eindruecke/
+.. _ESP8266-BeeScale.fzz: https://www.imker-nettetal.de/bienen-nsa/ESP8266-BeeScale1_1.fzz
+.. _node-wifi-mqtt-homie.ino: https://github.com/hiveeyes/arduino/blob/master/node-wifi-mqtt-homie/node-wifi-mqtt-homie.ino
+.. _node-wifi-mqtt-homie-battery.ino: https://github.com/hiveeyes/arduino/blob/master/node-wifi-mqtt-homie-battery/node-wifi-mqtt-homie-battery.ino
+
 .. Kotori
 .. _Kotori: https://getkotori.org/docs/
 
@@ -125,6 +131,7 @@
 .. _RH_RF95: http://www.airspayce.com/mikem/arduino/RadioHead/classRH__RF95.html
 .. _RH_TCP: http://www.airspayce.com/mikem/arduino/RadioHead/classRH__TCP.html
 .. _StandardCplusplus: https://github.com/maniacbug/StandardCplusplus
+.. _ESP8266 framework for Homie: https://github.com/marvinroger/homie-esp8266
 
 .. Tools
 .. _Ino: http://inotool.org

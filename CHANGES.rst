@@ -10,6 +10,7 @@ CHANGES
 in-progress
 ===========
 - Work on documentation
+- Initial commit of sketches based on ESP8266 and Homie. Thanks, Alex!
 
 
 2016-11-01 0.10.0

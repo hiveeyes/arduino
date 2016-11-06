@@ -2,9 +2,9 @@
 
 .. _node-wifi-mqtt-homie:
 
-#############################
-Open Hive Wifi / Homie sensor node
-#############################
+##################################
+Open Hive WiFi / Homie sensor node
+##################################
 
 .. contents::
    :local:
@@ -22,20 +22,27 @@ Open Hive Wifi / Homie sensor node
 Introduction
 ************
 A beehive monitoring sensor node based on a ESP8266-07 module and a custom made PCB.
-The PCB itself can be used with or without Homie / Hiveeyes. 
 Telemetry data is transmitted using WiFi/MQTT.
-The most recent firmware version is available at `node-wifi-mqtt-homie.ino`_.
+The standard firmware is based on the `ESP8266 framework for Homie`_, its most recent
+version is available at `node-wifi-mqtt-homie.ino`_.
+However, the PCB (`ESP8266-BeeScale.fzz`_) can be used independently of the Homie/Hiveeyes
+software stack.
+
+.. seealso::
+
+    - `ESP8266 Stockwaage – erste Eindrücke`_
+    - https://www.imker-nettetal.de/category/stockwaage/
 
 .. figure:: https://www.imker-nettetal.de/wp-content/gallery/esp8266-gh/PCB-Built-in.jpg
     :alt: Open Hive ESP8266 BeeScale
     :width: 640px
 
 
-*****************
-PCB 
-*****************
+***
+PCB
+***
 
-The PCB can be downloaded in Frtitzing format from https://www.imker-nettetal.de
+The PCB can be downloaded in Fritzing format from `ESP8266-BeeScale.fzz`_.
 
 .. figure:: https://www.imker-nettetal.de/wp-content/gallery/esp8266-beescale/BienenESP_Leiterplatte.png
     :alt: ESP8266 BeeScale PCB - schematics - top view
