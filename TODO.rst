@@ -17,6 +17,11 @@ TODO
 Misc
 ====
 
+2016-11-07
+----------
+- Provide snapshot archive of whole repository
+
+
 2016-11-01
 ----------
 - [o] Add http://platformio.org/
