@@ -1,25 +1,14 @@
 /***********************************************************************************************************
    ESP8266 Beescale
-   (c)2014 - 2016 Alexander Wilms
+   (c)2015-2016 Alexander Wilms
+   alex.wilms@adminguru.org
    https://www.imker-nettetal.de
 
-   GNU GPL v3 License
-   ------------------
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 3 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
-   You should have received a copy of the GNU General Public License
-   along with this program; if not, see:
-   <http://www.gnu.org/licenses/gpl-3.0.txt>,
-   or write to the Free Software Foundation,
-   Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA
-   -------------------------------------------------------------------------
-
+  Dieser Sketch von Alexander Wilms ist lizensiert unter einer Creative Commons
+  Namensnennung - Nicht-kommerziell - Weitergabe unter gleichen
+  Bedingungen 4.0 International Lizenz.
+  This code by Alexander Wilms is licensed under a Creative Commons
+  Attribution-NonCommercial-ShareAlike 4.0 International License.
 
   Credits: Marvin Roger for the awesome Homie Framework: https://github.com/marvinroger/homie-esp8266
 
@@ -40,12 +29,19 @@
 #include "HX711.h"
 #include <RunningMedian.h>
 
+
+
 // Use sketch BeeScale-Calibration to get these values
-const float offset = 85107.00;  // Offset load cell
-const float cell_divider = 22.27; // Load cell divider
+//const float offset = 85107.00;  // Offset load cell
+const float offset = 244017.00;  // Offset load cell
+const float cell_divider = 22.09; // Load cell divider
+//const float cell_divider = 22.27; // Load cell divider
 
-HX711 scale(13, 12);    // 13 DOUT, 12 PD_SCK
-
+// Pin Assignement here stopped working after 23.11.2016
+// Reason unknown, see
+// Workaround http://www.esp8266.com/viewtopic.php?f=8&t=11958
+//HX711 scale(13, 12);    // 13 DOUT, 12 PD_SCK
+HX711 scale;
 
 const int DEFAULT_SEND_INTERVAL = 60;
 unsigned long lastSent = 0;
@@ -56,12 +52,14 @@ float weight;
 ADC_MODE(ADC_VCC);
 float volt;
 
+
+
 HomieNode temperatureNode0("temperature0", "temperature");
 HomieNode temperatureNode1("temperature1", "temperature");
 HomieNode weightNode("weight", "weight");
 HomieNode batteryNode("battery", "battery");
 
-HomieSetting<unsigned long> sendIntervalSetting("sendInterval", "Interval for measurements in seconds");
+HomieSetting<long> sendIntervalSetting("sendInterval", "Interval for measurements in seconds");
 
 void setupHandler() {
   temperatureNode0.setProperty("unit").send("C");
@@ -69,6 +67,8 @@ void setupHandler() {
   weightNode.setProperty("unit").send("kg");
   batteryNode.setProperty("unit").send("V");
 }
+
+
 
 #define ONE_WIRE_BUS 14
 // Setup a OneWire instance to communicate with any OneWire devices
@@ -96,10 +96,10 @@ void getTemperatures() {
   temperature1 = sensors.getTempCByIndex(1);
 }
 
+
+
 void getWeight() {
-  scale.set_scale(cell_divider);  //initialize scale
-  scale.set_offset(offset);       //initialize scale
-  Serial.println("Getting weight, hold on");
+  Serial.println("Getting weight with 4 measurements, hold on");
     
   for (int i = 0; i < 4; i++) {
     Serial.print("*");
@@ -114,6 +114,7 @@ void getWeight() {
   Serial.println("");
   weight = WeightSamples.getMedian() / 1000;
 }
+
 
 void loopHandler() {
   if (millis() - lastSent >= sendIntervalSetting.get() * 1000UL || lastSent == 0) {
@@ -139,9 +140,16 @@ void loopHandler() {
 void setup() {
   Serial.begin(115200);
   Serial.println();
-  Serial.println();
-  Homie_setFirmware("Bienen", "1.0.11");
+
+  // Workaround http://www.esp8266.com/viewtopic.php?f=8&t=11958
+  scale.begin(13, 12);
+  scale.set_scale(cell_divider);  //initialize scale
+  scale.set_offset(offset);       //initialize scale
+  
+  Homie_setFirmware("Bienen", "1.0.0");
+  Homie.disableLedFeedback(); // before Homie.setup()
   Homie.setSetupFunction(setupHandler).setLoopFunction(loopHandler);
+
 
   temperatureNode0.advertise("unit");
   temperatureNode0.advertise("degrees");
@@ -154,8 +162,6 @@ void setup() {
 
   batteryNode.advertise("unit");
   batteryNode.advertise("volt");
-
-  Homie.disableLedFeedback(); // before Homie.setup()
 
   sendIntervalSetting.setDefaultValue(DEFAULT_SEND_INTERVAL);
   
