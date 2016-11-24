@@ -24,12 +24,12 @@
   Credits: Marvin Roger for the awesome Homie Framework: https://github.com/marvinroger/homie-esp8266
 
   Used libraries:
-  HX711:              https://github.com/bogde/HX711
-  RunningMedian:      https://github.com/RobTillaart/Arduino/tree/master/libraries/RunningMedian
-  Homie-esp8266:      https://github.com/marvinroger/homie-esp8266
-  Bounce2:            https://github.com/thomasfredericks/Bounce2
-  ESPAsyncTCP:        https://github.com/me-no-dev/ESPAsyncTCP
-  async-mqtt-client:  https://github.com/marvinroger/async-mqtt-client
+  HX711:		https://github.com/bogde/HX711
+  RunningMedian:	https://github.com/RobTillaart/Arduino/tree/master/libraries/RunningMedian
+  Homie-esp8266 v2.0.0:	https://github.com/marvinroger/homie-esp8266
+  Bounce2:		https://github.com/thomasfredericks/Bounce2
+  ESPAsyncTCP:		https://github.com/me-no-dev/ESPAsyncTCP
+  async-mqtt-client:	https://github.com/marvinroger/async-mqtt-client
 
 **********************************************************************************************************/
 
@@ -44,8 +44,7 @@
 const float offset = 85107.00;  // Offset load cell
 const float cell_divider = 22.27; // Load cell divider
 
-HX711 scale(13, 12);    // 13 DOUT, 12 PD_SCK
-
+HX711 scale;
 
 const int DEFAULT_SEND_INTERVAL = 60;
 unsigned long lastSent = 0;
@@ -61,7 +60,7 @@ HomieNode temperatureNode1("temperature1", "temperature");
 HomieNode weightNode("weight", "weight");
 HomieNode batteryNode("battery", "battery");
 
-HomieSetting<unsigned long> sendIntervalSetting("sendInterval", "Interval for measurements in seconds");
+HomieSetting<long> sendIntervalSetting("sendInterval", "Interval for measurements in seconds (max. 3600)");
 
 void setupHandler() {
   temperatureNode0.setProperty("unit").send("C");
@@ -97,9 +96,7 @@ void getTemperatures() {
 }
 
 void getWeight() {
-  scale.set_scale(cell_divider);  //initialize scale
-  scale.set_offset(offset);       //initialize scale
-  Serial.println("Getting weight, hold on");
+  Serial.println("Getting weight, hold on for 4 seconds");
     
   for (int i = 0; i < 4; i++) {
     Serial.print("*");
@@ -140,8 +137,13 @@ void setup() {
   Serial.begin(115200);
   Serial.println();
   Serial.println();
-  Homie_setFirmware("Bienen", "1.0.11");
+  Homie_setFirmware("Bienen", "1.0.1");
   Homie.setSetupFunction(setupHandler).setLoopFunction(loopHandler);
+  Homie.disableLedFeedback(); // LED pin would break serial on ESP-07
+  
+  scale.begin(13, 12);
+  scale.set_scale(cell_divider);
+  scale.set_offset(offset);    
 
   temperatureNode0.advertise("unit");
   temperatureNode0.advertise("degrees");
@@ -154,8 +156,6 @@ void setup() {
 
   batteryNode.advertise("unit");
   batteryNode.advertise("volt");
-
-  Homie.disableLedFeedback(); // before Homie.setup()
 
   sendIntervalSetting.setDefaultValue(DEFAULT_SEND_INTERVAL);
   
