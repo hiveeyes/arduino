@@ -24,6 +24,30 @@ Stable
 ******
 
 
+WiFi
+====
+List of WiFi-based firmwares.
+
+.. list-table::
+    :widths: 20 40
+    :header-rows: 1
+    :class: table-generous
+
+    * - Name
+      - Description
+
+    * - :ref:`node-wifi-mqtt`
+      - `node-wifi-mqtt.ino`_ is the firmware source code powering
+        the Open Hive `Adafruit Feather HUZZAH`_.
+        It transmits sensor data using WiFi/MQTT.
+
+    * - :ref:`node-wifi-mqtt-homie`
+      - `node-wifi-mqtt-homie.ino`_ is the standard firmware
+        based on the `ESP8266 framework for Homie`_ for powering
+        the »`ESP8266 beehive scale <ESP8266 Stockwaage – erste Eindrücke_>`_«.
+        It transmits sensor data using WiFi/MQTT.
+
+
 GPRS
 ====
 List of GPRS-based firmwares.
@@ -40,6 +64,7 @@ List of GPRS-based firmwares.
       - `node-gprs-http.ino`_ is the firmware source code powering
         the `Open Hive Box`_. It transmits sensor data by HTTP
         using a GPRSbee_ GPRS modem.
+
 
 .. _firmwares-beradio:
 
@@ -88,10 +113,14 @@ List of radio-based firmwares using CSV serialization.
         CSV and sends it through a RFM69 radio
         transceiver module to a gateway node.
 
-    * - :ref:`open-hive-firmware-rfm69-gateway`
-      - `gateway-rfm69-csv.ino`_ receives sensor data over radio
-        and stores it to a SD card on an Arduino Yún.
+    * - :ref:`open-hive-firmware-rfm69-gateway-uart`
+      - `gateway-rfm69-csv-uart.ino`_ receives sensor data over radio
+        and forwards it to the UART interface suitable for further downstreaming
+        to MQTT using the :ref:`beradio-python <beradio:beradio-python>` gateway.
 
+    * - :ref:`open-hive-firmware-rfm69-gateway-sdcard`
+      - `gateway-rfm69-csv-sdcard.ino`_ receives sensor data over radio
+        and stores it to a SD card on an Arduino Yún.
 
 Tools
 =====

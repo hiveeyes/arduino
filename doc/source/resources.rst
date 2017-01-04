@@ -45,11 +45,18 @@
 .. _OpenHive-Lib: https://github.com/hiveeyes/arduino/tree/master/libraries/OpenHive
 .. _node-gprs-http.ino: https://github.com/hiveeyes/arduino/blob/master/node-gprs-http/node-gprs-http.ino
 .. _node-rfm69-csv.ino: https://github.com/hiveeyes/arduino/blob/master/node-rfm69-csv/node-rfm69-csv.ino
-.. _gateway-rfm69-csv.ino: https://github.com/hiveeyes/arduino/blob/master/gateway-rfm69-csv/gateway-rfm69-csv.ino
+.. _gateway-rfm69-csv-sdcard.ino: https://github.com/hiveeyes/arduino/blob/master/gateway-rfm69-csv-sdcard/gateway-rfm69-csv-sdcard.ino
+.. _gateway-rfm69-csv-uart.ino: https://github.com/hiveeyes/arduino/blob/master/gateway-rfm69-csv-uart/gateway-rfm69-csv-uart.ino
+.. _node-wifi-mqtt.ino: https://github.com/hiveeyes/arduino/blob/master/node-wifi-mqtt/node-wifi-mqtt.ino
+
+.. imker-nettetal.de
+.. _ESP8266 Stockwaage – erste Eindrücke: https://www.imker-nettetal.de/esp8266-beescale-erste-eindruecke/
+.. _ESP8266-BeeScale.fzz: https://www.imker-nettetal.de/bienen-nsa/ESP8266-BeeScale1_1.fzz
+.. _node-wifi-mqtt-homie.ino: https://github.com/hiveeyes/arduino/blob/master/node-wifi-mqtt-homie/node-wifi-mqtt-homie.ino
+.. _node-wifi-mqtt-homie-battery.ino: https://github.com/hiveeyes/arduino/blob/master/node-wifi-mqtt-homie-battery/node-wifi-mqtt-homie-battery.ino
 
 .. Kotori
 .. _Kotori: https://getkotori.org/docs/
-.. _Kotori Firmware Builder: https://getkotori.org/docs/applications/firmware.html
 
 
 
@@ -66,6 +73,7 @@
 
 .. ESP8266
 .. _ESP8266: https://en.wikipedia.org/wiki/ESP8266
+.. _Adafruit Feather HUZZAH: https://www.adafruit.com/product/2821
 .. _RFM69 to MQTT gateway using ESP8266: https://harizanov.com/2015/11/rfm69-to-mqtt-gateway-using-esp8266/
 
 .. JeeLabs
@@ -81,6 +89,9 @@
 .. _Wheatstone bridge: https://en.wikipedia.org/wiki/Wheatstone_bridge
 .. _HX711: http://www.dfrobot.com/image/data/SEN0160/hx711_english.pdf
 .. _ADS1231: http://www.ti.com/product/ADS1231
+.. _DS18B20: https://www.maximintegrated.com/en/products/analog/sensors-and-sensor-interface/DS18B20.html
+.. _DHT33: http://shop.boxtec.ch/digital-humiditytemperature-sensor-dht33-rht04-p-40541.html
+.. _RHT04: http://www.humiditycn.com/cp21.html
 
 
 .. LowPowerLab and computourist
@@ -120,6 +131,7 @@
 .. _RH_RF95: http://www.airspayce.com/mikem/arduino/RadioHead/classRH__RF95.html
 .. _RH_TCP: http://www.airspayce.com/mikem/arduino/RadioHead/classRH__TCP.html
 .. _StandardCplusplus: https://github.com/maniacbug/StandardCplusplus
+.. _ESP8266 framework for Homie: https://github.com/marvinroger/homie-esp8266
 
 .. Tools
 .. _Ino: http://inotool.org

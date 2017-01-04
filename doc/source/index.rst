@@ -27,6 +27,7 @@ Enjoy reading and exploring this space.
     BERadio/README
     development
 
+    Contributors <AUTHORS>
     Changelog <CHANGES>
     LICENSE
 
@@ -46,15 +47,18 @@ There are different firmwares for different flavours of sensor nodes.
 
 Stable:
 
+- :ref:`WiFi sensor node <node-wifi-mqtt>`
+- :ref:`WiFi sensor node based on Homie <node-wifi-mqtt-homie>`
 - :ref:`GPRS sensor node <open-hive-firmware-gprs>`
-- :ref:`BERadio-based sensor and gateway nodes <firmwares-beradio>`
+- :ref:`Radio sensor and gateway nodes <firmwares-beradio>`
 - :ref:`scale-adjust-firmware`
 
 In development:
 
 - :ref:`generic-firmware`
 - :ref:`open-hive-firmware-rfm69-node`
-- :ref:`open-hive-firmware-rfm69-gateway`
+- :ref:`open-hive-firmware-rfm69-gateway-sdcard`
+- :ref:`open-hive-firmware-rfm69-gateway-uart`
 
 
 .. Indices and tables

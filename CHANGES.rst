@@ -9,8 +9,17 @@ CHANGES
 
 in-progress
 ===========
-- Add gateway sketch for Open Hive CSV payload transmission and forwarding to UART using a JeeLink
+- Work on documentation
+- Initial commit of sketches based on ESP8266 and Homie. Thanks, Alex!
 
+
+2016-11-01 0.10.0
+=================
+- Add sketch and update documentation about CSV payload transmission and forwarding to UART using a JeeLink device
+  to complete the Open Hive RFM69 trio: :ref:`open-hive-firmware-rfm69-gateway-uart` (`gateway-rfm69-csv-uart.ino`_).
+  Thanks Richard!
+- Update sketch (beta release) and add documentation about :ref:`node-wifi-mqtt` (`node-wifi-mqtt.ino`_).
+  Thanks Clemens and Karsten!
 
 2016-09-17 0.9.0
 ================
@@ -19,7 +28,7 @@ in-progress
 - Add firmwares for Open Hive RFM69 tandem with build infrastructure and documentation
 
     - :ref:`open-hive-firmware-rfm69-node`: `node-rfm69-csv.ino`_
-    - :ref:`open-hive-firmware-rfm69-gateway`: `gateway-rfm69-csv.ino`_
+    - :ref:`open-hive-firmware-rfm69-gateway-sdcard`: `gateway-rfm69-csv-sdcard.ino`_
 
 - Improve documentation
 

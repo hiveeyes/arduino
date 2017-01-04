@@ -6,11 +6,21 @@
 Firmware builder
 ################
 
+.. contents::
+    :local:
+    :depth: 1
 
-*****
-Intro
-*****
+----
+
+************
+Introduction
+************
 We have a flexible and powerful build system.
+
+You may build your own firmware flavors without having any toolchain installed
+on your workstation by issuing a HTTP POST request to the
+:ref:`Kotori firmware builder subsystem <kotori:firmware-builder>`.
+
 This infrastructure pulls code sketches including dependencies from the
 `Hiveeyes Arduino repository`_, replaces user-defined variables in the main
 sketch as well as the ``Makefile`` and delivers customized firmwares based
@@ -23,14 +33,85 @@ user-defined variables would be the Hiveeyes WAN device address in form of the t
 for setting up a GPRS device for communication in form of the quadruple
 (``GPRSBEE_AP_NAME``, ``GPRSBEE_AP_AUTH``, ``GPRSBEE_AP_USER`` and ``GPRSBEE_AP_PASS``).
 
-For getting an idea about the variable replacements with an example sketch suitable for
-automatic building using the variables described above, please have a look at
+For getting an idea about the variable replacements we are aiming at with an example sketch
+suitable for automatic building using the variables described above, please have a look at
 `node-gprs-any.ino, line 81 ff. <https://github.com/hiveeyes/arduino/blob/master/node-gprs-any/node-gprs-any.ino#L81#>`_
 
+.. attention::
 
-*****
-Usage
-*****
+    This is a work in progress, don't expect everything to work without effort yet.
+    Contributions are welcome!
+
+
+********************
+Build node-gprs-http
+********************
+
+The firmware source code `node-gprs-http.ino`_ of the :ref:`open-hive-firmware-gprs`
+is pulled from the master branch of the `Hiveeyes Arduino repository`_ on GitHub.
+Specify appropriate parameters to match your environment.
+
+.. todo::
+
+    How to configure the sensor node address (here ``testdrive/area-42/node-1``)
+    and other firmware parameters?
+
+
+HTTPie
+======
+HTTPie_ is a cURL-like tool for humans for conveniently issuing HTTP requests from the command line.
+
+Setup
+-----
+::
+
+    # Debian-based systems
+    aptitude install httpie
+
+    # Mac OS X
+    sudo port install httpie
+
+
+Build
+-----
+Issue a HTTP POST request to build and obtain the firmware hex file::
+
+    time http --timeout=120 POST https://swarm.hiveeyes.org/api/hiveeyes/testdrive/area-42/node-1/firmware.hex \
+        ref=master path=node-gprs-http makefile=Makefile-FWB.mk \
+        GPRSBEE_AP_NAME=internet.eplus.de GPRSBEE_AP_USER=barney@blau.de GPRSBEE_AP_PASS=789 \
+        --download
+
+    Downloading to "hiveeyes_node-gprs-http_pro328-atmega328p_af495adf-GPRSBEE_AP_NAME=internet.eplus.de,GPRSBEE_AP_PASS=789,HE_SITE=area-42,GPRSBEE_AP_USER=barney@blau.de,HE_USER=testdrive,HE_HIVE=node-1.hex"
+    Done. 72.18 kB in 0.17865s (404.03 kB/s)
+
+    real	0m19.154s
+
+
+HttpRequester
+=============
+The HttpRequester_ add-on for Firefox is a graphical user interface for issuing HTTP requests.
+
+Issue a HTTP POST request to acquire a firmware from the :ref:`Kotori firmware builder subsystem <kotori:firmware-builder>`.
+Please set the appropriate firmware build- and configuration parameters on the left side of the screen.
+
+.. figure:: https://ptrace.hiveeyes.org/2016-07-07_Kotori%20Firmware%20Builder%20HttpRequester.jpg
+    :alt: Kotori Firmware Builder HttpRequester
+    :width: 1024px
+
+After sending the HTTP POST request by hitting "Submit", just copy/paste the
+response content on the right side of the screen into a .hex file and upload to the MCU.
+
+.. tip::
+
+    As the available configuration parameters and possible values are currently not documented
+    in detail, please have a look at the source code (`node-gprs-http.ino`_). All preprocessor
+    variables (``#define ...``) can be changed through HTTP POST parameters.
+
+
+
+*******************
+Build node-gprs-any
+*******************
 .. highlight:: bash
 
 Just send a HTTP POST request to the ``..../firmware.hex``
@@ -43,7 +124,7 @@ Setup HTTP client::
     # Debian-based systems
     aptitude install httpie
 
-    # Mac OSX
+    # Mac OS X
     sudo port install httpie
 
 Acquire firmware::
@@ -70,12 +151,30 @@ to distinguish different build artifacts from each other.
     - When running Kotori on your workstation, you might want to use ``Makefile-OSX.mk``
       as designated Makefile.
 
+
+
+*************
+Upload to MCU
+*************
+
 .. todo::
 
-    How to program the firmware (e.g. using avrdude)?
+    What's the best way to upload the downloaded firmware hex file
+    to the MCU, when not having any toolchain installed, actually?
 
-    - Windows: http://m8051.blogspot.de/2015/01/avrdude-on-windows-long-time-after.html
-    - Mac OS X: https://www.pololu.com/docs/0J36/5.c, https://www.obdev.at/products/crosspack/
+
+Windows
+=======
+- http://m8051.blogspot.de/2015/01/avrdude-on-windows-long-time-after.html
+- http://arduinodev.com/arduino-uploader/
+- http://www.hobbytronics.co.uk/arduino-xloader
+- http://blog.zakkemble.co.uk/avrdudess-a-gui-for-avrdude/
+
+Mac OS X
+========
+- https://www.pololu.com/docs/0J36/5.c
+- https://www.obdev.at/products/crosspack/
+
 
 
 ********
