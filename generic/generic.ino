@@ -242,7 +242,7 @@ Terrine terrine;
         void transceive();
         RHReliableDatagram manager95(rh95, RH95_TRANSCEIVER_ID);
     #elif HE_RH95 && IS_GATEWAY
-        void gatewayReceive();
+        void gatewayReceive95();
         RHReliableDatagram manager95(rh95, RH95_GATEWAY_ID);
     #else
         RHReliableDatagram manager95(rh95, RH95_NODE_ID);
@@ -259,6 +259,7 @@ Terrine terrine;
         void transceive();
         RHReliableDatagram manager69(rh69, RH69_TRANSCEIVER_ID);
     #elif HE_RH69 && IS_GATEWAY
+        void gatewayReceive69();
         RHReliableDatagram manager69(rh69, RH69_GATEWAY_ID);
     #else
         RHReliableDatagram manager69(rh69, RH69_NODE_ID);
@@ -575,8 +576,12 @@ void loop() {
     #if HE_RH69 && IS_TRANSCEIVER
         transceive();
     #endif
+    #if HE_RH69 && IS_GATEWAY
+        //Serial.println("YYY");
+        gatewayReceive69();
+    #endif
     #if HE_RH95 && IS_GATEWAY
-        gatewayReceive();
+        gatewayReceive95();
     #endif
 
     #if HE_SLEEP
@@ -830,8 +835,31 @@ void receivePackages(){
         }
     }
 #endif
+
+#if HE_RH69 && IS_GATEWAY
+    void gatewayReceive69(){
+        uint8_t len = sizeof(buf69);
+        uint8_t from;
+        if (manager69.available()){
+        //if (is_online){
+            // Wait for a message addressed to us from the client
+            //bool success = manager69.recvfromAckTimeout(buf69, &len, RH_ACK_TIMEOUT, &from);
+            bool success = manager69.recvfromAck(buf69, &len, &from);
+            //bool success = manager69.recvfromAck(buf69, &len);
+                  #if DEBUG_RADIO
+                      terrine.log("SUCCESS: ", false);
+                      terrine.log(success);
+                      terrine.log("@", false);
+                      terrine.log(from);
+                  #endif
+                  if (success){Serial.println((char*)buf69); Serial.println();}
+        }
+        memset(&buf69[0], 0, len);
+    }
+#endif
+
 #if HE_RH95 && IS_GATEWAY
-    void gatewayReceive(){
+    void gatewayReceive95(){
         uint8_t len = sizeof(buf95);
         uint8_t from;
         if (manager95.available()){
