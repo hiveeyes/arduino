@@ -8,8 +8,8 @@
  *
  * Software release 0.10.0
  *
- * Copyright (C) 2014-2016  Richard Pobering <einsiedlerkrebs@ginnungagap.org>
- * Copyright (C) 2014-2016  Andreas Motl <andreas.motl@elmyra.de>
+ * Copyright (C) 2014-2017  Richard Pobering <einsiedlerkrebs@ginnungagap.org>
+ * Copyright (C) 2014-2017  Andreas Motl <andreas.motl@elmyra.de>
  *
 **/
 
@@ -17,7 +17,7 @@
 #define HE_DEBUG                  true               // turn on debug output and choose below
 #define SERIAL_BAUD               115200         // serial baud rate
 #define BLINKPERIOD               500            // LED blinking period in ms
-#define HE_SLEEP                  false              // set to 1 for sleeping
+#define HE_SLEEP                  false              // enable sleeping
 #define HE_SCALE                  false
 #define HE_HUMIDITY               false
 #define HE_TEMPERATURE            false
@@ -30,15 +30,36 @@
 
 #define IS_NODE                   false
 #define IS_TRANSCEIVER            false
-#define IS_GATEWAY                true
+#define IS_GATEWAY                false
 
 
 #define HE_RFM69                  false              // LowPowerLab RFM69 library
 #define HE_RH69                   false              // RadioHead RH_RF69 driver
-#define HE_RH95                   true              // RadioHead RH_RF95 driver
-#define HE_RHTCP                  false               // RadioHead RH_TCP driver
+#define HE_RH95                   false              // RadioHead RH_RF95 driver
+#define HE_RHTCP                  false              // RadioHead RH_TCP driver
 #define HE_FLASH                  false              // Enable SPI-flash
 
+
+// Compute custom configuration file
+// See also: https://stackoverflow.com/questions/5873722/c-macro-dynamic-include
+#ifdef CUSTOM_CONFIG
+    #define PASTER(str)   #str
+    #define EVALUATOR(x)  PASTER(x)
+    #define CUSTOM_CONFIG_FILE EVALUATOR(CUSTOM_CONFIG)
+#endif
+
+// Custom config: Used here to overwrite toplevel settings
+// To include a custom "config_xxx.h" (e.g. config_node.h vs. config_gateway.h).
+// Examples:
+//
+//      make -f Makefile-OSX.mk HE_ROLE=node        # config_node.h
+//      make -f Makefile-OSX.mk HE_ROLE=gateway     # config_gateway.h
+//
+// ... you get the idea!?
+//
+#ifdef CUSTOM_CONFIG_FILE
+    #include CUSTOM_CONFIG_FILE
+#endif
 
 
 #if HE_DEBUG                                  /**    fine grade debug settings     ***
@@ -231,3 +252,7 @@
 
 
 
+// Custom config: Now used to overwrite evaluated settings
+#ifdef CUSTOM_CONFIG_FILE
+    #include CUSTOM_CONFIG_FILE
+#endif

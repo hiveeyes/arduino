@@ -36,7 +36,7 @@ USER_LIB_PATH     =  $(realpath $(PROJECT_DIR)/libraries)
 ### Note: for the Arduino Uno, only BOARD_TAG is mandatory and BOARD_SUB can be equal to anything
 #BOARD_TAG         = pro
 #BOARD_TAG         = uno
-#BOARD_SUB         = 8MHzatmega328 
+#BOARD_SUB         = 8MHzatmega328
 
 # RasPIO Hiveeyes, 2016-12-15
 # NOTE: to flash the raspiduino, this avrdude command is needed
@@ -71,7 +71,7 @@ CXXFLAGS_STD      = -std=gnu++11
 
 ### CPPFLAGS
 ### Flags you might want to set for debugging purpose. Comment to stop.
-CXXFLAGS         = -pedantic -Wall -Wextra -fno-use-cxa-atexit 
+CXXFLAGS         = -pedantic -Wall -Wextra -fno-use-cxa-atexit
 
 ### If avr-gcc -v is higher than 4.9, activate coloring of the output
 ifeq "$(AVR_GCC_VERSION)" "1"
@@ -89,6 +89,11 @@ CURRENT_DIR       = $(shell basename $(CURDIR))
 CURRENT_DIR       = $(shell basename $(CURDIR))
 OBJDIR            = $(PROJECT_DIR)/bin/$(CURRENT_DIR)/$(BOARD_TAG)
 
+### Setup dispatcher: Delivers configuration settings for specific hardware setups.
+### Find a blueprint and further documentation in User.mk.
+ifneq "$(MAKEFILE_USER)" ""
+    include $(MAKEFILE_USER)
+endif
 
 ### path to Arduino.mk, inside the ARDMK_DIR, don't touch.
 include $(ARDMK_DIR)/Arduino.mk
