@@ -240,10 +240,10 @@ Terrine terrine;
     uint8_t buf95[RH_RF95_MAX_MESSAGE_LEN];
     #if HE_RH95 && IS_TRANSCEIVER
         void transceive();
-        RHReliableDatagram manager95(rh95, RH95_TRANSCEIVER_ID);
+        RHReliableDatagram manager95(rh95, RH95_RESCEIVER_ID);
     #elif HE_RH95 && IS_GATEWAY
-        void gatewayReceive();
-        RHReliableDatagram manager95(rh95, RH95_GATEWAY_ID);
+        void gatewayReceive95();
+        RHReliableDatagram manager95(rh95, RH95_RESCEIVER_ID);
     #else
         RHReliableDatagram manager95(rh95, RH95_NODE_ID);
     #endif
@@ -257,9 +257,10 @@ Terrine terrine;
     uint8_t buf69[RH69_MAX_MESSAGE_LEN];
     #if HE_RH69 && IS_TRANSCEIVER
         void transceive();
-        RHReliableDatagram manager69(rh69, RH69_TRANSCEIVER_ID);
+        RHReliableDatagram manager69(rh69, RH69_RESCEIVER_ID);
     #elif HE_RH69 && IS_GATEWAY
-        RHReliableDatagram manager69(rh69, RH69_GATEWAY_ID);
+        void gatewayReceive69();
+        RHReliableDatagram manager69(rh69, RH69_RESCEIVER_ID);
     #else
         RHReliableDatagram manager69(rh69, RH69_NODE_ID);
     #endif
@@ -575,8 +576,12 @@ void loop() {
     #if HE_RH69 && IS_TRANSCEIVER
         transceive();
     #endif
+    #if HE_RH69 && IS_GATEWAY
+        //Serial.println("YYY");
+        gatewayReceive69();
+    #endif
     #if HE_RH95 && IS_GATEWAY
-        gatewayReceive();
+        gatewayReceive95();
     #endif
 
     #if HE_SLEEP
@@ -758,9 +763,6 @@ void receivePackages(){
     }
 #endif
 
-//   Getting DHT Data
-
-
 
 /*
 #if HE_RH69 && IS_NODE
@@ -814,7 +816,7 @@ void receivePackages(){
                     digitalWrite(RH69_SS, HIGH);
                     //bool success95 = manager95.sendtoWait(buf69, len69, RH95_GATEWAY_ID);
                     bool success95 = false;
-                    success95 = manager95.sendtoWait(buf69, len69, RH95_GATEWAY_ID);
+                    success95 = manager95.sendtoWait(buf69, len69, RH95_RESCEIVER_ID);
                     #if DEBUG_RADIO
                         terrine.log("SUCCESS95: ", false);
                         terrine.log(success95);
@@ -830,8 +832,31 @@ void receivePackages(){
         }
     }
 #endif
+
+#if HE_RH69 && IS_GATEWAY
+    void gatewayReceive69(){
+        uint8_t len = sizeof(buf69);
+        uint8_t from;
+        if (manager69.available()){
+        //if (is_online){
+            // Wait for a message addressed to us from the client
+            //bool success = manager69.recvfromAckTimeout(buf69, &len, RH_ACK_TIMEOUT, &from);
+            bool success = manager69.recvfromAck(buf69, &len, &from);
+            //bool success = manager69.recvfromAck(buf69, &len);
+                  #if DEBUG_RADIO
+                      terrine.log("SUCCESS: ", false);
+                      terrine.log(success);
+                      terrine.log("@", false);
+                      terrine.log(from);
+                  #endif
+                  if (success){Serial.println((char*)buf69); Serial.println();}
+        }
+        memset(&buf69[0], 0, len);
+    }
+#endif
+
 #if HE_RH95 && IS_GATEWAY
-    void gatewayReceive(){
+    void gatewayReceive95(){
         uint8_t len = sizeof(buf95);
         uint8_t from;
         if (manager95.available()){
@@ -861,7 +886,6 @@ void receivePackages(){
             //dprint(payload.c_str());
         #endif
 
-        //manager69.sendtoWait(payload.c_str(), payload.length(), HE_RH69_TRANSCEIVER_ID);
 
         // C++ std::string
         //uint8_t *buf69 = new uint8_t[payload.length() + 1];
@@ -875,7 +899,7 @@ void receivePackages(){
         // Radio transmission
         if (is_online) {
             #if HE_RH69
-                bool success = manager69.sendtoWait(rh_buffer, length, RH69_TRANSCEIVER_ID);
+                bool success = manager69.sendtoWait(rh_buffer, length, RH69_RESCEIVER_ID);
                 terrine.log("SUCCESS: ", false);
                 terrine.log(success);
                 delay(BERadio_DELAY);

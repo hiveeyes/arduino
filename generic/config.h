@@ -142,9 +142,9 @@
 #ifdef HE_RADIO
     #define RH_ACK_TIMEOUT           200
     #if HE_RH69                                     /**   RadioHead's HE_RH69radio lib     **/
-        #define RH69_NODE_ID          99             //
-        #define RH69_GATEWAY_ID       1              // radio topology
-        #define RH69_TRANSCEIVER_ID   3              //
+        #define RH69_NODE_ID          99             //    radio topology
+        #define RH69_RESCEIVER_ID       1              // ID of next RESCEIVER (gateway | transceiver)
+        //#define RH69_TRANSCEIVER_ID   3              //
 
         #define RH69_IRQ              2             // radio pins
         #define RH69_SS               10              //
@@ -158,9 +158,9 @@
 
     #if HE_RH95                                     /**     RadioHead's HE_RH95radio lib   **/
 
-        #define RH95_NODE_ID          99             //
-        #define RH95_GATEWAY_ID       1              // radio topology
-        #define RH95_TRANSCEIVER_ID   3              //
+        #define RH95_NODE_ID          99             //       radio topology
+        #define RH95_RESCEIVER_ID       1            // ID of next RESCEIVER (gateway | transceiver)
+        //#define RH95_TRANSCEIVER_ID   3              //
         #if IS_TRANSCEIVER
             #define RH95_IRQ              3             // radio pins
             #define RH95_SS               5              //
