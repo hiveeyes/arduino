@@ -70,6 +70,7 @@
 
 .. Atmel
 .. _ATmega328: https://en.wikipedia.org/wiki/ATmega328
+.. _Seeeduino Stalker v2.3: http://wiki.seeedstudio.com/wiki/Seeeduino_Stalker_v2.3
 
 .. ESP8266
 .. _ESP8266: https://en.wikipedia.org/wiki/ESP8266

@@ -2,9 +2,9 @@
 
 .. _node-wifi-mqtt:
 
-#############################
-Open Hive Feather sensor node
-#############################
+###############################
+Open Hive WiFi/MQTT sensor node
+###############################
 
 .. contents::
    :local:

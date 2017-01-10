@@ -9,7 +9,10 @@ CHANGES
 
 in-progress
 ===========
-- Work on documentation
+
+
+2017-01-10 0.11.0
+=================
 - `Add sketches based on the ESP8266 MCU and the Homie firmware <https://github.com/hiveeyes/arduino/pull/1>`_. Thanks, Alex!
 - Update firmware for :ref:`open-hive-firmware-gprs` "`node-gprs-http.ino`_". Thanks, Clemens!
 
@@ -19,6 +22,7 @@ in-progress
 - Add "makeEspArduino", a makefile for ESP8266 Arduino projects by Peter Lerup
 - Pull update to HX711 submodule
 - Fix compilation errors for ADS1231 library on ESP8266
+- Improve documentation
 
 
 2016-11-01 0.10.0
@@ -28,6 +32,7 @@ in-progress
   Thanks Richard!
 - Update sketch (beta release) and add documentation about :ref:`node-wifi-mqtt` (`node-wifi-mqtt.ino`_).
   Thanks Clemens and Karsten!
+
 
 2016-09-17 0.9.0
 ================

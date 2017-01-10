@@ -22,15 +22,15 @@ for transmitting telemetry data over radio links with
 narrow bandwidth, all on embedded low-power devices.
 
 Its serialization format is Bencode_ according to the
-`BERadio specification`_, the C++ interface provides
+:ref:`beradio:beradio-spec`, the C++ interface provides
 convenient API methods and container data structures
 for working with variable amounts of measurement
 values.
 
 By featuring automatic message fragmentation, data transmission
 is safe, even when using radio transceivers with constrained
-payloads, yet reasonably compact and still readable by humans
-(8-bit clean).
+payloads. Yet, it is reasonably compact and still readable by
+humans (8-bit clean).
 
 BERadio C++ was tested successfully on
 Arduino (ATmega328p Pro/Uno), SimulAVR and x86_64 (both Mac OS X).

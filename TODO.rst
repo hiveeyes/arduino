@@ -1,5 +1,7 @@
 .. include:: resources.rst
 
+.. _todo:
+
 ####
 TODO
 ####
@@ -10,6 +12,29 @@ TODO
 
 ----
 
+
+****
+2017
+****
+
+Misc
+====
+
+2017-01-09
+----------
+- https://github.com/bogde/HX711/pull/59
+- Alternative libraries for ADS1231:
+
+    - https://github.com/rfjakob/barwin-arduino/tree/master/lib/ads1231
+    - | https://github.com/jensfranke/ads-1231-particle-library
+      | see also: https://community.particle.io/t/library-for-ads-1231-bee-hive-weigh-scale/21719
+
+- http://forum.sodaq.com/c/beekeeping
+- Rename node-gprs-http to node-gsm-wifi-http
+- node-openhive: Make HTTP interface compatible with Hiveeyes backend
+- node-openhive: Make feature flags compatible with firmware builder
+
+
 ****
 2016
 ****
@@ -17,9 +42,61 @@ TODO
 Misc
 ====
 
-2016-11-07
+2016-12-15
 ----------
-- Provide snapshot archive of whole repository
+RaspIO setup
+
+- Hardware jumper to decouple SPI from RFM69
+
+- Compile using::
+
+    cat Makefile-Linux.mk
+
+    # RasPIO Hiveeyes, 2016-12-15
+    BOARD_TAG         = gert328
+    MCU = atmega328p
+    F_CPU = 12000000L
+    ISP_PROG = gpio
+    FORCE_MONITOR_PORT = true
+
+- Upload using::
+
+    sudo avrdude -P gpio -c gpio -p atmega328p -v -U flash:w:../../bin/src/gert328/src.hex
+
+- Enable UART on /dev/ttyS0::
+
+    root@raspberrypi:~# cat /boot/config.txt | grep uart
+    enable_uart=1
+
+- Use the **correct** serial device::
+
+    screen /dev/ttyS0 115200
+
+.. seealso:: http://raspberrypi.stackexchange.com/questions/47671/why-my-program-wont-communicate-through-ttyama0-on-raspbian-jessie
+
+- Stop picocom::
+
+    CTRL + A + X
+
+
+2016-12-02
+----------
+- [o] Investigate alternative HX711 library
+
+    - http://www.arduinolibraries.info/libraries/queuetue-digital-balance-library
+    - http://www.arduinolibraries.info/libraries/queuetue-hx711-library
+    - https://github.com/queuetue/Q2-Balance-Arduino-Library
+    - https://github.com/queuetue/Q2-HX711-Arduino-Library
+
+- [o] Migrate from StandardCplusplus to ArduinoSTL?
+    - https://github.com/mike-matera/ArduinoSTL
+    - http://platformio.org/lib/show/750/ArduinoSTL
+    - See also https://github.com/maniacbug/StandardCplusplus/pull/20
+
+
+2016-11-01
+----------
+- [o] Provide complete Zip Snapshot of Repository contents
 
 
 2016-11-01

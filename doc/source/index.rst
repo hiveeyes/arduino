@@ -11,31 +11,34 @@
 Hiveeyes Arduino documentation
 ##############################
 
-This is the documentation for the `Hiveeyes Arduino repository`_
-of the `Hiveeyes project`_, a beehive monitoring system made of
-open source software and hardware components.
+This is the firmware source code documentation of the `Hiveeyes project`_,
+a beehive monitoring system made of open source software and hardware components.
+For an overview about the whole system, please have a look at :ref:`hiveeyes-system`.
 Enjoy reading and exploring this space.
 
 .. toctree::
     :maxdepth: 1
     :hidden:
 
-    firmwares
-    firmware-builder
+    README
 
-    Usage <README>
-    BERadio/README
+    firmwares
     development
 
     Contributors <AUTHORS>
     Changelog <CHANGES>
     LICENSE
 
+    BERadio/README
+    firmware-builder
+
 
 ************
 Introduction
 ************
-For an overview about the whole system, please have a look at :ref:`hiveeyes-system`.
+Please have a look at the :ref:`README` about how to setup this thing.
+It also describes the structure of the `Hiveeyes Arduino repository`_,
+which supports different kinds of firmwares matching different environments.
 
 
 *********
