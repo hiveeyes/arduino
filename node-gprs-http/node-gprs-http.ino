@@ -1,6 +1,6 @@
 /*
-  Open Hive | GSM Node
-  --------------------
+  Open Hive | GSM or WiFi
+  -----------------------
   sensors:  | Scale
             | Temperature
             | Humidity
@@ -8,8 +8,9 @@
             | SD
             | Battery
   transp:   | GSM via HTTP
+            | WiFi via HTTP (ESP8266)
 
-  Copyright (C) 2013-2016 by Clemens Gruber
+  Copyright (C) 2013-2017 by Clemens Gruber
 
 
   Changes
@@ -18,6 +19,7 @@
   2016-03-01 Clemens Gruber | Make sketch ready for publishing
   2016-06-20 Clemens Gruber | Modularization of upload URL
   2016-09-17 Clemens Gruber | Modularization of sensors and debugging
+  2017-01-09 Clemens Gruber | Add support for HX711 and ESP8266
 
 
   GNU GPL v3 License
@@ -32,7 +34,7 @@
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
   GNU General Public License for more details.
 
-  The license can be viewed at
+  Licence can be viewed at
   http://www.gnu.org/licenses/gpl-3.0.txt
 
 
@@ -44,6 +46,7 @@
   D8           DS18B20 one-wire array
   D12 D13      DTR, CTS - GSM
   D14 D15 D16  Data, SCL, Power - ADS1231
+  D14 D12      Dour, SCK - HX711 (ESP8266)
   D17          Power load cell and ADS1231
   A7           battery voltage
 */
@@ -56,13 +59,15 @@
 // ------------------------------
 // comment all components you are not using
 #define isScale
+#define isScaleADS1231
+//#define isScaleHX711
 #define isTemperatureArray
 #define isHumidityTemperature
-#define isRTC
+#define isRTC  // define for ESP8266 also! gets time from server
 //#define isSD
 #define isBattery
-#define isGSM
-//#define isWifi
+//#define isGSM
+#define isWifi
 //#define isEthernet
 // comments this line in case you are using GSM as upload path
 // GSM and Serial debug using the same pins and interfere
@@ -71,8 +76,10 @@
 // ** RTC / timekeeping
 // --------------------
 // update interval for sensor reading in seconds
-//const unsigned long updateInterval = 60UL * 20;  // s*m*h*d
-const unsigned long updateInterval = 60UL * 2;  // s*m*h*d
+// unsigned long updateInterval = 60UL * 20;  // s*m*h*d
+// ESP8266: maximun update interval is 1 hour due to variable size limitations
+// (we'll fix that in a later version)
+unsigned long updateInterval = 60UL * 60UL;  // s*m*h*d  // seems it take 11 sec longer than in theory
 
 // keep in mind that very low values make no sense here!
 // sensor reading takes time, scale reads load multiple to
@@ -85,10 +92,10 @@ const unsigned long updateInterval = 60UL * 2;  // s*m*h*d
   // specify your node number
   const char uploadNode[]       = "1";
   // and user credentials
-  const char uploadUserName[]   = "yourUsername";
-  const char uploadUserId[]     = "yourUserID";
+  const char uploadUserName[]   = "your-user-name";
+  const char uploadUserId[]     = "your-id";
   // server, path and upload script
-  const char uploadDomain[]     = "apiary.example.org";
+  const char uploadDomain[]     = "data.example.com";
   const char uploadFolderFile[] = "apiary/upload.php";
   const char uploadScheme[]     = "http://%s/%s?user=%s&id=%s&node=%s&dataset=";  // "%s" is the variable placeholder for snprintf command
 #endif
@@ -98,6 +105,14 @@ const unsigned long updateInterval = 60UL * 2;  // s*m*h*d
 #ifdef isGSM
   // specify your APN here, specific for your network operator
   #define APN "internet.eplus.de"
+#endif
+
+// ** WiFi
+// -------
+#ifdef isWifi
+  // specify your SSID an PW here, specific for your local WiFi
+  #define WLAN_SSID  "your-ssid"
+  #define WLAN_PW    "your-pw"
 #endif
 
 // ** load cell characteristic
@@ -114,14 +129,21 @@ const unsigned long updateInterval = 60UL * 2;  // s*m*h*d
   //   add a load with known weight in kg to the scale, note the
   //   sesor value, calculate the value for a 1 kg load and adjust
   //   it here
-  const long loadCellZeroOffset = 27483776;
-  const long loadCellKgDivider  =  5804288;
+  const long loadCellZeroOffset = 38623;
+//  const long loadCellKgDivider  = 22053;
+  // 1/2 value for single side measurement, so that 1 kg is displayed as 2 kg
+  const long loadCellKgDivider  = 11026;
 
   // wait between samples
   // 3 sec is a good delay so that load cell did not warm up
   // too much and external random influences like wind has time
   // to go so that the next sample is more valid
   const int waitTimeLoadSamples = 3;
+
+  #ifdef isScaleHX711
+    const int scalePinDout = 14;  // Dout
+    const int scalePinSck  = 12;  // SCK
+  #endif
 #endif
 
 // ** median statistics (for weight / load cell)
@@ -137,35 +159,37 @@ const unsigned long updateInterval = 60UL * 2;  // s*m*h*d
 #ifdef isHumidityTemperature
   // DHTxx type, set to "read22" for DHT22 or "read33" for DHT33
   // you have to use the same hardware type (DHT22 or DHT33) for all DHT devices
-  #define readHumidityType read33
+  #define readHumidityType read22
   // how much pins have DHTxx devices connected?
-  const int humidityNumDevices = 2;
+  const int humidityNumDevices = 1;
   // pins with DHTxx device, pin 6, pin 7
-  const int humidityPins[humidityNumDevices] = {6,7};
+  const int humidityPins[humidityNumDevices] = {4};
 #endif
 
 // ** temperature array / DS18B20
 // ------------------------------
 #ifdef isTemperatureArray
   // number of temperature devices on bus
-  const int temperatureNumDevices = 5;
+  const int temperatureNumDevices = 1;
   // order on physical array of temperature devices
   // the order is normally defined by the device id hardcoded in
   // the device, you can physically arrange the DS18B20 in case you
   // know the ID and use here {0,1,2,3,4 ... or you can try out what
   // sensor is on wich position and adjust it herer accordingly
-const int temperatureOrderDevices[temperatureNumDevices] = {2,1,0,3,4};
+  const int temperatureOrderDevices[temperatureNumDevices] = {0};
   // resolution for all devices (9, 10, 11 or 12 bits)
   const int temperaturePrecision = 12;
   // pin for the temperature sensors
-  const int temperaturePin = 8;
+  const int temperaturePin = 5;
 #endif
 
 // ** SD card
 // ----------
 #ifdef isSD
   // data upload to server, path and file
-  const char sdStorageUploadPathFile[]  = "/upload/data.txt";
+  const char sdStorageUploadPath[]  = "/upload2/";
+  const char sdStorageUploadFile[]  = "d-new.txt";
+
   // data archive, path
   const char sdStorageArchivePath[] = "/archive/";
 #endif
@@ -174,7 +198,9 @@ const int temperatureOrderDevices[temperatureNumDevices] = {2,1,0,3,4};
 // ------------------------------
 // define header für dataset
 // do not use spaces before or after an comma
-const char datasetHeader[] = "Date/Time,Weight,Outside Temp,Outside Humid,Inside Temp,Inside Humid,H1 Temp,H2 Temp,H3 Temp,H4 Temp,H5 Temp,Voltage";
+//const char datasetHeader[] = "Date/Time,Weight,Outside Temp,Outside Humid,Inside Temp,Inside Humid,H1 Temp,H2 Temp,H3 Temp,H4 Temp,H5 Temp,Voltage";
+//const char datasetHeader[] = "Date/Time,Weight,Outside Temp,Outside Humid,Inside Temp,Voltage";
+const char datasetHeader[] = "Datum/Zeit,Gewicht,Aussen-Temperatur,Aussen-Feuchtigkeit,Brut-Temperatur,Spannung";
 
 // -------------------------+----
 // variables you can modify | END
@@ -183,16 +209,30 @@ const char datasetHeader[] = "Date/Time,Weight,Outside Temp,Outside Humid,Inside
 // libraries
 // RTC
 #ifdef isRTC
-  #include <Wire.h>        // I2C (for RTC)
-  #include <DS3231.h>      // RTC itself
-  DS3231 RTC;              // create RTC object for DS3231
-  DateTime interruptTime;  // next interrupt time
+  #ifdef isWifi
+    // intentionally blank
+    // no special lib for ESP8266
+  #else
+    #include <Wire.h>        // I2C (for RTC)
+    #include <DS3231.h>      // RTC itself
+    DS3231 RTC;              // create RTC object for DS3231
+    DateTime interruptTime;  // next interrupt time
+  #endif
 #endif
 
 // SD card
 #ifdef isSD
-  #include <SD.h>
-  const int sdPinCs = 10; //
+// #include <SD.h>
+#include "SdFat.h"
+  SdFat SD;
+  const int sdPinCs = 10;
+
+  // some simplificatiion for your convenience
+  // calculate size of sdStorageUploadPathFile
+  char sdStorageUploadPathFile[
+    +sizeof(sdStorageUploadPath)
+    +sizeof(sdStorageUploadFile)
+  ];
 #endif
 
 // GSM / GPRSbee
@@ -202,10 +242,31 @@ const char datasetHeader[] = "Date/Time,Weight,Outside Temp,Outside Humid,Inside
   const int BEECTS = 13;
 #endif
 
+
+// WiFi
+#ifdef isWifi
+  // Wifi functions for ESP8266
+  #include <ESP8266WiFi.h>
+  #include <ESP8266WiFiMulti.h>
+  // ESP8266 as http client
+  #include <ESP8266HTTPClient.h>
+  // multiples AP possible
+  ESP8266WiFiMulti WiFiMulti;
+
+  // maximal connection attempts
+  int maxConnectionAttempts = 15;
+#endif
+
 // load cell
 #ifdef isScale
-  #include <ADS1231.h>
-  ADS1231 loadCell;  // create ADS1231 object
+  #ifdef isScaleADS1231
+    #include <ADS1231.h>
+    ADS1231 loadCell;  // create ADS1231 object
+  #endif
+  #ifdef isScaleHX711
+    #include <HX711.h>
+    HX711 loadCell;  // create HX711 object
+  #endif
 #endif
 
 // median statistics (for weight)
@@ -231,8 +292,24 @@ const char datasetHeader[] = "Date/Time,Weight,Outside Temp,Outside Humid,Inside
 #endif
 
 // power saving
-#include <LowPower.h>
+#ifdef isWifi
+  // intentionally blank
+  // LowPower.h does not support ESP8266
+#else
+  #include <LowPower.h>
+#endif
 
+// lipo, battery
+#ifdef isBattery
+  // battery pin
+  #ifdef isWifi
+    const int batteryPin = A0;
+    const float analogMax = 1.0;
+  #else
+    const int batteryPin = A7;
+    const float analogMax = 1.1;
+  #endif
+#endif
 
 // we need some variable as char to pass it to payload easily
 // timekeeping / RTC
@@ -281,13 +358,24 @@ void wakeUp();
 void setup () {
   // debug and GSM
   Serial.begin(9600);
-
+  #ifdef isDebug
+    // new line after wakeup from sleep garbage
+    Serial.flush();
+    Serial.println();
+    Serial.println();
+    Serial.println();
+  #endif
   // RTC, IRQ
   #ifdef isRTC
-    Wire.begin();
-    RTC.begin();
-    // initialize INT0 (D2 on the most Arduinos) to accept external interrupts
-    pinMode(2, INPUT_PULLUP);
+    #ifdef isWifi
+      // intentionally blank
+      // no special lib for ESP8266
+    #else
+      Wire.begin();
+      RTC.begin();
+      // initialize INT0 (D2 on the most Arduinos) to accept external interrupts
+      pinMode(2, INPUT_PULLUP);
+    #endif
   #endif
 
   // SD card
@@ -301,16 +389,41 @@ void setup () {
     // see if the card is present and can be initialized
     if (!SD.begin(sdPinCs)) {
       #ifdef isDebug
-        Serial.println("SD card failed, or not present!");
+        Serial.println(F("SD card failed, or not present!"));
         Serial.println();
       #endif
     }
     #ifdef isDebug
-      Serial.println("SD card initialized!");
+      Serial.println(F("SD card initialized!"));
       Serial.println();
     #endif
+
+    // make upload directories on SD
+    if (!SD.mkdir(sdStorageUploadPath)) {
+      #ifdef isDebug
+        Serial.print(F("Failed to create "));
+        Serial.print(sdStorageUploadPath);
+        Serial.print(F(" on SD card!"));
+        Serial.println();
+      #endif
+    }
+    #ifdef isDebug
+      Serial.print(F("Directory "));
+      Serial.print(sdStorageUploadPath);
+      Serial.print(F(" on SD card created or already existing!"));
+      Serial.println();
+    #endif
+
     // switch off SD
     digitalWrite(4, HIGH);  // LOW is power on
+
+
+    // some simplificatiion for your convenience
+    // make sdStorageUploadPathFile
+    snprintf(sdStorageUploadPathFile, sizeof(sdStorageUploadPathFile), "%s%s",
+      sdStorageUploadPath,
+      sdStorageUploadFile
+    );
   #endif
 
   // GSM / GPRSbee
@@ -319,6 +432,12 @@ void setup () {
     gprsbee.initAutonomoSIM800(Serial, BEEDTR, -1, BEECTS);
     // make sure the GPRSbee is switched off to begin with
     gprsbee.off();
+  #endif
+
+  // WiFi
+  #ifdef isWifi
+    WiFiMulti.addAP(WLAN_SSID, WLAN_PW);
+//    WiFiMulti.addAP(WLAN_SSID_2, WLAN_PW_2);
   #endif
 
   // some simplificatiion for your convenience
@@ -351,17 +470,23 @@ void setup () {
     memset(buffer, 0, sizeof(buffer));
     gprsbee.doHTTPGET(APN,uploadUrl,buffer,sizeof(buffer));
   #endif
-  #ifdef isSd
-    writeToSd[datasetHeader];
+  #ifdef isSD
+//    writeToSd(datasetHeader);
   #endif
 
   // weight / ADS1231
   #ifdef isScale
-    // pin definition: SCL 15, Data 14, Power 16
-    loadCell.attach(15,14,16);
-    // power pin load cell and ADS1231: pin 17
-    pinMode(17, OUTPUT);
-
+    #ifdef isScaleADS1231
+      // pin definition: SCL 15, Data 14, Power 16
+      loadCell.attach(15,14,16);
+      // power pin load cell and ADS1231: pin 17
+      pinMode(17, OUTPUT);
+    #endif
+    #ifdef isScaleHX711
+      loadCell.begin(scalePinDout, scalePinSck);
+      loadCell.set_scale(loadCellKgDivider);  // this value is obtained by calibrating the scale with known weights; see the README for details
+      loadCell.set_offset(loadCellZeroOffset);
+    #endif
     // weight debug
     #ifdef isDebug
       Serial.print(F("Open Hive | Scale"));
@@ -423,8 +548,14 @@ void setup () {
 
   // lipo, battery
   #ifdef isBattery
-    // use internal analog reference for lipo / battery
-    analogReference(INTERNAL);
+    // power saving
+    #ifdef isWifi
+      // intentionally blank
+      // no analogReference for ESP8266
+    #else
+      // use internal analog reference for lipo / battery
+      analogReference(INTERNAL);
+    #endif
   #endif
 
   // set periodic interrupt intervals
@@ -433,14 +564,307 @@ void setup () {
   // of the sensors need some time and mess up timestamp
   //
   #ifdef isRTC
-    //RTC.enableInterrupts(EveryMinute); // options: EverySecond, EveryMinute, EveryHour
-    // or specify only the first interrupt time in case EverySecond, EveryMinute, EveryHour
-    // does not fit your needs
-    DateTime start = RTC.now();
-    // add x seconds (interval time) to start time
-    interruptTime = DateTime(start.get() + updateInterval);
+    #ifdef isWifi
+      // intentionally blank
+      // no special lib for ESP8266
+    #else
+      //RTC.enableInterrupts(EveryMinute); // options: EverySecond, EveryMinute, EveryHour
+      // or specify only the first interrupt time in case EverySecond, EveryMinute, EveryHour
+      // does not fit your needs
+      DateTime start = RTC.now();
+      // add x seconds (interval time) to start time
+      interruptTime = DateTime(start.get() + updateInterval);
+    #endif
   #endif
 }
+
+
+// functions for devices
+// ---------------------
+
+// timestamp
+#ifdef isRTC
+  #ifdef isWifi
+    void getTimestamp() {
+      // set timestamp later by server
+      memcpy(timestampChar, "timestamp-by-server", sizeof("timestamp-by-server"));
+      /*
+      // try max. 15x to connect
+      for (int i = 0; i < maxConnectionAttempts; i++) {
+        // wait for WiFi connection
+        if ((WiFiMulti.run() == WL_CONNECTED)) {
+          // debug WIfi
+          #ifdef isDebug
+            Serial.println();
+            Serial.print(F("WiFi connected! IP address: "));
+            Serial.print(WiFi.localIP());
+            Serial.println();
+          #endif
+
+          HTTPClient http;
+          // configure traged server and url
+          // do NOT use "http://" in the domain!
+          //http.begin("192.168.1.12", 443, "/test.html", true, "7a 9c f4 db 40 d3 62 5a 6e 21 bc 5c cc 66 c8 3e a1 45 59 38"); //HTTPS
+          http.begin(uploadDomain, 80, "/time.php");  // HTTP
+
+          // start connection and send HTTP header
+          int httpCode = http.GET();
+
+          // httpCode will be negative on error
+          if (httpCode > 0) {
+            // HTTP header has been send and Server response header has been handled
+            #ifdef isDebug
+              Serial.printf("[HTTP] GET... code: %d\n", httpCode);
+            #endif
+             // file found at server
+            if(httpCode == 200) {
+              String payload = http.getString();
+              #ifdef isDebug
+                Serial.print("Time from server: ");
+                Serial.println(payload);
+              #endif
+              payload.toCharArray(timestampChar, sizeof(timestampChar));  // write to char array
+            }
+          }
+          else {
+            #ifdef isDebug
+              Serial.print(F("[HTTP] GET... failed, no connection or no HTTP server\n"));
+            #endif
+          }
+          http.end();
+          break;
+        }
+        // not succesfully connected
+        else {
+          #ifdef isDebug
+            Serial.print(".");
+          #endif
+          // wait 400 ms before retry
+          delay(400);
+        }
+      }
+      */
+    }
+  #else
+    void getTimestamp() {
+      DateTime currentTime = RTC.now();  // get the current date-time
+      snprintf(timestampChar, sizeof(timestampChar), "%d/%02d/%02d %02d:%02d:%02d", currentTime.year(), currentTime.month(), currentTime.date(), currentTime.hour(), currentTime.minute(), currentTime.second());  // write to char array
+    }
+  #endif
+#endif
+
+// SD card
+#ifdef isSD
+  void writeToSd(char *data) {
+    // power SD
+    digitalWrite(4, LOW);  // LOW is power on
+
+    // open file
+    File dataFile = SD.open(sdStorageUploadPathFile, FILE_WRITE);
+
+    // if the file is available, write to it:
+    if (dataFile) {
+      dataFile.println(data);
+      dataFile.close();
+      // debug
+      #ifdef isDebug
+        Serial.println(F("Wrote dataset to SD!"));
+      #endif
+    }
+    // if the file isn't open, pop up an error:
+    else {
+      // debug
+      #ifdef isDebug
+        Serial.print(F("Error opening "));
+        Serial.print(sdStorageUploadPathFile);
+        Serial.println();
+      #endif
+    }
+    // switch off SD
+    digitalWrite(4, HIGH);  // LOW is power on
+  }
+#endif
+
+// weight
+#ifdef isScale
+  void getWeight() {
+    // clear running median samples
+    weightSamples.clear();
+
+    // read x times weight and take median
+    // do this till running median sample is full
+    do {
+      // wait between samples
+      Serial.flush();
+      for (int i=0; i<waitTimeLoadSamples; i++) {
+        // sleep for one second
+        #ifdef isWifi
+          delay(1000);
+        #else
+          LowPower.powerDown(SLEEP_1S, ADC_OFF, BOD_OFF);
+        #endif
+      }
+
+      #ifdef isScaleADS1231
+        // power ADS1231 and load cell
+        digitalWrite(17, HIGH);
+        loadCell.power(HIGH);
+
+        delay(2);  // wait for stabilizing
+
+        // ADS1231 ready?
+        while (!loadCell.check()) {
+          loadCell.check();
+        }
+
+        // read raw data input of ADS1231
+        long weightSensorValue = loadCell.readData();
+
+        // switch off ADS1231 and load cell
+        loadCell.power(LOW);
+        digitalWrite(17, LOW);
+
+        // calculate weight in kg
+        float weightKg = ((float)weightSensorValue - (float)loadCellZeroOffset) / (float)loadCellKgDivider;
+      #endif
+      #ifdef isScaleHX711
+        // power HX711 and load cell
+        loadCell.power_up();
+
+        // read data input of ADS1231
+        float weightKg = loadCell.get_units();
+
+        // switch off ADS1231 and load cell
+        loadCell.power_down();  // put the ADC in sleep mode
+      #endif
+
+      // add single value to runnig median sample
+      weightSamples.add(weightKg);
+    } while (weightSamples.getCount() < weightSamples.getSize());
+
+    dtostrf(weightSamples.getMedian(), 8, 3, weightMedianChar);  // write to char array
+  }
+#endif
+
+// temperature array / DS18B20
+#ifdef isTemperatureArray
+  void getTemperature() {
+    // request temperature on all devices on the bus
+    temperatureSensors.setWaitForConversion(false);  // makes it async
+    // initiatie temperature retrieval
+    temperatureSensors.requestTemperatures();
+
+    // wait at least 750 ms for conversion
+    // to save power go to sleep for this delay
+    Serial.flush();  // flush serial before sleeping
+    // sleep for one second
+    #ifdef isWifi
+      delay(1000);
+    #else
+      LowPower.powerDown(SLEEP_1S, ADC_OFF, BOD_OFF);
+    #endif
+
+    // loop through each device, print out temperature
+    for (int i=0; i<temperatureNumDevices; i++) {
+      // print temperature
+      float temperatureC = temperatureSensors.getTempC(deviceAddressArray[i]);
+      dtostrf(temperatureC, 5, 1, temperatureArrayChar[i]);  // write to char array
+    }
+  }
+#endif
+
+// humidity and temperature / DHTxx
+#ifdef isHumidityTemperature
+  void getHumidityTemperature() {
+    // read humidity and temperature data
+    // loop through all devices
+    for (int i=0; i<humidityNumDevices; i++) {
+      // read device, we have to do this twice because DHTxx reports always value from teading before
+      DHT.readHumidityType(humidityPins[i]);
+      // wait at least 500 ms between readings
+      // to save power go to sleep for this delay
+      Serial.flush();  // flush serial before sleeping
+      // sleep for 500 ms second
+      #ifdef isWifi
+        delay(500);
+      #else
+        LowPower.powerDown(SLEEP_500MS, ADC_OFF, BOD_OFF);
+      #endif
+      // do this again
+      int chk = DHT.readHumidityType(humidityPins[i]);
+
+      switch (chk) {
+        // this is the normal case, all is working smoothly
+        case DHTLIB_OK:
+          // Serial.print("OK,\t");
+          dtostrf(DHT.temperature, 5, 1, temperatureChar[i]);  // write to char array
+          dtostrf(DHT.humidity, 5, 1, humidityChar[i]);  // write to char array
+          break;
+        // following are error cases
+        case DHTLIB_ERROR_CHECKSUM:
+          #ifdef isDebug
+            Serial.println(F("DHTxx Checksum error"));
+          #endif
+          break;
+        case DHTLIB_ERROR_TIMEOUT:
+          #ifdef isDebug
+            Serial.println(F("DHTxx Time out error"));
+          #endif
+          break;
+        default:
+          #ifdef isDebug
+            Serial.println(F("DHTxx Unknown error"));
+          #endif
+          break;
+      }
+    }
+
+    // FOR UNO + DHT33 400ms SEEMS TO BE MINIMUM DELAY BETWEEN SENSOR READS,
+    // ADJUST TO YOUR NEEDS
+    // we do other time consuming things / sleeping after reading DHT33, so we can skip this
+//  delay(1000);
+  }
+#endif
+
+// battery voltage
+// read the battery level from the analog pin.
+//
+// ** for Lipo 4.2V
+// Our 1M & 220K voltage divider takes the max lipo value of
+// 4.2V and drops it to 0.757V max. This means our min analog
+// read value should be 580 (3.14V / 0.566V) and the max analog
+// read value should be 774 (4.2V / 0.757).
+//
+// ** for 4x 1,5 V AA battery = 6 V
+// Our 1.5M & 220K voltage divider takes the max battery value of
+// 6V and drops it to 0.767V max. This means our min analog
+// read value should be 411 (3.14V / 0.402V) and the max analog
+// read value should be 785 (6V / 0.767V).
+#ifdef isBattery
+  void getVoltage() {
+    int batteryValue = analogRead(batteryPin); // read battery as analog value
+    // calculate voltage based on voltage divider resistors
+    float voltage = batteryValue * (analogMax / 1024) * (10 + 2) / 2;  // voltage divider, values in Mega Ohm
+    dtostrf(voltage,5,2,voltageChar);  // write to char array
+  }
+#endif
+
+// interrupt service routine for external interrupt on INT0 triggered from RTC
+// keep this as short as possible, possibly avoid using function calls
+#ifdef isRTC
+  #ifdef isWifi
+    // intentionally blank
+    // no special lib for ESP8266
+  #else
+    void wakeUp() {
+      // handler for the pin interrupt
+    }
+  #endif
+#endif
+
+
+// Main program
+// ------------
 
 void loop () {
   // update data
@@ -570,233 +994,138 @@ void loop () {
       Serial.println(uploadUrl);
     #endif
   #endif
+
   #ifdef isGSM
     char buffer[50];
     memset(buffer, 0, sizeof(buffer));
     gprsbee.doHTTPGET(APN, uploadUrl, buffer, sizeof(buffer));
   #endif
-  #ifdef isSd
-    writeToSd[dataset];
+
+  #ifdef isWifi
+    // try max. 15x to connect
+    for (int i = 0; i < maxConnectionAttempts; i++) {
+      // wait for WiFi connection
+      if ((WiFiMulti.run() == WL_CONNECTED)) {
+        // debug WIfi
+        #ifdef isDebug
+          Serial.println();
+          Serial.print(F("WiFi connected! IP address: "));
+          Serial.print(WiFi.localIP());
+          Serial.println();
+        #endif
+
+        HTTPClient http;
+        // configure traged server and url
+        // do NOT use "http://" in the domain!
+        //http.begin("192.168.1.12", 443, "/test.html", true, "7a 9c f4 db 40 d3 62 5a 6e 21 bc 5c cc 66 c8 3e a1 45 59 38"); //HTTPS
+        http.begin(uploadUrl);  // HTTP
+
+        #ifdef isDebug
+          Serial.print(uploadUrl);
+          Serial.print(F("  |  "));
+          Serial.print(sizeof(uploadUrl));
+          Serial.println();
+
+          Serial.print(F("[HTTP] GET...\n"));
+        #endif
+        // start connection and send HTTP header
+        int httpCode = http.GET();
+
+        // httpCode will be negative on error
+        if (httpCode > 0) {
+          // HTTP header has been send and Server response header has been handled
+          #ifdef isDebug
+            Serial.printf("[HTTP] GET... code: %d\n", httpCode);
+          #endif
+           // file found at server
+          if(httpCode == 200) {
+            String payload = http.getString();
+            #ifdef isDebug
+              Serial.print("Status: ");
+              Serial.println(payload);
+            #endif
+          }
+        }
+        else {
+          #ifdef isDebug
+            Serial.print(F("[HTTP] GET... failed, no connection or no HTTP server\n"));
+          #endif
+        }
+        http.end();
+        break;
+      }
+      // not succesfully connected
+      else {
+        #ifdef isDebug
+          Serial.print(".");
+        #endif
+        // wait 400 ms before retry
+        delay(400);
+      }
+    }
+    // go sleeping
+    unsigned long runningTime = millis() * 1000UL;  // in us!
+    unsigned long sleepTime = (updateInterval * 1000UL*1000UL) - runningTime;  // s (*ms*us)
+//    unsigned long sleepTime = (updateInterval * 1000UL*1000UL);  // s (*ms*us)
+
+    // sometimes we need this adjustment
+    if (sleepTime > updateInterval * 1000UL*1000UL){
+      sleepTime = updateInterval * 1000UL*1000UL;
+    }
+
+    #ifdef isDebug
+      Serial.println();
+      Serial.println(millis());
+      Serial.print("running time: ");
+      Serial.println(runningTime);
+      Serial.print("sleep time: ");
+      Serial.println(sleepTime);
+      Serial.print("total: ");
+      Serial.println((runningTime + sleepTime));
+    #endif
+
+    Serial.flush();
+    ESP.deepSleep(sleepTime, WAKE_RF_DEFAULT);  // us! micro(!) seconds, so sleeping for 1 minute would be: 1000us*1000ms *60*1 = 1 sec * 60 sec * 1 min
+//    delay(10000);  // sleep for 10 s
+  #endif
+
+  #ifdef isSD
+    writeToSd(dataset);
   #endif
 
   // manage sleeping and wake up
   //
   #ifdef isRTC
-    // prepare next interrupt time
-    RTC.clearINTStatus();  // this function call is a must to bring INT pin high after an interrupt
-    RTC.enableInterrupts(interruptTime.hour(),interruptTime.minute(),interruptTime.second());  // set the interrupt (h,m,s)
-    attachInterrupt(0, wakeUp, LOW);  // enable INT0, required to handle level triggered interrupts
+    #ifdef isWifi
+      // intentionally blank
+      // no special lib for ESP8266
+    #else
+      // prepare next interrupt time
+      RTC.clearINTStatus();  // this function call is a must to bring INT pin high after an interrupt
+      RTC.enableInterrupts(interruptTime.hour(),interruptTime.minute(),interruptTime.second());  // set the interrupt (h,m,s)
+      attachInterrupt(0, wakeUp, LOW);  // enable INT0, required to handle level triggered interrupts
 
-    // go sleeping
+      // go sleeping
 
-    // debug
-    #ifdef isDebug
-      Serial.print(F("\nSleeping ... "));
-    #endif
-    Serial.flush();  // flush serial before sleeping
-    // power down with ADC and BOD disabled
-    LowPower.powerDown(SLEEP_FOREVER, ADC_OFF, BOD_OFF);
-    // waiting for the next interrupt
-    // tzzzzz ... tzzzzz ...
+      // debug
+      #ifdef isDebug
+        Serial.print(F("\nSleeping ... "));
+      #endif
+      Serial.flush();  // flush serial before sleeping
+      // power down with ADC and BOD disabled
+      LowPower.powerDown(SLEEP_FOREVER, ADC_OFF, BOD_OFF);
+      // waiting for the next interrupt
+      // tzzzzz ... tzzzzz ...
 
-    // wakeup
-    detachInterrupt(0);
-    // calculate next interrupt time
-    interruptTime = DateTime(interruptTime.get() + updateInterval);
+      // wakeup
+      detachInterrupt(0);
+      // calculate next interrupt time
+      interruptTime = DateTime(interruptTime.get() + updateInterval);
 
-    delay(10); // this delay is required to allow CPU to stabilize
-    #ifdef isDebug
-      Serial.println(F("Awake from sleep.\n"));
+      delay(10); // this delay is required to allow CPU to stabilize
+      #ifdef isDebug
+        Serial.println(F("Awake from sleep.\n"));
+      #endif
     #endif
   #endif
 }
-
-
-// functions for devices
-// ---------------------
-
-// timestamp
-#ifdef isRTC
-  void getTimestamp() {
-    DateTime currentTime = RTC.now();  // get the current date-time
-    snprintf(timestampChar, sizeof(timestampChar), "%d/%02d/%02d %02d:%02d:%02d", currentTime.year(), currentTime.month(), currentTime.date(), currentTime.hour(), currentTime.minute(), currentTime.second());  // write to char array
-  }
-#endif
-
-// SD card
-#ifdef isSD
-  void writeToSd (char data) {
-    // power SD
-    digitalWrite(4, LOW);  // LOW is power on
-
-    // open file
-    File dataFile = SD.open(sdStorageUploadPathFile, FILE_WRITE);
-
-    // if the file is available, write to it:
-    if (dataFile) {
-      dataFile.println(data);
-      dataFile.close();
-      // debug
-      #ifdef isDebug
-        Serial.println("Wrote dataset to SD!");
-      #endif
-    }
-    // if the file isn't open, pop up an error:
-    else {
-      // debug
-      #ifdef isDebug
-        Serial.print("Error opening ");
-        Serial.print(sdStorageUploadPathFile);
-        Serial.println();
-      #endif
-    }
-    // switch off SD
-    digitalWrite(4, HIGH);  // LOW is power on
-  }
-#endif
-
-// weight
-#ifdef isScale
-  void getWeight() {
-    // clear running median samples
-    weightSamples.clear();
-
-    // read x times weight and take median
-    // do this till running median sample is full
-    do {
-      // wait between samples
-      Serial.flush();
-      for (int i=0; i<waitTimeLoadSamples; i++) {
-        // sleep for one second
-        LowPower.powerDown(SLEEP_1S, ADC_OFF, BOD_OFF); // delay 60 ms
-      }
-
-      // power ADS1231 and load cell
-      digitalWrite(17, HIGH);
-      loadCell.power(HIGH);
-
-      delay(2);  // wait for stabilizing
-
-      // ADS1231 ready?
-      while (!loadCell.check()) {
-        loadCell.check();
-      }
-
-      // read raw data input of ADS1231
-      long weightSensorValue = loadCell.readData();
-
-      // switch off ADS1231 and load cell
-      loadCell.power(LOW);
-      digitalWrite(17, LOW);
-
-      // calculate weight in kg
-      float weightKg = ((float)weightSensorValue - (float)loadCellZeroOffset) / (float)loadCellKgDivider;
-
-      // add single value to runnig median sample
-      weightSamples.add(weightKg);
-    } while (weightSamples.getCount() < weightSamples.getSize());
-
-    dtostrf(weightSamples.getMedian(), 8, 3, weightMedianChar);  // write to char array
-  }
-#endif
-
-// temperature array / DS18B20
-#ifdef isTemperatureArray
-  void getTemperature() {
-    // request temperature on all devices on the bus
-    temperatureSensors.setWaitForConversion(false);  // makes it async
-    // initiatie temperature retrieval
-    temperatureSensors.requestTemperatures();
-
-    // wait at least 750 ms for conversion
-    // to save power go to sleep for this delay
-    Serial.flush();  // flush serial before sleeping
-    LowPower.powerDown(SLEEP_1S, ADC_OFF, BOD_OFF); // delay 60 ms
-
-    // loop through each device, print out temperature
-    for (int i=0; i<temperatureNumDevices; i++) {
-      // print temperature
-      float temperatureC = temperatureSensors.getTempC(deviceAddressArray[i]);
-      dtostrf(temperatureC, 5, 1, temperatureArrayChar[i]);  // write to char array
-    }
-  }
-#endif
-
-// humidity and temperature / DHTxx
-#ifdef isHumidityTemperature
-  void getHumidityTemperature() {
-    // read humidity and temperature data
-    // loop through all devices
-    for (int i=0; i<humidityNumDevices; i++) {
-      // read device, we have to do this twice because DHTxx reports always value from teading before
-      DHT.readHumidityType(humidityPins[i]);
-      // wait at least 500 ms between readings
-      // to save power go to sleep for this delay
-      Serial.flush();  // flush serial before sleeping
-      LowPower.powerDown(SLEEP_500MS, ADC_OFF, BOD_OFF); // delay 60 ms
-      // do this again
-      int chk = DHT.readHumidityType(humidityPins[i]);
-
-      switch (chk) {
-        // this is the normal case, all is working smoothly
-        case DHTLIB_OK:
-          // Serial.print("OK,\t");
-          dtostrf(DHT.temperature, 5, 1, temperatureChar[i]);  // write to char array
-          dtostrf(DHT.humidity, 5, 1, humidityChar[i]);  // write to char array
-          break;
-        // following are error cases
-        case DHTLIB_ERROR_CHECKSUM:
-          #ifdef isDebug
-            Serial.println(F("DHTxx Checksum error"));
-          #endif
-          break;
-        case DHTLIB_ERROR_TIMEOUT:
-          #ifdef isDebug
-            Serial.println(F("DHTxx Time out error"));
-          #endif
-          break;
-        default:
-          #ifdef isDebug
-            Serial.println(F("DHTxx Unknown error"));
-          #endif
-          break;
-      }
-    }
-
-    // FOR UNO + DHT33 400ms SEEMS TO BE MINIMUM DELAY BETWEEN SENSOR READS,
-    // ADJUST TO YOUR NEEDS
-    // we do other time consuming things / sleeping after reading DHT33, so we can skip this
-//  delay(1000);
-  }
-#endif
-
-// battery voltage
-// read the battery level from the analog pin.
-//
-// ** for Lipo 4.2V
-// Our 1M & 220K voltage divider takes the max lipo value of
-// 4.2V and drops it to 0.757V max. This means our min analog
-// read value should be 580 (3.14V / 0.566V) and the max analog
-// read value should be 774 (4.2V / 0.757).
-//
-// ** for 4x 1,5 V AA battery = 6 V
-// Our 1.5M & 220K voltage divider takes the max battery value of
-// 6V and drops it to 0.767V max. This means our min analog
-// read value should be 411 (3.14V / 0.402V) and the max analog
-// read value should be 785 (6V / 0.767V).
-#ifdef isBattery
-  void getVoltage() {
-    int batteryValue = analogRead(A7); // read battery as analog value
-    // calculate voltage based on voltage divider resistors
-    float voltage = batteryValue * (1.1 / 1024) * (10 + 2) / 2;  // voltage divider, values in Mega Ohm
-    dtostrf(voltage,5,2,voltageChar);  // write to char array
-  }
-#endif
-
-// interrupt service routine for external interrupt on INT0 triggered from RTC
-// keep this as short as possible, possibly avoid using function calls
-#ifdef isRTC
-  void wakeUp() {
-     // handler for the pin interrupt
-  }
-#endif

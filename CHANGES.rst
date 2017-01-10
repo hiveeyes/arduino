@@ -10,7 +10,11 @@ CHANGES
 in-progress
 ===========
 - Work on documentation
-- Initial commit of sketches based on ESP8266 and Homie. Thanks, Alex!
+- `Add sketches based on the ESP8266 MCU and the Homie firmware <https://github.com/hiveeyes/arduino/pull/1>`_. Thanks, Alex!
+- Update firmware for :ref:`open-hive-firmware-gprs` "`node-gprs-http.ino`_". Thanks, Clemens!
+
+    - Add support for HX711
+    - Add support for ESP8266
 
 
 2016-11-01 0.10.0
