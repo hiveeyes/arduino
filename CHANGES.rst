@@ -18,6 +18,7 @@ in-progress
 
 - Add "makeEspArduino", a makefile for ESP8266 Arduino projects by Peter Lerup
 - Pull update to HX711 submodule
+- Fix compilation errors for ADS1231 library on ESP8266
 
 
 2016-11-01 0.10.0

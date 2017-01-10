@@ -4,6 +4,17 @@
 	#include <inttypes.h>
     #include <Arduino.h> //It is very important to remember this! note that if you are using Arduino 1.0 IDE, change "WProgram.h" to "Arduino.h"
 
+    #ifdef __SAM3X8E__
+      typedef volatile RwReg PortReg;
+      typedef uint32_t PortMask;
+    #elif defined(ESP8266)
+      typedef volatile uint32_t PortReg;
+      typedef uint32_t PortMask;
+    #else
+      typedef volatile uint8_t PortReg;
+      typedef uint8_t PortMask;
+    #endif
+
 	#define MAX_ADS1231   6
 
 	#define INVALID_ADS1231         255     // flag indicating an invalid servo index
