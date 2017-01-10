@@ -16,6 +16,9 @@ in-progress
     - Add support for HX711
     - Add support for ESP8266
 
+- Add "makeEspArduino", a makefile for ESP8266 Arduino projects by Peter Lerup
+- Pull update to HX711 submodule
+
 
 2016-11-01 0.10.0
 =================
