@@ -9,6 +9,7 @@ CHANGES
 
 in-progress
 ===========
+- Add ArduinoSTL, a STL and iostream implementation for Arduino based on uClibc++
 
 
 2017-01-10 0.11.0
