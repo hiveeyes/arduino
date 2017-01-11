@@ -10,6 +10,12 @@ CHANGES
 in-progress
 ===========
 - Add ArduinoSTL, a STL and iostream implementation for Arduino based on uClibc++
+- Update firmware for :ref:`node-wifi-mqtt` "`node-wifi-mqtt.ino`_". Thanks Clemens and Karsten!
+
+    - Make things actually work
+    - Add dependency "Adafruit_MQTT_Library"
+    - Add more sensors
+    - Add Makefile and documentation
 
 
 2017-01-10 0.11.0

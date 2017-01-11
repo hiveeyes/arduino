@@ -30,17 +30,24 @@ The most recent firmware version is available at `node-wifi-mqtt.ino`_.
     :width: 640px
 
 
-*****************
-Breadboard wiring
-*****************
-These Fritzing schematics describe the breadboard hardware wiring
-of the MCU with its sensor equipment. It features:
+Platform and supported peripherals
+==================================
 
 - `Adafruit Feather HUZZAH`_ with an ESP8266_ MCU
 - HX711_ ADC weigh scale breakout board
 - DS18B20_ digital thermometer
 - DHT33_ (RHT04_) digital humidity/temperature sensor
 
+
+
+*******
+Details
+*******
+
+Wiring
+======
+These Fritzing schematics describe the breadboard hardware wiring
+of the MCU with its sensor equipment. It features:
 
 .. figure:: https://ptrace.hiveeyes.org/2016-11-01_esp8266-feather-hx711-ds18b20-dht33_breadboard_01-top_v0.3.png
     :alt: ESP8266 with HX711, DS18B20 and DHT33 on breadboard, top view.
@@ -63,8 +70,8 @@ Firmware
 .. highlight:: bash
 
 
-Build on your workstation
-=========================
+Clone git repository
+====================
 ::
 
     # Get hold of the source code repository including all dependencies
@@ -73,18 +80,66 @@ Build on your workstation
     # Select this firmware
     cd node-wifi-mqtt
 
-.. todo::
 
-    Describe how to build using
+Configure
+=========
+Have a look at the source code `node-wifi-mqtt.ino`_ and adapt setting variables according to your environment.
 
-        - https://github.com/thunderace/Esp8266-Arduino-Makefile or
-        - https://github.com/plerup/makeEspArduino
+Configure WiFi and MQTT settings::
+
+    // WiFi parameters
+    #define WLAN_SSID       "change-to-your-ssid"
+    #define WLAN_PASS       "change-to-your-pw"
+
+    // MQTT server
+    #define MQTT_BROKER     "swarm.hiveeyes.org"
+    #define MQTT_PORT       1883
+    #define AIO_USERNAME    ""
+    #define AIO_KEY         ""
+
+
+Build
+=====
+Setup SDK::
+
+    mkdir ~/sdk; cd ~/sdk
+    git clone https://github.com/esp8266/Arduino esp8266-arduino
+
+    # Download appropriate Espressif SDK
+    cd esp8266-arduino/tools
+    ./get.py
+
+Announce path to SDK::
+
+    export ESP_ROOT=~/sdk/esp8266-arduino
+
+Build firmware::
+
+    make -f Makefile-ESP8266.mk
+
+Output when successful::
+
+    # ...
+    node-wifi-mqtt.ino
+    # ...
+    Creating core archive
+    Linking /tmp/mkESP/node-wifi-mqtt_generic/node-wifi-mqtt.bin
+      Versions: 0.11.0-4-gd839c68-dirty, 2.3.0-88-g0291a6e
+
+    Memory usage
+      Ram:    35744 bytes
+      Flash: 274241 bytes
+
+    Build complete. Elapsed time: 8 seconds
+
+Enable more verbose output::
+
+    export VERBOSE=true
 
 
 Upload to MCU
--------------
+=============
+::
 
-.. todo::
-
-    Describe how to upload to the MCU using ``esptool``.
+    make -f Makefile-ESP8266.mk upload
 

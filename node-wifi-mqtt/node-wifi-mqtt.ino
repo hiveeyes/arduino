@@ -4,13 +4,16 @@
 
    Collect beehive sensor data and transmit via WiFi to a MQTT broker.
 
-   Copyright (C) 2014-2016  Clemens Gruber
+   Copyright (C) 2014-2017  Clemens Gruber
+   Copyright (C) 2016-2017  Karsten Harazim
+   Copyright (C) 2016-2017  Andreas Motl
 
 
    Changes
    -------
    2016-05-18 Initial version
    2016-10-31 Beta release
+   2017-01-09 Add more sensors
 
 
    GNU GPL v3 License
@@ -35,7 +38,7 @@
 
    Hiveeyes node sketch for Arduino based platforms. Here: ESP8266.
 
-   This is a Arduino sketch for the Hiveeyes bee monitoring system.
+   This is a Arduino sketch for the Hiveeyes beehive monitoring system.
    The purpose is to collect vital data and to send it via WiFi to
    the MQTT bus at swarm.hiveeyes.org:1883.
 
@@ -70,41 +73,59 @@
   MIT license, all text above must be included in any redistribution
  ****************************************************/
 
-// Libraries
-// ESP8266
 
-#include <ESP8266WiFi.h>                // https://github.com/esp8266/Arduino
+// --------
+// Settings
+// --------
 
 // WiFi parameters
-#define WLAN_SSID  "change-to-your-ssid"
-#define WLAN_PASS  "change-to-your-pw"
+#define WLAN_SSID       "change-to-your-ssid"
+#define WLAN_PASS       "change-to-your-pw"
 
-// Adafruit MQTT
-#include "Adafruit_MQTT.h"              // https://github.com/adafruit/Adafruit_MQTT_Library
-#include "Adafruit_MQTT_Client.h"       // https://github.com/adafruit/Adafruit_MQTT_Library
-
-// Adafruit IO
-#define AIO_SERVER      "swarm.hiveeyes.org"
-#define AIO_SERVERPORT  1883
+// MQTT server
+#define MQTT_BROKER     "swarm.hiveeyes.org"
+#define MQTT_PORT       1883
 #define AIO_USERNAME    ""
 #define AIO_KEY         ""
+
+
+// ---------
+// Libraries
+// ---------
+// ESP8266: https://github.com/esp8266/Arduino
+#include <ESP8266WiFi.h>
+
+// Adafruit MQTT
+// https://github.com/adafruit/Adafruit_MQTT_Library
+#include "Adafruit_MQTT.h"
+#include "Adafruit_MQTT_Client.h"
 
 // DS18B20
 #include <OneWire.h>            // oneWire for DS18B20
 #include <DallasTemperature.h>  // DS18B20 itself
 
+
+// --------------------
+// Sensor configuration
+// --------------------
+
 // number of temperature devices on bus
-const int temperatureNumDevices = 1;
+const int temperatureNumDevices = 2;
 // order on physical array of temperature devices
 // the order is normally defined by the device id hardcoded in
 // the device, you can physically arrange the DS18B20 in case you
 // know the ID and use here {1,2,3,4 ... or you can tryp out what
 // sensor is on wich position and adusit it herer accordingly
-const int temperatureOrderDevices[temperatureNumDevices] = {0};
+const int temperatureOrderDevices[temperatureNumDevices] = {0,1};
 // resolution for all devices (9, 10, 11 or 12 bits)
 const int temperaturePrecision = 12;
 // pin for the temperature sensors
 const int temperaturePin = 5;
+
+
+// ----
+// Main
+// ----
 
 OneWire oneWire(temperaturePin);                       // oneWire instance to communicate with any OneWire devices (not just DS18B20)
 DallasTemperature temperatureSensors(&oneWire);        // pass oneWire reference to DallasTemperature
@@ -118,9 +139,9 @@ char gradC[4]={' ','°','C','\0'};                      // degree sign
 
 // DHTxx pin(s) / humidity and temperature
 // how much pins have DHTxx devices connected?
-const int humidityNumDevices = 1;
+const int humidityNumDevices = 2;
 // pins have DHTxx device, pin 4
-const int humidityPins[humidityNumDevices+1] = {4};
+const int humidityPins[humidityNumDevices+1] = {2,4};
 
 dht DHT;  // create DHT object
 
@@ -139,47 +160,41 @@ char humidityChar[humidityNumDevices][6];  // should handle xxx.x and null termi
 char weightChar[9];  // should handle +-xxx.xxx and null terminator
 
 // Functions
-void connect();
+void mqtt_connect();
 
 // Create an ESP8266 WiFiClient class to connect to the MQTT server.
 WiFiClient client;
 
-// Store the MQTT server, client ID, username, and password in flash memory.
-const char MQTT_SERVER[] PROGMEM    = AIO_SERVER;
 
 // Set a unique MQTT client ID using the AIO key + the date and time the sketch
 // was compiled (so this should be unique across multiple devices for a user,
 // alternatively you can manually set this to a GUID or other random value).
-const char MQTT_CLIENTID[] PROGMEM  = AIO_KEY __DATE__ __TIME__;
-const char MQTT_USERNAME[] PROGMEM  = AIO_USERNAME;
-const char MQTT_PASSWORD[] PROGMEM  = AIO_KEY;
+// TODO: Maybe use/compute CLIENT_ID again
 
 // Setup the MQTT client class by passing in the WiFi client and MQTT server and login details.
-Adafruit_MQTT_Client mqtt(&client, MQTT_SERVER, AIO_SERVERPORT, MQTT_CLIENTID, MQTT_USERNAME, MQTT_PASSWORD);
+Adafruit_MQTT_Client mqtt(&client, MQTT_BROKER, MQTT_PORT, AIO_USERNAME, AIO_KEY);
+//Adafruit_MQTT_Client mqtt(&client, MQTT_BROKER, MQTT_PORT, CLIENT_ID, AIO_USERNAME, AIO_KEY);
 
 /****************************** Feeds ***************************************/
 
 // Setup feeds for temperature & humidity
-const char WEIGHT_FEED[] PROGMEM = AIO_USERNAME "hiveeyes/kh/dach/huzzah/measure/weight";
-Adafruit_MQTT_Publish weight = Adafruit_MQTT_Publish(&mqtt, WEIGHT_FEED);
-
-const char TEMPERATURE_FEED[] PROGMEM = AIO_USERNAME "hiveeyes/kh/dach/huzzah/measure/temperature";
-Adafruit_MQTT_Publish temperature = Adafruit_MQTT_Publish(&mqtt, TEMPERATURE_FEED);
-
-const char HUMIDITY_FEED[] PROGMEM = AIO_USERNAME "hiveeyes/kh/dach/huzzah/measure/humidity";
-Adafruit_MQTT_Publish humidity = Adafruit_MQTT_Publish(&mqtt, HUMIDITY_FEED);
-
-const char TEMPERATUREARRAY_FEED[] PROGMEM = AIO_USERNAME "hiveeyes/kh/dach/huzzah/measure/temperaturearray";
-Adafruit_MQTT_Publish temperaturearray = Adafruit_MQTT_Publish(&mqtt, TEMPERATUREARRAY_FEED);
-
+Adafruit_MQTT_Publish weight             = Adafruit_MQTT_Publish(&mqtt, AIO_USERNAME "hiveeyes/kh/cfb/hive1/measure/weight");
+Adafruit_MQTT_Publish temperature1       = Adafruit_MQTT_Publish(&mqtt, AIO_USERNAME "hiveeyes/kh/cfb/hive1/measure/airtemperature");
+Adafruit_MQTT_Publish humidity1          = Adafruit_MQTT_Publish(&mqtt, AIO_USERNAME "hiveeyes/kh/cfb/hive1/measure/airhumidity");
+Adafruit_MQTT_Publish temperaturearray1  = Adafruit_MQTT_Publish(&mqtt, AIO_USERNAME "hiveeyes/kh/cfb/hive1/measure/broodtemperature");
+Adafruit_MQTT_Publish temperature2       = Adafruit_MQTT_Publish(&mqtt, AIO_USERNAME "hiveeyes/kh/cfb/hive1/measure/airtemperature_outside");
+Adafruit_MQTT_Publish humidity2          = Adafruit_MQTT_Publish(&mqtt, AIO_USERNAME "hiveeyes/kh/cfb/hive1/measure/airhumidity_outside");
+Adafruit_MQTT_Publish temperaturearray2  = Adafruit_MQTT_Publish(&mqtt, AIO_USERNAME "hiveeyes/kh/cfb/hive1/measure/entrytemperature");
 
 /*************************** Sketch Code ************************************/
+
 void setup() {
   Serial.begin(9600);
 
   // scale
-  scale.set_scale(-25144.f);  // this value is obtained by calibrating the scale with known weights; see the README for details
-  scale.set_offset(30775);
+  // These values are obtained by calibrating the scale with known weights, see the README for details.
+  scale.set_scale(-13035.f);
+  scale.set_offset(-122526);
 //  scale.tare();             // reset the scale to 0
   yield();
 
@@ -244,8 +259,6 @@ void setup() {
   //if (!oneWire.search(outsideThermometer)) Serial.println("Unable to find address for outsideThermometer");
 
 
-  // connect to adafruit io
-  connect();
 }
 
 
@@ -314,20 +327,19 @@ void getWeight() {
 
 
 void loop() {
-  // ping adafruit io a few times to make sure we remain connected
-  if(! mqtt.ping(3)) {
-    // reconnect to adafruit io
-    if(! mqtt.connected())
-      connect();
-  }
 
-  // Grab the current state of the sensor
+  mqtt_connect();
+
+// Grab the current state of the sensor
 //  int humidity_data = (int)dht.readHumidity();
 //  int temperature_data = (int)dht.readTemperature();
 
   // output humidity and temperature, DHTxx
+  Serial.println(F("Read weight"));
   getWeight();
+  Serial.println(F("Read temp"));
   getTemperature();
+  Serial.println(F("Read hum temp"));
   getHumidityTemperature();
 
   // Publish data
@@ -340,64 +352,95 @@ void loop() {
     Serial.println(F("  -  published!"));
   };
 
+
   // note: only for a single DS18B20 on the bus!!
   // must be rewritten for more DS18B20
-  if (! temperaturearray.publish(temperatureArrayChar[0]))
+  if (! temperaturearray1.publish(temperatureArrayChar[0]))
     Serial.println(F("Failed to publish temperatureArray[0]"));
   else {
-    Serial.print(F("temperatureArray: "));
+    Serial.print(F("temperatureArray1: "));
     Serial.print(temperatureArrayChar[0]);
     Serial.print(F(" "));
     Serial.print(gradC);
     Serial.println(F("  -  published!"));
   };
 
-  if (! temperature.publish(temperatureChar[0]))
+  if (! temperaturearray2.publish(temperatureArrayChar[1]))
+    Serial.println(F("Failed to publish temperatureArray[0]"));
+  else {
+    Serial.print(F("temperatureArray2: "));
+    Serial.print(temperatureArrayChar[1]);
+    Serial.print(F(" "));
+    Serial.print(gradC);
+    Serial.println(F("  -  published!"));
+  };
+
+  if (! temperature1.publish(temperatureChar[0]))
     Serial.println(F("Failed to publish temperature"));
   else {
-    Serial.print(F("Temperature: "));
+    Serial.print(F("Temperature1: "));
     Serial.print(temperatureChar[0]);
     Serial.print(F(" "));
     Serial.print(gradC);
     Serial.println(F("  -  published!"));
   };
 
-  if (! humidity.publish(humidityChar[0]))
+  if (! humidity1.publish(humidityChar[0]))
     Serial.println(F("Failed to publish humidity"));
   else {
-    Serial.print(F("Humidity:    "));
+    Serial.print(F("Humidity1:    "));
     Serial.print(humidityChar[0]);
     Serial.print(F(" %"));
     Serial.println(F("  -  published!"));
   };
 
+  if (! temperature2.publish(temperatureChar[1]))
+    Serial.println(F("Failed to publish temperature"));
+  else {
+    Serial.print(F("Temperature2: "));
+    Serial.print(temperatureChar[1]);
+    Serial.print(F(" "));
+    Serial.print(gradC);
+    Serial.println(F("  -  published!"));
+  };
 
-  // Repeat every 30 seconds
-  delay(30000);
+  if (! humidity2.publish(humidityChar[1]))
+    Serial.println(F("Failed to publish humidity"));
+  else {
+    Serial.print(F("Humidity2:    "));
+    Serial.print(humidityChar[1]);
+    Serial.print(F(" %"));
+    Serial.println(F("  -  published!"));
+  };
+
+  // Repeat every 5 minutes
+  delay(300000);
 }
 
 
-// connect to adafruit io via MQTT
-void connect() {
-  Serial.print(F("Connecting to Adafruit IO... "));
+// Connect to MQTT
+void mqtt_connect() {
+
+  if (mqtt.connected()) {
+    Serial.println(F("Already connected to MQTT"));
+    return;
+  }
+
+  Serial.println(F("Connecting to MQTT..."));
   int8_t ret;
 
+  uint8_t retries = 3;
   while ((ret = mqtt.connect()) != 0) {
-    switch (ret) {
-      case 1: Serial.println(F("Wrong protocol")); break;
-      case 2: Serial.println(F("ID rejected")); break;
-      case 3: Serial.println(F("Server unavail")); break;
-      case 4: Serial.println(F("Bad user/pass")); break;
-      case 5: Serial.println(F("Not authed")); break;
-      case 6: Serial.println(F("Failed to subscribe")); break;
-      default: Serial.println(F("Connection failed")); break;
+    Serial.println(mqtt.connectErrorString(ret));
+
+    Serial.println("Retrying MQTT connect in 5 seconds...");
+    delay(5000);
+
+    retries--;
+    if (retries == 0) {
+      Serial.println(F("Could not connect to MQTT, dying!"));
     }
 
-    if(ret >= 0)
-      mqtt.disconnect();
-
-    Serial.println(F("Retrying connection..."));
-    delay(5000);
   }
-  Serial.println(F("Adafruit IO Connected!"));
+  Serial.println(F("Connected to MQTT!"));
 }
