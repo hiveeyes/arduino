@@ -20,6 +20,7 @@
   2016-06-20 Clemens Gruber | Modularization of upload URL
   2016-09-17 Clemens Gruber | Modularization of sensors and debugging
   2017-01-09 Clemens Gruber | Add support for HX711 and ESP8266
+  2017-01-10 Andreas Motl   | Improve sensor data collection
 
 
   GNU GPL v3 License
@@ -50,6 +51,22 @@
   D17          Power load cell and ADS1231
   A7           battery voltage
 */
+
+
+// Standard C++ (STL) for Arduino for dynamic data structures like vector and map.
+// Required for AVR only, STL already seems to be included in Espressif SDK.
+#ifndef ARDUINO_ARCH_ESP8266
+    #include <ArduinoSTL.h>
+#endif
+
+
+// TerkinData - flexible data collection for sensor readings
+// to decouple measurement from telemetry domain.
+#include <TerkinData.h>
+using namespace TerkinData;
+using namespace TerkinUtil;
+using std::string;
+
 
 // -------------------------+------
 // variables you can modify | START
@@ -207,7 +224,44 @@ unsigned long updateInterval = 60UL * 60UL;  // s*m*h*d  // seems it take 11 sec
 // do not use spaces before or after an comma
 //const char datasetHeader[] = "Date/Time,Weight,Outside Temp,Outside Humid,Inside Temp,Inside Humid,H1 Temp,H2 Temp,H3 Temp,H4 Temp,H5 Temp,Voltage";
 //const char datasetHeader[] = "Date/Time,Weight,Outside Temp,Outside Humid,Inside Temp,Voltage";
-const char datasetHeader[] = "Datum/Zeit,Gewicht,Aussen-Temperatur,Aussen-Feuchtigkeit,Brut-Temperatur,Spannung";
+//const char datasetHeader[] = "Datum/Zeit,Gewicht,Aussen-Temperatur,Aussen-Feuchtigkeit,Brut-Temperatur,Spannung";
+
+
+// ---------------------------------------
+// ** dynamic dataset (v2): infrastructure
+// ---------------------------------------
+
+// Moved to "TerkinData" library.
+
+
+// ------------------------------
+// ** dynamic dataset (v2): setup
+// ------------------------------
+
+void DataManager::setup() {
+
+    // List of field names
+    this->field_names  = new DataHeader({"time", "weight", "temp-outside", "humidity-outside", "temp-brood", "voltage"});
+
+    // List of human readable field names for backward compatibility
+    this->field_labels = new DataHeader({"Datum/Zeit", "Gewicht", "Aussen-Temperatur", "Aussen-Feuchtigkeit", "Brut-Temperatur", "Spannung"});
+
+    // Optionally prefix header line with string
+    //this->csv_header_prefix = "";
+
+    // Map names of lowlevel sensor values to highlevel telemetry data fields
+    (*this->sensor_field_mapping)[string("dht.0.temp")]   = string("temp-outside");
+    (*this->sensor_field_mapping)[string("dht.0.hum")]    = string("humidity-outside");
+    (*this->sensor_field_mapping)[string("ds18b20.0")]    = string("temp-brood");
+
+}
+
+DataManager *datamgr = new DataManager();
+
+
+// static dataset (v1) backward compatibility: Make opaque CSV header string from list of field name elements
+const char *datasetHeader = join(*datamgr->field_labels, ',').c_str();
+
 
 // -------------------------+----
 // variables you can modify | END
@@ -355,7 +409,7 @@ const char datasetHeader[] = "Datum/Zeit,Gewicht,Aussen-Temperatur,Aussen-Feucht
 #endif
 
 
-void setup () {
+void setup() {
   // debug and GSM
   Serial.begin(9600);
   #ifdef isDebug
@@ -443,6 +497,7 @@ void setup () {
   // some simplificatiion for your convenience
   // build uploadPath and upload header
   #if defined (isGSM) || defined (isWifi) || defined (isEthernet)
+
     // build uploadPath
     snprintf(uploadPath, sizeof(uploadPath), uploadScheme,
       uploadDomain,
@@ -585,7 +640,7 @@ void setup () {
 // timestamp
 #ifdef isRTC
   #ifdef isWifi
-    void getTimestamp() {
+    void getTimestamp(Measurement& measurement) {
       // set timestamp later by server
       memcpy(timestampChar, "timestamp-by-server", sizeof("timestamp-by-server"));
       /*
@@ -646,7 +701,7 @@ void setup () {
       */
     }
   #else
-    void getTimestamp() {
+    void getTimestamp(Measurement& measurement) {
 
       // Get the current datetime
       DateTime currentTime = RTC.now();
@@ -654,6 +709,8 @@ void setup () {
       // Write to char array
       snprintf(timestampChar, sizeof(timestampChar), "%d/%02d/%02d %02d:%02d:%02d", currentTime.year(), currentTime.month(), currentTime.date(), currentTime.hour(), currentTime.minute(), currentTime.second());  // write to char array
 
+      // Write to data container
+      measurement.time = timestampChar;
     }
   #endif
 #endif
@@ -692,7 +749,7 @@ void setup () {
 
 // weight
 #ifdef isScale
-  void getWeight() {
+  void getWeight(Measurement& measurement) {
     // clear running median samples
     weightSamples.clear();
 
@@ -753,12 +810,14 @@ void setup () {
     // Write to char array
     dtostrf(weight, 8, 3, weightMedianChar);
 
+    // Write to data container
+    measurement.data["weight"] = weight;
   }
 #endif
 
 // temperature array / DS18B20
 #ifdef isTemperatureArray
-  void getTemperature() {
+  void getTemperature(Measurement& measurement) {
     // request temperature on all devices on the bus
     temperatureSensors.setWaitForConversion(false);  // makes it async
     // initiatie temperature retrieval
@@ -783,13 +842,16 @@ void setup () {
       // Write to char array
       dtostrf(temperatureC, 5, 1, temperatureArrayChar[i]);
 
+      // Write to data container
+      String key = "ds18b20." + String(i);  // e.g. ds18b20.0, ds18b20.1, etc.
+      measurement.data[key.c_str()] = temperatureC;
     }
   }
 #endif
 
 // humidity and temperature / DHTxx
 #ifdef isHumidityTemperature
-  void getHumidityTemperature() {
+  void getHumidityTemperature(Measurement& measurement) {
     // read humidity and temperature data
     // loop through all devices
     for (int i=0; i<humidityNumDevices; i++) {
@@ -812,6 +874,10 @@ void setup () {
       // Read sensor the second time, this should deliver the appropriate values
       int chk = DHT.readHumidityType(humidityPins[i]);
 
+      // Prepare keys for data container, e.g. dht.0.temp, dht.0.hum, dht.1.temp, dht.1.hum, etc.
+      String key_temp = "dht." + String(i) + ".temp";
+      String key_hum  = "dht." + String(i) + ".hum";
+
       switch (chk) {
         // this is the normal case, all is working smoothly
         case DHTLIB_OK:
@@ -821,6 +887,9 @@ void setup () {
           dtostrf(DHT.temperature, 5, 1, temperatureChar[i]);
           dtostrf(DHT.humidity, 5, 1, humidityChar[i]);
 
+          // Write to data container
+          measurement.data[key_temp.c_str()] = DHT.temperature;
+          measurement.data[key_hum.c_str()]  = DHT.humidity;
 
           break;
 
@@ -865,7 +934,7 @@ void setup () {
 // read value should be 411 (3.14V / 0.402V) and the max analog
 // read value should be 785 (6V / 0.767V).
 #ifdef isBattery
-  void getVoltage() {
+  void getVoltage(Measurement& measurement) {
     int batteryValue = analogRead(batteryPin); // read battery as analog value
 
     // Compute voltage based on voltage divider resistors
@@ -874,6 +943,8 @@ void setup () {
     // Write to char array
     dtostrf(voltage,5,2,voltageChar);  // write to char array
 
+    // Write to data container
+    measurement.data["voltage"] = voltage;
 
   }
 #endif
@@ -895,28 +966,32 @@ void setup () {
 // Main program
 // ------------
 
-void loop () {
+void loop() {
+
+  // Data container to collect one reading
+  Measurement *measurement = new Measurement();
+
   // update data
   //
   // update timestamp
   #ifdef isRTC
-    getTimestamp();
+    getTimestamp(*measurement);
   #endif
   // update weight
   #ifdef isScale
-    getWeight();
+    getWeight(*measurement);
   #endif
   // update humidity and temperature, DHTxx
   #ifdef isHumidityTemperature
-    getHumidityTemperature();
+    getHumidityTemperature(*measurement);
   #endif
   // update temperature array
   #ifdef isTemperatureArray
-    getTemperature();
+    getTemperature(*measurement);
   #endif
   // update battery voltage
   #ifdef isBattery
-    getVoltage();
+    getVoltage(*measurement);
   #endif
 
 /*
@@ -949,7 +1024,10 @@ void loop () {
   Serial.println(voltageChar);
 */
 
-  // build dataset
+  // ----------------------------
+  // ** static dataset (v1): data
+  // ----------------------------
+
   // calculate size of dataset
   char dataset[0
     #ifdef isRTC
@@ -997,10 +1075,35 @@ void loop () {
     strcat(dataset, ",");
     strcat(dataset, voltageChar);
   #endif
+
   // debug
   #ifdef isDebug
+    Serial.println("static dataset (v1)");
     Serial.println(dataset);
   #endif
+
+
+  // -----------------------------
+  // ** dynamic dataset (v2): data
+  // -----------------------------
+
+  std::string data_header = datamgr->csv_header();
+  std::string data_record = datamgr->csv_data(*measurement);
+
+  // debug
+  #ifdef isDebug
+    Serial.println("static dataset (v2)");
+    //Serial.println(data_record);
+  #endif
+
+
+  // ---------------
+  // ** Telemetry **
+  // ---------------
+
+  // TODO: Use HTTP POST
+  // TODO: Use MQTT
+  // TODO: Use SSL if possible
 
   #if defined (isGSM) || defined (isWifi) || defined (isEthernet)
     // replace spaces with plus for proper URL
