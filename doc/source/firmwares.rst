@@ -26,7 +26,7 @@ Stable
 
 WiFi
 ====
-List of WiFi-based firmwares.
+List of WiFi-based firmwares, all are based on the ESP8266_.
 
 .. list-table::
     :widths: 20 40
@@ -35,6 +35,11 @@ List of WiFi-based firmwares.
 
     * - Name
       - Description
+
+    * - :ref:`node-wifi-http`
+      - `node-gprs-http.ino`_ is the firmware source code powering
+        the `Open Hive WiFi Solar`_ sensor node based on the `ESP8266 core for Arduino`_.
+        It transmits sensor data using WiFi/HTTP.
 
     * - :ref:`node-wifi-mqtt`
       - `node-wifi-mqtt.ino`_ is the firmware source code powering
@@ -48,9 +53,9 @@ List of WiFi-based firmwares.
         It transmits sensor data using WiFi/MQTT.
 
 
-GPRS
-====
-List of GPRS-based firmwares.
+GSM
+===
+List of GSM-based firmwares.
 
 .. list-table::
     :widths: 20 40
@@ -63,7 +68,7 @@ List of GPRS-based firmwares.
     * - :ref:`open-hive-firmware-gprs`
       - `node-gprs-http.ino`_ is the firmware source code powering
         the `Open Hive Box`_. It transmits sensor data by HTTP
-        using a GPRSbee_ GPRS modem.
+        using the GPRSbee_ GSM modem.
 
 
 .. _firmwares-beradio:

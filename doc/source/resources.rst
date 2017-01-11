@@ -147,3 +147,12 @@
 .. _HTTPie: http://httpie.org
 .. _HttpRequester: https://addons.mozilla.org/en-us/firefox/addon/httprequester/
 
+
+
+.. Clearfix in reStructuredText
+.. https://stackoverflow.com/questions/23498174/clearfix-paragraph-in-restructured-text
+.. https://stackoverflow.com/questions/4550021/working-example-of-floating-image-in-restructured-text
+.. |clearfix| raw:: html
+
+    <div class="clearfix"></div>
+

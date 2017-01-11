@@ -47,10 +47,12 @@ Platform and supported peripherals
 Details
 *******
 
+.. _esp8266-fritzing-wiring:
+
 Wiring
 ======
 These Fritzing schematics describe the breadboard hardware wiring
-of the MCU with its sensor equipment. It features:
+of the ESP8266 MCU with its sensor equipment (HX711, DS18B20 and DHT33).
 
 .. figure:: https://ptrace.hiveeyes.org/2016-11-01_esp8266-feather-hx711-ds18b20-dht33_breadboard_01-top_v0.3.png
     :alt: ESP8266 with HX711, DS18B20 and DHT33 on breadboard, top view.
@@ -64,7 +66,7 @@ of the MCU with its sensor equipment. It features:
     :alt: ESP8266 with HX711, DS18B20 and DHT33 on breadboard, bottom view.
     :width: 640px
 
-    Bottom view.
+    Bottom view
 
 
 ********

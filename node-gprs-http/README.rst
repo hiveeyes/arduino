@@ -23,13 +23,32 @@ This hybrid firmware supports two different hardware devices.
 Telemetry data is transmitted using HTTP. Both HX711_ and ADS1231_ load cell sensor chips are supported.
 The most recent firmware version is available at `node-gprs-http.ino`_.
 
+.. figure:: https://ptrace.hiveeyes.org/2016-07-08_open-hive_box-with-electronics.jpg
+    :alt: Open Hive Box with electronics
+    :width: 450px
+    :align: left
+
+    `Open Hive Box`_ GSM
+
+
+.. figure:: https://ptrace.hiveeyes.org/2016-06-17_openhive-huzzah.jpg
+    :alt: Open Hive WiFi Node on workbench
+    :width: 450px
+    :align: right
+
+    Open Hive WiFi Node
+
+
+|clearfix|
+
+
 Platform and supported peripherals
 ==================================
 
 Board
 -----
-- Open Hive GSM: `Seeeduino Stalker v2.3`_ with an ATmega328_ MCU or
-- Open Hive WiFi: `Adafruit Feather HUZZAH`_ with an ESP8266_ MCU
+- `Open Hive Box`_ GSM: `Seeeduino Stalker v2.3`_ with ATmega328_ MCU and GPRSbee_ GSM modem or
+- Open Hive WiFi Node: `Adafruit Feather HUZZAH`_ with ESP8266_ MCU (:ref:`Fritzing wiring <esp8266-fritzing-wiring>`)
 
 Sensors
 -------
@@ -43,51 +62,9 @@ Sensors
     - Nodes with identical hardware: :ref:`node-wifi-mqtt` and :ref:`node-wifi-mqtt-homie`
 
 
-
-*******
-Details
-*******
-
-Open Hive GSM
-=============
-The `Open Hive Box`_ is a beehive monitoring sensor node with GPRS transceiver based on an AVR ATmega328_.
-
-.. figure:: https://ptrace.hiveeyes.org/2016-07-08_open-hive_box-with-electronics.jpg
-    :alt: Open Hive Box with electronics
-    :width: 640px
-
-Open Hive WiFi
-==============
-A beehive monitoring sensor node based on the `Adafruit Feather HUZZAH`_, featuring an ESP8266_ MCU.
-
-.. figure:: https://ptrace.hiveeyes.org/2016-06-17_openhive-huzzah.jpg
-    :alt: Open Hive Adafruit Feather HUZZAH
-    :width: 640px
-
-Wiring
-------
-These Fritzing schematics describe the breadboard hardware wiring
-of the MCU with its sensor equipment.
-
-.. figure:: https://ptrace.hiveeyes.org/2016-11-01_esp8266-feather-hx711-ds18b20-dht33_breadboard_01-top_v0.3.png
-    :alt: ESP8266 with HX711, DS18B20 and DHT33 on breadboard, top view.
-    :width: 640px
-
-    Top view
-
-----
-
-.. figure:: https://ptrace.hiveeyes.org/2016-11-01_esp8266-feather-hx711-ds18b20-dht33_breadboard_02-bottom_v0.3.png
-    :alt: ESP8266 with HX711, DS18B20 and DHT33 on breadboard, bottom view.
-    :width: 640px
-
-    Bottom view.
-
-
 *****
 Setup
 *****
-
 
 Clone git repository
 ====================
@@ -102,7 +79,10 @@ Clone git repository
 
 Configure firmware
 ==================
-Have a look at the source code `node-gprs-http.ino`_ and adapt feature flags according to your environment:
+.. highlight:: c++
+
+Have a look at the source code `node-gprs-http.ino`_ and adapt
+feature flags and setting variables according to your environment:
 
 When using a HX711_ sensor::
 
@@ -125,10 +105,25 @@ Enable ESP8266 with integrated WiFi::
     #define WLAN_SSID  "your-ssid"
     #define WLAN_PW    "your-pw"
 
+Configure load cell calibration settings::
+
+    // Use sketches "scale-adjust-hx711.ino" or "scale-adjust-ads1231.ino" for calibration
+
+    // The raw sensor value for "0 kg"
+    const long loadCellZeroOffset = 38623;
+
+    // The raw sensor value for a 1 kg weight load
+    const long loadCellKgDivider  = 11026;
+
+.. tip::
+
+    Read about :ref:`scale-adjust-firmware` to get these values.
+
 
 *****
 Build
 *****
+.. highlight:: bash
 
 Build for AVR
 =============

@@ -94,7 +94,8 @@ Configure
 =========
 .. highlight:: c++
 
-Have a look at the source code `node-wifi-mqtt-homie.ino`_ and adapt setting variables according to your environment.
+Have a look at the source code `node-wifi-mqtt-homie.ino`_ and adapt
+setting variables according to your environment.
 
 Configure load cell calibration settings::
 
