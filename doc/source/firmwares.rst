@@ -38,11 +38,11 @@ List of WiFi-based firmwares.
 
     * - :ref:`node-wifi-mqtt`
       - `node-wifi-mqtt.ino`_ is the firmware source code powering
-        the Open Hive `Adafruit Feather HUZZAH`_.
+        the Open Hive `Adafruit Feather HUZZAH`_ based on the `ESP8266 core for Arduino`_.
         It transmits sensor data using WiFi/MQTT.
 
     * - :ref:`node-wifi-mqtt-homie`
-      - `node-wifi-mqtt-homie.ino`_ is the standard firmware
+      - `node-wifi-mqtt-homie.ino`_ is the firmware
         based on the `ESP8266 framework for Homie`_ for powering
         the »`ESP8266 beehive scale <ESP8266 Stockwaage – erste Eindrücke_>`_«.
         It transmits sensor data using WiFi/MQTT.

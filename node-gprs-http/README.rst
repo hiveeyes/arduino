@@ -38,6 +38,11 @@ Sensors
 - DS18B20_ digital thermometer
 - DHT33_ (RHT04_) digital humidity/temperature sensor
 
+.. seealso::
+
+    - Nodes with identical hardware: :ref:`node-wifi-mqtt` and :ref:`node-wifi-mqtt-homie`
+
+
 
 *******
 Details
@@ -127,6 +132,8 @@ Build
 
 Build for AVR
 =============
+The build system is based on `Arduino-Makefile`_, a Makefile for Arduino projects.
+
 ::
 
     # Select appropriate Makefile
@@ -148,6 +155,8 @@ Upload to MCU
 
 Build for ESP8266
 =================
+The build system is based on `makeESPArduino`_, a Makefile for ESP8286 Arduino projects.
+
 Setup SDK::
 
     mkdir ~/sdk; cd ~/sdk
@@ -163,22 +172,11 @@ Announce path to SDK::
 
 Build firmware::
 
+    # Announce path to SDK
+    export ESP_ROOT=~/sdk/esp8266-arduino
+
+    # Run Makefile
     make -f Makefile-ESP8266.mk
-
-Output when successful::
-
-    # ...
-    node-gprs-http.ino
-    # ...
-    Creating core archive
-    Linking /tmp/mkESP/node-gprs-http_generic/node-gprs-http.bin
-      Versions: 0.10.0-16-g62487f1-dirty, 2.3.0-88-g0291a6e
-
-    Memory usage
-      Ram:    34096 bytes
-      Flash: 252637 bytes
-
-    Build complete. Elapsed time: 2 seconds
 
 Enable more verbose output::
 

@@ -10,7 +10,7 @@ CHANGES
 in-progress
 ===========
 - Add ArduinoSTL, a STL and iostream implementation for Arduino based on uClibc++
-- Update firmware for :ref:`node-wifi-mqtt` "`node-wifi-mqtt.ino`_". Thanks Clemens and Karsten!
+- Update firmware for :ref:`node-wifi-mqtt` (`node-wifi-mqtt.ino`_). Thanks Clemens and Karsten!
 
     - Make things actually work
     - Add dependency "Adafruit_MQTT_Library"
@@ -25,8 +25,9 @@ in-progress
 
 2017-01-10 0.11.0
 =================
-- `Add sketches based on the ESP8266 MCU and the Homie firmware <https://github.com/hiveeyes/arduino/pull/1>`_. Thanks, Alex!
-- Update firmware for :ref:`open-hive-firmware-gprs` "`node-gprs-http.ino`_". Thanks, Clemens!
+- Add firmware for :ref:`node-wifi-mqtt-homie` (`node-wifi-mqtt-homie.ino`_).
+  Contributed as `PR #1`_ by Alexander Wilms of `Imkerverein Nettetal e.V.`_. Thanks a bunch!
+- Update firmware for :ref:`open-hive-firmware-gprs`: (`node-gprs-http.ino`_). Thanks, Clemens!
 
     - Add support for HX711
     - Add support for ESP8266
@@ -35,6 +36,8 @@ in-progress
 - Pull update to HX711 submodule
 - Fix compilation errors for ADS1231 library on ESP8266
 - Improve documentation
+
+.. _PR #1: https://github.com/hiveeyes/arduino/pull/1
 
 
 2016-11-01 0.10.0

@@ -32,11 +32,14 @@ The most recent firmware version is available at `node-wifi-mqtt.ino`_.
 
 Platform and supported peripherals
 ==================================
-
 - `Adafruit Feather HUZZAH`_ with an ESP8266_ MCU
 - HX711_ ADC weigh scale breakout board
 - DS18B20_ digital thermometer
 - DHT33_ (RHT04_) digital humidity/temperature sensor
+
+.. seealso::
+
+    - Nodes with identical hardware: :ref:`node-wifi-http` and :ref:`node-wifi-mqtt-homie`
 
 
 
@@ -100,6 +103,8 @@ Configure WiFi and MQTT settings::
 
 Build
 =====
+The build system is based on `makeESPArduino`_, a Makefile for ESP8286 Arduino projects.
+
 Setup SDK::
 
     mkdir ~/sdk; cd ~/sdk
@@ -109,28 +114,13 @@ Setup SDK::
     cd esp8266-arduino/tools
     ./get.py
 
-Announce path to SDK::
-
-    export ESP_ROOT=~/sdk/esp8266-arduino
-
 Build firmware::
 
-    make -f Makefile-ESP8266.mk
+    # Announce path to SDK
+    export ESP_ROOT=~/sdk/esp8266-arduino
 
-Output when successful::
-
-    # ...
-    node-wifi-mqtt.ino
-    # ...
-    Creating core archive
-    Linking /tmp/mkESP/node-wifi-mqtt_generic/node-wifi-mqtt.bin
-      Versions: 0.11.0-4-gd839c68-dirty, 2.3.0-88-g0291a6e
-
-    Memory usage
-      Ram:    35744 bytes
-      Flash: 274241 bytes
-
-    Build complete. Elapsed time: 8 seconds
+    # Run Makefile
+    make
 
 Enable more verbose output::
 
@@ -141,5 +131,5 @@ Upload to MCU
 =============
 ::
 
-    make -f Makefile-ESP8266.mk upload
+    make upload
 

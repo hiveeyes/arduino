@@ -51,6 +51,7 @@
 .. _node-wifi-mqtt.ino: https://github.com/hiveeyes/arduino/blob/master/node-wifi-mqtt/node-wifi-mqtt.ino
 
 .. imker-nettetal.de
+.. _Imkerverein Nettetal e.V.: https://www.imker-nettetal.de
 .. _ESP8266 Stockwaage – erste Eindrücke: https://www.imker-nettetal.de/esp8266-beescale-erste-eindruecke/
 .. _ESP8266-BeeScale.fzz: https://www.imker-nettetal.de/bienen-nsa/ESP8266-BeeScale1_1.fzz
 .. _node-wifi-mqtt-homie.ino: https://github.com/hiveeyes/arduino/blob/master/node-wifi-mqtt-homie/node-wifi-mqtt-homie.ino
