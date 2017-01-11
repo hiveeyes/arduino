@@ -24,6 +24,7 @@ LIBS = \
     ../libraries/DallasTemperature \
     ../libraries/RobTillaart-Arduino/libraries/DHTstable \
     ../libraries/RobTillaart-Arduino/libraries/RunningMedian \
+    ../libraries/TerkinData/*.{h,cpp}
 
 # Run makeEspArduino
 include ../tools/makeEspArduino/makeEspArduino.mk

@@ -22,6 +22,8 @@ in-progress
     - Add dependencies as git submodules
     - Add Makefile
 
+- Add :ref:`lib-terkin-data` library: Flexible data collection for decoupling sensor reading and telemetry domains
+
 
 2017-01-10 0.11.0
 =================

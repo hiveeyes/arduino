@@ -30,6 +30,7 @@ Enjoy reading and exploring this space.
     LICENSE
 
     BERadio/README
+    TerkinData/README
     firmware-builder
 
 
