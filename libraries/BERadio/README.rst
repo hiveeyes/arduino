@@ -8,6 +8,12 @@
 BERadio C++
 ###########
 
+.. contents::
+   :local:
+   :depth: 1
+
+----
+
 .. tip::
 
     You might want to `read this document on our documentation space <https://hiveeyes.org/docs/arduino/BERadio/README.html>`_,
@@ -70,8 +76,22 @@ using EmBencode_::
 
     d1:#i999e1:_2:h11:tli2121ei4242eee
 
-In case you are wondering, the scaling factor of ``* 100`` is
-applied to all floating point values, giving a precision of 2 digits.
+
+.. hint::
+
+    A scaling factor of ``* 100`` was applied to all floating point values,
+    giving an effective precision of 2 digits.
+
+
+
+********
+Download
+********
+
+BERadio C++
+===========
+    | Please download from GitHub:
+    | https://github.com/hiveeyes/arduino/tree/master/libraries/BERadio
 
 
 ************

@@ -28,6 +28,8 @@ Misc
 - Use PlatformIO
 - Rename repository from "arduino" to "firmware"
 - node-wifi-mqtt: Submit data as JSON container
+- # If you like this project, please add a star!
+- Test framework based on gtest: https://github.com/google/googletest
 
 2017-01-10
 ----------
