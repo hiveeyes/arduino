@@ -66,8 +66,13 @@
 #define isRTC  // define for ESP8266 also! gets time from server
 //#define isSD
 #define isBattery
-//#define isGSM
-#define isWifi
+
+#define isGSM
+#ifdef ARDUINO_ARCH_ESP8266
+    #undef isGSM
+    #define isWifi
+#endif
+
 //#define isEthernet
 // comments this line in case you are using GSM as upload path
 // GSM and Serial debug using the same pins and interfere
@@ -175,7 +180,7 @@ unsigned long updateInterval = 60UL * 60UL;  // s*m*h*d  // seems it take 11 sec
   // the order is normally defined by the device id hardcoded in
   // the device, you can physically arrange the DS18B20 in case you
   // know the ID and use here {0,1,2,3,4 ... or you can try out what
-  // sensor is on wich position and adjust it herer accordingly
+  // sensor is on wich position and adjust it here accordingly
   const int temperatureOrderDevices[temperatureNumDevices] = {0};
   // resolution for all devices (9, 10, 11 or 12 bits)
   const int temperaturePrecision = 12;
@@ -194,7 +199,9 @@ unsigned long updateInterval = 60UL * 60UL;  // s*m*h*d  // seems it take 11 sec
   const char sdStorageArchivePath[] = "/archive/";
 #endif
 
-// ** dataset header
+
+// ------------------------------
+// ** static dataset (v1): header
 // ------------------------------
 // define header für dataset
 // do not use spaces before or after an comma
@@ -347,13 +354,6 @@ const char datasetHeader[] = "Datum/Zeit,Gewicht,Aussen-Temperatur,Aussen-Feucht
   ] = "";
 #endif
 
-// Forward declarations
-void getTimestamp();
-void getWeight();
-void getHumidityTemperature();
-void getTemperature();
-void getVoltage();
-void wakeUp();
 
 void setup () {
   // debug and GSM
@@ -647,8 +647,13 @@ void setup () {
     }
   #else
     void getTimestamp() {
-      DateTime currentTime = RTC.now();  // get the current date-time
+
+      // Get the current datetime
+      DateTime currentTime = RTC.now();
+
+      // Write to char array
       snprintf(timestampChar, sizeof(timestampChar), "%d/%02d/%02d %02d:%02d:%02d", currentTime.year(), currentTime.month(), currentTime.date(), currentTime.hour(), currentTime.minute(), currentTime.second());  // write to char array
+
     }
   #endif
 #endif
@@ -742,7 +747,12 @@ void setup () {
       weightSamples.add(weightKg);
     } while (weightSamples.getCount() < weightSamples.getSize());
 
-    dtostrf(weightSamples.getMedian(), 8, 3, weightMedianChar);  // write to char array
+    // Final measurement value
+    float weight = weightSamples.getMedian();
+
+    // Write to char array
+    dtostrf(weight, 8, 3, weightMedianChar);
+
   }
 #endif
 
@@ -766,9 +776,13 @@ void setup () {
 
     // loop through each device, print out temperature
     for (int i=0; i<temperatureNumDevices; i++) {
-      // print temperature
+
+      // Read temperature for single device
       float temperatureC = temperatureSensors.getTempC(deviceAddressArray[i]);
-      dtostrf(temperatureC, 5, 1, temperatureArrayChar[i]);  // write to char array
+
+      // Write to char array
+      dtostrf(temperatureC, 5, 1, temperatureArrayChar[i]);
+
     }
   }
 #endif
@@ -779,27 +793,37 @@ void setup () {
     // read humidity and temperature data
     // loop through all devices
     for (int i=0; i<humidityNumDevices; i++) {
-      // read device, we have to do this twice because DHTxx reports always value from teading before
+
+      // Read sensor device
+      // We have to do this twice and wait at least 500 ms between readings,
+      // otherwise the DHTxx will report the value from the previous reading.
       DHT.readHumidityType(humidityPins[i]);
-      // wait at least 500 ms between readings
-      // to save power go to sleep for this delay
+
+      // To save power, go to sleep for this delay
       Serial.flush();  // flush serial before sleeping
-      // sleep for 500 ms second
+
+      // Sleep for 500 ms
       #ifdef isWifi
         delay(500);
       #else
         LowPower.powerDown(SLEEP_500MS, ADC_OFF, BOD_OFF);
       #endif
-      // do this again
+
+      // Read sensor the second time, this should deliver the appropriate values
       int chk = DHT.readHumidityType(humidityPins[i]);
 
       switch (chk) {
         // this is the normal case, all is working smoothly
         case DHTLIB_OK:
           // Serial.print("OK,\t");
-          dtostrf(DHT.temperature, 5, 1, temperatureChar[i]);  // write to char array
-          dtostrf(DHT.humidity, 5, 1, humidityChar[i]);  // write to char array
+
+          // Write to char array
+          dtostrf(DHT.temperature, 5, 1, temperatureChar[i]);
+          dtostrf(DHT.humidity, 5, 1, humidityChar[i]);
+
+
           break;
+
         // following are error cases
         case DHTLIB_ERROR_CHECKSUM:
           #ifdef isDebug
@@ -843,9 +867,14 @@ void setup () {
 #ifdef isBattery
   void getVoltage() {
     int batteryValue = analogRead(batteryPin); // read battery as analog value
-    // calculate voltage based on voltage divider resistors
+
+    // Compute voltage based on voltage divider resistors
     float voltage = batteryValue * (analogMax / 1024) * (10 + 2) / 2;  // voltage divider, values in Mega Ohm
+
+    // Write to char array
     dtostrf(voltage,5,2,voltageChar);  // write to char array
+
+
   }
 #endif
 
