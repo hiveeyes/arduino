@@ -16,6 +16,7 @@
 .. _Hiveeyes platform: https://swarm.hiveeyes.org/
 .. _Hiveeyes project: https://hiveeyes.org/
 .. _Hiveeyes Arduino repository: https://github.com/hiveeyes/arduino
+.. _Hiveeyes Backend: https://getkotori.org/
 
 
 .. Electronics
@@ -108,8 +109,11 @@
 .. _Bencoding: https://wiki.theory.org/BitTorrentSpecification#Bencoding
 .. _MQTT: http://mqtt.org/
 .. _UUID4: https://en.wikipedia.org/wiki/Universally_unique_identifier#Version_4_.28random.29
-.. _Arduino: https://www.arduino.cc/
 .. _ELF: https://en.wikipedia.org/wiki/Executable_and_Linkable_Format
+
+.. SDKs
+.. _Arduino: https://www.arduino.cc/
+.. _ESP8266 core for Arduino: https://github.com/esp8266/Arduino
 
 .. MQTT
 .. _Andy Piper: http://andypiper.co.uk
@@ -137,6 +141,7 @@
 .. Tools
 .. _Ino: http://inotool.org
 .. _Arduino-Makefile: https://github.com/sudar/Arduino-Makefile
+.. _makeESPArduino: https://github.com/plerup/makeEspArduino
 .. _Bare-Arduino-Project: https://github.com/ladislas/Bare-Arduino-Project
 .. _HTTPie: http://httpie.org
 .. _HttpRequester: https://addons.mozilla.org/en-us/firefox/addon/httprequester/

@@ -20,6 +20,8 @@ in-progress
 - Improve Homie Firmware for :ref:`node-wifi-mqtt-homie`
 
     - Add dependencies as git submodules
+    - Add Makefile
+
 
 2017-01-10 0.11.0
 =================
