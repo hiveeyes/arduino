@@ -17,7 +17,11 @@ Solution::
     -SREG = oldSREG;
     +interrupts();
 
-See also: https://github.com/esp8266/Arduino/issues/2218
+See also::
+
+    - | https://github.com/esp8266/Arduino/issues/2218
+      | via: https://forums.adafruit.com/viewtopic.php?f=22&t=101978
+    - https://forum.arduino.cc/index.php?topic=369939.0
 
 
 =========================
@@ -81,4 +85,12 @@ Solution: Use most recent ESP8266 Arduino Core from Git::
 
     Linking /tmp/mkESP/node-gprs-http_generic/node-gprs-http.bin
       Versions: 0.10.0-16-g62487f1-dirty, 2.3.0-88-g0291a6e
+
+See also::
+
+    - https://github.com/esp8266/Arduino/issues/1582
+    - https://github.com/esp8266/Arduino/issues/2253
+    - http://bbs.espressif.com/viewtopic.php?t=3164
+    - http://www.esp8266.com/viewtopic.php?f=9&t=12754
+    - http://stackoverflow.com/questions/34502452/esp8266-what-can-i-do-to-overcome-section-text-will-not-fit-in-region-iram
 

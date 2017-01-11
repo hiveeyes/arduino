@@ -20,6 +20,12 @@ TODO
 Misc
 ====
 
+2017-01-10
+----------
+- Should use recent ESP8266 Arduino Core, see also https://github.com/esp8266/Arduino/compare/2.3.0...master
+- Properly document correct libraries for individual sketches (A. Nickel)
+- https://github.com/mike-matera/ArduinoSTL/pull/4
+
 2017-01-09
 ----------
 - https://github.com/bogde/HX711/pull/59
