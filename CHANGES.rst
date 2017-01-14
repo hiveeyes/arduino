@@ -9,6 +9,10 @@ CHANGES
 
 in-progress
 ===========
+
+
+2017-01-14 0.12.0
+=================
 - Add ArduinoSTL, a STL and iostream implementation for Arduino based on uClibc++
 - Update firmware for :ref:`node-wifi-mqtt` (`node-wifi-mqtt.ino`_). Thanks Clemens and Karsten!
 
