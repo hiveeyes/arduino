@@ -85,6 +85,8 @@ namespace TerkinData {
             // Serialize measurement data to CSV format
             std::string csv_data(Measurement&);
 
+            // Serialize measurement data to JSON format
+            std::string json_data(Measurement&);
 
         private:
             // Configure the DataManager instance at runtime

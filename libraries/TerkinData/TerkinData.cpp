@@ -15,6 +15,11 @@
 **/
 #include "TerkinData.h"
 
+#if defined(HAVE_ARDUINO_JSON)
+    #include <ArduinoJson.h>
+#endif
+
+
 using namespace TerkinData;
 using namespace TerkinUtil;
 
@@ -107,5 +112,55 @@ std::string DataManager::csv_data(Measurement& measurement) {
         }
     }
     return join(items, ',');
+
+}
+
+
+/**
+ *
+ * Serialize measurement data to JSON format
+ *
+**/
+std::string DataManager::json_data(Measurement& measurement) {
+
+#if defined(HAVE_ARDUINO_JSON)
+
+    // Translate lowlevel sensor value names to telemetry field names
+    this->map_fields(measurement);
+
+    // Container object for JSON data elements
+    StaticJsonBuffer<512> jsonBuffer;
+    JsonObject& json = jsonBuffer.createObject();
+
+    // Iterate header field names
+    for (std::string name: *this->field_names) {
+
+        // #include <stdio.h>
+        //std::cout << "name: " << name << std::endl;
+
+        // Handle .time specially
+        if (name == "time") {
+            json[name] = measurement.time;
+            continue;
+        }
+
+        // Add values of sensor readings
+        if (key_exists(measurement.data, name)) {
+            float value = measurement.data[name];
+            json[name] = to_string(value);
+        }
+    }
+
+    // Serialize to JSON string
+    char payload[256];
+    json.printTo(payload, sizeof(payload));
+
+    return payload;
+
+#else
+
+    return "JSON serialization unavailable, please compile using '-DHAVE_ARDUINO_JSON'.";
+
+#endif
 
 }
