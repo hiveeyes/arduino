@@ -15,6 +15,7 @@ LIBS = \
     $(ESP_LIBS)/ESP8266WiFi \
     $(ESP_LIBS)/ESP8266HTTPClient \
     ../libraries/Adafruit_MQTT_Library/*.{h,cpp} \
+    ../libraries/ArduinoJson/include \
     ../libraries/OneWire \
     ../libraries/DallasTemperature \
     ../libraries/RobTillaart-Arduino/libraries/DHTstable \

@@ -14,6 +14,7 @@
    2016-05-18 Initial version
    2016-10-31 Beta release
    2017-01-09 Add more sensors
+   2017-02-01 Serialize sensor readings en bloc using JSON
 
 
    GNU GPL v3 License
@@ -94,6 +95,9 @@
 // ---------
 // ESP8266: https://github.com/esp8266/Arduino
 #include <ESP8266WiFi.h>
+
+// JSON serializer
+#include <ArduinoJson.h>
 
 // Adafruit MQTT
 // https://github.com/adafruit/Adafruit_MQTT_Library
@@ -177,14 +181,9 @@ Adafruit_MQTT_Client mqtt(&client, MQTT_BROKER, MQTT_PORT, AIO_USERNAME, AIO_KEY
 
 /****************************** Feeds ***************************************/
 
-// Setup feeds for temperature & humidity
-Adafruit_MQTT_Publish weight             = Adafruit_MQTT_Publish(&mqtt, AIO_USERNAME "hiveeyes/kh/cfb/hive1/measure/weight");
-Adafruit_MQTT_Publish temperature1       = Adafruit_MQTT_Publish(&mqtt, AIO_USERNAME "hiveeyes/kh/cfb/hive1/measure/airtemperature");
-Adafruit_MQTT_Publish humidity1          = Adafruit_MQTT_Publish(&mqtt, AIO_USERNAME "hiveeyes/kh/cfb/hive1/measure/airhumidity");
-Adafruit_MQTT_Publish temperaturearray1  = Adafruit_MQTT_Publish(&mqtt, AIO_USERNAME "hiveeyes/kh/cfb/hive1/measure/broodtemperature");
-Adafruit_MQTT_Publish temperature2       = Adafruit_MQTT_Publish(&mqtt, AIO_USERNAME "hiveeyes/kh/cfb/hive1/measure/airtemperature_outside");
-Adafruit_MQTT_Publish humidity2          = Adafruit_MQTT_Publish(&mqtt, AIO_USERNAME "hiveeyes/kh/cfb/hive1/measure/airhumidity_outside");
-Adafruit_MQTT_Publish temperaturearray2  = Adafruit_MQTT_Publish(&mqtt, AIO_USERNAME "hiveeyes/kh/cfb/hive1/measure/entrytemperature");
+// Setup MQTT publishing handler
+Adafruit_MQTT_Publish mqtt_publisher = Adafruit_MQTT_Publish(&mqtt, AIO_USERNAME "hiveeyes/kh/cfb/hive1/data.json");
+
 
 /*************************** Sketch Code ************************************/
 
@@ -334,6 +333,10 @@ void loop() {
 //  int humidity_data = (int)dht.readHumidity();
 //  int temperature_data = (int)dht.readTemperature();
 
+  // note: only for a single DS18B20 on the bus!!
+  // must be rewritten for more DS18B20
+
+
   // output humidity and temperature, DHTxx
   Serial.println(F("Read weight"));
   getWeight();
@@ -342,76 +345,37 @@ void loop() {
   Serial.println(F("Read hum temp"));
   getHumidityTemperature();
 
+
+  // Prepare data, build JSON object
+
+  StaticJsonBuffer<256> jsonBuffer;
+
+  JsonObject& root = jsonBuffer.createObject();
+  root["weight"]                    = weightChar;
+  root["broodtemperature"]          = temperatureArrayChar[0];
+  root["entrytemperature"]          = temperatureArrayChar[1];
+  root["airtemperature"]            = temperatureChar[0];
+  root["airhumidity"]               = humidityChar[0];
+  root["airtemperature_outside"]    = temperatureChar[1];
+  root["airhumidity_outside"]       = humidityChar[1];
+
+
+  // Debugging
+  root.printTo(Serial);
+
+
+  // Serialize data
+  char payload[256];
+  root.printTo(payload, sizeof(payload));
+
+
   // Publish data
-  if (! weight.publish(weightChar))
-    Serial.println(F("Failed to publish weight"));
-  else {
-    Serial.print(F("Weight:     "));
-    Serial.print(weightChar);
-    Serial.print(F(" kg"));
-    Serial.println(F("  -  published!"));
-  };
+  if (mqtt_publisher.publish(payload)) {
+    Serial.println(F("MQTT publish succeeded"));
+  } else {
+    Serial.println(F("MQTT publish failed"));
+  }
 
-
-  // note: only for a single DS18B20 on the bus!!
-  // must be rewritten for more DS18B20
-  if (! temperaturearray1.publish(temperatureArrayChar[0]))
-    Serial.println(F("Failed to publish temperatureArray[0]"));
-  else {
-    Serial.print(F("temperatureArray1: "));
-    Serial.print(temperatureArrayChar[0]);
-    Serial.print(F(" "));
-    Serial.print(gradC);
-    Serial.println(F("  -  published!"));
-  };
-
-  if (! temperaturearray2.publish(temperatureArrayChar[1]))
-    Serial.println(F("Failed to publish temperatureArray[0]"));
-  else {
-    Serial.print(F("temperatureArray2: "));
-    Serial.print(temperatureArrayChar[1]);
-    Serial.print(F(" "));
-    Serial.print(gradC);
-    Serial.println(F("  -  published!"));
-  };
-
-  if (! temperature1.publish(temperatureChar[0]))
-    Serial.println(F("Failed to publish temperature"));
-  else {
-    Serial.print(F("Temperature1: "));
-    Serial.print(temperatureChar[0]);
-    Serial.print(F(" "));
-    Serial.print(gradC);
-    Serial.println(F("  -  published!"));
-  };
-
-  if (! humidity1.publish(humidityChar[0]))
-    Serial.println(F("Failed to publish humidity"));
-  else {
-    Serial.print(F("Humidity1:    "));
-    Serial.print(humidityChar[0]);
-    Serial.print(F(" %"));
-    Serial.println(F("  -  published!"));
-  };
-
-  if (! temperature2.publish(temperatureChar[1]))
-    Serial.println(F("Failed to publish temperature"));
-  else {
-    Serial.print(F("Temperature2: "));
-    Serial.print(temperatureChar[1]);
-    Serial.print(F(" "));
-    Serial.print(gradC);
-    Serial.println(F("  -  published!"));
-  };
-
-  if (! humidity2.publish(humidityChar[1]))
-    Serial.println(F("Failed to publish humidity"));
-  else {
-    Serial.print(F("Humidity2:    "));
-    Serial.print(humidityChar[1]);
-    Serial.print(F(" %"));
-    Serial.println(F("  -  published!"));
-  };
 
   // Repeat every 5 minutes
   delay(300000);
