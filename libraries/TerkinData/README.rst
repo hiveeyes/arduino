@@ -27,10 +27,41 @@ telemetry domain in a typical data logger application.
 While providing a generic interface, it can serialize
 measurement values to CSV and JSON formats.
 
-TerkinData C++ was tested successfully on x86_64 (Mac OS X).
-It compiles with *xtensa-lx106-elf-g++ 4.8.2* (xtensa-lx106, crosstool-NG 1.20.0), *avr-g++ 4.9.1* (AVR) and *g++ 5.3.0* (MacPorts)
-on Mac OS X. It currently does **not** compile with *clang++ 3.4*.
+The library solves some important obstacles usually encountered when doing telemetry:
 
+- When serializing to CSV, the order of fields is important.
+  Therefore, an ordered list of field names is required for proper operation.
+  When serializing a CSV data line and some sensor values are missing due to sensor
+  defects or other errors, this must not have an impact on the CSV data line.
+  Optionally, the CSV header line can be prefixed with an arbitrary string on serialization.
+- Some sensors like the DHT33_ (RHT04_) digital humidity/temperature sensor
+  deliver two values in a single reading cycle: Humidity and temperature.
+  The data channeling from reading the sensor to telemetry submission has to account for that.
+  As with the DS18B20_ digital thermometer or other `1-Wire`_ devices,
+  multiple sensors of the same type might be attached, the data channeling also has to account for that.
+  This is achieved by one level of indirection between the sensor reading and
+  the telemetry domain by introducing a convenient mapping between lowlevel
+  sensor values and the designated highlevel telemetry field names,
+  which is resolved and applied on serialization.
+- A timestamp string in arbitrary format can be attached to a single measurement.
+
+It relies on a reasonable STL_ implementation as it uses the ``map`` and ``vector``
+data containers and its corresponding iterators under the hood.
+
+
+***********
+Environment
+***********
+TerkinData C++ compiles with *avr-g++ 4.9.1* (AVR) and *g++ 5.3.0* (MacPorts)
+as well as *xtensa-lx106-elf-g++ 4.8.2* (xtensa-lx106, crosstool-NG 1.20.0) on Mac OS X.
+It currently does **not** compile with *clang++ 3.4*. Patches are welcome!
+
+The example programs `<csv_basic.cpp_>`_ and `<json_basic.cpp_>`_ have been tested
+successfully at runtime on x86_64 (Mac OS X).
+
+It is currently alpha quality as we didn't hunt down potential memory leaks yet.
+It has also not been run on embedded MCU hardware yet, as this is just a design draft by now.
+Helping hands on that are very welcome!
 
 
 ********
@@ -176,18 +207,38 @@ Download
 
 TerkinData C++
 ==============
-    | Please download from GitHub:
-    | https://github.com/hiveeyes/arduino/tree/master/libraries/TerkinData
+| Please download a recent version from GitHub:
+| https://github.com/hiveeyes/arduino/tree/master/libraries/TerkinData
+|
 
 
 ************
 Dependencies
 ************
 
-
 ArduinoSTL
 ==========
-    | ArduinoSTL 1.0.1 by Mike Matera
-    | https://github.com/mike-matera/ArduinoSTL
-    | https://github.com/hiveeyes/ArduinoSTL
+| ArduinoSTL 1.0.2 by Mike Matera
+| https://github.com/mike-matera/ArduinoSTL
+|
 
+ArduinoJson
+===========
+| ArduinoJson by Benoît Blanchon
+| https://github.com/bblanchon/ArduinoJson
+|
+| This library is optional, but obviously required when serializing to JSON.
+|
+
+
+*********
+Etymology
+*********
+
+Terkin
+======
+| Epitomizes the greatest, the most immenense, the supreme and the paramount one.
+| Basically, the fundamental individual.
+|
+| -- http://www.urbandictionary.com/define.php?term=Terkin
+|
