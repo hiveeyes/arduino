@@ -92,6 +92,9 @@
 .. _Wheatstone bridge: https://en.wikipedia.org/wiki/Wheatstone_bridge
 .. _HX711: http://www.dfrobot.com/image/data/SEN0160/hx711_english.pdf
 .. _ADS1231: http://www.ti.com/product/ADS1231
+
+.. Other sensors
+.. _1-Wire: https://en.wikipedia.org/wiki/1-Wire
 .. _DS18B20: https://www.maximintegrated.com/en/products/analog/sensors-and-sensor-interface/DS18B20.html
 .. _DHT33: http://shop.boxtec.ch/digital-humiditytemperature-sensor-dht33-rht04-p-40541.html
 .. _RHT04: http://www.humiditycn.com/cp21.html
@@ -111,6 +114,7 @@
 .. _MQTT: http://mqtt.org/
 .. _UUID4: https://en.wikipedia.org/wiki/Universally_unique_identifier#Version_4_.28random.29
 .. _ELF: https://en.wikipedia.org/wiki/Executable_and_Linkable_Format
+.. _STL: https://en.wikipedia.org/wiki/Standard_Template_Library
 
 .. SDKs
 .. _Arduino: https://www.arduino.cc/
