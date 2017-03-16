@@ -9,8 +9,42 @@ CHANGES
 
 in-progress
 ===========
-- Work on documentation
-- Initial commit of sketches based on ESP8266 and Homie. Thanks, Alex!
+- Add JSON serialization to :ref:`lib-terkin-data` library
+
+
+2017-01-14 0.12.0
+=================
+- Add ArduinoSTL, a STL and iostream implementation for Arduino based on uClibc++
+- Update firmware for :ref:`node-wifi-mqtt` (`node-wifi-mqtt.ino`_). Thanks Clemens and Karsten!
+
+    - Make things actually work
+    - Add dependency "Adafruit_MQTT_Library"
+    - Add more sensors
+    - Add Makefile and documentation
+
+- Improve Homie Firmware for :ref:`node-wifi-mqtt-homie`
+
+    - Add dependencies as git submodules
+    - Add Makefile
+
+- Add :ref:`lib-terkin-data` library: Flexible data collection for decoupling sensor reading and telemetry domains
+
+
+2017-01-10 0.11.0
+=================
+- Add firmware for :ref:`node-wifi-mqtt-homie` (`node-wifi-mqtt-homie.ino`_).
+  Contributed as `PR #1`_ by Alexander Wilms of `Imkerverein Nettetal e.V.`_. Thanks a bunch!
+- Update firmware for :ref:`open-hive-firmware-gprs`: (`node-gprs-http.ino`_). Thanks, Clemens!
+
+    - Add support for HX711
+    - Add support for ESP8266
+
+- Add "makeEspArduino", a makefile for ESP8266 Arduino projects by Peter Lerup
+- Pull update to HX711 submodule
+- Fix compilation errors for ADS1231 library on ESP8266
+- Improve documentation
+
+.. _PR #1: https://github.com/hiveeyes/arduino/pull/1
 
 
 2016-11-01 0.10.0
@@ -20,6 +54,7 @@ in-progress
   Thanks Richard!
 - Update sketch (beta release) and add documentation about :ref:`node-wifi-mqtt` (`node-wifi-mqtt.ino`_).
   Thanks Clemens and Karsten!
+
 
 2016-09-17 0.9.0
 ================

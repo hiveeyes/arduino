@@ -16,6 +16,7 @@
 .. _Hiveeyes platform: https://swarm.hiveeyes.org/
 .. _Hiveeyes project: https://hiveeyes.org/
 .. _Hiveeyes Arduino repository: https://github.com/hiveeyes/arduino
+.. _Hiveeyes Backend: https://getkotori.org/
 
 
 .. Electronics
@@ -50,6 +51,7 @@
 .. _node-wifi-mqtt.ino: https://github.com/hiveeyes/arduino/blob/master/node-wifi-mqtt/node-wifi-mqtt.ino
 
 .. imker-nettetal.de
+.. _Imkerverein Nettetal e.V.: https://www.imker-nettetal.de
 .. _ESP8266 Stockwaage – erste Eindrücke: https://www.imker-nettetal.de/esp8266-beescale-erste-eindruecke/
 .. _ESP8266-BeeScale.fzz: https://www.imker-nettetal.de/bienen-nsa/ESP8266-BeeScale1_1.fzz
 .. _node-wifi-mqtt-homie.ino: https://github.com/hiveeyes/arduino/blob/master/node-wifi-mqtt-homie/node-wifi-mqtt-homie.ino
@@ -70,6 +72,7 @@
 
 .. Atmel
 .. _ATmega328: https://en.wikipedia.org/wiki/ATmega328
+.. _Seeeduino Stalker v2.3: http://wiki.seeedstudio.com/wiki/Seeeduino_Stalker_v2.3
 
 .. ESP8266
 .. _ESP8266: https://en.wikipedia.org/wiki/ESP8266
@@ -89,6 +92,9 @@
 .. _Wheatstone bridge: https://en.wikipedia.org/wiki/Wheatstone_bridge
 .. _HX711: http://www.dfrobot.com/image/data/SEN0160/hx711_english.pdf
 .. _ADS1231: http://www.ti.com/product/ADS1231
+
+.. Other sensors
+.. _1-Wire: https://en.wikipedia.org/wiki/1-Wire
 .. _DS18B20: https://www.maximintegrated.com/en/products/analog/sensors-and-sensor-interface/DS18B20.html
 .. _DHT33: http://shop.boxtec.ch/digital-humiditytemperature-sensor-dht33-rht04-p-40541.html
 .. _RHT04: http://www.humiditycn.com/cp21.html
@@ -107,8 +113,12 @@
 .. _Bencoding: https://wiki.theory.org/BitTorrentSpecification#Bencoding
 .. _MQTT: http://mqtt.org/
 .. _UUID4: https://en.wikipedia.org/wiki/Universally_unique_identifier#Version_4_.28random.29
-.. _Arduino: https://www.arduino.cc/
 .. _ELF: https://en.wikipedia.org/wiki/Executable_and_Linkable_Format
+.. _STL: https://en.wikipedia.org/wiki/Standard_Template_Library
+
+.. SDKs
+.. _Arduino: https://www.arduino.cc/
+.. _ESP8266 core for Arduino: https://github.com/esp8266/Arduino
 
 .. MQTT
 .. _Andy Piper: http://andypiper.co.uk
@@ -136,7 +146,17 @@
 .. Tools
 .. _Ino: http://inotool.org
 .. _Arduino-Makefile: https://github.com/sudar/Arduino-Makefile
+.. _makeESPArduino: https://github.com/plerup/makeEspArduino
 .. _Bare-Arduino-Project: https://github.com/ladislas/Bare-Arduino-Project
 .. _HTTPie: http://httpie.org
 .. _HttpRequester: https://addons.mozilla.org/en-us/firefox/addon/httprequester/
+
+
+
+.. Clearfix in reStructuredText
+.. https://stackoverflow.com/questions/23498174/clearfix-paragraph-in-restructured-text
+.. https://stackoverflow.com/questions/4550021/working-example-of-floating-image-in-restructured-text
+.. |clearfix| raw:: html
+
+    <div class="clearfix"></div>
 

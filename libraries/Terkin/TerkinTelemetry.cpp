@@ -1,6 +1,6 @@
 /**
  *
- * Terkin - a flexible telemetry client interface layer
+ * TerkinTelemetry - a flexible telemetry client interface layer
  *
  *
  *  Copyright (C) 2015-2016  Andreas Motl <andreas.motl@elmyra.de>
