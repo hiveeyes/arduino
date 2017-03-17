@@ -184,7 +184,7 @@ std::string DataManager::json_data(Measurement& measurement) {
         // Add values of sensor readings
         if (key_exists(measurement.data, name)) {
             float value = measurement.data[name];
-            json[name] = to_string(value);
+            json[name] = value;
         }
     }
 

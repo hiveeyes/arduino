@@ -14,6 +14,7 @@ in-progress
 2017-03-17 0.13.0
 =================
 - Add x-www-form-urlencoded serialization to :ref:`lib-terkin-data` library
+- Fix JSON serialization: Don’t convert values to string
 
 
 2017-02-01 unreleased

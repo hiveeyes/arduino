@@ -229,11 +229,10 @@ JSON
     =======================
 
     -- Test single reading (complete)
-    data:   {"time":"2017-02-01T18:41:56Z","weight":"85.000000","temperature-outside":"42.419998","humidity-outside":"84.839996","temperature-inside":"33.330002","voltage":"3.843000"}
+    data:   {"time":"2017-03-17T03:07:25Z","weight":85.00,"temperature-outside":42.42,"humidity-outside":84.84,"temperature-inside":33.33,"voltage":3.84}
 
     -- Test single reading (incomplete)
-    data:   {"time":"2017-02-01T18:41:56Z","temperature-outside":"42.419998","humidity-outside":"84.839996","voltage":"3.843000"}
-
+    data:   {"time":"2017-03-17T03:07:25Z","temperature-outside":42.42,"humidity-outside":84.84,"voltage":3.84}
 
 .. seealso:: Full source of `<json_basic.cpp_>`_.
 
