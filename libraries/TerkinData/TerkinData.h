@@ -76,6 +76,9 @@ namespace TerkinData {
             //static const std::string csv_header_prefix;
             std::string *csv_header_prefix;
 
+            // At which decimal to round floats
+            int float_precision = 2;
+
             // Translate lowlevel sensor value names to telemetry field names
             void map_fields(Measurement&);
 
@@ -87,6 +90,9 @@ namespace TerkinData {
 
             // Serialize measurement data to JSON format
             std::string json_data(Measurement&);
+
+            // Serialize measurement data to x-www-urlencoded format
+            std::string urlencode_data(Measurement&);
 
         private:
             // Configure the DataManager instance at runtime
@@ -170,6 +176,23 @@ namespace TerkinUtil {
 
     }
 
+    template <typename T> std::string to_string(const T& t, int precision) {
+        // This is currently Arduino-only
+        #if defined(ARDUINO)
+            return std::string(String(t).c_str());
+        #else
+            //return std::to_string(t, precision);
+            std::string buffer(16, '\0');
+            std::string format = "%." + to_string(precision) + "f";
+            //auto result = std::snprintf(&buffer[0], buffer.size(), "%.2f", t);
+            auto result = std::snprintf(&buffer[0], buffer.size(), format.c_str(), t);
+            if (result < 0) {
+                // ERROR
+            }
+            return buffer.c_str();
+        #endif
+    }
+
     #if not defined(ARDUINO)
 
     // http://www.cplusplus.com/reference/ctime/strftime/
@@ -185,7 +208,101 @@ namespace TerkinUtil {
 
         return std::string(buffer);
     }
+
     #endif
+
+
+    // https://github.com/zenmanenergy/ESP8266-Arduino-Examples/blob/master/helloWorld_urlencoded/urlencode.ino
+
+    /*
+    ESP8266 Hello World urlencode by Steve Nelson
+    URLEncoding is used all the time with internet urls. This is how urls handle funny characters
+    in a URL. For example a space is: %20
+    These functions simplify the process of encoding and decoding the urlencoded format.
+
+    It has been tested on an esp12e (NodeMCU development board)
+    This example code is in the public domain, use it however you want.
+
+    Prerequisite Examples:
+    https://github.com/zenmanenergy/ESP8266-Arduino-Examples/blob/master/helloWorld_urlencoded/helloWorld_urlencoded.ino
+    */
+
+    static unsigned char h2int(char c);
+
+    static std::string urldecode(std::string str)
+    {
+
+        std::string encodedString="";
+        char c;
+        char code0;
+        char code1;
+        for (unsigned int i = 0; i < str.length(); i++){
+            c=str.at(i);
+          if (c == '+'){
+            encodedString+=' ';
+          }else if (c == '%') {
+            i++;
+            code0=str.at(i);
+            i++;
+            code1=str.at(i);
+            c = (h2int(code0) << 4) | h2int(code1);
+            encodedString+=c;
+          } else{
+
+            encodedString+=c;
+          }
+        }
+
+       return encodedString;
+    }
+
+    static std::string urlencode(std::string str)
+    {
+        std::string encodedString="";
+        char c;
+        char code0;
+        char code1;
+        //char code2;
+        for (unsigned int i = 0; i < str.length(); i++){
+          c=str.at(i);
+          if (c == ' '){
+            encodedString+= '+';
+          } else if (isalnum(c)){
+            encodedString+=c;
+          } else{
+            code1=(c & 0xf)+'0';
+            if ((c & 0xf) >9){
+                code1=(c & 0xf) - 10 + 'A';
+            }
+            c=(c>>4)&0xf;
+            code0=c+'0';
+            if (c > 9){
+                code0=c - 10 + 'A';
+            }
+            //code2='\0';
+            encodedString+='%';
+            encodedString+=code0;
+            encodedString+=code1;
+            //encodedString+=code2;
+          }
+        }
+        return encodedString;
+
+    }
+
+    static unsigned char h2int(char c)
+    {
+        if (c >= '0' && c <='9'){
+            return((unsigned char)c - '0');
+        }
+        if (c >= 'a' && c <='f'){
+            return((unsigned char)c - 'a' + 10);
+        }
+        if (c >= 'A' && c <='F'){
+            return((unsigned char)c - 'A' + 10);
+        }
+        return(0);
+    }
 
 }
 

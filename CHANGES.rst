@@ -9,6 +9,15 @@ CHANGES
 
 in-progress
 ===========
+
+
+2017-03-17 0.13.0
+=================
+- Add x-www-form-urlencoded serialization to :ref:`lib-terkin-data` library
+
+
+2017-02-01 unreleased
+=====================
 - Add JSON serialization to :ref:`lib-terkin-data` library
 
 
