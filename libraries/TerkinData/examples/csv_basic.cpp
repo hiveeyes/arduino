@@ -37,13 +37,16 @@ void DataManager::setup() {
     // List of field names
     this->field_names  = new DataHeader({"time", "weight", "temperature-outside", "humidity-outside", "temperature-inside", "voltage"});
 
-    // Optionally prefix header line with string
-    this->csv_header_prefix = new std::string("## ");
-
     // Map names of lowlevel sensor values to highlevel telemetry data fields
     (*this->sensor_field_mapping)[string("dht.0.temp")]   = string("temperature-outside");
     (*this->sensor_field_mapping)[string("dht.0.hum")]    = string("humidity-outside");
     (*this->sensor_field_mapping)[string("ds18b20.0")]    = string("temperature-inside");
+
+    // Optionally prefix CSV header line with string
+    this->csv_header_prefix = new std::string("## ");
+
+    // Optionally set float serialization precision
+    this->float_precision = 3;
 
 }
 

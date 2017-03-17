@@ -15,6 +15,7 @@ in-progress
 =================
 - Add x-www-form-urlencoded serialization to :ref:`lib-terkin-data` library
 - Fix JSON serialization: Don’t convert values to string
+- Improve CSV serialization demo: Set float precision to three digits
 
 
 2017-02-01 unreleased
