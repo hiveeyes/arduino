@@ -5,7 +5,7 @@
 
 ### PROJECT_DIR
 ### This is the path to where you have created/cloned your project
-PROJECT_DIR       = ..
+PROJECT_DIR       = ../..
 
 ### AVR_GCC_VERSION
 ### Check if the version is equal or higher than 4.9
@@ -27,12 +27,26 @@ USER_LIB_PATH     =  $(realpath $(PROJECT_DIR)/libraries)
 ### For Arduino IDE 1.0.x
 ### Only BOARD_TAG is needed. It must be set to the board you are currently using. (i.e uno, mega2560, etc.)
 # BOARD_TAG         = mega2560
+#BOARD_TAG         = uno
+#BOARD_TAG         = raspioduino
+#BOARD_TAG         = gertduino328
+
 ### For Arduino IDE 1.6.x
 ### Both BOARD_TAG and BOARD_SUB are needed. They must be set to the board you are currently using. (i.e BOARD_TAG = uno, mega, etc. & BOARD_SUB = atmega2560, etc.)
 ### Note: for the Arduino Uno, only BOARD_TAG is mandatory and BOARD_SUB can be equal to anything
 #BOARD_TAG         = pro
-BOARD_TAG         = uno
-BOARD_SUB         = 8MHzatmega328
+#BOARD_TAG         = uno
+#BOARD_SUB         = 8MHzatmega328
+
+# RasPIO Hiveeyes, 2016-12-15
+# NOTE: to flash the raspiduino, this avrdude command is needed
+# sudo avrdude -P gpio -c gpio -p atmega328p -v -U flash:w:../bin/src/gert328/generic.hex
+
+BOARD_TAG         = gert328
+MCU = atmega328p
+F_CPU = 12000000L
+ISP_PROG = gpio
+FORCE_MONITOR_PORT = true
 
 ### MONITOR_BAUDRATE
 ### It must be set to Serial baudrate value you are using.

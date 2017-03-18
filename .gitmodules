@@ -57,3 +57,25 @@
 [submodule "libraries/DS3231"]
 	path = libraries/DS3231
 	url = https://github.com/jcastaneyra/ds3231_library
+[submodule "tools/makeEspArduino"]
+	path = tools/makeEspArduino
+	url = https://github.com/plerup/makeEspArduino
+[submodule "libraries/ArduinoSTL"]
+	path = libraries/ArduinoSTL
+	url = https://github.com/hiveeyes/ArduinoSTL
+	branch = operator-fixes
+[submodule "libraries/Adafruit_MQTT_Library"]
+	path = libraries/Adafruit_MQTT_Library
+	url = https://github.com/adafruit/Adafruit_MQTT_Library
+[submodule "libraries/homie-esp8266"]
+	path = libraries/homie-esp8266
+	url = https://github.com/marvinroger/homie-esp8266
+[submodule "libraries/async-mqtt-client"]
+	path = libraries/async-mqtt-client
+	url = https://github.com/marvinroger/async-mqtt-client
+[submodule "libraries/ESPAsyncTCP"]
+	path = libraries/ESPAsyncTCP
+	url = https://github.com/me-no-dev/ESPAsyncTCP
+[submodule "libraries/Bounce2"]
+	path = libraries/Bounce2
+	url = https://github.com/thomasfredericks/Bounce2

@@ -2,9 +2,9 @@
 
 .. _node-wifi-mqtt:
 
-#############################
-Open Hive Feather sensor node
-#############################
+###############################
+Open Hive WiFi/MQTT sensor node
+###############################
 
 .. contents::
    :local:
@@ -30,17 +30,29 @@ The most recent firmware version is available at `node-wifi-mqtt.ino`_.
     :width: 640px
 
 
-*****************
-Breadboard wiring
-*****************
-These Fritzing schematics describe the breadboard hardware wiring
-of the MCU with its sensor equipment. It features:
-
+Platform and supported peripherals
+==================================
 - `Adafruit Feather HUZZAH`_ with an ESP8266_ MCU
 - HX711_ ADC weigh scale breakout board
 - DS18B20_ digital thermometer
 - DHT33_ (RHT04_) digital humidity/temperature sensor
 
+.. seealso::
+
+    - Nodes with identical hardware: :ref:`node-wifi-http` and :ref:`node-wifi-mqtt-homie`
+
+
+
+*******
+Details
+*******
+
+.. _esp8266-fritzing-wiring:
+
+Wiring
+======
+These Fritzing schematics describe the breadboard hardware wiring
+of the ESP8266 MCU with its sensor equipment (HX711, DS18B20 and DHT33).
 
 .. figure:: https://ptrace.hiveeyes.org/2016-11-01_esp8266-feather-hx711-ds18b20-dht33_breadboard_01-top_v0.3.png
     :alt: ESP8266 with HX711, DS18B20 and DHT33 on breadboard, top view.
@@ -54,7 +66,7 @@ of the MCU with its sensor equipment. It features:
     :alt: ESP8266 with HX711, DS18B20 and DHT33 on breadboard, bottom view.
     :width: 640px
 
-    Bottom view.
+    Bottom view
 
 
 ********
@@ -63,8 +75,8 @@ Firmware
 .. highlight:: bash
 
 
-Build on your workstation
-=========================
+Clone git repository
+====================
 ::
 
     # Get hold of the source code repository including all dependencies
@@ -73,18 +85,53 @@ Build on your workstation
     # Select this firmware
     cd node-wifi-mqtt
 
-.. todo::
 
-    Describe how to build using
+Configure
+=========
+Have a look at the source code `node-wifi-mqtt.ino`_ and adapt setting variables according to your environment.
 
-        - https://github.com/thunderace/Esp8266-Arduino-Makefile or
-        - https://github.com/plerup/makeEspArduino
+Configure WiFi and MQTT settings::
+
+    // WiFi parameters
+    #define WLAN_SSID       "change-to-your-ssid"
+    #define WLAN_PASS       "change-to-your-pw"
+
+    // MQTT server
+    #define MQTT_BROKER     "swarm.hiveeyes.org"
+    #define MQTT_PORT       1883
+    #define AIO_USERNAME    ""
+    #define AIO_KEY         ""
+
+
+Build
+=====
+The build system is based on `makeESPArduino`_, a Makefile for ESP8286 Arduino projects.
+
+Setup SDK::
+
+    mkdir ~/sdk; cd ~/sdk
+    git clone https://github.com/esp8266/Arduino esp8266-arduino
+
+    # Download appropriate Espressif SDK
+    cd esp8266-arduino/tools
+    ./get.py
+
+Build firmware::
+
+    # Announce path to SDK
+    export ESP_ROOT=~/sdk/esp8266-arduino
+
+    # Run Makefile
+    make
+
+Enable more verbose output::
+
+    export VERBOSE=true
 
 
 Upload to MCU
--------------
+=============
+::
 
-.. todo::
-
-    Describe how to upload to the MCU using ``esptool``.
+    make upload
 

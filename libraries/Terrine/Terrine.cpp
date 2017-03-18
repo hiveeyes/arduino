@@ -28,16 +28,19 @@ Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA
 #ifdef ARDUINO
     #include <Arduino.h>
     #include <MemoryFree.h>
+#elif defined(__unix__)
+#else
+    #include <iostream>
 #endif
 
 void Terrine::log(const char *message, bool newline) {
-    #if defined SIMULAVR
+    #ifdef SIMULAVR
         if (newline) {
             _d(message);
         } else {
             _l(message);
         }
-    #else
+    #elif defined(ARDUINO)
         if (newline) {
             Serial.println(message);
         } else {
@@ -46,6 +49,35 @@ void Terrine::log(const char *message, bool newline) {
         #ifdef ARDUINO
             delay(TERRINE_SERIAL_DELAY);
         #endif
+    #else
+        std::cout << message;
+        if (newline) {
+            std::cout << std::endl;
+        }
+    #endif
+}
+
+void Terrine::log(bool newline) {
+    #ifdef SIMULAVR
+        if (newline) {
+            _d("");
+        } else {
+            _l("");
+        }
+    #elif defined(ARDUINO)
+        if (newline) {
+            Serial.println("");
+        } else {
+            Serial.print("");
+        }
+        #ifdef ARDUINO
+            delay(TERRINE_SERIAL_DELAY);
+        #endif
+    #else
+        std::cout << "";
+        if (newline) {
+            std::cout << std::endl;
+        }
     #endif
 }
 
@@ -56,8 +88,10 @@ void Terrine::log(int value) {
         #ifdef ARDUINO
             Serial.println(value);
             delay(TERRINE_SERIAL_DELAY);
-        #else
+        #elif defined(__unix__)
             Serial.println(std::to_string(value).c_str());
+        #else
+            std::cout << value << std::endl;
         #endif
     #endif
 }
@@ -73,12 +107,15 @@ void Terrine::logmem() {
     #ifdef SIMULAVR
         _d("free: n/a");
     #else
-        Serial.print("free: ");
         #ifdef ARDUINO
+            Serial.print("free: ");
             Serial.println(memfree());
             delay(TERRINE_SERIAL_DELAY);
-        #else
+        #elif defined(__unix__)
             Serial.println(std::to_string(memfree()).c_str());
+        #else
+            log("free: ", false);
+            log(std::to_string(memfree()).c_str(), true);
         #endif
     #endif
 }

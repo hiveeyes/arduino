@@ -85,6 +85,7 @@ class Terrine {
         //void dprint(const char *message);
         void log(const char *message, bool newline=true);
         void log(int value);
+        void log(bool newline=true);
 
         int memfree();
         void logmem();

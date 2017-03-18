@@ -15,13 +15,13 @@ Firmware builder
 ************
 Introduction
 ************
-We have a flexible and powerful build system.
+The build system is integrated with a flexible infrastructure for hands-off firmware building.
 
-You may build your own firmware flavors without having any toolchain installed
-on your workstation by issuing a HTTP POST request to the
-:ref:`Kotori firmware builder subsystem <kotori:firmware-builder>`.
+Customized firmwares can be built without having any toolchain installed
+on your workstation by just issuing a HTTP POST request to the
+:ref:`firmware builder subsystem <kotori:firmware-builder>`.
 
-This infrastructure pulls code sketches including dependencies from the
+This infrastructure pulls the source code including dependencies from the
 `Hiveeyes Arduino repository`_, replaces user-defined variables in the main
 sketch as well as the ``Makefile`` and delivers customized firmwares based
 on an universal code base.
@@ -40,7 +40,12 @@ suitable for automatic building using the variables described above, please have
 .. attention::
 
     This is a work in progress, don't expect everything to work without effort yet.
-    Contributions are welcome!
+    Testers and contributors are very welcome!
+
+    The blueprint is the fine Cloud Build Service of the NodeMCU community:
+
+        - https://nodemcu.readthedocs.io/en/master/en/build/
+        - https://nodemcu-build.com/
 
 
 ********************
@@ -91,7 +96,7 @@ HttpRequester
 =============
 The HttpRequester_ add-on for Firefox is a graphical user interface for issuing HTTP requests.
 
-Issue a HTTP POST request to acquire a firmware from the :ref:`Kotori firmware builder subsystem <kotori:firmware-builder>`.
+Issue a HTTP POST request to acquire a firmware from the :ref:`firmware builder subsystem <kotori:firmware-builder>`.
 Please set the appropriate firmware build- and configuration parameters on the left side of the screen.
 
 .. figure:: https://ptrace.hiveeyes.org/2016-07-07_Kotori%20Firmware%20Builder%20HttpRequester.jpg
@@ -141,15 +146,15 @@ This should deliver a hex file ready for programming::
     Downloading to "hiveeyes_node-gprs-any_pro328-atmega328p_a05548bf-GPRSBEE_AP_NAME=internet.eplus.de,GPRSBEE_AP_PASS=123,HE_SITE=area-42,HE_HIVE=node-1,HE_USER=testdrive,GPRSBEE_AP_USER=barney@blau.de.hex"
     Done. 53.57 kB in 0.00064s (81.48 MB/s)
 
-Given, the filename is huge, but it includes every parameter
+Given, the filename is long, but it includes every parameter
 to distinguish different build artifacts from each other.
 
 .. tip::
 
     - There's also an endpoint with suffix ``firmware.elf`` which can be used to obtain
       a firmware binary in `ELF format <ELF_>`_.
-    - When running Kotori on your workstation, you might want to use ``Makefile-OSX.mk``
-      as designated Makefile.
+    - When running the :ref:`firmware builder subsystem <kotori:firmware-builder>` on your workstation,
+      you might want to use ``Makefile-OSX.mk`` as designated Makefile.
 
 
 
@@ -198,5 +203,5 @@ On the server, there's currently Arduino 1.0.5::
     root@elbanco:~# aptitude show arduino-core | grep Version
     Version: 2:1.0.5+dfsg2-4
 
-So the appropriate settings for Arduino 1.0.x show be used.
+So the appropriate settings for Arduino 1.0.x should be used inside the respective Makefile.
 

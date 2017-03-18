@@ -36,11 +36,13 @@ USER_LIB_PATH     :=  $(realpath $(PROJECT_DIR)/libraries)
 ### For Arduino IDE 1.0.x
 ### Only BOARD_TAG is needed. It must be set to the board you are currently using. (i.e uno, mega2560, etc.)
 # BOARD_TAG         = mega2560
+# BOARD_TAG         = pro328
+
 ### For Arduino IDE 1.6.x
 ### Both BOARD_TAG and BOARD_SUB are needed. They must be set to the board you are currently using. (i.e BOARD_TAG = uno, mega, etc. & BOARD_SUB = atmega2560, etc.)
 ### Note: for the Arduino Uno, only BOARD_TAG is mandatory and BOARD_SUB can be equal to anything
-BOARD_TAG         = uno
-BOARD_SUB         = atmega328p
+#BOARD_TAG         = uno
+#BOARD_SUB         = atmega328p
 
 ### MONITOR_BAUDRATE
 ### It must be set to Serial baudrate value you are using.
@@ -70,12 +72,18 @@ endif
 
 ### MONITOR_PORT
 ### The port your board is connected to. Using an '*' tries all the ports and finds the right one.
-MONITOR_PORT      = /dev/tty.usbserial-AL006Q8G
+MONITOR_PORT      = /dev/tty.usbserial-A703X2SY
 
 ### OBJDIR
 ### This is were you put the binaries you just compile using 'make'
 CURRENT_DIR       = $(shell basename $(CURDIR))
 OBJDIR            = $(PROJECT_DIR)/bin/$(CURRENT_DIR)/$(BOARD_TAG)
+
+### Setup dispatcher: Delivers configuration settings for specific hardware setups.
+### Find a blueprint and further documentation in User.mk.
+ifneq "$(MAKEFILE_USER)" ""
+    include $(MAKEFILE_USER)
+endif
 
 ### path to Arduino.mk, inside the ARDMK_DIR, don't touch.
 include $(ARDMK_DIR)/Arduino.mk
