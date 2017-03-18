@@ -103,7 +103,7 @@ std::string DataManager::csv_data(Measurement& measurement) {
             continue;
         }
 
-        // Add reading values in order of
+        // Add reading values, keep slots for n/a values
         if (key_exists(measurement.data, name)) {
             float value = measurement.data[name];
             items.push_back(to_string(value, float_precision));
@@ -142,7 +142,7 @@ std::string DataManager::urlencode_data(Measurement& measurement) {
             continue;
         }
 
-        // Add reading values in order of
+        // Add reading values
         if (key_exists(measurement.data, name)) {
             float value = measurement.data[name];
             items.push_back(name + "=" + urlencode(to_string(value, float_precision)));
