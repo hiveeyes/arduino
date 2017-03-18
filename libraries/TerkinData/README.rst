@@ -1,5 +1,7 @@
 .. include:: ../resources.rst
 
+.. _terkindata:
+
 .. _lib-terkin-data:
 
 ##############
@@ -25,7 +27,8 @@ TerkinData C++ is a convenient library for handling sensor readings.
 It helps to decouple the sensor reading domain from the
 telemetry domain in a typical data logger application.
 While providing a generic interface, it can serialize
-measurement values to CSV and JSON formats.
+measurement values to CSV, x-www-form-urlencoded and
+JSON formats.
 
 The library solves some important obstacles usually encountered when doing telemetry:
 
@@ -82,12 +85,15 @@ Setup
         // List of field names
         this->field_names  = new DataHeader({"time", "temperature", "humidity", "rssi", "voltage"});
 
-        // Optionally prefix header line with string
-        this->csv_header_prefix = "## ";
-
         // Map names of lowlevel sensor values to highlevel telemetry data fields
         (*this->sensor_field_mapping)[string("dht.0.temp")]   = string("temperature");
         (*this->sensor_field_mapping)[string("dht.0.hum")]    = string("humidity");
+
+        // Optionally prefix CSV header line with string
+        this->csv_header_prefix = "## ";
+
+        // Optionally set float serialization precision
+        this->float_precision = 3;
 
     }
 
@@ -121,12 +127,23 @@ CSV
     std::string data_header = datamgr->csv_header();
     std::string data_record = datamgr->csv_data(*measurement);
 
-    // Output
-    terrine.log("header: ", false);
-    terrine.log(data_header.c_str());
+    // Use as character array:
+    // - data_header.c_str()
+    // - data_record.c_str()
 
-    terrine.log("data:   ", false);
-    terrine.log(data_record.c_str());
+    // Free memory
+    delete measurement;
+
+
+x-www-form-urlencoded
+---------------------
+::
+
+    // Serialize data into x-www-form-urlencoded format
+    std::string data_record = datamgr->urlencode_data(*measurement);
+
+    // Use as character array:
+    // - data_record.c_str()
 
     // Free memory
     delete measurement;
@@ -140,9 +157,8 @@ JSON
     // Serialize data into JSON format
     std::string data_record = datamgr->json_data(*measurement);
 
-    // Output
-    terrine.log("data:   ", false);
-    terrine.log(data_record.c_str());
+    // Use as character array:
+    // - data_record.c_str()
 
     // Free memory
     delete measurement;
@@ -153,6 +169,7 @@ Examples
 ********
 .. highlight:: bash
 
+.. _terkindata-csv-example:
 
 CSV
 ===
@@ -167,14 +184,38 @@ CSV
 
     -- Test single reading (complete)
     header: ## time,weight,temperature-outside,humidity-outside,temperature-inside,voltage
-    data:   2017-01-11T15:00:11Z,85.000000,42.419998,84.839996,33.330002,3.843000
+    data:   2017-03-17T02:48:15Z,85.000,42.420,84.840,33.330,3.843
 
     -- Test single reading (incomplete)
     header: ## time,weight,temperature-outside,humidity-outside,temperature-inside,voltage
-    data:   2017-01-11T15:00:11Z,,42.419998,84.839996,,3.843000
+    data:   2017-03-17T02:48:15Z,,42.420,84.840,,3.843
 
 .. seealso:: Full source of `<csv_basic.cpp_>`_.
 
+
+.. _terkindata-urlencoded-example:
+
+x-www-form-urlencoded
+=====================
+::
+
+    cd examples
+    make urlencoded
+
+    ========================================
+    TerkinData x-www-form-urlencoded example
+    ========================================
+
+    -- Test single reading (complete)
+    data:   time=2017%2D03%2D17T03%3A03%3A57Z&weight=85%2E00&temperature-outside=42%2E42&humidity-outside=84%2E84&temperature-inside=33%2E33&voltage=3%2E84
+
+    -- Test single reading (incomplete)
+    data:   time=2017%2D03%2D17T03%3A03%3A57Z&temperature-outside=42%2E42&humidity-outside=84%2E84&voltage=3%2E84
+
+.. seealso:: Full source of `<urlencoded_basic.cpp_>`_.
+
+
+.. _terkindata-json-example:
 
 JSON
 ====
@@ -188,16 +229,16 @@ JSON
     =======================
 
     -- Test single reading (complete)
-    data:   {"time":"2017-02-01T18:41:56Z","weight":"85.000000","temperature-outside":"42.419998","humidity-outside":"84.839996","temperature-inside":"33.330002","voltage":"3.843000"}
+    data:   {"time":"2017-03-17T03:07:25Z","weight":85.00,"temperature-outside":42.42,"humidity-outside":84.84,"temperature-inside":33.33,"voltage":3.84}
 
     -- Test single reading (incomplete)
-    data:   {"time":"2017-02-01T18:41:56Z","temperature-outside":"42.419998","humidity-outside":"84.839996","voltage":"3.843000"}
-
+    data:   {"time":"2017-03-17T03:07:25Z","temperature-outside":42.42,"humidity-outside":84.84,"voltage":3.84}
 
 .. seealso:: Full source of `<json_basic.cpp_>`_.
 
 
 .. _csv_basic.cpp: https://github.com/hiveeyes/arduino/blob/master/libraries/TerkinData/examples/csv_basic.cpp
+.. _urlencoded_basic.cpp: https://github.com/hiveeyes/arduino/blob/master/libraries/TerkinData/examples/urlencoded_basic.cpp
 .. _json_basic.cpp: https://github.com/hiveeyes/arduino/blob/master/libraries/TerkinData/examples/json_basic.cpp
 
 

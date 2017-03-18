@@ -106,12 +106,49 @@ std::string DataManager::csv_data(Measurement& measurement) {
         // Add reading values in order of
         if (key_exists(measurement.data, name)) {
             float value = measurement.data[name];
-            items.push_back(to_string(value));
+            items.push_back(to_string(value, float_precision));
         } else {
             items.push_back("");
         }
     }
     return join(items, ',');
+
+}
+
+
+/**
+ *
+ * Serialize measurement data to x-www-form-urlencoded format
+ *
+**/
+std::string DataManager::urlencode_data(Measurement& measurement) {
+
+    // Translate lowlevel sensor value names to telemetry field names
+    this->map_fields(measurement);
+
+    // Container for data elements
+    std::vector<std::string> items;
+
+    // Iterate header field names
+    for (std::string name: *this->field_names) {
+
+        //#include <stdio.h>
+        //std::cout << "name: " << name << std::endl;
+        //std::cout << "value: " << measurement.data[name] << std::endl;
+
+        // Handle .time specially
+        if (name == "time") {
+            items.push_back("time=" + urlencode(measurement.time));
+            continue;
+        }
+
+        // Add reading values in order of
+        if (key_exists(measurement.data, name)) {
+            float value = measurement.data[name];
+            items.push_back(name + "=" + urlencode(to_string(value, float_precision)));
+        }
+    }
+    return join(items, '&');
 
 }
 
@@ -147,7 +184,7 @@ std::string DataManager::json_data(Measurement& measurement) {
         // Add values of sensor readings
         if (key_exists(measurement.data, name)) {
             float value = measurement.data[name];
-            json[name] = to_string(value);
+            json[name] = value;
         }
     }
 

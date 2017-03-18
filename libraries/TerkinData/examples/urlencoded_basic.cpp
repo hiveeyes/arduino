@@ -1,7 +1,7 @@
 /**
  *
  * TerkinData:  Flexible data collection for decoupling sensor reading and telemetry domains
- * CSV example: Collect measurement readings and serialize to CSV
+ * urlencode example: Collect measurement readings and serialize to x-www-form-urlencoded
  *
  *
  *  Copyright (C) 2017  Andreas Motl <andreas.motl@elmyra.de>
@@ -42,12 +42,6 @@ void DataManager::setup() {
     (*this->sensor_field_mapping)[string("dht.0.hum")]    = string("humidity-outside");
     (*this->sensor_field_mapping)[string("ds18b20.0")]    = string("temperature-inside");
 
-    // Optionally prefix CSV header line with string
-    this->csv_header_prefix = new std::string("## ");
-
-    // Optionally set float serialization precision
-    this->float_precision = 3;
-
 }
 
 DataManager *datamgr = new DataManager();
@@ -77,7 +71,7 @@ void basic_single() {
     measurement->data["ds18b20.0"]   = 33.33f;
     measurement->data["voltage"]     = 3.843f;
 
-    // Display measurement in CSV format
+    // Display measurement in x-www-form-urlencoded format
     dump(measurement);
 
     // Free memory
@@ -100,7 +94,7 @@ void basic_missing() {
     measurement->data["dht.0.hum"]   = 84.84f;
     measurement->data["voltage"]     = 3.843f;
 
-    // Display measurement in CSV format
+    // Display measurement in x-www-form-urlencoded format
     dump(measurement);
 
     // Free memory
@@ -110,14 +104,10 @@ void basic_missing() {
 
 void dump(Measurement *measurement) {
 
-    // Serialize data into CSV format
-    std::string data_header = datamgr->csv_header();
-    std::string data_record = datamgr->csv_data(*measurement);
+    // Serialize data into x-www-form-urlencoded format
+    std::string data_record = datamgr->urlencode_data(*measurement);
 
     // Output
-    terrine.log("header: ", false);
-    terrine.log(data_header.c_str());
-
     terrine.log("data:   ", false);
     terrine.log(data_record.c_str());
 
@@ -126,9 +116,9 @@ void dump(Measurement *measurement) {
 
 int main() {
 
-    terrine.log("======================");
-    terrine.log("TerkinData CSV example");
-    terrine.log("======================");
+    terrine.log("========================================");
+    terrine.log("TerkinData x-www-form-urlencoded example");
+    terrine.log("========================================");
     terrine.log();
 
     basic_single();
