@@ -17,8 +17,8 @@
 	},
 	"device_id":"<esp-node-id eg. hive1>",
 	"settings": {
-    		"sendInterval": 60,
-        "weightOffset": 244017.00,
-        "kilogramDivider": 22.27
+    		"sleepTime": 60,
+                "weightOffset": 244017.00,
+                "kilogramDivider": 22.27
   	}
 }
