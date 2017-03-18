@@ -1,6 +1,6 @@
 /***********************************************************************************************************
    ESP8266 Beescale
-   (c)2014 - 2016 Alexander Wilms
+   (c)2014 - 2017 Alexander Wilms
    https://www.imker-nettetal.de
 
    GNU GPL v3 License
@@ -40,8 +40,20 @@
 #include "HX711.h"
 #include <RunningMedian.h>
 
+HX711 scale;
+
 const int DEFAULT_SLEEP_TIME = 60;
-HomieSetting<unsigned long>sleepTimeS("sleepTime", "SleepTime in seconds (max. 3600s!), default is 60s");
+
+/* Use sketch BeeScale-Calibration.ino to determine these calibration values.
+   Set them here or use HomieSetting via config.json or WebApp/MQTT
+*/
+const float DEFAULT_WEIGHT_OFFSET = 244017.00; // Load cell zero offset. 
+const float DEFAULT_KILOGRAM_DIVIDER = 22.27;  // Load cell value per kilogram.
+
+HomieSetting<long> sleepTimeSetting("sleepTime", "SleepTime in seconds (max. 3600s!), default is 60s");
+HomieSetting<double> weightOffsetSetting("weightOffset", "Offset value to zero. Use BeeScale-Calibration.ino to determine.");
+HomieSetting<double> kilogramDividerSetting("kilogramDivider", "Scale value per kilogram. Use BeeScale-Calibration.ino to determine.");
+
 
 ADC_MODE(ADC_VCC);
 
@@ -82,13 +94,6 @@ int i;
 
 //end deep sleep infrastructure
 
-// Use sketch Bienen-NSA-v2.0-Calibration to get these values
-// FIXME das geht besser
-//const float offset = 85961.00;  // Offset load cell
-const float offset = 85107.00;  // Offset load cell
-const float cell_divider = 22.27; // Load cell divider
-HX711 scale(13, 12);    // 13 DOUT, 12 PD_SCK
-
 RunningMedian WeightSamples = RunningMedian(4);
 
 float weight;
@@ -100,6 +105,7 @@ HomieNode weightNode("weight", "weight");
 HomieNode temperatureNode0("temperature0", "temperature");
 HomieNode temperatureNode1("temperature1", "temperature");
 HomieNode batteryNode("battery", "battery");
+HomieNode jsonNode("data","__json__");
 
 void setupHandler() {
   weightNode.setProperty("unit").send("kg");
@@ -134,8 +140,9 @@ void getTemperatures() {
 }
 
 void getWeight() {
-  scale.set_scale(cell_divider);  //initialize scale
-  scale.set_offset(offset);       //initialize scale
+  scale.begin(13, 12);
+  scale.set_scale(kilogramDividerSetting.get());  //initialize scale
+  scale.set_offset(weightOffsetSetting.get());    //initialize scale
   Serial.println("Getting weight, hold on");
   scale.power_up();
   for (int i = 0; i < 4; i++) {
@@ -169,13 +176,25 @@ void loopHandler() {
     Serial << "Input Voltage: " << voltage << " V" << endl;
     batteryNode.setProperty("volt").setRetained(true).send(String(voltage));
 
+    StaticJsonBuffer<200> jsonBuffer;
+    JsonObject& root = jsonBuffer.createObject();
+    root["Weight"] = weight;
+    root["Temp1"] = temperature0;
+    root["Temp2"] = temperature1;
+    root["VCC"] = voltage; 
+    String values;
+    root.printTo(values);
+    Serial << "Json data:" << values << endl;
+    jsonNode.setProperty("__json__").setRetained(false).send(values);
+
+
     Homie.prepareToSleep();
     delay(500);
     Serial << "Ready to sleep" << endl;
     buf[0] = STATE_SLEEP_WAKE;
     system_rtc_mem_write(RTC_STATE, buf, 1); // set state for next wakeUp
     //FIXME
-    int SLEEP_TIME = sleepTimeS.get();
+    int SLEEP_TIME = sleepTimeSetting.get();
     Serial << "Sleeping for " << SLEEP_TIME << " seconds" << endl;
     ESP.deepSleep(SLEEP_TIME*1000000, WAKE_RF_DISABLED);
     yield();
@@ -226,6 +245,10 @@ void setup() {
       break;      
   
     case STATE_CONNECT_WIFI:
+      sleepTimeSetting.setDefaultValue(DEFAULT_SLEEP_TIME);
+      weightOffsetSetting.setDefaultValue(DEFAULT_WEIGHT_OFFSET);
+      kilogramDividerSetting.setDefaultValue(DEFAULT_KILOGRAM_DIVIDER);
+      
       voltage = ESP.getVcc() / 1000;
       getTemperatures();
       getWeight();
@@ -234,7 +257,7 @@ void setup() {
       delay(500);
       wifi_set_sleep_type(MODEM_SLEEP_T);
         
-      Homie_setFirmware("Bienen-ULP", "1.0.5");
+      Homie_setFirmware("node-wifi-mqtt-homie-battery", "1.0.5");
       Homie.setSetupFunction(setupHandler).setLoopFunction(loopHandler);
 
       weightNode.advertise("unit");
@@ -248,6 +271,7 @@ void setup() {
 
       batteryNode.advertise("unit");
       batteryNode.advertise("volt");
+
 
       Homie.disableLedFeedback(); // collides with Serial on ESP07
       Homie.setup();
