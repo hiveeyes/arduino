@@ -3,7 +3,7 @@
  * TerkinTelemetry - a flexible telemetry client interface layer
  *
  *
- *  Copyright (C) 2015-2016  Andreas Motl <andreas.motl@elmyra.de>
+ *  Copyright (C) 2015-2017  Andreas Motl <andreas.motl@elmyra.de>
  *  Copyright (C) 2015-2016  Richard Pobering <einsiedlerkrebs@ginnungagap.org>
  *
  *  This program is free software; you can redistribute it and/or modify
@@ -24,9 +24,10 @@
  * under the hood.
  *
 **/
+#include <Arduino.h>
 #include "TerkinTelemetry.h"
 
-using namespace Terkin;
+using namespace TerkinTelemetry;
 
 
 // ==========================================
@@ -82,14 +83,14 @@ TelemetryNode::TelemetryNode(TelemetryManager& manager, NodeAddress& address)
 // The transmit method on the TelemetryNode object builds the full
 // address path from topology address segments before handing the
 // data container over to the appropriate TelemetryManager component.
-bool TelemetryNode::transmit(JsonObject& data) {
+bool TelemetryNode::transmit(const char *payload) {
     String address_path =
         String(_address.realm) + String("/") +
         String(_address.network) + String("/") +
         String(_address.gateway) + String("/") +
         String(_address.node) + String("/") +
         String("data");
-    return _manager.transmit(address_path.c_str(), data);
+    return _manager.transmit(address_path.c_str(), payload);
 }
 
 
@@ -100,21 +101,31 @@ bool TelemetryNode::transmit(JsonObject& data) {
  * It gets consumed by a TelemetryNode and dispatches
  * calls to the transmitter instance.
  *
- * When creating an instance, a GenericJsonTransmitter
- * and a target URI resource have to be supplied.
+ * When creating an instance, a transmitter object,
+ * a target URI resource and optionally an authentication token
+ * have to be supplied.
  *
  * When aiming at HTTP, this would be the full URL to
  * your data collection API endpoint.
  *
 **/
-TelemetryManager::TelemetryManager(GenericJsonTransmitter& transmitter, const char *http_uri)
+TelemetryManager::TelemetryManager(GenericTransmitter& transmitter, const char *http_uri)
     :
     transmitter(transmitter),
     http_uri(http_uri)
 {}
-bool TelemetryManager::transmit(const char *address_path, JsonObject& data) {
+TelemetryManager::TelemetryManager(GenericTransmitter& transmitter, const char *http_uri, const char *auth_token)
+    :
+    transmitter(transmitter),
+    http_uri(http_uri),
+    auth_token(auth_token)
+{}
+bool TelemetryManager::transmit(const char *address_path, const char *payload) {
     String uri = String(http_uri) + String(address_path);
-    return transmitter.transmit(uri.c_str(), data);
+    if (auth_token) {
+        uri += String("?token=") + auth_token;
+    }
+    return transmitter.transmit(uri.c_str(), payload);
 }
 
 
@@ -139,6 +150,8 @@ bool TelemetryManager::transmit(const char *address_path, JsonObject& data) {
  *
 **/
 
+#if TELEMETRY_DEVICE_GPRSBEE
+
 // Initialize without APN authentication
 GPRSbeeTransmitter::GPRSbeeTransmitter(GPRSbeeClass& driver, const char *apn)
     :
@@ -157,14 +170,9 @@ GPRSbeeTransmitter::GPRSbeeTransmitter(GPRSbeeClass& driver, const char *apn, co
     _authenticated(true)
 {}
 
-// The transmit method obtains a reference to a JsonObject
-// which will get serialized before handing the payload
-// over to the appropriate driver component.
-bool GPRSbeeTransmitter::transmit(const char *uri, JsonObject& data) {
-
-    // Serialize data
-    char payload[256];
-    data.printTo(payload, sizeof(payload));
+// The transmit method obtains the uri and payload to be
+// transmitted using the appropriate driver component.
+bool GPRSbeeTransmitter::transmit(const char *uri, const char *payload) {
 
     // Transmit data
     // Derived from https://github.com/SodaqMoja/GPRSbee/wiki#do-a-http-post
@@ -195,3 +203,63 @@ bool GPRSbeeTransmitter::transmit(const char *uri, JsonObject& data) {
     return retval;
 
 }
+
+#endif
+
+
+
+/**
+ *
+ * ESPHTTPClientTransmitter is a transmitter component
+ * wrapping the HTTPClient of the ESP8266 SDK.
+ *
+ * Serialize and transmit telemetry data
+ * to data collection server using HTTP.
+ *
+ * Todo:
+ *
+ *   - Data acquisition by MQTT or FTP
+ *   - Bulk uploads
+ *
+**/
+
+#if TELEMETRY_DEVICE_ESP8266
+
+// Initialize with Content-Type
+ESPHTTPClientTransmitter::ESPHTTPClientTransmitter(const char *content_type)
+    :
+    _content_type(content_type)
+{}
+
+// The transmit method obtains the uri and payload to be
+// transmitted using the appropriate driver component.
+bool ESPHTTPClientTransmitter::transmit(const char *uri, const char *payload) {
+
+    HTTPClient http;
+    http.begin(uri);
+    http.addHeader("Content-Type", _content_type);
+    int httpCode = http.POST(payload);
+    //http.writeToStream(&Serial);
+
+    bool success = false;
+
+    if (httpCode == 200) {
+        success = true;
+        #ifdef isDebug
+            Serial.print("HTTP success: ");
+            String payload = http.getString();
+            Serial.println(payload);
+        #endif
+    } else {
+        #ifdef isDebug
+            Serial.print("HTTP failure: code=" + String(httpCode));
+        #endif
+    }
+
+    http.end();
+
+    return success;
+
+}
+
+#endif

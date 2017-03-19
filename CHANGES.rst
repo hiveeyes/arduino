@@ -9,6 +9,7 @@ CHANGES
 
 in-progress
 ===========
+- Revamp the TerkinTelemetry C++ library for wrapping the transport layer universally for AVR vs. ESP8266
 
 
 2017-03-17 0.13.0

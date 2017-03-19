@@ -3,7 +3,7 @@
  * TerkinTelemetry - a flexible telemetry client interface layer
  *
  *
- *  Copyright (C) 2015-2016  Andreas Motl <andreas.motl@elmyra.de>
+ *  Copyright (C) 2015-2017  Andreas Motl <andreas.motl@elmyra.de>
  *  Copyright (C) 2015-2016  Richard Pobering <einsiedlerkrebs@ginnungagap.org>
  *
  *  This program is free software; you can redistribute it and/or modify
@@ -27,13 +27,18 @@
 #ifndef TerkinTelemetry_h
 #define TerkinTelemetry_h
 
-#include <ArduinoJson.h>                // https://github.com/bblanchon/ArduinoJson
+#if TELEMETRY_DEVICE_GPRSBEE
 #include <GPRSbee.h>                    // https://github.com/SodaqMoja/GPRSbee
+#endif
 
-namespace Terkin {
+#if TELEMETRY_DEVICE_ESP8266
+#include <ESP8266HTTPClient.h>
+#endif
+
+namespace TerkinTelemetry {
 
     // Forward declarations
-    class GenericJsonTransmitter;
+    class GenericTransmitter;
     class TelemetryManager;
 
     // ==========================================
@@ -79,8 +84,7 @@ namespace Terkin {
     class TelemetryNode {
         public:
             TelemetryNode(TelemetryManager& manager, NodeAddress& address);
-            bool transmit(JsonObject& data);
-            //void transmit(EmBencode& data);
+            bool transmit(const char *payload);
         protected:
             TelemetryManager& _manager;
             NodeAddress& _address;
@@ -93,7 +97,7 @@ namespace Terkin {
      * It gets consumed by a TelemetryNode and dispatches
      * calls to the transmitter instance.
      *
-     * When creating an instance, a GenericJsonTransmitter
+     * When creating an instance, a transmitter object
      * and a target URI resource have to be supplied.
      *
      * When aiming at HTTP, this would be the full URL to
@@ -102,11 +106,13 @@ namespace Terkin {
     **/
     class TelemetryManager {
         public:
-            TelemetryManager(GenericJsonTransmitter& transmitter, const char *http_uri);
-            bool transmit(const char *address_path, JsonObject& data);
+            TelemetryManager(GenericTransmitter& transmitter, const char *http_uri);
+            TelemetryManager(GenericTransmitter& transmitter, const char *http_uri, const char *auth_token);
+            bool transmit(const char *address_path, const char *payload);
         protected:
-            GenericJsonTransmitter& transmitter;
+            GenericTransmitter& transmitter;
             const char *http_uri;
+            const char *auth_token;
     };
 
 
@@ -121,15 +127,10 @@ namespace Terkin {
      * Abstract class defining the
      * interface for all telemetry drivers.
      *
-     * Todo:
-     *
-     *   - For wiring the GPRSbee, we currently use JSON,
-     *     let's also aim at BERadio.
-     *
     **/
-    class GenericJsonTransmitter {
+    class GenericTransmitter {
         public:
-            virtual bool transmit(const char *uri, JsonObject& data);
+            virtual bool transmit(const char *uri, const char *payload);
     };
 
     /**
@@ -137,19 +138,34 @@ namespace Terkin {
      * Transmitter component wrapping the GPRSbeeClass of the Sodaq GSM modem driver.
      *
     **/
-    class GPRSbeeTransmitter : public GenericJsonTransmitter {
+    class GPRSbeeTransmitter : public GenericTransmitter {
+#if TELEMETRY_DEVICE_GPRSBEE
         public:
             GPRSbeeTransmitter(GPRSbeeClass& driver, const char *apn);
             GPRSbeeTransmitter(GPRSbeeClass& driver, const char *apn, const char *apnuser, const char *apnpwd);
-            bool transmit(const char *uri, JsonObject& data);
+            bool transmit(const char *uri, const char *payload);
         protected:
             GPRSbeeClass& _driver;
             const char *_apn;
             const char *_apnuser;
             const char *_apnpwd;
             bool _authenticated = false;
+#endif
     };
 
+
+    /**
+     *
+     * Transmitter component wrapping the HTTPClient of the ESP8266 SDK.
+     *
+    **/
+    class ESPHTTPClientTransmitter : public GenericTransmitter {
+        public:
+            ESPHTTPClientTransmitter(const char *content_type);
+            bool transmit(const char *uri, const char *payload);
+        protected:
+            const char *_content_type;
+    };
 
 
 }
