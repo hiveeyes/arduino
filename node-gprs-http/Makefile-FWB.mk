@@ -79,6 +79,9 @@ CURRENT_DIR       = $(shell basename $(CURDIR))
 CURRENT_DIR       = $(shell basename $(CURDIR))
 OBJDIR            = $(PROJECT_DIR)/bin/$(CURRENT_DIR)/$(BOARD_TAG)
 
+### Set up custom settings
+include Configuration.mk
+
 ### Set up custom library paths additionally to auto detection
 include Libraries.mk
 

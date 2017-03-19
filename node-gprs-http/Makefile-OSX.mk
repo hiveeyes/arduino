@@ -62,7 +62,7 @@ CXXFLAGS_STD      = -std=gnu++11
 
 ### CPPFLAGS
 ### Flags you might want to set for debugging purpose. Comment to stop.
-CXXFLAGS         = -pedantic -Wall -Wextra
+CXXFLAGS         = -pedantic -Wall -Wextra -Wno-unused-parameter -fno-use-cxa-atexit
 
 ### If avr-gcc -v is higher than 4.9, activate coloring of the output
 ifeq "$(AVR_GCC_VERSION)" "1"
@@ -77,6 +77,9 @@ MONITOR_PORT      = /dev/tty.usbmodem*
 ### This is were you put the binaries you just compile using 'make'
 CURRENT_DIR       = $(shell basename $(CURDIR))
 OBJDIR            = $(PROJECT_DIR)/bin/$(CURRENT_DIR)/$(BOARD_TAG)
+
+### Set up custom settings
+include Configuration.mk
 
 ### Set up custom library paths additionally to auto detection
 include Libraries.mk

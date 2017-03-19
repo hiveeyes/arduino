@@ -10,6 +10,10 @@ CHANGES
 in-progress
 ===========
 - Revamp the TerkinTelemetry C++ library for wrapping the transport layer universally for AVR vs. ESP8266
+- Improve telemetry of :ref:`open-hive-firmware-gprs`:
+
+    - serialize using :ref:`lib-terkin-data` library
+    - transmit using TerkinTelemetry C++ library
 
 
 2017-03-17 0.13.0

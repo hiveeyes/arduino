@@ -63,8 +63,10 @@
 // TerkinData - flexible data collection for sensor readings
 // to decouple measurement from telemetry domain.
 #include <TerkinData.h>
-using namespace TerkinData;
+#include <TerkinTelemetry.h>
 using namespace TerkinUtil;
+using namespace TerkinData;
+using namespace TerkinTelemetry;
 using std::string;
 
 
@@ -84,11 +86,23 @@ using std::string;
 //#define isSD
 #define isBattery
 
+// Ad hoc telemetry device configuration
 #define isGSM
 #ifdef ARDUINO_ARCH_ESP8266
     #undef isGSM
     #define isWifi
 #endif
+
+// Propagate telemetry device configuration from Makefile (Configuration.mk)
+#if TELEMETRY_DEVICE_GPRSBEE
+    #define isGSM
+    #undef isWifi
+#endif
+#if TELEMETRY_DEVICE_ESP8266
+    #undef isGSM
+    #define isWifi
+#endif
+
 
 //#define isEthernet
 // comments this line in case you are using GSM as upload path
@@ -111,6 +125,9 @@ unsigned long updateInterval = 60UL * 60UL;  // s*m*h*d  // seems it take 11 sec
 // ** upload server
 // ----------------
 #if defined (isGSM) || defined (isWifi) || defined (isEthernet)
+
+  // Telemetry v1
+
   // specify your node number
   const char uploadNode[]       = "1";
   // and user credentials
@@ -120,13 +137,38 @@ unsigned long updateInterval = 60UL * 60UL;  // s*m*h*d  // seems it take 11 sec
   const char uploadDomain[]     = "data.example.com";
   const char uploadFolderFile[] = "apiary/upload.php";
   const char uploadScheme[]     = "http://%s/%s?user=%s&id=%s&node=%s&dataset=";  // "%s" is the variable placeholder for snprintf command
+
+  // Telemetry v2
+
+  // HTTP API Base URL
+  #define TELEMETRY_API_URL      "http://swarm.hiveeyes.org/api-notls/"
+
+  // Authentication token
+  #define TELEMETRY_TOKEN        "88673770c6d64097e3"
+
+  // Data acquisition channel address
+  #define TELEMETRY_REALM        "hiveeyes"
+  #define TELEMETRY_USER         "testdrive"
+  #define TELEMETRY_SITE         "area-42"
+  #define TELEMETRY_NODE         "node-1"
+
 #endif
 
 // ** GSM / GPRSbee
 // ----------------
 #ifdef isGSM
   // specify your APN here, specific for your network operator
-  #define APN "internet.eplus.de"
+  // https://en.wikipedia.org/wiki/Access_Point_Name
+  #define GPRSBEE_AP_NAME     "internet.eplus.de"
+  #define GPRSBEE_AP_AUTH     false
+  #define GPRSBEE_AP_USER     "testuser"
+  #define GPRSBEE_AP_PASS     "12345"
+
+  // pwrkeyPin, vbatPin, statusPin, we use -1 for vbatPin because we have no switched battery here
+  #define GPRSBEE_VCC       12
+  #define GPRSBEE_VBAT      -1
+  #define GPRSBEE_STATUS    13
+
 #endif
 
 // ** WiFi
@@ -217,6 +259,7 @@ unsigned long updateInterval = 60UL * 60UL;  // s*m*h*d  // seems it take 11 sec
 #endif
 
 
+
 // ------------------------------
 // ** static dataset (v1): header
 // ------------------------------
@@ -246,26 +289,42 @@ void DataManager::setup() {
     // List of human readable field names for backward compatibility
     this->field_labels = new DataHeader({"Datum/Zeit", "Gewicht", "Aussen-Temperatur", "Aussen-Feuchtigkeit", "Brut-Temperatur", "Spannung"});
 
-    // Optionally prefix header line with string
-    //this->csv_header_prefix = "";
-
     // Map names of lowlevel sensor values to highlevel telemetry data fields
     (*this->sensor_field_mapping)[string("dht.0.temp")]   = string("temp-outside");
     (*this->sensor_field_mapping)[string("dht.0.hum")]    = string("humidity-outside");
     (*this->sensor_field_mapping)[string("ds18b20.0")]    = string("temp-brood");
 
+    // Optionally prefix CSV header line with string
+    //this->csv_header_prefix = "## ";
+
+    // Optionally set float serialization precision
+    this->float_precision = 3;
+
 }
 
+// -------------------------+----
+// variables you can modify | END
+// -------------------------+----
+
+
+
+// ---------------
+// Telemetry setup
+// ---------------
+
+// Main telemetry API handle
+TelemetryNode *telemetry;
+
+// Forward declarations
+TelemetryNode& setup_telemetry(bool wait_usb);
+
+// DataManager for collecting and serializing sensor readings
 DataManager *datamgr = new DataManager();
 
 
 // static dataset (v1) backward compatibility: Make opaque CSV header string from list of field name elements
 const char *datasetHeader = join(*datamgr->field_labels, ',').c_str();
 
-
-// -------------------------+----
-// variables you can modify | END
-// -------------------------+----
 
 // libraries
 // RTC
@@ -299,23 +358,25 @@ const char *datasetHeader = join(*datamgr->field_labels, ',').c_str();
 // GSM / GPRSbee
 #ifdef isGSM
   #include <GPRSbee.h>
-  const int BEEDTR = 12;
-  const int BEECTS = 13;
 #endif
 
 
 // WiFi
 #ifdef isWifi
+
   // Wifi functions for ESP8266
   #include <ESP8266WiFi.h>
   #include <ESP8266WiFiMulti.h>
-  // ESP8266 as http client
-  #include <ESP8266HTTPClient.h>
-  // multiples AP possible
+
+  // Multiple AP possible
   ESP8266WiFiMulti WiFiMulti;
 
   // maximal connection attempts
   int maxConnectionAttempts = 15;
+
+  // Forward declaration
+  bool wifi_ensure_connection();
+
 #endif
 
 // load cell
@@ -395,21 +456,9 @@ const char *datasetHeader = join(*datamgr->field_labels, ',').c_str();
   char voltageChar[6];  // should handle xx.xx and null terminator
 #endif
 
-// some simplificatiion for your convenience
-// calculate size of uploadPath
-#if defined (isGSM) || defined (isWifi) || defined (isEthernet)
-  char uploadPath[
-    34  // 34 = char in "http://%s/%s?user=%s&id=%s&node=%s&dataset=%s" without variables
-    +sizeof(uploadDomain)
-    +sizeof(uploadFolderFile)
-    +sizeof(uploadUserName)
-    +sizeof(uploadUserId)
-    +sizeof(uploadNode)
-  ] = "";
-#endif
-
 
 void setup() {
+
   // debug and GSM
   Serial.begin(9600);
   #ifdef isDebug
@@ -419,7 +468,12 @@ void setup() {
     Serial.println();
     Serial.println();
   #endif
-  // RTC, IRQ
+
+
+  // ---------
+  // RTC setup
+  // ---------
+
   #ifdef isRTC
     #ifdef isWifi
       // intentionally blank
@@ -432,7 +486,11 @@ void setup() {
     #endif
   #endif
 
-  // SD card
+
+  // -------------
+  // SD card setup
+  // -------------
+
   #ifdef isSD
     // switchable power on D4 for SD
     pinMode(4, OUTPUT);
@@ -480,12 +538,18 @@ void setup() {
     );
   #endif
 
+
+
+  // ---------------
+  // Telemetry setup
+  // ---------------
+
   // GSM / GPRSbee
   #ifdef isGSM
-    // pwrkeyPin, vbatPin, statusPin, we use -1 for vbatPin because we have no switched battery here
-    gprsbee.initAutonomoSIM800(Serial, BEEDTR, -1, BEECTS);
-    // make sure the GPRSbee is switched off to begin with
-    gprsbee.off();
+
+    // Telemetry setup
+    telemetry = &setup_telemetry(true);
+
   #endif
 
   // WiFi
@@ -494,40 +558,44 @@ void setup() {
 //    WiFiMulti.addAP(WLAN_SSID_2, WLAN_PW_2);
   #endif
 
-  // some simplificatiion for your convenience
-  // build uploadPath and upload header
-  #if defined (isGSM) || defined (isWifi) || defined (isEthernet)
 
-    // build uploadPath
-    snprintf(uploadPath, sizeof(uploadPath), uploadScheme,
-      uploadDomain,
-      uploadFolderFile,
-      uploadUserName,
-      uploadUserId,
-      uploadNode
-    );
+  // -------------------
+  // Transmit CSV header
+  // -------------------
 
-    // update header
-    // calculate size of uploadUrl
-    char uploadUrl[
-      +sizeof(uploadPath)
-      +sizeof(datasetHeader)
-    ];
-    // make uploadUrl
-    snprintf(uploadUrl, sizeof(uploadUrl), "%s%s",
-      uploadPath,
-      datasetHeader
-    );
+  #if defined (isGSM) || defined (isEthernet)
+
+    // Serialize CSV header field names
+    std::string data_header = datamgr->csv_header();
+
+    // Transmit CSV header
+    telemetry->transmit(data_header.c_str());
+
   #endif
-  #ifdef isGSM
-    // upload to server
-    char buffer[50];  // buffer for get return
-    memset(buffer, 0, sizeof(buffer));
-    gprsbee.doHTTPGET(APN,uploadUrl,buffer,sizeof(buffer));
+
+
+  #if defined (isWifi)
+
+    // Serialize CSV header field names
+    std::string data_header = datamgr->csv_header();
+
+    // Wait for WiFi connection
+    if (wifi_ensure_connection()) {
+      // Transmit CSV header
+      telemetry->transmit(data_header.c_str());
+    }
+
   #endif
+
+
   #ifdef isSD
 //    writeToSd(datasetHeader);
   #endif
+
+
+  // ---------------------
+  // Sensor hardware setup
+  // ---------------------
 
   // weight / ADS1231
   #ifdef isScale
@@ -1087,13 +1155,12 @@ void loop() {
   // ** dynamic dataset (v2): data
   // -----------------------------
 
-  std::string data_header = datamgr->csv_header();
   std::string data_record = datamgr->csv_data(*measurement);
 
-  // debug
+  // Debugging
   #ifdef isDebug
     Serial.println("static dataset (v2)");
-    //Serial.println(data_record);
+    Serial.println(data_record);
   #endif
 
 
@@ -1105,96 +1172,17 @@ void loop() {
   // TODO: Use MQTT
   // TODO: Use SSL if possible
 
-  #if defined (isGSM) || defined (isWifi) || defined (isEthernet)
-    // replace spaces with plus for proper URL
-    for (int i = 0; dataset[i] != 0; i++) {
-      if (dataset[i] == ' ') dataset[i] = '+';
-    }
-
-    // calculate size of uploadUrl
-    char uploadUrl[
-      +sizeof(uploadPath)
-      +sizeof(dataset)
-    ];
-    // make uploadUrl
-    snprintf(uploadUrl, sizeof(uploadUrl), "%s%s",
-      uploadPath,
-      dataset
-    );
-    // debug
-    #ifdef isDebug
-      Serial.println(uploadUrl);
-    #endif
-  #endif
-
-  #ifdef isGSM
-    char buffer[50];
-    memset(buffer, 0, sizeof(buffer));
-    gprsbee.doHTTPGET(APN, uploadUrl, buffer, sizeof(buffer));
+  #if defined (isGSM) || defined (isEthernet)
+    telemetry->transmit(data_record.c_str());
   #endif
 
   #ifdef isWifi
-    // try max. 15x to connect
-    for (int i = 0; i < maxConnectionAttempts; i++) {
-      // wait for WiFi connection
-      if ((WiFiMulti.run() == WL_CONNECTED)) {
-        // debug WIfi
-        #ifdef isDebug
-          Serial.println();
-          Serial.print(F("WiFi connected! IP address: "));
-          Serial.print(WiFi.localIP());
-          Serial.println();
-        #endif
 
-        HTTPClient http;
-        // configure traged server and url
-        // do NOT use "http://" in the domain!
-        //http.begin("192.168.1.12", 443, "/test.html", true, "7a 9c f4 db 40 d3 62 5a 6e 21 bc 5c cc 66 c8 3e a1 45 59 38"); //HTTPS
-        http.begin(uploadUrl);  // HTTP
-
-        #ifdef isDebug
-          Serial.print(uploadUrl);
-          Serial.print(F("  |  "));
-          Serial.print(sizeof(uploadUrl));
-          Serial.println();
-
-          Serial.print(F("[HTTP] GET...\n"));
-        #endif
-        // start connection and send HTTP header
-        int httpCode = http.GET();
-
-        // httpCode will be negative on error
-        if (httpCode > 0) {
-          // HTTP header has been send and Server response header has been handled
-          #ifdef isDebug
-            Serial.printf("[HTTP] GET... code: %d\n", httpCode);
-          #endif
-           // file found at server
-          if(httpCode == 200) {
-            String payload = http.getString();
-            #ifdef isDebug
-              Serial.print("Status: ");
-              Serial.println(payload);
-            #endif
-          }
-        }
-        else {
-          #ifdef isDebug
-            Serial.print(F("[HTTP] GET... failed, no connection or no HTTP server\n"));
-          #endif
-        }
-        http.end();
-        break;
-      }
-      // not succesfully connected
-      else {
-        #ifdef isDebug
-          Serial.print(".");
-        #endif
-        // wait 400 ms before retry
-        delay(400);
-      }
+    // Wait for WiFi connection
+    if (wifi_ensure_connection()) {
+      telemetry->transmit(data_record.c_str());
     }
+
     // go sleeping
     unsigned long runningTime = millis() * 1000UL;  // in us!
     unsigned long sleepTime = (updateInterval * 1000UL*1000UL) - runningTime;  // s (*ms*us)
@@ -1261,3 +1249,93 @@ void loop() {
     #endif
   #endif
 }
+
+
+/**
+ *
+ * Setup function for initializing a TelemetryNode instance
+ * with appropriate components in individual setups.
+ *
+ * Here, the machinery is instructed to
+ * communicate using a Sodaq GPRSbee device.
+ *
+**/
+TelemetryNode& setup_telemetry(bool wait_usb = false) {
+
+    /* Setup transmitter hardware */
+
+    #if TELEMETRY_DEVICE_GPRSBEE
+
+        // GPRS setup
+        //Serial.begin(19200);          // Serial is connected to SIM900 GPRSbee
+
+        // Initialize GPRSbee device
+        gprsbee.initAutonomoSIM800(Serial, GPRSBEE_VCC, GPRSBEE_VBAT, GPRSBEE_STATUS);
+
+        // Make sure the GPRSbee is switched off when starting up
+        gprsbee.off();
+
+        // Optionally emit message to Serial interface
+        if (wait_usb) {
+            Serial.println(F("Please disconnect USB within 5 seconds."));
+            delay(5000);
+        }
+
+        // Transmitter
+        #if GPRSBEE_AP_AUTH
+            GPRSbeeTransmitter transmitter(gprsbee, GPRSBEE_AP_NAME, GPRSBEE_AP_USER, GPRSBEE_AP_PASS);
+        #else
+            GPRSbeeTransmitter transmitter(gprsbee, GPRSBEE_AP_NAME);
+        #endif
+
+    #endif
+
+    #if TELEMETRY_DEVICE_ESP8266
+        ESPHTTPClientTransmitter transmitter("text/csv");
+    #endif
+
+
+    /* Setup telemetry client with pluggable components */
+
+    // Telemetry manager
+    TelemetryManager manager(transmitter, TELEMETRY_API_URL, TELEMETRY_TOKEN);
+
+    // Telemetry node
+    NodeAddress address(TELEMETRY_REALM, TELEMETRY_USER, TELEMETRY_SITE, TELEMETRY_NODE);
+    TelemetryNode node(manager, address);
+
+    return node;
+
+}
+
+#if defined(isWifi)
+bool wifi_ensure_connection() {
+
+    // Try max. 15x to connect
+    for (int i = 0; i < maxConnectionAttempts; i++) {
+
+        // Wait for WiFi connection
+        if ((WiFiMulti.run() == WL_CONNECTED)) {
+
+            // Debug WiFi
+            #ifdef isDebug
+                Serial.println();
+                Serial.print(F("WiFi connected! IP address: "));
+                Serial.print(WiFi.localIP());
+                Serial.println();
+            #endif
+
+            return true;
+
+        // Not connected
+        } else {
+            #ifdef isDebug
+                Serial.print(".");
+            #endif
+            // wait 400 ms before retry
+            delay(400);
+        }
+    }
+    return false;
+}
+#endif
