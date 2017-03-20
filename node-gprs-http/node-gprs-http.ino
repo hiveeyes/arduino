@@ -157,7 +157,7 @@ unsigned long updateInterval = 60UL * 60UL;  // s*m*h*d  // seems it take 11 sec
 // ** GSM / GPRSbee
 // ----------------
 #ifdef isGSM
-  // specify your APN here, specific for your network operator
+  // Specify your APN here, specific for your network operator
   // https://en.wikipedia.org/wiki/Access_Point_Name
   #define GPRSBEE_AP_NAME     "internet.eplus.de"
   #define GPRSBEE_AP_AUTH     false
@@ -165,9 +165,9 @@ unsigned long updateInterval = 60UL * 60UL;  // s*m*h*d  // seems it take 11 sec
   #define GPRSBEE_AP_PASS     "12345"
 
   // pwrkeyPin, vbatPin, statusPin, we use -1 for vbatPin because we have no switched battery here
-  #define GPRSBEE_VCC       12
-  #define GPRSBEE_VBAT      -1
-  #define GPRSBEE_STATUS    13
+  #define GPRSBEE_PIN_VCC       12
+  #define GPRSBEE_PIN_VBAT      -1
+  #define GPRSBEE_PIN_STATUS    13
 
 #endif
 
@@ -1270,7 +1270,7 @@ TelemetryNode& setup_telemetry(bool wait_usb = false) {
         //Serial.begin(19200);          // Serial is connected to SIM900 GPRSbee
 
         // Initialize GPRSbee device
-        gprsbee.initAutonomoSIM800(Serial, GPRSBEE_VCC, GPRSBEE_VBAT, GPRSBEE_STATUS);
+        gprsbee.initAutonomoSIM800(Serial, GPRSBEE_PIN_VCC, GPRSBEE_PIN_VBAT, GPRSBEE_PIN_STATUS);
 
         // Make sure the GPRSbee is switched off when starting up
         gprsbee.off();
