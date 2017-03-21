@@ -152,6 +152,7 @@ x-www-form-urlencoded
 JSON
 ----
 .. note:: To use the fine ArduinoJson_ library for JSON serialization, please compile using ``-DHAVE_ARDUINO_JSON``.
+
 ::
 
     // Serialize data into JSON format
@@ -189,6 +190,7 @@ CSV
     -- Test single reading (incomplete: "weight" and "temperature-inside" missing)
     header: ## time,weight,temperature-outside,humidity-outside,temperature-inside,voltage
     data:   2017-03-17T02:48:15Z,,42.420,84.840,,3.843
+
 
 .. seealso:: Full source of `<csv_basic.cpp_>`_.
 
