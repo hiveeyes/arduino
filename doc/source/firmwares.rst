@@ -24,6 +24,24 @@ Stable
 ******
 
 
+GSM
+===
+List of GSM-based firmwares.
+
+.. list-table::
+    :widths: 20 40
+    :header-rows: 1
+    :class: table-generous
+
+    * - Name
+      - Description
+
+    * - :ref:`open-hive-firmware-gprs`
+      - `node-gprs-http.ino`_ is the firmware source code powering
+        the `Open Hive Box`_. It transmits sensor data by HTTP
+        using the GPRSbee_ GSM modem.
+
+
 WiFi
 ====
 List of WiFi-based firmwares, all are based on the ESP8266_.
@@ -41,21 +59,21 @@ List of WiFi-based firmwares, all are based on the ESP8266_.
         the `Open Hive WiFi Solar`_ sensor node based on the `ESP8266 core for Arduino`_.
         It transmits sensor data using WiFi/HTTP.
 
-    * - :ref:`node-wifi-mqtt`
-      - `node-wifi-mqtt.ino`_ is the firmware source code powering
-        the Open Hive `Adafruit Feather HUZZAH`_ based on the `ESP8266 core for Arduino`_.
-        It transmits sensor data using WiFi/MQTT.
-
     * - :ref:`node-wifi-mqtt-homie`
       - `node-wifi-mqtt-homie.ino`_ is the firmware
         based on the `ESP8266 framework for Homie`_ for powering
         the »`ESP8266 beehive scale <ESP8266 Stockwaage – erste Eindrücke_>`_«.
         It transmits sensor data using WiFi/MQTT.
 
+    * - :ref:`node-wifi-mqtt`
+      - `node-wifi-mqtt.ino`_ is the source code for a preliminary/testing firmware powering
+        the Open Hive `Adafruit Feather HUZZAH`_ based on the `ESP8266 core for Arduino`_.
+        It transmits sensor data using WiFi/MQTT.
 
-GSM
+
+Yún
 ===
-List of GSM-based firmwares.
+List of Yún-based firmwares.
 
 .. list-table::
     :widths: 20 40
@@ -65,10 +83,10 @@ List of GSM-based firmwares.
     * - Name
       - Description
 
-    * - :ref:`open-hive-firmware-gprs`
-      - `node-gprs-http.ino`_ is the firmware source code powering
-        the `Open Hive Box`_. It transmits sensor data by HTTP
-        using the GPRSbee_ GSM modem.
+    * - :ref:`node-yun-http`
+      - `node-yun-http.ino`_ is the firmware source code powering
+        the `Mois Box`_. It transmits sensor data by HTTP
+        using the `Bridge Library for Yún devices`_.
 
 
 .. _firmwares-beradio:

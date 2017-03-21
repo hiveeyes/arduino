@@ -24,6 +24,7 @@
 
 .. Open Hive
 .. _Open Hive Box: https://hiveeyes.org/docs/system/vendor/open-hive/#open-hive-seeeduino-stalker
+.. _Open Hive WiFi Solar: https://www.facebook.com/media/set/?set=a.10208134828588174.1073741836.1224510416&type=1&l=bc626d9585
 
 
 .. Software and protocols
@@ -41,6 +42,10 @@
 
 .. BERadio
 .. _BERadio C++: https://github.com/hiveeyes/arduino/tree/master/libraries/BERadio
+
+.. Mois
+.. _node-yun-http.ino: https://github.com/hiveeyes/arduino/blob/master/node-yun-http/node-yun-http.ino
+.. _Mois Box: https://www.euse.de/wp/blog/2017/03/bienenwaage-2_0/
 
 .. Open Hive
 .. _OpenHive-Lib: https://github.com/hiveeyes/arduino/tree/master/libraries/OpenHive
@@ -79,6 +84,9 @@
 .. _Adafruit Feather HUZZAH: https://www.adafruit.com/product/2821
 .. _RFM69 to MQTT gateway using ESP8266: https://harizanov.com/2015/11/rfm69-to-mqtt-gateway-using-esp8266/
 
+.. _Arduino Yún Shield: https://www.arduino.cc/en/Main/ArduinoYunShield
+.. _Dragino Yun Shield v2.4: http://www.dragino.com/products/yunshield/item/105-yun-shield-v2-4.html
+
 .. JeeLabs
 .. _JeeLabs: http://jeelabs.org/
 .. _Jean-Claude Wippler: https://github.com/jcw
@@ -96,9 +104,12 @@
 .. Other sensors
 .. _1-Wire: https://en.wikipedia.org/wiki/1-Wire
 .. _DS18B20: https://www.maximintegrated.com/en/products/analog/sensors-and-sensor-interface/DS18B20.html
+.. _DHT22: http://shop.boxtec.ch/digital-humiditytemperature-sensor-dht22-rht03-p-40371.html
+.. _RHT03: http://www.humiditycn.com/cp22.html
 .. _DHT33: http://shop.boxtec.ch/digital-humiditytemperature-sensor-dht33-rht04-p-40541.html
 .. _RHT04: http://www.humiditycn.com/cp21.html
-
+.. _TSL25911: http://ams.com/eng/Products/Light-Sensors/Ambient-Light-Sensors/TSL25911
+.. _TSL2591: https://www.adafruit.com/product/1980
 
 .. LowPowerLab and computourist
 .. _LowPowerLab: https://lowpowerlab.com/
@@ -142,6 +153,8 @@
 .. _RH_TCP: http://www.airspayce.com/mikem/arduino/RadioHead/classRH__TCP.html
 .. _StandardCplusplus: https://github.com/maniacbug/StandardCplusplus
 .. _ESP8266 framework for Homie: https://github.com/marvinroger/homie-esp8266
+.. _Yún HTTP Client: https://www.arduino.cc/en/Tutorial/HttpClient
+.. _Bridge Library for Yún devices: https://www.arduino.cc/en/Reference/YunBridgeLibrary
 
 .. Tools
 .. _Ino: http://inotool.org

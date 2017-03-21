@@ -47,9 +47,8 @@ Copyright
 Source code and documentation both are
 
 | Copyright (C) 2013-2017  Clemens Gruber
+| Copyright (C) 2013-2017  Markus Euskirchen
 | Copyright (C) 2014-2017  Richard Pobering
 | Copyright (C) 2015-2017  Andreas Motl
-| Copyright (C) 2016       Alexander Wilms
-
-----
+| Copyright (C) 2016-2017  Alexander Wilms
 
