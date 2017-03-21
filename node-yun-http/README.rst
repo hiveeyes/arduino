@@ -18,10 +18,10 @@ Mois sensor node
 ************
 Introduction
 ************
-This firmware supports the `Arduino Yún Shield`_-compatible `Dragino Yun Shield v2.4`_.
+This firmware powers the `Mois Box`_, based on the `Arduino Yún Shield`_-compatible `Dragino Yun Shield v2.4`_.
 Telemetry data is transmitted to a `custom PHP receiver program <https://github.com/bee-mois/beescale/blob/master/add_line2.php>`_
 over HTTP using the `Yún HTTP Client`_ from the `Bridge Library for Yún devices`_. It is also stored locally on a SD card.
-The most recent firmware version is available at `node-yun-http.ino`_.
+The most recent firmware version is always available at `node-yun-http.ino`_.
 
 .. figure:: https://ptrace.hiveeyes.org/2017-03-21_mois-node-yun-http.jpg
     :alt: Mois Box with electronics

@@ -9,7 +9,7 @@ CHANGES
 
 in-progress
 ===========
-- Add slot for :ref:`mois-node`
+- Add slot, build infrastructure and dependency libraries for :ref:`mois-node`
 
 
 2017-03-17 0.13.0
