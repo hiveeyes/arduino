@@ -6,7 +6,7 @@
 README
 ######
 
-This is the low power battery version of :ref:`node-wifi-mqtt-homie`
+This is the low power battery version of `node-wifi-mqtt-homie`
 To run this sketch e.g. on the PCB Design from https://www.imker-nettetal.de/bienen-nsa/ESP8266-BeeScale1_1.fzz
 you should remove and shortout the input polarity protection diode to
 avoid unnecessary voltage drop.
