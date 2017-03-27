@@ -43,6 +43,10 @@ Platform and supported peripherals
     - https://www.imker-nettetal.de/category/stockwaage/
     - Nodes with identical hardware: :ref:`node-wifi-http` and :ref:`node-wifi-mqtt`
 
+.. note::
+
+    There's also an alternative firmware :ref:`node-wifi-mqtt-homie-battery`.
+
 
 ***
 PCB

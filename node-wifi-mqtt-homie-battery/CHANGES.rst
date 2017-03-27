@@ -1,6 +1,4 @@
-.. include:: resources.rst
-
-.. _changes:
+.. _node-wifi-mqtt-homie-battery-changes:
 
 #######
 CHANGES

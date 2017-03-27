@@ -14,6 +14,7 @@ in-progress
 - Update OneWire library to 2.3.3
 - Update HX711 library incorporating our fix »Define “yield” as noop for older Arduino Core releases«
 - Update Arduino-Makefile and makeEspArduino tools
+- Improve firmwares :ref:`node-wifi-mqtt-homie` and :ref:`node-wifi-mqtt-homie-battery`
 
 
 2017-03-17 0.13.0
