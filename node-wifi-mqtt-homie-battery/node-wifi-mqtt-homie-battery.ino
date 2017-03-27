@@ -33,6 +33,17 @@
 
 **********************************************************************************************************/
 
+/*
+ * Some notes to increase battery runtime:
+ * You should remove and short out the input polarity protection diode 
+ * if you are using this sketch with the PCB/Design from 
+ * https://www.imker-nettetal.de/bienen-nsa/ESP8266-BeeScale1_1.fzz
+ * to avoid unnecessary voltage drop. But don't mix polarity!
+ * 
+ * Also you should remove any unnecessary power indicator LED to save
+ * a couple om mA. (e.g. on ESP-07 the red power indicator LED)
+ */
+
 #include <Homie.h>
 #include <OneWire.h>
 #include <DallasTemperature.h>
@@ -40,20 +51,41 @@
 #include "HX711.h"
 #include <RunningMedian.h>
 
-HX711 scale;
+#define FW_NAME "node-wifi-mqtt-homie-battery"
+#define FW_VERSION "1.0.6b"
+const int DEFAULT_SLEEP_TIME = 600;
 
-const int DEFAULT_SLEEP_TIME = 60;
+// PINs
+#define ONE_WIRE_BUS 14
+#define DOUT  13
+#define PD_SCK  12
 
 /* Use sketch BeeScale-Calibration.ino to determine these calibration values.
    Set them here or use HomieSetting via config.json or WebApp/MQTT
 */
-const float DEFAULT_WEIGHT_OFFSET = 244017.00; // Load cell zero offset. 
-const float DEFAULT_KILOGRAM_DIVIDER = 22.27;  // Load cell value per kilogram.
+const long DEFAULT_WEIGHT_OFFSET = 154231; // Load cell zero offset. 
+const float DEFAULT_KILOGRAM_DIVIDER = 21.76;  // Load cell value per kilogram.
+
+/*
+ * Scale should be calibrated with a regulated input of 3.3V!
+ * Every change during runtime will cause wrong readings
+ */
+const float LOW_BATTERY = 3.1;
+
+/*
+ * *Some* ESPs tend to have a too low reading on ESP.getVcc()
+ * To get the maximum battery runtime you should check what ADC is reading and compare
+ * it with a multimeter between VCC and GND at the ESP. Change the following value to e.g. 0.13
+ * or -0.02 in case of a too high reading. Or set it using HomieSetting via config.json or WebApp/MQTT
+ */
+const float DEFAULT_VCC_ADJUST = 0.13;
 
 HomieSetting<long> sleepTimeSetting("sleepTime", "SleepTime in seconds (max. 3600s!), default is 60s");
-HomieSetting<double> weightOffsetSetting("weightOffset", "Offset value to zero. Use BeeScale-Calibration.ino to determine.");
+HomieSetting<long> weightOffsetSetting("weightOffset", "Offset value to zero. Use BeeScale-Calibration.ino to determine.");
 HomieSetting<double> kilogramDividerSetting("kilogramDivider", "Scale value per kilogram. Use BeeScale-Calibration.ino to determine.");
+HomieSetting<double> vccAdjustSetting("vccAdjust", "Calibration value for input voltage. See sketch for details.");
 
+HX711 scale;
 
 ADC_MODE(ADC_VCC);
 
@@ -72,7 +104,6 @@ extern "C" {
 
 #define STATE_COLDSTART 0
 #define STATE_SLEEP_WAKE 1
-#define STATE_ALARM 2
 #define STATE_CONNECT_WIFI 4
 
 #define BATT_WARNING_VOLTAGE 3.2          // Voltage for Low-Bat warning
@@ -100,21 +131,25 @@ float weight;
 float temperature0;
 float temperature1;
 float voltage;
+float raw_voltage;
+float vcc_adjust;
+int SLEEP_TIME;
 
 HomieNode weightNode("weight", "weight");
 HomieNode temperatureNode0("temperature0", "temperature");
 HomieNode temperatureNode1("temperature1", "temperature");
-HomieNode batteryNode("battery", "battery");
-HomieNode jsonNode("data","__json__");
+HomieNode batteryNode("battery", "volt");
+HomieNode batAlarmNode("battery","alarm");
+HomieNode jsonNode("data","__json__"); //Hiveeyes.org compatibility format
 
 void setupHandler() {
   weightNode.setProperty("unit").send("kg");
   temperatureNode0.setProperty("unit").send("C");
   temperatureNode1.setProperty("unit").send("C");
   batteryNode.setProperty("unit").send("V");
+  batAlarmNode.setProperty("bool");
 }
 
-#define ONE_WIRE_BUS 14
 // Setup a OneWire instance to communicate with any OneWire devices
 OneWire OneWire(ONE_WIRE_BUS);
 // Pass our OneWire reference to Dallas Temperature.
@@ -140,40 +175,45 @@ void getTemperatures() {
 }
 
 void getWeight() {
-  scale.begin(13, 12);
+  scale.begin(DOUT, PD_SCK);
   scale.set_scale(kilogramDividerSetting.get());  //initialize scale
   scale.set_offset(weightOffsetSetting.get());    //initialize scale
-  Serial.println("Getting weight, hold on");
+  Serial << endl << endl;
+  Serial << "Reading scale, hold on" << endl;
   scale.power_up();
   for (int i = 0; i < 4; i++) {
-    Serial.print("*");
     float WeightRaw = scale.get_units(10);
     yield();
+    Serial << "✔ Raw measurements: " << WeightRaw << "g" << endl;
     WeightSamples.add(WeightRaw);
     delay(500);                 
     yield();
   }
   scale.power_down();
-  Serial.println("");
   
   weight = WeightSamples.getMedian();
   weight = weight / 1000 ;      // we want kilogram
 }
 
-void loopHandler() {
-    //getWeight();
+void getVolt() {
+    raw_voltage = ESP.getVcc();
+    vcc_adjust = vccAdjustSetting.get();
+    Serial << "Voltage adjust value is: " << vcc_adjust << "V" << endl;
+    voltage = raw_voltage / 1000 + vcc_adjust;
+}
+        
+void transmit() {
     Serial << "Weight: " << weight << " kg" << endl;
     weightNode.setProperty("kilogram").setRetained(false).send(String(weight));
 
-    //getTemperatures();
     Serial << "Temperature0: " << temperature0 << " °C" << endl;
     temperatureNode0.setProperty("degrees").setRetained(false).send(String(temperature0));
 
     Serial << "Temperature1: " << temperature1 << " °C" << endl;
     temperatureNode1.setProperty("degrees").setRetained(false).send(String(temperature1));
 
-    voltage = ESP.getVcc() / 1000 + 0.3; // ESP07 reads 0.3V too low
-    Serial << "Input Voltage: " << voltage << " V" << endl;
+    Serial << "Raw Input Voltage: " << raw_voltage << " V" << endl;
+    Serial << "Corrected Input Voltage: " << voltage << " V" << endl;
     batteryNode.setProperty("volt").setRetained(true).send(String(voltage));
 
     StaticJsonBuffer<200> jsonBuffer;
@@ -187,28 +227,51 @@ void loopHandler() {
     Serial << "Json data:" << values << endl;
     jsonNode.setProperty("__json__").setRetained(false).send(values);
 
+    /*
+     * determine low battery, sleep forever to save lithium cell.
+     * we could go lower, but scale is calibrated at 3.3V so we    
+     * would get wrong readings.
+    */
+    if (voltage <= LOW_BATTERY)
+    {
+      batAlarmNode.setProperty("alarm").setRetained(true).send("true");
+      SLEEP_TIME = 0;
+      Serial << F("✖✖✖ Battery critically low, sleeping forever ✖✖✖") << endl;
+    }else
+    {
+      batAlarmNode.setProperty("alarm").setRetained(true).send("false");
+      SLEEP_TIME = sleepTimeSetting.get();
+      Serial << "✔ Sleeping for " << SLEEP_TIME << " seconds" << endl;
+    }
+}
 
-    Homie.prepareToSleep();
-    delay(500);
-    Serial << "Ready to sleep" << endl;
-    buf[0] = STATE_SLEEP_WAKE;
-    system_rtc_mem_write(RTC_STATE, buf, 1); // set state for next wakeUp
-    //FIXME
-    int SLEEP_TIME = sleepTimeSetting.get();
-    Serial << "Sleeping for " << SLEEP_TIME << " seconds" << endl;
-    ESP.deepSleep(SLEEP_TIME*1000000, WAKE_RF_DISABLED);
-    yield();
+void onHomieEvent(const HomieEvent& event) {
+  switch(event.type) {
+    case HomieEventType::MQTT_CONNECTED:
+      transmit();
+      Homie.getLogger() << "✔ Data transmitted, preparing for deep sleep..." << endl;
+      Homie.prepareToSleep();
+    break;
+    case HomieEventType::READY_TO_SLEEP:
+      Serial << "✔ Ready to sleep" << endl;
+      buf[0] = STATE_SLEEP_WAKE;
+      system_rtc_mem_write(RTC_STATE, buf, 1); // set state for next wakeUp
+      ESP.deepSleep(SLEEP_TIME*1000000, WAKE_RF_DISABLED);
+    break;
+  }
+}
+
+void loopHandler() {
 }
 
 void setup() {
-
+   
   WiFi.forceSleepBegin();  // send wifi directly to sleep to reduce power consumption
   yield();
   system_rtc_mem_read(RTC_BASE, buf, 2); // read 2 bytes from RTC-MEMORY to get our state
   
   Serial.begin(115200);
-  Serial.println();
-  Serial.println();
+  Serial << endl << endl;
 
   if ((buf[0] != 0x55) || (buf[1] != 0xaa))  // cold start, magic number is not present in rtc
   { state = STATE_COLDSTART;
@@ -245,19 +308,24 @@ void setup() {
       break;      
   
     case STATE_CONNECT_WIFI:
+    /*
+     * Can't set default, see issue #323
+     * https://github.com/marvinroger/homie-esp8266/issues/323
       sleepTimeSetting.setDefaultValue(DEFAULT_SLEEP_TIME);
       weightOffsetSetting.setDefaultValue(DEFAULT_WEIGHT_OFFSET);
       kilogramDividerSetting.setDefaultValue(DEFAULT_KILOGRAM_DIVIDER);
-      
-      voltage = ESP.getVcc() / 1000;
+      vccAdjustSetting.setDefaultValue(DEFAULT_VCC_ADJUST);
+    */
+      //get all measurements *BEFORE* WIFI get's active. This saves around 4s at full mA
       getTemperatures();
       getWeight();
+      getVolt();
       
       WiFi.forceSleepWake();
       delay(500);
       wifi_set_sleep_type(MODEM_SLEEP_T);
         
-      Homie_setFirmware("node-wifi-mqtt-homie-battery", "1.0.5");
+      Homie_setFirmware(FW_NAME, FW_VERSION);
       Homie.setSetupFunction(setupHandler).setLoopFunction(loopHandler);
 
       weightNode.advertise("unit");
@@ -274,6 +342,7 @@ void setup() {
 
 
       Homie.disableLedFeedback(); // collides with Serial on ESP07
+      Homie.onEvent(onHomieEvent);
       Homie.setup();
       break;
     }
