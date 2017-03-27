@@ -79,3 +79,18 @@
 [submodule "libraries/Bounce2"]
 	path = libraries/Bounce2
 	url = https://github.com/thomasfredericks/Bounce2
+[submodule "libraries/YunBridgeLibrary"]
+	path = libraries/YunBridgeLibrary
+	url = https://github.com/arduino-libraries/Bridge
+[submodule "libraries/Watterott-Arduino-Libs"]
+	path = libraries/Watterott-Arduino-Libs
+	url = https://github.com/watterott/Arduino-Libs
+[submodule "libraries/Adafruit_Sensor"]
+	path = libraries/Adafruit_Sensor
+	url = https://github.com/adafruit/Adafruit_Sensor
+[submodule "libraries/Adafruit_TSL2591"]
+	path = libraries/Adafruit_TSL2591
+	url = https://github.com/adafruit/Adafruit_TSL2591_Library
+[submodule "libraries/Adafruit_DHT"]
+	path = libraries/Adafruit_DHT
+	url = https://github.com/adafruit/DHT-sensor-library

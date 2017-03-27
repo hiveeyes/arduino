@@ -59,7 +59,7 @@ TerkinData C++ compiles with *avr-g++ 4.9.1* (AVR) and *g++ 5.3.0* (MacPorts)
 as well as *xtensa-lx106-elf-g++ 4.8.2* (xtensa-lx106, crosstool-NG 1.20.0) on Mac OS X.
 It currently does **not** compile with *clang++ 3.4*. Patches are welcome!
 
-The example programs `<csv_basic.cpp_>`_ and `<json_basic.cpp_>`_ have been tested
+The example programs `<csv_basic.cpp_>`_, `<urlencoded_basic.cpp_>`_ and `<json_basic.cpp_>`_ have been tested
 successfully at runtime on x86_64 (Mac OS X).
 
 It is currently alpha quality as we didn't hunt down potential memory leaks yet.
@@ -152,6 +152,7 @@ x-www-form-urlencoded
 JSON
 ----
 .. note:: To use the fine ArduinoJson_ library for JSON serialization, please compile using ``-DHAVE_ARDUINO_JSON``.
+
 ::
 
     // Serialize data into JSON format
@@ -186,9 +187,10 @@ CSV
     header: ## time,weight,temperature-outside,humidity-outside,temperature-inside,voltage
     data:   2017-03-17T02:48:15Z,85.000,42.420,84.840,33.330,3.843
 
-    -- Test single reading (incomplete)
+    -- Test single reading (incomplete: "weight" and "temperature-inside" missing)
     header: ## time,weight,temperature-outside,humidity-outside,temperature-inside,voltage
     data:   2017-03-17T02:48:15Z,,42.420,84.840,,3.843
+
 
 .. seealso:: Full source of `<csv_basic.cpp_>`_.
 
@@ -209,7 +211,7 @@ x-www-form-urlencoded
     -- Test single reading (complete)
     data:   time=2017%2D03%2D17T03%3A03%3A57Z&weight=85%2E00&temperature-outside=42%2E42&humidity-outside=84%2E84&temperature-inside=33%2E33&voltage=3%2E84
 
-    -- Test single reading (incomplete)
+    -- Test single reading (incomplete: "weight" and "temperature-inside" missing)
     data:   time=2017%2D03%2D17T03%3A03%3A57Z&temperature-outside=42%2E42&humidity-outside=84%2E84&voltage=3%2E84
 
 .. seealso:: Full source of `<urlencoded_basic.cpp_>`_.

@@ -52,7 +52,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'Hiveeyes Arduino'
-copyright = u'2014-2017, Hiveeyes Developers'
+copyright = u'2013-2017, Hiveeyes Developers'
 author = u'Hiveeyes Developers'
 
 # The version info for the project you're documenting, acts as replacement for
