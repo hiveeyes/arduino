@@ -15,10 +15,9 @@ in-progress
 
 2017-03-28 0.9.2
 =================
-Align with feature set of [node-wifi-mqtt-homie-battery.ino](../node-wifi-mqtt-homie-battery/node-wifi-mqtt-homie-battery.ino)
+Align with feature set of ../node-wifi-mqtt-homie-battery/node-wifi-mqtt-homie-battery.ino
 - Disable 3 of 4 default settings due to bug in homie-esp8266
 - All needed settings are now settable via HomieSetting
 - Modularized code
 - Add versioning scheme
 - Add JSON output for hiveeyes.org compatibility
-
