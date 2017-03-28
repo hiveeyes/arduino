@@ -43,7 +43,14 @@
 
 HX711 scale;
 
+#define FW_NAME "node-wifi-mqtt-homie"
+#define FW_VERSION "0.9.2"
 const int DEFAULT_SEND_INTERVAL = 60;
+
+// PINs
+#define ONE_WIRE_BUS 14
+#define DOUT  13
+#define PD_SCK  12
 
 /* Use sketch BeeScale-Calibration.ino to determine these calibration values.
    Set them here or use HomieSetting via config.json or WebApp/MQTT
@@ -53,10 +60,23 @@ const float DEFAULT_KILOGRAM_DIVIDER = 22.27;  // Load cell value per kilogram.
 unsigned long lastSent = 0;
 
 RunningMedian WeightSamples = RunningMedian(4);
+
 float weight;
+float temperature0;
+float temperature1;
+float voltage;
+float raw_voltage;
+float vcc_adjust;
+int sendInterval;
+
 
 ADC_MODE(ADC_VCC);
-float volt;
+
+// Setup a OneWire instance to communicate with any OneWire devices
+OneWire OneWire(ONE_WIRE_BUS);
+// Pass our OneWire reference to Dallas Temperature.
+DallasTemperature sensors(&OneWire);
+
 
 HomieNode temperatureNode0("temperature0", "temperature");
 HomieNode temperatureNode1("temperature1", "temperature");
@@ -65,8 +85,9 @@ HomieNode batteryNode("battery", "battery");
 HomieNode jsonNode("data","__json__");
 
 HomieSetting<long> sendIntervalSetting("sendInterval", "Interval for measurements in seconds (max. 3600)");
-HomieSetting<double> weightOffsetSetting("weightOffset", "Offset value to zero. Use BeeScale-Calibration.ino to determine.");
+HomieSetting<long> weightOffsetSetting("weightOffset", "Offset value to zero. Use BeeScale-Calibration.ino to determine.");
 HomieSetting<double> kilogramDividerSetting("kilogramDivider", "Scale value per kilogram. Use BeeScale-Calibration.ino to determine.");
+HomieSetting<double> vccAdjustSetting("vccAdjust", "Calibration value for input voltage. See sketch for details.");
 
 void setupHandler() {
   temperatureNode0.setProperty("unit").send("C");
@@ -74,14 +95,6 @@ void setupHandler() {
   weightNode.setProperty("unit").send("kg");
   batteryNode.setProperty("unit").send("V");
 }
-
-#define ONE_WIRE_BUS 14
-// Setup a OneWire instance to communicate with any OneWire devices
-OneWire OneWire(ONE_WIRE_BUS);
-// Pass our OneWire reference to Dallas Temperature.
-DallasTemperature sensors(&OneWire);
-float temperature0;
-float temperature1;
 
 void getTemperatures() {
   sensors.begin();
@@ -102,20 +115,28 @@ void getTemperatures() {
 }
 
 void getWeight() {
-  Serial.println("Getting weight, hold on for 4 seconds");
-    
+  Serial << endl << endl;
+  Serial << "Reading scale, hold on" << endl;
+  scale.power_up();
   for (int i = 0; i < 4; i++) {
-    Serial.print("*");
-    scale.power_up();
     float WeightRaw = scale.get_units(10);
     yield();
-    scale.power_down();
+    Serial << "✔ Raw measurements: " << WeightRaw << "g" << endl;
     WeightSamples.add(WeightRaw);
-    delay(1000);                 
+    delay(500);                 
     yield();
   }
-  Serial.println("");
-  weight = WeightSamples.getMedian() / 1000;
+  scale.power_down();
+  
+  weight = WeightSamples.getMedian();
+  weight = weight / 1000 ;      // we want kilogram
+}
+
+void getVolt() {
+    raw_voltage = ESP.getVcc();
+    vcc_adjust = vccAdjustSetting.get();
+    Serial << "Voltage adjust value is: " << vcc_adjust << "V" << endl;
+    voltage = raw_voltage / 1000 + vcc_adjust;
 }
 
 void loopHandler() {
@@ -131,9 +152,10 @@ void loopHandler() {
     Serial << "Weight: " << weight << " kg" << endl;
     weightNode.setProperty("kilogram").setRetained(false).send(String(weight));
 
-    volt = ESP.getVcc() / 1000 + 0.3; // ESP07 reads 0.3V too low
-    Serial << "Input Voltage: " << volt << " V" << endl;
-    batteryNode.setProperty("volt").setRetained(true).send(String(volt));
+    getVolt();
+    Serial << "Raw Input Voltage: " << raw_voltage << " V" << endl;
+    Serial << "Input Voltage: " << voltage << " V" << endl;
+    batteryNode.setProperty("volt").setRetained(true).send(String(voltage));
 
     StaticJsonBuffer<200> jsonBuffer;
     JsonObject& root = jsonBuffer.createObject();
@@ -151,20 +173,22 @@ void loopHandler() {
 
 void setup() {
   Serial.begin(115200);
-  Serial.println();
-  Serial.println();
-  Homie_setFirmware("node-wifi-mqtt-homie", "1.0.5");
+
+  Homie_setFirmware(FW_NAME, FW_VERSION);
   Homie.setSetupFunction(setupHandler).setLoopFunction(loopHandler);
   Homie.disableLedFeedback(); // LED pin would break serial on ESP-07
 
-  
   sendIntervalSetting.setDefaultValue(DEFAULT_SEND_INTERVAL);
+  /*
+  * Can't set more than one value to default, see issue #323
+  * https://github.com/marvinroger/homie-esp8266/issues/323
   weightOffsetSetting.setDefaultValue(DEFAULT_WEIGHT_OFFSET);
   kilogramDividerSetting.setDefaultValue(DEFAULT_KILOGRAM_DIVIDER);
+  */ 
 
-  scale.begin(13, 12);
-  scale.set_scale(kilogramDividerSetting.get());
-  scale.set_offset(weightOffsetSetting.get());    
+  scale.begin(DOUT, PD_SCK);
+  scale.set_scale(kilogramDividerSetting.get());  //initialize scale
+  scale.set_offset(weightOffsetSetting.get());    //initialize scale
 
   temperatureNode0.advertise("unit");
   temperatureNode0.advertise("degrees");
