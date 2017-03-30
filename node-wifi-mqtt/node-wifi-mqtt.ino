@@ -4,9 +4,9 @@
 
    Collect beehive sensor data and transmit via WiFi to a MQTT broker.
 
-   Copyright (C) 2014-2017  Clemens Gruber
-   Copyright (C) 2016-2017  Karsten Harazim
-   Copyright (C) 2016-2017  Andreas Motl
+   Copyright (C) 2014-2017  Clemens Gruber <clemens@hiveeyes.org>
+   Copyright (C) 2016-2017  Karsten Harazim <karsten@hiveeyes.org>
+   Copyright (C) 2016-2017  Andreas Motl <andreas@hiveeyes.org>
 
 
    Changes
@@ -15,6 +15,7 @@
    2016-10-31 Beta release
    2017-01-09 Add more sensors
    2017-02-01 Serialize sensor readings en bloc using JSON
+   2017-03-30 Fix JSON serialization: Transmit sensor readings as float values. Thanks, Matthias!
 
 
    GNU GPL v3 License
@@ -351,13 +352,13 @@ void loop() {
   StaticJsonBuffer<256> jsonBuffer;
 
   JsonObject& root = jsonBuffer.createObject();
-  root["weight"]                    = weightChar;
-  root["broodtemperature"]          = temperatureArrayChar[0];
-  root["entrytemperature"]          = temperatureArrayChar[1];
-  root["airtemperature"]            = temperatureChar[0];
-  root["airhumidity"]               = humidityChar[0];
-  root["airtemperature_outside"]    = temperatureChar[1];
-  root["airhumidity_outside"]       = humidityChar[1];
+  root["weight"]                    = String(weightChar).toFloat();
+  root["broodtemperature"]          = String(temperatureArrayChar[0]).toFloat();
+  root["entrytemperature"]          = String(temperatureArrayChar[1]).toFloat();
+  root["airtemperature"]            = String(temperatureChar[0]).toFloat();
+  root["airhumidity"]               = String(humidityChar[0]).toFloat();
+  root["airtemperature_outside"]    = String(temperatureChar[1]).toFloat();
+  root["airhumidity_outside"]       = String(humidityChar[1]).toFloat();
 
 
   // Debugging
