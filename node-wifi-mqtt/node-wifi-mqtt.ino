@@ -4,9 +4,7 @@
 
    Collect beehive sensor data and transmit via WiFi to a MQTT broker.
 
-   Copyright (C) 2014-2017  Clemens Gruber <clemens@hiveeyes.org>
-   Copyright (C) 2016-2017  Karsten Harazim <karsten@hiveeyes.org>
-   Copyright (C) 2016-2017  Andreas Motl <andreas@hiveeyes.org>
+   Copyright (C) 2016-2017  The Hiveeyes Developers <hello@hiveeyes.org>
 
 
    Changes
