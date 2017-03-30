@@ -76,24 +76,45 @@
  ****************************************************/
 
 
-// --------
-// Settings
-// --------
+// ======================
+// Configuration settings
+// ======================
 
-// WiFi parameters
+// ----
+// WiFi
+// ----
 #define WLAN_SSID       "change-to-your-ssid"
 #define WLAN_PASS       "change-to-your-pw"
 
-// MQTT server
+// ----
+// MQTT
+// ----
+
+// The address of the MQTT broker to connect to.
 #define MQTT_BROKER     "swarm.hiveeyes.org"
 #define MQTT_PORT       1883
-#define AIO_USERNAME    ""
-#define AIO_KEY         ""
+
+// A MQTT client ID, which should be unique across multiple devices for a user.
+// Maybe use your MQTT_USERNAME and the date and time the sketch was compiled
+// or just use an UUID (https://www.uuidgenerator.net/) or other random value.
+#define MQTT_CLIENT_ID  ""
+
+// The credentials to authenticate with the MQTT broker.
+#define MQTT_USERNAME   ""
+#define MQTT_PASSWORD   ""
+
+// The MQTT topic to transmit sensor readings to.
+// Note that the "testdrive" channel is not authenticated and can be used anonymously.
+// To publish to a protected data channel owned by you, please ask for appropriate
+// credentials at https://community.hiveeyes.org/ or hello@hiveeyes.org.
+#define MQTT_TOPIC      "hiveeyes/testdrive/area-42/node-1/data.json"
 
 
-// ---------
+
+// =========
 // Libraries
-// ---------
+// =========
+
 // ESP8266: https://github.com/esp8266/Arduino
 #include <ESP8266WiFi.h>
 
@@ -110,9 +131,9 @@
 #include <DallasTemperature.h>  // DS18B20 itself
 
 
-// --------------------
+// ====================
 // Sensor configuration
-// --------------------
+// ====================
 
 // number of temperature devices on bus
 const int temperatureNumDevices = 2;
@@ -128,9 +149,9 @@ const int temperaturePrecision = 12;
 const int temperaturePin = 5;
 
 
-// ----
-// Main
-// ----
+// ============
+// Sensor setup
+// ============
 
 OneWire oneWire(temperaturePin);                       // oneWire instance to communicate with any OneWire devices (not just DS18B20)
 DallasTemperature temperatureSensors(&oneWire);        // pass oneWire reference to DallasTemperature
@@ -164,6 +185,11 @@ char temperatureChar[humidityNumDevices][6];  // should handle +/-xx.x and null 
 char humidityChar[humidityNumDevices][6];  // should handle xxx.x and null terminator
 char weightChar[9];  // should handle +-xxx.xxx and null terminator
 
+
+// ===============
+// Telemetry setup
+// ===============
+
 // Functions
 void mqtt_connect();
 
@@ -171,22 +197,16 @@ void mqtt_connect();
 WiFiClient client;
 
 
-// Set a unique MQTT client ID using the AIO key + the date and time the sketch
-// was compiled (so this should be unique across multiple devices for a user,
-// alternatively you can manually set this to a GUID or other random value).
-// TODO: Maybe use/compute CLIENT_ID again
-
 // Setup the MQTT client class by passing in the WiFi client and MQTT server and login details.
-Adafruit_MQTT_Client mqtt(&client, MQTT_BROKER, MQTT_PORT, AIO_USERNAME, AIO_KEY);
-//Adafruit_MQTT_Client mqtt(&client, MQTT_BROKER, MQTT_PORT, CLIENT_ID, AIO_USERNAME, AIO_KEY);
-
-/****************************** Feeds ***************************************/
+Adafruit_MQTT_Client mqtt(&client, MQTT_BROKER, MQTT_PORT, MQTT_CLIENT_ID, MQTT_USERNAME, MQTT_PASSWORD);
 
 // Setup MQTT publishing handler
-Adafruit_MQTT_Publish mqtt_publisher = Adafruit_MQTT_Publish(&mqtt, AIO_USERNAME "hiveeyes/kh/cfb/hive1/data.json");
+Adafruit_MQTT_Publish mqtt_publisher = Adafruit_MQTT_Publish(&mqtt, MQTT_TOPIC);
 
 
-/*************************** Sketch Code ************************************/
+// ============
+// Main program
+// ============
 
 void setup() {
   Serial.begin(9600);
