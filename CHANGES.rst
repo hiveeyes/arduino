@@ -9,6 +9,10 @@ CHANGES
 
 in-progress
 ===========
+
+
+2017-03-31 0.14.0
+=================
 - Add slot, build infrastructure and dependency libraries for :ref:`mois-node`
 - Update GPRSbee library to 1.9.2
 - Update OneWire library to 2.3.3
