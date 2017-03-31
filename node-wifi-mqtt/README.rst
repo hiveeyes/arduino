@@ -2,9 +2,9 @@
 
 .. _node-wifi-mqtt:
 
-###############################
-Open Hive WiFi/MQTT sensor node
-###############################
+###########################
+Basic WiFi/MQTT sensor node
+###########################
 
 .. contents::
    :local:

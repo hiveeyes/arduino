@@ -19,9 +19,10 @@ in-progress
 - Update HX711 library incorporating our fix »Define “yield” as noop for older Arduino Core releases«
 - Update Arduino-Makefile and makeEspArduino tools
 - Improve firmwares :ref:`node-wifi-mqtt-homie` and :ref:`node-wifi-mqtt-homie-battery`
-- :ref:`node-wifi-mqtt`: Fix JSON serialization: Transmit sensor readings as float values. Thanks, Matthias!
-- :ref:`node-wifi-mqtt`: Improve configuration and documentation
-- :ref:`node-wifi-mqtt`: Fix JSON serialization again, there was an off-by-one-error. Thanks, Giuseppe!
+- :ref:`node-wifi-mqtt`:
+
+    - Fix JSON serialization: Transmit sensor readings as float values and improve robustness. Thanks, Matthias and Giuseppe!
+    - Improve configuration and documentation, last but not least regarding MQTT authentication.
 
 
 2017-03-17 0.13.0
