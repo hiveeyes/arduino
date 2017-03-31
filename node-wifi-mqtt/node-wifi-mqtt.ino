@@ -13,7 +13,7 @@
    2016-10-31 Beta release
    2017-01-09 Add more sensors
    2017-02-01 Serialize sensor readings en bloc using JSON
-   2017-03-30 Fix JSON serialization: Transmit sensor readings as float values. Thanks, Matthias!
+   2017-03-31 Fix JSON serialization: Transmit sensor readings as float values. Thanks, Matthias and Giuseppe!
 
 
    GNU GPL v3 License

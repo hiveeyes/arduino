@@ -20,6 +20,16 @@ TODO
 Misc
 ====
 
+2017-03-31
+----------
+- Use LWT (Last Will and Testament) MQTT feature
+  http://www.hivemq.com/blog/mqtt-essentials-part-9-last-will-and-testament
+- Update TerkinData with appropriate JSON serialization::
+
+    int json_length = root.measureLength();
+    char payload[json_length+1];
+    root.printTo(payload, sizeof(payload));
+
 2017-01-11
 ----------
 - Document ADS1231 patch for ESP8266, write to forum
