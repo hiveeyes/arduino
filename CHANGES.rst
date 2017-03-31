@@ -17,6 +17,7 @@ in-progress
 - Improve firmwares :ref:`node-wifi-mqtt-homie` and :ref:`node-wifi-mqtt-homie-battery`
 - :ref:`node-wifi-mqtt`: Fix JSON serialization: Transmit sensor readings as float values. Thanks, Matthias!
 - :ref:`node-wifi-mqtt`: Improve configuration and documentation
+- :ref:`node-wifi-mqtt`: Fix JSON serialization again, there was an off-by-one-error. Thanks, Giuseppe!
 
 
 2017-03-17 0.13.0

@@ -365,9 +365,8 @@ void loop() {
   getHumidityTemperature();
 
 
-  // Prepare data, build JSON object
-
-  StaticJsonBuffer<256> jsonBuffer;
+  // Build JSON object containing sensor readings
+  StaticJsonBuffer<512> jsonBuffer;
 
   JsonObject& root = jsonBuffer.createObject();
   root["weight"]                    = String(weightChar).toFloat();
@@ -384,7 +383,8 @@ void loop() {
 
 
   // Serialize data
-  char payload[256];
+  int json_length = root.measureLength();
+  char payload[json_length+1];
   root.printTo(payload, sizeof(payload));
 
 
