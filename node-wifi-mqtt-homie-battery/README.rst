@@ -17,4 +17,4 @@ battery lifetime a lot.
 
 
 # Todo:
-        Alarm handler for low battery
+        none at the moment
