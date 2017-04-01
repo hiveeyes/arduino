@@ -91,6 +91,16 @@ RunningMedian weightSamples = RunningMedian(weightSamplesNumber);  // create Run
 void getWeight();
 void outputStatistic(int decimal);
 
+void wait_for_serial_input() {
+
+  // Stop until a byte is received
+  while (!Serial.available()) {
+    yield();
+  };
+
+  // Clear serial input
+  Serial.read();
+}
 
 void setup() {
   // serial communication
@@ -114,10 +124,9 @@ void setup() {
   Serial.println("   (If done, input any character to continue ...)");
   Serial.println();
   Serial.flush();
-  // wait for serial input
-  while(!Serial.available()) ;  // stop until a byte is received notice the ; after the while()
-  Serial.read();  // clear serial input d
 
+  // Wait for keypress
+  wait_for_serial_input();
 
   // get Weight n times and calculate median
   Serial.println("Get raw values for tare: ");
@@ -134,9 +143,9 @@ void setup() {
   Serial.println("   (If done, input any character to continue ...)");
   Serial.println();
   Serial.flush();
-  // wait for serial input
-  while(!Serial.available()) ;  // stop until a byte is received notice the ; after the while()
-  Serial.read();  // clear serial input
+
+  // Wait for keypress
+  wait_for_serial_input();
 
   // get Weight n times and calculate median
   Serial.println("Get raw values for lower limit: ");
@@ -152,8 +161,10 @@ void setup() {
   Serial.println("   ... and input weight in gram ...");
   Serial.println();
   Serial.flush();
-  // wait for serial input
-  while(!Serial.available()) ;  // stop until a byte is received notice the ; after the while()
+
+  // Wait for keypress
+  wait_for_serial_input();
+
   long kgValue = Serial.parseInt();
 
   // get Weight n times and calculate median
@@ -185,9 +196,10 @@ void setup() {
   Serial.println("You can test your calculated settings now!");
   Serial.println("(Input any character to continue ...)");
   Serial.flush();
-  // wait for serial input
-  while(!Serial.available()) ;  // stop until a byte is received notice the ; after the while()
-  Serial.read();  // clear serial input
+
+  // Wait for keypress
+  wait_for_serial_input();
+
   Serial.println();
 }
 
