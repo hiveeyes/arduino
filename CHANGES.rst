@@ -10,6 +10,7 @@ CHANGES
 in-progress
 ===========
 - :ref:`scale-adjust-firmware`: Make `scale-adjust-hx711.ino`_ compile against Espressif/ESP8266
+- :ref:`generic-firmware`: Reduce loop interval when being in bootstrap phase
 
 
 2017-03-31 0.14.0

@@ -17,6 +17,7 @@
 #define HE_DEBUG                  true               // turn on debug output and choose below
 #define SERIAL_BAUD               115200         // serial baud rate
 #define BLINKPERIOD               500            // LED blinking period in ms
+#define BOOTSTRAP_LOOP_COUNT      15             // How often to loop fast when booting
 #define HE_SLEEP                  false              // enable sleeping
 #define HE_SCALE                  false
 #define HE_HUMIDITY               false
