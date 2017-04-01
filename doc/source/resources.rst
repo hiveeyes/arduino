@@ -39,6 +39,8 @@
 .. _Terrine: https://github.com/hiveeyes/arduino/tree/master/libraries/Terrine
 .. _Terkin: https://github.com/hiveeyes/arduino/tree/master/libraries/Terkin
 .. _Hiveeyes-Lib: https://github.com/hiveeyes/arduino/tree/master/libraries/Hiveeyes
+.. _scale-adjust-ads1231.ino: https://github.com/hiveeyes/arduino/blob/master/scale-adjust/ADS1231/scale-adjust-ads1231.ino
+.. _scale-adjust-hx711.ino: https://github.com/hiveeyes/arduino/blob/master/scale-adjust/HX711/scale-adjust-hx711.ino
 
 .. BERadio
 .. _BERadio C++: https://github.com/hiveeyes/arduino/tree/master/libraries/BERadio

@@ -9,11 +9,21 @@ CHANGES
 
 in-progress
 ===========
+- :ref:`scale-adjust-firmware`: Make `scale-adjust-hx711.ino`_ compile against Espressif/ESP8266
+
+
+2017-03-31 0.14.0
+=================
 - Add slot, build infrastructure and dependency libraries for :ref:`mois-node`
 - Update GPRSbee library to 1.9.2
 - Update OneWire library to 2.3.3
 - Update HX711 library incorporating our fix »Define “yield” as noop for older Arduino Core releases«
 - Update Arduino-Makefile and makeEspArduino tools
+- Improve firmwares :ref:`node-wifi-mqtt-homie` and :ref:`node-wifi-mqtt-homie-battery`
+- :ref:`node-wifi-mqtt`:
+
+    - Fix JSON serialization: Transmit sensor readings as float values and improve robustness. Thanks, Matthias and Giuseppe!
+    - Improve configuration and documentation, last but not least regarding MQTT authentication.
 
 
 2017-03-17 0.13.0

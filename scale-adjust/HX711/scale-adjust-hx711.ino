@@ -83,8 +83,9 @@ float weightKg;
 RunningMedian weightSamples = RunningMedian(weightSamplesNumber);  // create RunningMedian object
 
 // power saving
+#ifndef ARDUINO_ARCH_ESP8266
 #include <LowPower.h>  // https://github.com/rocketscream/Low-Power
-
+#endif
 
 // Forward declarations
 void getWeight();
@@ -220,10 +221,15 @@ void getWeight() {
   do {
     // wait between samples
     Serial.flush();
+
+    #ifndef ARDUINO_ARCH_ESP8266
     for (int i=0; i<waitTimeLoadSamples; i++) {
       // sleep for one second
       LowPower.powerDown(SLEEP_1S, ADC_OFF, BOD_OFF); // delay 60 ms
     }
+    #else
+    delay(60);
+    #endif
 
     // power HX711 / load cell
     loadCell.power_up();

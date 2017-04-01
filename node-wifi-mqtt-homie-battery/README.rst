@@ -1,20 +1,31 @@
-.. include:: resources.rst
+.. include:: ../../resources.rst
 
-.. _README:
+.. _node-wifi-mqtt-homie-battery:
 
-######
-README
-######
+####################################################
+Battery-powered ESP8266 beehive scale based on Homie
+####################################################
 
-This is the low power battery version of `node-wifi-mqtt-homie`
-To run this sketch e.g. on the PCB Design from https://www.imker-nettetal.de/bienen-nsa/ESP8266-BeeScale1_1.fzz
+.. contents::
+   :local:
+   :depth: 1
+
+----
+
+This is the low power battery version of :ref:`node-wifi-mqtt-homie`.
+The most recent version is available at `node-wifi-mqtt-homie-battery.ino`_.
+To run this sketch e.g. on the PCB Design from `ESP8266-BeeScale.fzz`_,
 you should remove and shortout the input polarity protection diode to
 avoid unnecessary voltage drop.
 Also you should remove any unnecessary power indicator LED to save
-a couple om mA. (e.g. on the ESP-07 the red power indicator LED). This will increase
+a couple of mA. (e.g. on the ESP-07 the red power indicator LED). This will increase
 battery lifetime a lot.
 
 
+.. Todo::
 
-# Todo:
-        none at the moment
+    - Alarm handler for low battery
+
+
+.. include:: CHANGES.rst
+

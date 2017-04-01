@@ -17,9 +17,6 @@ commonly used in industrial `load cell`_ components:
 - `scale-adjust-ads1231.ino`_ for ADS1231_ from Texas Instruments
 - `scale-adjust-hx711.ino`_ for HX711_ from Avia Semiconductor
 
-.. _scale-adjust-ads1231.ino: https://github.com/hiveeyes/arduino/blob/master/scale-adjust/ADS1231/scale-adjust-ads1231.ino
-.. _scale-adjust-hx711.ino: https://github.com/hiveeyes/arduino/blob/master/scale-adjust/HX711/scale-adjust-hx711.ino
-
 
 ************
 Instructions

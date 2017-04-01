@@ -62,8 +62,9 @@ List of WiFi-based firmwares, all are based on the ESP8266_.
     * - :ref:`node-wifi-mqtt-homie`
       - `node-wifi-mqtt-homie.ino`_ is the firmware
         based on the `ESP8266 framework for Homie`_ for powering
-        the »`ESP8266 beehive scale <ESP8266 Stockwaage – erste Eindrücke_>`_«.
+        the »`ESP8266 beehive scale by Alexander Wilms <ESP8266 Stockwaage – erste Eindrücke_>`_«.
         It transmits sensor data using WiFi/MQTT.
+        See also the alternative variant :ref:`node-wifi-mqtt-homie-battery`.
 
     * - :ref:`node-wifi-mqtt`
       - `node-wifi-mqtt.ino`_ is the source code for a preliminary/testing firmware powering
