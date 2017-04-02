@@ -91,15 +91,27 @@ RunningMedian weightSamples = RunningMedian(weightSamplesNumber);  // create Run
 void getWeight();
 void outputStatistic(int decimal);
 
-void wait_for_serial_input() {
 
-  // Stop until a byte is received
+// Stop until a byte is received on serial port
+void poll_serial() {
   while (!Serial.available()) {
     yield();
   };
+}
+
+// Wait for anything on serial port
+void wait_for_keypress() {
+
+  poll_serial();
 
   // Clear serial input
   Serial.read();
+}
+
+// Read numeric value from serial port
+long read_number_from_serial() {
+  poll_serial();
+  return Serial.parseInt();
 }
 
 void setup() {
@@ -125,8 +137,8 @@ void setup() {
   Serial.println();
   Serial.flush();
 
-  // Wait for keypress
-  wait_for_serial_input();
+  // Wait for anything on serial port
+  wait_for_keypress();
 
   // get Weight n times and calculate median
   Serial.println("Get raw values for tare: ");
@@ -144,8 +156,8 @@ void setup() {
   Serial.println();
   Serial.flush();
 
-  // Wait for keypress
-  wait_for_serial_input();
+  // Wait for anything on serial port
+  wait_for_keypress();
 
   // get Weight n times and calculate median
   Serial.println("Get raw values for lower limit: ");
@@ -162,10 +174,8 @@ void setup() {
   Serial.println();
   Serial.flush();
 
-  // Wait for keypress
-  wait_for_serial_input();
-
-  long kgValue = Serial.parseInt();
+  // Read numeric value from serial port
+  long kgValue = read_number_from_serial();
 
   // get Weight n times and calculate median
   Serial.print("Get raw values for upper limit \"");
@@ -197,8 +207,8 @@ void setup() {
   Serial.println("(Input any character to continue ...)");
   Serial.flush();
 
-  // Wait for keypress
-  wait_for_serial_input();
+  // Wait for anything on serial port
+  wait_for_keypress();
 
   Serial.println();
 }

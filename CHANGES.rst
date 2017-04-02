@@ -9,8 +9,12 @@ CHANGES
 
 in-progress
 ===========
-- :ref:`scale-adjust-firmware`: Make `scale-adjust-hx711.ino`_ compile against Espressif/ESP8266
-- :ref:`scale-adjust-firmware`: Second attempt to make it work on ESP8266 by satisfying the watchdog. Thanks, Martin!
+- :ref:`scale-adjust-firmware` (`scale-adjust-hx711.ino`_)
+
+    - Make it compile against Espressif/ESP8266
+    - Make it work on the ESP8266 at runtime by satisfying the watchdog. Thanks, Martin!
+    - Properly read numeric value from serial port. Thanks, Matthias!
+
 - :ref:`generic-firmware`: Reduce loop interval when being in bootstrap phase
 
 
