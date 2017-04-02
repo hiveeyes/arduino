@@ -24,7 +24,8 @@ battery lifetime a lot.
 
 .. Todo::
 
-    - Add some scale/temperature calibration curves. Actually not too important, as some grams don't really matter while we are measuring up to 120kg.
+    - Add some scale/temperature calibration curves. Actually not too important, 
+      as some grams don't really matter while we are measuring up to 120kg.
       But we can ;-)
 
 
