@@ -9,7 +9,7 @@ CHANGES
 
 in-progress
 ===========
-- :ref:`scale-adjust-firmware` (`scale-adjust-hx711.ino`_)
+- :ref:`scale-adjust-firmware` (`scale-adjust-hx711.ino`_ and `scale-adjust-ads1231.ino`_)
 
     - Make it compile against Espressif/ESP8266
     - Make it work on the ESP8266 at runtime by satisfying the watchdog. Thanks, Martin!
