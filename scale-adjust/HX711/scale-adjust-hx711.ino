@@ -3,9 +3,11 @@
   ----------------------------
             | Scale ADC HX711
 
-  Copyright (C) 2016 by Clemens Gruber
+  Copyright (C) 2016-2017 by Clemens Gruber <clemens@hiveeyes.org>
+  Copyright (C) 2017      by Andreas Motl <andreas@hiveeyes.org>
 
-  2016-07 Clemens Gruber | Initial version
+  2016-07-01 Clemens Gruber        | Initial version
+  2017-04-02 Andreas Motl          | ESP8266 compatibility
 
 
   GNU GPL v3 License
@@ -71,48 +73,24 @@ int weightSamplesNumber = 10;  // take at least 10 readings for adjusting
 
 // libraries
 // load cell
-#include <HX711.h>  // https://github.com/bogde/HX711
-// load cell / HX711 pin definition: Dout 15, SCK 14
-HX711 loadCell(15, 14);    // parameter "gain" is ommited; the default value 128 is used by the library
+#include <HX711.h>      // https://github.com/bogde/HX711
+HX711 loadCell;         // Create HX711 object; The parameter "gain" is ommited, a default value of "128" is used by the library.
 int adjustScale = true;  // flag for adjust vs. operation mode
 long weightSensorValue;
 float weightKg;
 
 // median statistics to eliminate outlier
-#include <RunningMedian.h>  // http://playground.arduino.cc/Main/RunningMedian
+#include <RunningMedian.h>
 RunningMedian weightSamples = RunningMedian(weightSamplesNumber);  // create RunningMedian object
 
-// power saving
-#ifndef ARDUINO_ARCH_ESP8266
-#include <LowPower.h>  // https://github.com/rocketscream/Low-Power
-#endif
 
 // Forward declarations
 void getWeight();
 void outputStatistic(int decimal);
+void serial_poll();
+int  serial_read_byte();
+long serial_read_number();
 
-
-// Stop until a byte is received on serial port
-void poll_serial() {
-  while (!Serial.available()) {
-    yield();
-  };
-}
-
-// Wait for anything on serial port
-void wait_for_keypress() {
-
-  poll_serial();
-
-  // Clear serial input
-  Serial.read();
-}
-
-// Read numeric value from serial port
-long read_number_from_serial() {
-  poll_serial();
-  return Serial.parseInt();
-}
 
 void setup() {
   // serial communication
@@ -121,6 +99,9 @@ void setup() {
   Serial.println("Scale Adjustment for Open Hive / HX711");
   Serial.println("--------------------------------------");
   Serial.println();
+
+  // load cell / HX711 pin definition: Dout 15, SCK 14
+  loadCell.begin(15, 14);
 
   // switch off HX711 / load cell
   loadCell.power_down();
@@ -137,8 +118,8 @@ void setup() {
   Serial.println();
   Serial.flush();
 
-  // Wait for anything on serial port
-  wait_for_keypress();
+  // Wait for keypress
+  serial_read_byte();
 
   // get Weight n times and calculate median
   Serial.println("Get raw values for tare: ");
@@ -156,8 +137,8 @@ void setup() {
   Serial.println();
   Serial.flush();
 
-  // Wait for anything on serial port
-  wait_for_keypress();
+  // Wait for keypress
+  serial_read_byte();
 
   // get Weight n times and calculate median
   Serial.println("Get raw values for lower limit: ");
@@ -175,7 +156,7 @@ void setup() {
   Serial.flush();
 
   // Read numeric value from serial port
-  long kgValue = read_number_from_serial();
+  long kgValue = serial_read_number();
 
   // get Weight n times and calculate median
   Serial.print("Get raw values for upper limit \"");
@@ -207,8 +188,8 @@ void setup() {
   Serial.println("(Input any character to continue ...)");
   Serial.flush();
 
-  // Wait for anything on serial port
-  wait_for_keypress();
+  // Wait for keypress
+  serial_read_byte();
 
   Serial.println();
 }
@@ -241,17 +222,11 @@ void getWeight() {
   // read x times weight and take median
   // do this till running median sample is full
   do {
-    // wait between samples
+
     Serial.flush();
 
-    #ifndef ARDUINO_ARCH_ESP8266
-    for (int i=0; i<waitTimeLoadSamples; i++) {
-      // sleep for one second
-      LowPower.powerDown(SLEEP_1S, ADC_OFF, BOD_OFF); // delay 60 ms
-    }
-    #else
-    delay(60);
-    #endif
+    // Wait some time between samples to reduce influences from heating and wind
+    delay(waitTimeLoadSamples * 1000);
 
     // power HX711 / load cell
     loadCell.power_up();
@@ -297,4 +272,24 @@ void outputStatistic(int decimal) {
   Serial.print("\t");
   Serial.println(weightSamples.getLowest()-weightSamples.getHighest(),decimal);
   Serial.println();
+}
+
+
+// Poll serial port until anything is received
+void serial_poll() {
+  while (!Serial.available()) {
+    yield();
+  };
+}
+
+// Read byte from serial port
+int serial_read_byte() {
+  serial_poll();
+  return Serial.read();
+}
+
+// Read numeric value from serial port
+long serial_read_number() {
+  serial_poll();
+  return Serial.parseInt();
 }
