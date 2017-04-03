@@ -10,6 +10,9 @@ in-progress
 - Set some custom settings as default, limited at the moment by issue:
  https://github.com/marvinroger/homie-esp8266/issues/323
 
+2017-03-27 0.9.3
+=================
+- Add connection error handling to avoid battery drain (WIFI/MQTT Connection issues) Thanks to a broken WIFI and  @amotl.
 
 2017-03-27 0.9.2
 =================
