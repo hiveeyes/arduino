@@ -174,7 +174,7 @@ void setup() {
   long upperValue = weightSamples.getMedian();
 
   // calculate loadCellKgDivider
-  loadCellKgDivider = (upperValue - lowerValue) / (kgValue/1000);
+  loadCellKgDivider = (upperValue - lowerValue) / ((float) kgValue / 1000.0f);
 
   // output calculated parameter
   Serial.println(">> Done! Your calculated parameters:");

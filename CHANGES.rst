@@ -14,6 +14,7 @@ in-progress
     - Make it compile against Espressif/ESP8266
     - Make it work on the ESP8266 at runtime by satisfying the watchdog. Thanks, Martin!
     - Properly read numeric value from serial port. Thanks, Matthias!
+    - Fix computing the ``loadCellKgDivider``
 
 - :ref:`generic-firmware`: Reduce loop interval when being in bootstrap phase
 
