@@ -11,13 +11,16 @@ in-progress
 ===========
 - :ref:`scale-adjust-firmware`: Make `scale-adjust-hx711.ino`_ compile against Espressif/ESP8266
 - :ref:`generic-firmware`: Reduce loop interval when being in bootstrap phase
-- :ref:`node-wifi-mqtt`: Fix Makefile for ESP8266 reported not to work on Ubuntu 16.10. Thanks, Matthias!
 - :ref:`node-gsm-http`: Fix Makefile for ESP8266. Thanks, Matthias!
-- :ref:`node-wifi-mqtt`: Completely overhaul the basic ESP8266/MQTT firmware making it more efficient and flexible,
-  see also `Improve the basic “node-wifi-mqtt” firmware <https://community.hiveeyes.org/t/improve-the-basic-node-wifi-mqtt-firmware/235>`_.
-  Thanks Giuseppe!
-- :ref:`node-wifi-mqtt`: Start with single device counts of DHTxx and DS18B20 sensors to make firmware even more basic out of the box.
-  Thanks Matthias!
+- :ref:`node-wifi-mqtt`:
+
+    - Fix Makefile for ESP8266 reported not to work on Ubuntu 16.10. Thanks, Matthias!
+    - Completely overhaul the basic ESP8266/MQTT firmware making it more efficient and flexible,
+      see also `Improve the basic “node-wifi-mqtt” firmware <https://community.hiveeyes.org/t/improve-the-basic-node-wifi-mqtt-firmware/235>`_.
+      Thanks, Giuseppe!
+    - Start with single device counts of DHTxx and DS18B20 sensors to make firmware even more basic out of the box.
+      Thanks again, Matthias!
+    - Modularize and streamline code to better serve educational purposes
 
 
 2017-03-31 0.14.0

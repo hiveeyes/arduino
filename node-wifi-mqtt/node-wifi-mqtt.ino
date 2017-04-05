@@ -124,12 +124,12 @@
 
 // A dummy sensor publishing static values of "temperature", "humidity" and "weight".
 // Please turn this off when working with the real sensors.
-#define HAS_DUMMY_SENSOR    true
+#define HAS_DUMMY_SENSOR    false
 
 // The real sensors
-#define HAS_HX711           false
-#define HAS_DHTxx           false
-#define HAS_DS18B20         false
+#define HAS_HX711           true
+#define HAS_DHTxx           true
+#define HAS_DS18B20         true
 
 
 // -------------------
@@ -229,14 +229,16 @@ const int ds18b20_onewire_pin = 5;
 // HX711 weight scale sensor
 #if HAS_HX711
     #include "HX711.h"
-    HX711 hx711_sensor;  // create HX711 object
+
+    // Create HX711 object
+    HX711 hx711_sensor;
 
     // Intermediate data structure for reading the sensor values
     float weight;
 
 #endif
 
-// DHTxx sensor
+// DHTxx humidity/temperature sensor
 #if HAS_DHTxx
     #include <dht.h>
 
@@ -249,7 +251,7 @@ const int ds18b20_onewire_pin = 5;
 
 #endif
 
-// DS18B20 sensor
+// DS18B20 1-Wire temperature sensor
 #if HAS_DS18B20
 
     // 1-Wire library
@@ -277,12 +279,8 @@ const int ds18b20_onewire_pin = 5;
 // Telemetry setup
 // ===============
 
-// Functions
-void mqtt_connect();
-
 // Create an ESP8266 WiFiClient class to connect to the MQTT server.
 WiFiClient client;
-
 
 // Setup the MQTT client class by passing in the WiFi client and MQTT server and login details.
 Adafruit_MQTT_Client mqtt(&client, MQTT_BROKER, MQTT_PORT, MQTT_CLIENT_ID, MQTT_USERNAME, MQTT_PASSWORD);
@@ -291,33 +289,51 @@ Adafruit_MQTT_Client mqtt(&client, MQTT_BROKER, MQTT_PORT, MQTT_CLIENT_ID, MQTT_
 Adafruit_MQTT_Publish mqtt_publisher = Adafruit_MQTT_Publish(&mqtt, MQTT_TOPIC);
 
 
+// ====================
+// Forward declarations
+// ====================
+void wifi_connect();
+void mqtt_connect();
+void setup_sensors();
+void read_sensors();
+void transmit_readings();
+
+
 // ============
 // Main program
 // ============
 
 void setup() {
+
+    // ...
     Serial.begin(9600);
 
     // Connect to WiFi
-    Serial.println(); Serial.println();
-    delay(10);
-    Serial.print(F("Connecting to "));
-    Serial.println(WLAN_SSID);
+    wifi_connect();
 
-    WiFi.begin(WLAN_SSID, WLAN_PASS);
-    while (WiFi.status() != WL_CONNECTED) {
-        delay(500);
-        Serial.print(F("."));
-    }
-    Serial.println();
+    // Setup all sensors
+    setup_sensors();
+}
 
-    Serial.println(F("WiFi connected"));
-    Serial.println(F("IP address: "));
-    Serial.println(WiFi.localIP());
-    Serial.println();
+void loop() {
 
+    // Connect to MQTT broker
+    mqtt_connect();
 
-    // Setup scale sensor
+    // Read all sensors
+    read_sensors();
+
+    // Transmit all sensor readings
+    transmit_readings();
+
+    // Pause some time. After that, continue with the next measurement cycle.
+    delay(MEASUREMENT_INTERVAL);
+
+}
+
+void setup_sensors() {
+
+    // Setup scale sensor (single HX711)
     #if HAS_HX711
         hx711_sensor.begin(HX711_PIN_DOUT, HX711_PIN_PDSCK);
 
@@ -330,7 +346,7 @@ void setup() {
     #endif
 
 
-    // temperature array
+    // Setup temperature array (multiple DS18B20 sensors)
     #if HAS_DS18B20
 
         ds18b20_sensor.begin();  // start DallasTemperature library
@@ -378,17 +394,23 @@ void setup() {
 }
 
 
-// temperature array / DS18B20
-void getTemperature() {
+
+// DS18B20: Temperature array
+void read_temperature_array() {
 
     #if HAS_DS18B20
 
-    // request temperature on all devices on the bus
-    ds18b20_sensor.setWaitForConversion(false);  // makes it async
-    // initiatie temperature retrieval
+    Serial.println(F("Read temperature array (DS18B20)"));
+
+    // Request temperature on all devices on the bus
+
+    // Make it asynchronous
+    ds18b20_sensor.setWaitForConversion(false);
+
+    // Initiate temperature retrieval
     ds18b20_sensor.requestTemperatures();
 
-    // wait at least 750 ms for conversion
+    // Wait at least 750 ms for conversion
     delay(1000);
 
     // Iterate all DS18B20 devices and read temperature values
@@ -401,36 +423,38 @@ void getTemperature() {
 
 }
 
-// humidity and temperature, DHTxx
-void getHumidityTemperature() {
+// DHTxx: Humidity and temperature
+void read_humidity_temperature() {
 
     #if HAS_DHTxx
 
-    // read humidity and temperature data
-    // loop through all devices
+    Serial.println(F("Read humidity and temperature (DHTxx)"));
+
+    // Iterate all DHTxx devices
     for (int i=0; i<dht_device_count; i++) {
-        // read device
+
+        // Read single device
         int chk = dht_sensor.read33(dht_pins[i]);
 
         switch (chk) {
-            // this is the normal case, all is working smoothly
+
+            // Reading the sensor worked, let's get the values
             case DHTLIB_OK:
-                //Serial.print("OK,\t");
                 dht_temperature[i]  = dht_sensor.temperature;
                 dht_humidity[i]     = dht_sensor.humidity;
                 break;
 
-            // following are error cases
+            // Print debug messages when errors occur
             case DHTLIB_ERROR_CHECKSUM:
-                Serial.println("Checksum error");
+                Serial.println("DHT checksum error. Device #" + i);
                 break;
 
             case DHTLIB_ERROR_TIMEOUT:
-                Serial.println("Time out error");
+                Serial.println("DHT timeout error. Device #" + i);
                 break;
 
             default:
-                Serial.println("Unknown error");
+                Serial.println("DHT unknown error. Device #" + i);
                 break;
         }
     }
@@ -445,9 +469,11 @@ void getHumidityTemperature() {
 }
 
 
-void getWeight() {
+void read_weight() {
 
     #if HAS_HX711
+
+    Serial.println(F("Read weight (HX711)"));
 
     hx711_sensor.power_up();
     weight = hx711_sensor.get_units(5);
@@ -463,27 +489,15 @@ void getWeight() {
 
 }
 
+// Read all sensors in sequence
+void read_sensors() {
+    read_weight();
+    read_temperature_array();
+    read_humidity_temperature();
+}
 
-void loop() {
-
-    mqtt_connect();
-
-    // Grab the current state of the sensor
-    //  int humidity_data = (int)dht.readHumidity();
-    //  int temperature_data = (int)dht.readTemperature();
-
-    // note: only for a single DS18B20 on the bus!!
-    // must be rewritten for more DS18B20
-
-
-    // output humidity and temperature, DHTxx
-    Serial.println(F("Read weight"));
-    getWeight();
-    Serial.println(F("Read temp"));
-    getTemperature();
-    Serial.println(F("Read hum temp"));
-    getHumidityTemperature();
-
+// Telemetry: Transmit all readings by publishing them to the MQTT bus serialized as JSON
+void transmit_readings() {
 
     // Build JSON object containing sensor readings
     StaticJsonBuffer<512> jsonBuffer;
@@ -537,14 +551,33 @@ void loop() {
         Serial.println(F("MQTT publish failed"));
     }
 
-
-    // Wait for the next measurement interval
-    delay(MEASUREMENT_INTERVAL);
-
 }
 
 
-// Connect to MQTT
+// Connect to WiFi
+void wifi_connect() {
+
+    // Debugging
+    Serial.println(); Serial.println();
+    delay(10);
+    Serial.println("Connecting to WiFi SSID " + String(WLAN_SSID));
+
+    // Connect
+    WiFi.begin(WLAN_SSID, WLAN_PASS);
+    while (WiFi.status() != WL_CONNECTED) {
+        delay(500);
+        Serial.print(F("."));
+    }
+    Serial.println();
+
+    Serial.println(F("WiFi connected"));
+    Serial.println(F("IP address: "));
+    Serial.println(WiFi.localIP());
+    Serial.println();
+
+}
+
+// Connect to MQTT broker
 void mqtt_connect() {
 
     if (mqtt.connected()) {
@@ -570,3 +603,4 @@ void mqtt_connect() {
     }
     Serial.println(F("Connected to MQTT!"));
 }
+
