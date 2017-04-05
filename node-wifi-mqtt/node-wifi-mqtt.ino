@@ -1,6 +1,6 @@
 /*
 
-                  Hiveeyes node-wifi-mqtt
+                         Hiveeyes node-wifi-mqtt
 
    Collect beehive sensor data and transmit via WiFi to a MQTT broker.
 
@@ -15,7 +15,7 @@
    2017-02-01 Serialize sensor readings en bloc using JSON
    2017-03-31 Fix JSON serialization: Transmit sensor readings as float values.
               Thanks, Matthias and Giuseppe!
-   2017-04-05 Improve efficiency and flexibility
+   2017-04-05 Improve efficiency and configuration flexibility
    2017-04-05 Enable connecting to multiple WiFi access points with multiple attempts
               Read and transmit battery level
               Thanks, Matthias and Clemens!
@@ -42,14 +42,11 @@
 
    -------------------------------------------------------------------------
 
-   Hiveeyes node sketch for Arduino based platforms. Here: ESP8266.
+   Hiveeyes node firmware for ESP8266 based on Arduino Core.
 
-   This is a Arduino sketch for the Hiveeyes beehive monitoring system.
-   The purpose is to collect vital data and to send it via WiFi to
-   the MQTT bus at swarm.hiveeyes.org:1883.
-
-   This code is derived from the Adafruit ESP8266 MCU demo sketch,
-   see below.
+   This is a basic firmware for the Hiveeyes beehive monitoring system.
+   The purpose is to collect vital data and to transmit it
+   via WiFi to the MQTT broker at swarm.hiveeyes.org:1883.
 
    Feel free to adapt this code to your own needs. Contributions are welcome!
 
@@ -61,23 +58,18 @@
    System documentation         https://hiveeyes.org/docs/system/
    Code repository              https://github.com/hiveeyes/arduino/
 
+   Arduino Core for ESP8266     https://github.com/esp8266/Arduino
+   Firmware documentation       https://hiveeyes.org/docs/arduino/firmware/node-wifi-mqtt/README.html
+
+   -------------------------------------------------------------------------
+
+   Confirmed to be working on:
+
+   Adafruit Feather HUZZAH      https://www.adafruit.com/product/2471
+
    -------------------------------------------------------------------------
 
 */
-
-/***************************************************
-  Adafruit ESP8266 Sensor Module
-
-  Must use ESP8266 Arduino from:
-    https://github.com/esp8266/Arduino
-  Works great with Adafruit's Huzzah ESP board:
-  ----> https://www.adafruit.com/product/2471
-  Adafruit invests time and resources providing this open source code,
-  please support Adafruit and open-source hardware by purchasing
-  products from Adafruit!
-  Written by Tony DiCola for Adafruit Industries.
-  MIT license, all text above must be included in any redistribution
- ****************************************************/
 
 
 
@@ -131,7 +123,7 @@
 // ====================
 
 // A dummy sensor publishing static values of "temperature", "humidity" and "weight".
-// Please turn this off when working with the real sensors.
+// Please turn this on when working without any sensor hardware.
 #define SENSOR_DUMMY            false
 
 // The real sensors
@@ -150,9 +142,10 @@
 // HX711.PD_SCK - pin #12
 #define HX711_PIN_DOUT      14
 #define HX711_PIN_PDSCK     12
+// Properly using the load cell requires definition of individual configuration values.
+// This is not just specific to the *type* of the load cell as even
+// load cells of the *same* type / model have individual characteristics.
 
-// Define here individual values for the used load cell. This is not type specific!
-// Even load cells of the same type / model have individual characteristics.
 // To measure these values, please have a look at the firmwares for load cell adjustment:
 // https://hiveeyes.org/docs/arduino/firmware/scale-adjust/README.html
 
@@ -365,13 +358,16 @@ void setup_sensors() {
 
     // Setup scale sensor (single HX711)
     #if SENSOR_HX711
+
+        // Initialize the hardware driver with the appropriate pins
         hx711_sensor.begin(HX711_PIN_DOUT, HX711_PIN_PDSCK);
 
         // These values are obtained by calibrating the scale sensor with known weights; see the README for details
         hx711_sensor.set_scale(loadCellKgDivider);
         hx711_sensor.set_offset(loadCellZeroOffset);
+        // Reset the scale sensor to 0
+        //hx711_sensor.tare();
 
-        //  hx711_sensor.tare();             // reset the scale sensor to 0
         yield();
     #endif
 
@@ -397,7 +393,9 @@ void setup_sensors() {
         // method 1: by index
         // change index to order divices as in nature
         // (an other approach can be to order physical devices ascending to device address on cable)
-        for (int i=0; i<ds18b20_device_count; i++) {
+        for (int i=0; i < ds18b20_device_count; i++) {
+
+            // Get address of single device
             if (!ds18b20_sensor.getAddress(ds18b20_addresses[ds18b20_device_order[i]], i)) {
                 Serial.print(F("Unable to find address for temperature array device "));
                 Serial.print(i);
@@ -444,7 +442,9 @@ void read_temperature_array() {
     delay(1000);
 
     // Iterate all DS18B20 devices and read temperature values
-    for (int i=0; i<ds18b20_device_count; i++) {
+    for (int i=0; i < ds18b20_device_count; i++) {
+
+        // Read single device
         float temperatureC = ds18b20_sensor.getTempC(ds18b20_addresses[i]);
         ds18b20_temperature[i] = temperatureC;
     }
@@ -461,7 +461,7 @@ void read_humidity_temperature() {
     Serial.println(F("Read humidity and temperature (DHTxx)"));
 
     // Iterate all DHTxx devices
-    for (int i=0; i<dht_device_count; i++) {
+    for (int i=0; i < dht_device_count; i++) {
 
         // Read single device
         int chk = dht_sensor.read33(dht_pins[i]);
@@ -475,6 +475,7 @@ void read_humidity_temperature() {
                 break;
 
             // Print debug messages when errors occur
+
             case DHTLIB_ERROR_CHECKSUM:
                 Serial.println("DHT checksum error. Device #" + i);
                 break;
@@ -487,12 +488,8 @@ void read_humidity_temperature() {
                 Serial.println("DHT unknown error. Device #" + i);
                 break;
         }
-    }
 
-    // FOR UNO + DHT33 400ms SEEMS TO BE MINIMUM DELAY BETWEEN SENSOR READS,
-    // ADJUST TO YOUR NEEDS
-    // we do other time consuming things after reading DHT33, so we can skip this
-    //  delay(1000);
+    }
 
     #endif
 
@@ -511,8 +508,9 @@ void read_weight() {
     // Debugging
     Serial.println(weight);
 
-    // Aftermath
-    hx711_sensor.power_down();              // put the ADC in sleep mode
+    // Put the ADC to sleep mode
+    hx711_sensor.power_down();
+
     yield();
 
     #endif
@@ -543,13 +541,9 @@ void read_battery_level() {
 }
 
 void read_memory_free() {
-
     #if SENSOR_MEMORY_FREE
-
     memory_free = ESP.getFreeHeap();
-
     #endif
-
 }
 
 // Read all sensors in sequence
@@ -571,7 +565,16 @@ void transmit_readings() {
     // Create telemetry payload by manually mapping sensor readings to telemetry field names.
     // Note: For more advanced use cases, please have a look at the TerkinData C++ library
     //       https://hiveeyes.org/docs/arduino/TerkinData/README.html
+    // TODO: Refactor by using TerkinData
     JsonObject& json_data = jsonBuffer.createObject();
+
+
+    #if SENSOR_DUMMY
+    json_data["temperature"]                 = 42.42f;
+    json_data["humidity"]                    = 84.84f;
+    json_data["weight"]                      = 33.33f;
+    #endif
+
 
     #if SENSOR_HX711
     json_data["weight"]                      = weight;
@@ -601,11 +604,6 @@ void transmit_readings() {
     json_data["memory_free"]                 = memory_free;
     #endif
 
-    #if SENSOR_DUMMY
-    json_data["temperature"]                 = 42.42f;
-    json_data["humidity"]                    = 84.84f;
-    json_data["weight"]                      = 33.33f;
-    #endif
 
     // Debugging
     json_data.printTo(Serial);
@@ -618,6 +616,7 @@ void transmit_readings() {
 
 
     // Publish data
+    // TODO: Refactor to TerkinTelemetry
     if (mqtt_publisher.publish(payload)) {
         Serial.println(F("MQTT publish succeeded"));
     } else {
@@ -637,6 +636,7 @@ void wifi_setup() {
 }
 
 // Connect to WiFi
+// TODO: Refactor to TerkinTelemetry
 bool wifi_connect() {
 
     // Debugging
@@ -675,6 +675,7 @@ bool wifi_connect() {
 
 // Connect to MQTT broker
 void mqtt_connect() {
+// TODO: Refactor to TerkinTelemetry
 
     if (mqtt.connected()) {
         Serial.println(F("Already connected to MQTT"));
