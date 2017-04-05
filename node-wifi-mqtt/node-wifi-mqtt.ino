@@ -13,7 +13,8 @@
    2016-10-31 Beta release
    2017-01-09 Add more sensors
    2017-02-01 Serialize sensor readings en bloc using JSON
-   2017-03-31 Fix JSON serialization: Transmit sensor readings as float values. Thanks, Matthias and Giuseppe!
+   2017-03-31 Fix JSON serialization: Transmit sensor readings as float values.
+              Thanks, Matthias and Giuseppe!
    2017-04-05 Improve efficiency and flexibility
 
 
@@ -124,12 +125,14 @@
 
 // A dummy sensor publishing static values of "temperature", "humidity" and "weight".
 // Please turn this off when working with the real sensors.
-#define HAS_DUMMY_SENSOR    false
+#define SENSOR_DUMMY            false
 
 // The real sensors
-#define HAS_HX711           true
-#define HAS_DHTxx           true
-#define HAS_DS18B20         true
+#define SENSOR_HX711            true
+#define SENSOR_DHTxx            true
+#define SENSOR_DS18B20          true
+#define SENSOR_BATTERY_LEVEL    true
+#define SENSOR_MEMORY_FREE      true
 
 
 // -------------------
@@ -142,20 +145,19 @@
 #define HX711_PIN_PDSCK     12
 
 // Define here individual values for the used load cell. This is not type specific!
-// Even load cells of the same type / model have individual characteristics
-//
-// - ZeroOffset is the raw sensor value for "0 kg"
-//   write down the sensor value of the scale sensor with no load and
-//   adjust it here
-//
-// - KgDivider is the raw sensor value for a 1 kg weight load
-//   add a load with known weight in kg to the scale sensor, note the
-//   sesor value, calculate the value for a 1 kg load and adjust
-//   it here
+// Even load cells of the same type / model have individual characteristics.
+// To measure these values, please have a look at the firmwares for load cell adjustment:
+// https://hiveeyes.org/docs/arduino/firmware/scale-adjust/README.html
 
+// ZeroOffset is the raw sensor value for "0 kg".
+// Write down the sensor value of the scale sensor with no load and adjust it here.
 const long loadCellZeroOffset = 38623.0f;
 
-// 1/2 value for single side measurement, so that 1 kg is displayed as 2 kg
+// KgDivider is the raw sensor value for a 1 kg weight load.
+// Add a load with known weight in kg to the scale sensor, note the
+// sensor value, calculate the value for a 1 kg load and adjust it here.
+// Note: Use value * 0.5 for asymmetric / single side measurement,
+// so that 1 kg is displayed as 2 kg.
 //const long loadCellKgDivider  = 22053;
 const long loadCellKgDivider  = 11026;
 
@@ -165,7 +167,7 @@ const long loadCellKgDivider  = 11026;
 // DHTxx: Humidity / Temperature
 // -----------------------------
 
-// Number of DHTxx devices connected
+// Number of DHTxx devices
 const int dht_device_count = 1;
 
 // DHTxx device pins: Pin 2, Pin 4
@@ -227,7 +229,7 @@ const int ds18b20_onewire_pin = 5;
 // -------
 
 // HX711 weight scale sensor
-#if HAS_HX711
+#if SENSOR_HX711
     #include "HX711.h"
 
     // Create HX711 object
@@ -239,7 +241,7 @@ const int ds18b20_onewire_pin = 5;
 #endif
 
 // DHTxx humidity/temperature sensor
-#if HAS_DHTxx
+#if SENSOR_DHTxx
     #include <dht.h>
 
     // Create DHT object
@@ -252,7 +254,7 @@ const int ds18b20_onewire_pin = 5;
 #endif
 
 // DS18B20 1-Wire temperature sensor
-#if HAS_DS18B20
+#if SENSOR_DS18B20
 
     // 1-Wire library
     #include <OneWire.h>
@@ -289,19 +291,20 @@ Adafruit_MQTT_Client mqtt(&client, MQTT_BROKER, MQTT_PORT, MQTT_CLIENT_ID, MQTT_
 Adafruit_MQTT_Publish mqtt_publisher = Adafruit_MQTT_Publish(&mqtt, MQTT_TOPIC);
 
 
-// ====================
+
+// ============
+// Main program
+// ============
+
+// --------------------
 // Forward declarations
-// ====================
 void wifi_connect();
+// --------------------
 void mqtt_connect();
 void setup_sensors();
 void read_sensors();
 void transmit_readings();
 
-
-// ============
-// Main program
-// ============
 
 void setup() {
 
@@ -334,7 +337,7 @@ void loop() {
 void setup_sensors() {
 
     // Setup scale sensor (single HX711)
-    #if HAS_HX711
+    #if SENSOR_HX711
         hx711_sensor.begin(HX711_PIN_DOUT, HX711_PIN_PDSCK);
 
         // These values are obtained by calibrating the scale sensor with known weights; see the README for details
@@ -347,7 +350,7 @@ void setup_sensors() {
 
 
     // Setup temperature array (multiple DS18B20 sensors)
-    #if HAS_DS18B20
+    #if SENSOR_DS18B20
 
         ds18b20_sensor.begin();  // start DallasTemperature library
         ds18b20_sensor.setResolution(ds18b20_precision);  // set resolution of all devices
@@ -398,7 +401,7 @@ void setup_sensors() {
 // DS18B20: Temperature array
 void read_temperature_array() {
 
-    #if HAS_DS18B20
+    #if SENSOR_DS18B20
 
     Serial.println(F("Read temperature array (DS18B20)"));
 
@@ -426,7 +429,7 @@ void read_temperature_array() {
 // DHTxx: Humidity and temperature
 void read_humidity_temperature() {
 
-    #if HAS_DHTxx
+    #if SENSOR_DHTxx
 
     Serial.println(F("Read humidity and temperature (DHTxx)"));
 
@@ -471,7 +474,7 @@ void read_humidity_temperature() {
 
 void read_weight() {
 
-    #if HAS_HX711
+    #if SENSOR_HX711
 
     Serial.println(F("Read weight (HX711)"));
 
@@ -503,45 +506,45 @@ void transmit_readings() {
     StaticJsonBuffer<512> jsonBuffer;
 
 
-    // Create telemetry payload by mapping sensor readings to telemetry field names
+    // Create telemetry payload by manually mapping sensor readings to telemetry field names.
     // Note: For more advanced use cases, please have a look at the TerkinData C++ library
     //       https://hiveeyes.org/docs/arduino/TerkinData/README.html
-    JsonObject& root = jsonBuffer.createObject();
+    JsonObject& json_data = jsonBuffer.createObject();
 
-    #if HAS_HX711
-    root["weight"]                      = weight;
+    #if SENSOR_HX711
+    json_data["weight"]                      = weight;
     #endif
 
-    #if HAS_DHTxx
-    root["airtemperature"]              = dht_temperature[0];
-    root["airhumidity"]                 = dht_humidity[0];
+    #if SENSOR_DHTxx
+    json_data["airtemperature"]              = dht_temperature[0];
+    json_data["airhumidity"]                 = dht_humidity[0];
     if (dht_device_count >= 2) {
-        root["airtemperature_outside"]  = dht_temperature[1];
-        root["airhumidity_outside"]     = dht_humidity[1];
+        json_data["airtemperature_outside"]  = dht_temperature[1];
+        json_data["airhumidity_outside"]     = dht_humidity[1];
     }
     #endif
 
-    #if HAS_DS18B20
-    root["broodtemperature"]            = ds18b20_temperature[0];
+    #if SENSOR_DS18B20
+    json_data["broodtemperature"]            = ds18b20_temperature[0];
     if (ds18b20_device_count >= 2) {
-        root["entrytemperature"]        = ds18b20_temperature[1];
+        json_data["entrytemperature"]        = ds18b20_temperature[1];
     }
     #endif
 
-    #if HAS_DUMMY_SENSOR
-    root["temperature"]                 = 42.42f;
-    root["humidity"]                    = 84.84f;
-    root["weight"]                      = 33.33f;
+    #if SENSOR_DUMMY
+    json_data["temperature"]                 = 42.42f;
+    json_data["humidity"]                    = 84.84f;
+    json_data["weight"]                      = 33.33f;
     #endif
 
     // Debugging
-    root.printTo(Serial);
+    json_data.printTo(Serial);
 
 
     // Serialize data
-    int json_length = root.measureLength();
+    int json_length = json_data.measureLength();
     char payload[json_length+1];
-    root.printTo(payload, sizeof(payload));
+    json_data.printTo(payload, sizeof(payload));
 
 
     // Publish data
