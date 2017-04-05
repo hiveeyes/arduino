@@ -221,13 +221,11 @@ When installing the `UI bundle`_ "``ui_bundle.gz``", the configuration UI will b
 ****
 Todo
 ****
-- Check if HTTP API, SPIFFS and UI configuration options work as described
-- Use the `Homie custom settings`_ feature for storing calibration values
+- Improve documentation at all
 - Document how to determine calibration values (i.e. "Use sketch BeeScale-Calibration to get these values").
   Would it be possible to build it into the main firmware and run it conditionally somehow?
-- Make the `Hiveeyes Backend`_ grok data from Homie devices by using the setting ``mqtt.base_topic`` like::
+- Document how to determine scale's temperature compensation values.
 
-    mqtt.base_topic: hiveeyes/{network}/{gateway}/{node}/homie
 
 .. _Homie custom settings: https://homie-esp8266.readme.io/docs/custom-settings
 

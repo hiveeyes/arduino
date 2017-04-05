@@ -52,7 +52,7 @@
 #include <RunningMedian.h>
 
 #define FW_NAME "node-wifi-mqtt-homie-battery"
-#define FW_VERSION "0.9.3"
+#define FW_VERSION "0.9.4"
 const int DEFAULT_SLEEP_TIME = 600;
 
 // PINs
@@ -65,6 +65,8 @@ const int DEFAULT_SLEEP_TIME = 600;
 */
 const long DEFAULT_WEIGHT_OFFSET = 154231; // Load cell zero offset. 
 const float DEFAULT_KILOGRAM_DIVIDER = 21.76;  // Load cell value per kilogram.
+const float DEFAULT_CALIBRATION_TEMPERATURE = 20.0; // Temperature at which the scale has been calibrated for Temperature compensation
+const float DEFAULT_CALIBRATION_FACTOR_GRAM_DEGREE = 0.0; // Calibration factor in gram per degree
 
 /*
  * Scale should be calibrated with a regulated input of 3.3V!
@@ -83,6 +85,8 @@ const float DEFAULT_VCC_ADJUST = 0.13;
 HomieSetting<long> sleepTimeSetting("sleepTime", "SleepTime in seconds (max. 3600s!), default is 60s");
 HomieSetting<long> weightOffsetSetting("weightOffset", "Offset value to zero. Use BeeScale-Calibration.ino to determine.");
 HomieSetting<double> kilogramDividerSetting("kilogramDivider", "Scale value per kilogram. Use BeeScale-Calibration.ino to determine.");
+HomieSetting<double> calibrationTemperatureSetting("calibrationTemperature", "Outside Temperature at which the scale has been calibrated");
+HomieSetting<double> calibrationFactorSetting("calibrationFactor", "Calibration Factor in gram per degree. 0.0 to disable adjustment");
 HomieSetting<double> vccAdjustSetting("vccAdjust", "Calibration value for input voltage. See sketch for details.");
 
 HX711 scale;
@@ -197,6 +201,15 @@ void getWeight() {
   scale.power_down();
   
   weight = WeightSamples.getMedian();
+
+  //temperature compensation
+  Homie.getLogger() << "✔ uncompensated median Weight: " << weight << "g" << endl;
+  float calibrationTemperature = calibrationTemperatureSetting.get();
+  float calibrationFactor = calibrationFactorSetting.get();
+  if (temperature1 < calibrationTemperature) weight = weight+(fabs(temperature1 - calibrationTemperature)*calibrationFactor);
+  if (temperature1 > calibrationTemperature) weight = weight-(fabs(temperature1 - calibrationTemperature)*calibrationFactor);
+  Homie.getLogger() << "✔ compensated median Weight: " << weight << "g" << endl;
+
   weight = weight / 1000 ;      // we want kilogram
 }
 
@@ -352,6 +365,8 @@ void setup() {
       weightOffsetSetting.setDefaultValue(DEFAULT_WEIGHT_OFFSET);
       kilogramDividerSetting.setDefaultValue(DEFAULT_KILOGRAM_DIVIDER);
       vccAdjustSetting.setDefaultValue(DEFAULT_VCC_ADJUST);
+      calibrationTemperatureSetting.setDefaultValue(DEFAULT_CALIBRATION_TEMPERATURE);
+      calibrationFactorSetting.setDefaultValue(DEFAULT_CALIBRATION_FACTOR_GRAM_DEGREE);
     
       //get all measurements *BEFORE* WIFI get's active. This saves around 4s at full mA
       getTemperatures();
