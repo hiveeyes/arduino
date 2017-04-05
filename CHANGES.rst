@@ -24,6 +24,7 @@ in-progress
     - Enable connecting to multiple WiFi access points with multiple attempts. Thanks, Matthias and Clemens!
     - Read and transmit battery level. Thanks, Matthias!
     - Read and transmit free heap memory
+    - Improve overall configurability and wifi_connect/mqtt_connect re. retrying
 
 
 2017-03-31 0.14.0

@@ -20,6 +20,8 @@
               Read and transmit battery level
               Thanks, Matthias and Clemens!
    2017-04-06 Read and transmit free heap memory
+   2017-04-06 Further improve overall configurability and wifi_connect/mqtt_connect
+              regarding retrying
 
 
    GNU GPL v3 License
@@ -88,34 +90,48 @@
 // ----
 // WiFi
 // ----
-#define WIFI_SSID_1     "wifi-ssid-1"
-#define WIFI_PASS_1     "wifi-pass-1"
-#define WIFI_SSID_2     "wifi-ssid-2"
-#define WIFI_PASS_2     "wifi-pass-2"
-#define WIFI_ATTEMPTS   15
+
+// How often to retry connecting to the WiFi network
+#define WIFI_RETRY_COUNT    15
+
+// How long to delay between WiFi (re)connection attempts (seconds)
+#define WIFI_RETRY_DELAY    0.4f
+
+// The WiFi network credentials for multiple access points
+#define WIFI_SSID_1         "wifi-ssid-1"
+#define WIFI_PASS_1         "wifi-pass-1"
+#define WIFI_SSID_2         "wifi-ssid-2"
+#define WIFI_PASS_2         "wifi-pass-2"
+
 
 // ----
 // MQTT
 // ----
 
-// The address of the MQTT broker to connect to.
-#define MQTT_BROKER     "swarm.hiveeyes.org"
-#define MQTT_PORT       1883
+// How often to retry connecting to the MQTT broker
+#define MQTT_RETRY_COUNT    5
+
+// How long to delay between MQTT (re)connection attempts (seconds)
+#define MQTT_RETRY_DELAY    5.0f
+
+// The address of the MQTT broker to connect to
+#define MQTT_BROKER         "swarm.hiveeyes.org"
+#define MQTT_PORT           1883
 
 // A MQTT client ID, which should be unique across multiple devices for a user.
 // Maybe use your MQTT_USERNAME and the date and time the sketch was compiled
 // or just use an UUID (https://www.uuidgenerator.net/) or other random value.
-#define MQTT_CLIENT_ID  ""
+#define MQTT_CLIENT_ID      ""
 
-// The credentials to authenticate with the MQTT broker.
-#define MQTT_USERNAME   ""
-#define MQTT_PASSWORD   ""
+// The credentials to authenticate with the MQTT broker
+#define MQTT_USERNAME       ""
+#define MQTT_PASSWORD       ""
 
 // The MQTT topic to transmit sensor readings to.
 // Note that the "testdrive" channel is not authenticated and can be used anonymously.
 // To publish to a protected data channel owned by you, please ask for appropriate
 // credentials at https://community.hiveeyes.org/ or hello@hiveeyes.org.
-#define MQTT_TOPIC      "hiveeyes/testdrive/area-42/node-1/data.json"
+#define MQTT_TOPIC          "hiveeyes/testdrive/area-42/node-1/data.json"
 
 
 // ====================
@@ -140,8 +156,10 @@
 
 // HX711.DOUT   - pin #14
 // HX711.PD_SCK - pin #12
-#define HX711_PIN_DOUT      14
-#define HX711_PIN_PDSCK     12
+#define HX711_PIN_DOUT          14
+#define HX711_PIN_PDSCK         12
+
+
 // Properly using the load cell requires definition of individual configuration values.
 // This is not just specific to the *type* of the load cell as even
 // load cells of the *same* type / model have individual characteristics.
@@ -149,17 +167,19 @@
 // To measure these values, please have a look at the firmwares for load cell adjustment:
 // https://hiveeyes.org/docs/arduino/firmware/scale-adjust/README.html
 
-// ZeroOffset is the raw sensor value for "0 kg".
-// Write down the sensor value of the scale sensor with no load and adjust it here.
-const long loadCellZeroOffset = 38623.0f;
 
-// KgDivider is the raw sensor value for a 1 kg weight load.
+// This is the raw sensor value for "0 kg".
+// Write down the sensor value of the scale sensor with no load and adjust it here.
+#define LOADCELL_ZERO_OFFSET    38623.0f
+
+// This is the raw sensor value for a load weighing exactly 1 kg.
 // Add a load with known weight in kg to the scale sensor, note the
 // sensor value, calculate the value for a 1 kg load and adjust it here.
+#define LOADCELL_KG_DIVIDER     22053
+
 // Note: Use value * 0.5 for asymmetric / single side measurement,
 // so that 1 kg is displayed as 2 kg.
-//const long loadCellKgDivider  = 22053;
-const long loadCellKgDivider  = 11026;
+//#define LOADCELL_KG_DIVIDER     11026
 
 
 
@@ -317,7 +337,7 @@ Adafruit_MQTT_Publish mqtt_publisher = Adafruit_MQTT_Publish(&mqtt, MQTT_TOPIC);
 // --------------------
 bool wifi_connect();
 void wifi_setup();
-void mqtt_connect();
+bool mqtt_connect();
 void setup_sensors();
 void read_sensors();
 void transmit_readings();
@@ -362,9 +382,12 @@ void setup_sensors() {
         // Initialize the hardware driver with the appropriate pins
         hx711_sensor.begin(HX711_PIN_DOUT, HX711_PIN_PDSCK);
 
-        // These values are obtained by calibrating the scale sensor with known weights; see the README for details
-        hx711_sensor.set_scale(loadCellKgDivider);
-        hx711_sensor.set_offset(loadCellZeroOffset);
+        // These values are obtained by calibrating the scale sensor with known weights.
+        // See the README for further details and - for obtaining them:
+        // https://hiveeyes.org/docs/arduino/firmware/scale-adjust/README.html
+        hx711_sensor.set_scale(LOADCELL_KG_DIVIDER);
+        hx711_sensor.set_offset(LOADCELL_ZERO_OFFSET);
+
         // Reset the scale sensor to 0
         //hx711_sensor.tare();
 
@@ -645,7 +668,7 @@ bool wifi_connect() {
     Serial.println("Connecting to WiFi");
 
     // Try connecting to WiFi
-    for (int i = 0; i < WIFI_ATTEMPTS; i++) {
+    for (int i = 0; i < WIFI_RETRY_COUNT; i++) {
 
         // Wait for WiFi connection
         if ((wifi_multi.run() == WL_CONNECTED)) {
@@ -663,8 +686,8 @@ bool wifi_connect() {
 
             Serial.print(".");
 
-            // Wait 400 ms before retry
-            delay(400);
+            // Wait some time before retrying
+            delay(WIFI_RETRY_DELAY * 1000);
         }
     }
 
@@ -674,30 +697,42 @@ bool wifi_connect() {
 }
 
 // Connect to MQTT broker
-void mqtt_connect() {
 // TODO: Refactor to TerkinTelemetry
+bool mqtt_connect() {
 
     if (mqtt.connected()) {
-        Serial.println(F("Already connected to MQTT"));
-        return;
+        Serial.println(F("MQTT connection already alive"));
+        return true;
     }
 
-    Serial.println(F("Connecting to MQTT..."));
+    Serial.println(F("Connecting to MQTT broker"));
+
+    // Reconnect loop
+    uint8_t retries = MQTT_RETRY_COUNT;
     int8_t ret;
-
-    uint8_t retries = 3;
     while ((ret = mqtt.connect()) != 0) {
-        Serial.println(mqtt.connectErrorString(ret));
 
-        Serial.println("Retrying MQTT connect in 5 seconds...");
-        delay(5000);
+        Serial.print("Error connecting to MQTT broker: ");
+        Serial.println(mqtt.connectErrorString(ret));
 
         retries--;
         if (retries == 0) {
-            Serial.println(F("Could not connect to MQTT, dying!"));
+            Serial.println(F("Giving up connecting to MQTT broker"));
+            return false;
         }
 
+        Serial.println("Retrying MQTT connection in 5 seconds");
+
+        // Wait some time before retrying
+        delay(MQTT_RETRY_DELAY * 1000);
     }
-    Serial.println(F("Connected to MQTT!"));
+
+    if (mqtt.connected()) {
+        Serial.println(F("Successfully connected to MQTT broker"));
+        return true;
+    }
+
+    // Giving up on further connection attempts
+    return false;
 }
 
