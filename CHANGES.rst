@@ -15,6 +15,7 @@ in-progress
     - Make it work on the ESP8266 at runtime by satisfying the watchdog. Thanks, Martin!
     - Properly read numeric value from serial port. Thanks, Matthias!
     - Fix computing the ``loadCellKgDivider``
+    - Fix compilation on Arduino version <= 1.0.6
 
 - :ref:`generic-firmware`: Reduce loop interval when being in bootstrap phase
 
