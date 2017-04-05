@@ -14,6 +14,7 @@
    2017-01-09 Add more sensors
    2017-02-01 Serialize sensor readings en bloc using JSON
    2017-03-31 Fix JSON serialization: Transmit sensor readings as float values. Thanks, Matthias and Giuseppe!
+   2017-04-05 Improve efficiency and flexibility
 
 
    GNU GPL v3 License
@@ -123,12 +124,12 @@
 
 // A dummy sensor publishing static values of "temperature", "humidity" and "weight".
 // Please turn this off when working with the real sensors.
-#define HAS_DUMMY_SENSOR   true
+#define HAS_DUMMY_SENSOR    true
 
 // The real sensors
-#define HAS_HX711   false
-#define HAS_DHT33   false
-#define HAS_DS18B20 false
+#define HAS_HX711           false
+#define HAS_DHT33           false
+#define HAS_DS18B20         false
 
 
 // -----
