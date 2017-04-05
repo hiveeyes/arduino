@@ -23,8 +23,10 @@ LIBS = \
     ../libraries/OneWire \
     ../libraries/DallasTemperature \
     ../libraries/RobTillaart-Arduino/libraries/DHTstable \
-    ../libraries/RobTillaart-Arduino/libraries/RunningMedian \
-    ../libraries/TerkinData/*.{h,cpp}
+    ../libraries/RobTillaart-Arduino/libraries/RunningMedian
+
+# For ESP8266 (makeEspArduino)
+BUILD_EXTRA_FLAGS += -DARDUINO_ARCH_ESP8266=true
 
 # Run makeEspArduino
 include ../tools/makeEspArduino/makeEspArduino.mk

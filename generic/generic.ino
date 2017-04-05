@@ -501,6 +501,8 @@ void setup() {
 /*+++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
 //                  loop function
 /*+++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
+int loop_counter = 0;
+
 void loop() {
     #if DEBUG_FRAME
         terrine.log(separator.c_str());
@@ -585,8 +587,13 @@ void loop() {
     #endif
 
     #if HE_SLEEP
-        delay(100);
-        Sleep(SLEEP_MINUTES);
+        if (loop_counter <= BOOTSTRAP_LOOP_COUNT) {
+            delay(1000);
+            loop_counter++;
+        } else {
+            delay(100);
+            Sleep(SLEEP_MINUTES);
+        }
     #endif
 
 }
