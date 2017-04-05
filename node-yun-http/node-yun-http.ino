@@ -88,6 +88,8 @@ DHT dht2(DHT2PIN, DHT2TYPE);
 #include "Adafruit_TSL2591.h"
 Adafruit_TSL2591 tsl = Adafruit_TSL2591(2591); // pass in a number for the sensor identifier
 
+// Forward declarations
+String getTimeStamp();
 
 // Function to read out weight cell.
 void getWeight(void) {
