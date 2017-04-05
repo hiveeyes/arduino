@@ -128,15 +128,15 @@
 
 // The real sensors
 #define HAS_HX711           false
-#define HAS_DHT33           false
+#define HAS_DHTxx           false
 #define HAS_DS18B20         false
 
 
-// -----
-// Scale
-// -----
+// -------------------
+// HX711: Scale sensor
+// -------------------
 
-// HX711.DOUT  - pin #14
+// HX711.DOUT   - pin #14
 // HX711.PD_SCK - pin #12
 #define HX711_PIN_DOUT      14
 #define HX711_PIN_PDSCK     12
@@ -145,11 +145,11 @@
 // Even load cells of the same type / model have individual characteristics
 //
 // - ZeroOffset is the raw sensor value for "0 kg"
-//   write down the sensor value of the scale with no load and
+//   write down the sensor value of the scale sensor with no load and
 //   adjust it here
 //
 // - KgDivider is the raw sensor value for a 1 kg weight load
-//   add a load with known weight in kg to the scale, note the
+//   add a load with known weight in kg to the scale sensor, note the
 //   sesor value, calculate the value for a 1 kg load and adjust
 //   it here
 
@@ -161,22 +161,44 @@ const long loadCellKgDivider  = 11026;
 
 
 
-// -----------
-// Temperature
-// -----------
+// -----------------------------
+// DHTxx: Humidity / Temperature
+// -----------------------------
 
-// number of temperature devices on bus
-const int temperatureNumDevices = 2;
-// order on physical array of temperature devices
+// Number of DHTxx devices connected
+const int dht_device_count = 1;
+
+// DHTxx device pins: Pin 2, Pin 4
+const int dht_pins[dht_device_count] = {2};
+
+// For more DHTxx devices, configure their pins like...
+// DHTxx device pins: Pin 2, Pin 4
+//const int dht_pins[dht_device_count] = {2,4};
+
+
+// --------------------------
+// DS18B20: Temperature array
+// --------------------------
+
+// Number of temperature devices on the 1-Wire bus
+const int ds18b20_device_count = 1;
+
+// Order of the physical array of temperature devices,
 // the order is normally defined by the device id hardcoded in
-// the device, you can physically arrange the DS18B20 in case you
-// know the ID and use here {1,2,3,4 ... or you can tryp out what
-// sensor is on wich position and adusit it herer accordingly
-const int temperatureOrderDevices[temperatureNumDevices] = {0,1};
-// resolution for all devices (9, 10, 11 or 12 bits)
-const int temperaturePrecision = 12;
-// pin for the temperature sensors
-const int temperaturePin = 5;
+// the device.
+// You can physically arrange the DS18B20 in case you
+// know the ID and use here {1,2,3,4 ...} or you can try out what
+// sensor is on which position and adjust it here accordingly.
+const int ds18b20_device_order[ds18b20_device_count] = {0};
+
+// For more DS18B20 devices, configure them like...
+//const int ds18b20_device_order[ds18b20_device_count] = {0,1};
+
+// Resolution for all devices (9, 10, 11 or 12 bits)
+const int ds18b20_precision = 12;
+
+// 1-Wire pin for the temperature sensors
+const int ds18b20_onewire_pin = 5;
 
 
 
@@ -204,45 +226,49 @@ const int temperaturePin = 5;
 // Sensors
 // -------
 
+// HX711 weight scale sensor
 #if HAS_HX711
     #include "HX711.h"
-    HX711 scale;  // create HX711 object
+    HX711 hx711_sensor;  // create HX711 object
 
     // Intermediate data structure for reading the sensor values
     float weight;
 
 #endif
 
-#if HAS_DHT33
-    // DHTxx sensor
+// DHTxx sensor
+#if HAS_DHTxx
     #include <dht.h>
 
-    dht DHT;  // create DHT object
-
-    // DHTxx pin(s) / humidity and temperature
-    // how much pins have DHTxx devices connected?
-    const int humidityNumDevices = 2;
-    // pins have DHTxx device, pin 4
-    const int humidityPins[humidityNumDevices+1] = {2,4};
+    // Create DHT object
+    dht dht_sensor;
 
     // Intermediate data structure for reading the sensor values
-    float dht_temperature[humidityNumDevices];
-    float dht_humidity[humidityNumDevices];
+    float dht_temperature[dht_device_count];
+    float dht_humidity[dht_device_count];
 
 #endif
 
-// DS18B20
+// DS18B20 sensor
 #if HAS_DS18B20
-    #include <OneWire.h>            // oneWire for DS18B20
-    #include <DallasTemperature.h>  // DS18B20 itself
 
-    OneWire oneWire(temperaturePin);                       // oneWire instance to communicate with any OneWire devices (not just DS18B20)
-    DallasTemperature temperatureSensors(&oneWire);        // pass oneWire reference to DallasTemperature
+    // 1-Wire library
+    #include <OneWire.h>
 
-    uint8_t deviceAddressArray[temperatureNumDevices][8];  // arrays for device addresses
+    // DS18B20/DallasTemperature library
+    #include <DallasTemperature.h>
+
+    // For communicating with any 1-Wire device (not just DS18B20)
+    OneWire oneWire(ds18b20_onewire_pin);
+
+    // Initialize DallasTemperature library with reference to 1-Wire object
+    DallasTemperature ds18b20_sensor(&oneWire);
+
+    // Arrays for device addresses
+    uint8_t ds18b20_addresses[ds18b20_device_count][8];
 
     // Intermediate data structure for reading the sensor values
-    float ds18b20_temperature[temperatureNumDevices];
+    float ds18b20_temperature[ds18b20_device_count];
 
 #endif
 
@@ -291,15 +317,15 @@ void setup() {
     Serial.println();
 
 
-    // Setup scale
+    // Setup scale sensor
     #if HAS_HX711
-        scale.begin(HX711_PIN_DOUT, HX711_PIN_PDSCK);
+        hx711_sensor.begin(HX711_PIN_DOUT, HX711_PIN_PDSCK);
 
-        // These values are obtained by calibrating the scale with known weights; see the README for details
-        scale.set_scale(loadCellKgDivider);
-        scale.set_offset(loadCellZeroOffset);
+        // These values are obtained by calibrating the scale sensor with known weights; see the README for details
+        hx711_sensor.set_scale(loadCellKgDivider);
+        hx711_sensor.set_offset(loadCellZeroOffset);
 
-        //  scale.tare();             // reset the scale to 0
+        //  hx711_sensor.tare();             // reset the scale sensor to 0
         yield();
     #endif
 
@@ -307,13 +333,13 @@ void setup() {
     // temperature array
     #if HAS_DS18B20
 
-        temperatureSensors.begin();  // start DallasTemperature library
-        temperatureSensors.setResolution(temperaturePrecision);  // set resolution of all devices
+        ds18b20_sensor.begin();  // start DallasTemperature library
+        ds18b20_sensor.setResolution(ds18b20_precision);  // set resolution of all devices
 
         // Assign address manually. The addresses below will need to be changed
         // to valid device addresses on your bus. Device addresses can be retrieved
         // by using either oneWire.search(deviceAddress) or individually via
-        // temperatureSensors.getAddress(deviceAddress, index)
+        // ds18b20_sensor.getAddress(deviceAddress, index)
         //insideThermometer    = { 0x28, 0x1D, 0x39, 0x31, 0x2, 0x0, 0x0, 0xF0 };
         //outsideThermometer   = { 0x28, 0x3F, 0x1C, 0x31, 0x2, 0x0, 0x0, 0x2 };
 
@@ -325,8 +351,8 @@ void setup() {
         // method 1: by index
         // change index to order divices as in nature
         // (an other approach can be to order physical devices ascending to device address on cable)
-        for (int i=0; i<temperatureNumDevices; i++) {
-            if (!temperatureSensors.getAddress(deviceAddressArray[temperatureOrderDevices[i]], i)) {
+        for (int i=0; i<ds18b20_device_count; i++) {
+            if (!ds18b20_sensor.getAddress(ds18b20_addresses[ds18b20_device_order[i]], i)) {
                 Serial.print(F("Unable to find address for temperature array device "));
                 Serial.print(i);
                 Serial.println();
@@ -358,16 +384,16 @@ void getTemperature() {
     #if HAS_DS18B20
 
     // request temperature on all devices on the bus
-    temperatureSensors.setWaitForConversion(false);  // makes it async
+    ds18b20_sensor.setWaitForConversion(false);  // makes it async
     // initiatie temperature retrieval
-    temperatureSensors.requestTemperatures();
+    ds18b20_sensor.requestTemperatures();
 
     // wait at least 750 ms for conversion
     delay(1000);
 
     // Iterate all DS18B20 devices and read temperature values
-    for (int i=0; i<temperatureNumDevices; i++) {
-        float temperatureC = temperatureSensors.getTempC(deviceAddressArray[i]);
+    for (int i=0; i<ds18b20_device_count; i++) {
+        float temperatureC = ds18b20_sensor.getTempC(ds18b20_addresses[i]);
         ds18b20_temperature[i] = temperatureC;
     }
 
@@ -378,20 +404,20 @@ void getTemperature() {
 // humidity and temperature, DHTxx
 void getHumidityTemperature() {
 
-    #if HAS_DHT33
+    #if HAS_DHTxx
 
     // read humidity and temperature data
     // loop through all devices
-    for (int i=0; i<humidityNumDevices; i++) {
+    for (int i=0; i<dht_device_count; i++) {
         // read device
-        int chk = DHT.read33(humidityPins[i]);
+        int chk = dht_sensor.read33(dht_pins[i]);
 
         switch (chk) {
             // this is the normal case, all is working smoothly
             case DHTLIB_OK:
                 //Serial.print("OK,\t");
-                dht_temperature[i]  = DHT.temperature;
-                dht_humidity[i]     = DHT.humidity;
+                dht_temperature[i]  = dht_sensor.temperature;
+                dht_humidity[i]     = dht_sensor.humidity;
                 break;
 
             // following are error cases
@@ -423,14 +449,14 @@ void getWeight() {
 
     #if HAS_HX711
 
-    scale.power_up();
-    weight = scale.get_units(5);
+    hx711_sensor.power_up();
+    weight = hx711_sensor.get_units(5);
 
     // Debugging
     Serial.println(weight);
 
     // Aftermath
-    scale.power_down();              // put the ADC in sleep mode
+    hx711_sensor.power_down();              // put the ADC in sleep mode
     yield();
 
     #endif
@@ -469,25 +495,29 @@ void loop() {
     JsonObject& root = jsonBuffer.createObject();
 
     #if HAS_HX711
-    root["weight"]                    = weight;
+    root["weight"]                      = weight;
+    #endif
+
+    #if HAS_DHTxx
+    root["airtemperature"]              = dht_temperature[0];
+    root["airhumidity"]                 = dht_humidity[0];
+    if (dht_device_count >= 2) {
+        root["airtemperature_outside"]  = dht_temperature[1];
+        root["airhumidity_outside"]     = dht_humidity[1];
+    }
     #endif
 
     #if HAS_DS18B20
-    root["broodtemperature"]          = ds18b20_temperature[0];
-    root["entrytemperature"]          = ds18b20_temperature[1];
-    #endif
-
-    #if HAS_DHT33
-    root["airtemperature"]            = dht_temperature[0];
-    root["airhumidity"]               = dht_humidity[0];
-    root["airtemperature_outside"]    = dht_temperature[1];
-    root["airhumidity_outside"]       = dht_humidity[1];
+    root["broodtemperature"]            = ds18b20_temperature[0];
+    if (ds18b20_device_count >= 2) {
+        root["entrytemperature"]        = ds18b20_temperature[1];
+    }
     #endif
 
     #if HAS_DUMMY_SENSOR
-    root["temperature"]               = 42.42f;
-    root["humidity"]                  = 84.84f;
-    root["weight"]                    = 33.33f;
+    root["temperature"]                 = 42.42f;
+    root["humidity"]                    = 84.84f;
+    root["weight"]                      = 33.33f;
     #endif
 
     // Debugging
