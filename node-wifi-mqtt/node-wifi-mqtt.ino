@@ -17,6 +17,7 @@
               Thanks, Matthias and Giuseppe!
    2017-04-05 Improve efficiency and flexibility
    2017-04-05 Enable connecting to multiple WiFi access points with multiple attempts.
+              Read and transmit battery level.
               Thanks, Matthias and Clemens!
 
 
@@ -282,6 +283,11 @@ const int ds18b20_onewire_pin = 5;
 
 #endif
 
+// Battery level
+#if SENSOR_BATTERY_LEVEL
+    int battery_level;
+#endif
+
 
 // ===============
 // Telemetry setup
@@ -506,11 +512,35 @@ void read_weight() {
 
 }
 
+void read_battery_level() {
+
+    #if SENSOR_BATTERY_LEVEL
+
+    // Read the battery level from the ESP8266 analog input pin.
+    // Analog read level is 10 bit 0-1023 (0V-1V).
+    // Our 1M & 220K voltage divider takes the max
+    // LiPo value of 4.2V and drops it to 0.758V max.
+    // This means our minimum analog read value should be 580 (3.14V)
+    // and the maximum analog read value should be 774 (4.2V).
+    int adc_level = analogRead(A0);
+    Serial.print("Battery ADC Level: ");
+    Serial.println(adc_level);
+
+    // Convert battery level to percentage
+    battery_level = map(adc_level, 535, 759, 0, 100);
+    Serial.print("Battery level: ");
+    Serial.print(battery_level);
+    Serial.println("%");
+
+    #endif
+}
+
 // Read all sensors in sequence
 void read_sensors() {
     read_weight();
     read_temperature_array();
     read_humidity_temperature();
+    read_battery_level();
 }
 
 // Telemetry: Transmit all readings by publishing them to the MQTT bus serialized as JSON
@@ -543,6 +573,10 @@ void transmit_readings() {
     if (ds18b20_device_count >= 2) {
         json_data["entrytemperature"]        = ds18b20_temperature[1];
     }
+    #endif
+
+    #if SENSOR_BATTERY_LEVEL
+    json_data["battery_level"]               = battery_level;
     #endif
 
     #if SENSOR_DUMMY
