@@ -21,6 +21,7 @@ in-progress
     - Start with single device counts of DHTxx and DS18B20 sensors to make firmware even more basic out of the box.
       Thanks again, Matthias!
     - Modularize and streamline code to better serve educational purposes
+    - Connect to multiple WiFi access points
 
 
 2017-03-31 0.14.0

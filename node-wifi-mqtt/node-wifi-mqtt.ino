@@ -16,6 +16,8 @@
    2017-03-31 Fix JSON serialization: Transmit sensor readings as float values.
               Thanks, Matthias and Giuseppe!
    2017-04-05 Improve efficiency and flexibility
+   2017-04-05 Enable connecting to multiple WiFi access points with multiple attempts.
+              Thanks, Matthias and Clemens!
 
 
    GNU GPL v3 License
@@ -92,8 +94,11 @@
 // ----
 // WiFi
 // ----
-#define WLAN_SSID       "change-to-your-ssid"
-#define WLAN_PASS       "change-to-your-pw"
+#define WIFI_SSID_1     "wifi-ssid-1"
+#define WIFI_PASS_1     "wifi-pass-1"
+#define WIFI_SSID_2     "wifi-ssid-2"
+#define WIFI_PASS_2     "wifi-pass-2"
+#define WIFI_ATTEMPTS   15
 
 // ----
 // MQTT
@@ -214,6 +219,7 @@ const int ds18b20_onewire_pin = 5;
 
 // ESP8266: https://github.com/esp8266/Arduino
 #include <ESP8266WiFi.h>
+#include <ESP8266WiFiMulti.h>
 
 // JSON serializer
 #include <ArduinoJson.h>
@@ -281,11 +287,15 @@ const int ds18b20_onewire_pin = 5;
 // Telemetry setup
 // ===============
 
-// Create an ESP8266 WiFiClient class to connect to the MQTT server.
-WiFiClient client;
+// Create an ESP8266 WiFiClient object to connect to the MQTT server
+WiFiClient wifi_client;
 
-// Setup the MQTT client class by passing in the WiFi client and MQTT server and login details.
-Adafruit_MQTT_Client mqtt(&client, MQTT_BROKER, MQTT_PORT, MQTT_CLIENT_ID, MQTT_USERNAME, MQTT_PASSWORD);
+// Enable connecting to multiple WiFi access points to operate
+// device in different environments without reconfiguration
+ESP8266WiFiMulti wifi_multi;
+
+// Setup the MQTT client class by passing in the WiFi client and MQTT server and login details
+Adafruit_MQTT_Client mqtt(&wifi_client, MQTT_BROKER, MQTT_PORT, MQTT_CLIENT_ID, MQTT_USERNAME, MQTT_PASSWORD);
 
 // Setup MQTT publishing handler
 Adafruit_MQTT_Publish mqtt_publisher = Adafruit_MQTT_Publish(&mqtt, MQTT_TOPIC);
@@ -298,8 +308,9 @@ Adafruit_MQTT_Publish mqtt_publisher = Adafruit_MQTT_Publish(&mqtt, MQTT_TOPIC);
 
 // --------------------
 // Forward declarations
-void wifi_connect();
 // --------------------
+bool wifi_connect();
+void wifi_setup();
 void mqtt_connect();
 void setup_sensors();
 void read_sensors();
@@ -310,6 +321,9 @@ void setup() {
 
     // ...
     Serial.begin(9600);
+
+    // Setup WiFi
+    wifi_setup();
 
     // Connect to WiFi
     wifi_connect();
@@ -557,26 +571,49 @@ void transmit_readings() {
 }
 
 
+// Setup WiFi
+void wifi_setup() {
+
+    // Add/remove entries as needed
+    wifi_multi.addAP(WIFI_SSID_1, WIFI_PASS_1);
+    wifi_multi.addAP(WIFI_SSID_2, WIFI_PASS_2);
+
+}
+
 // Connect to WiFi
-void wifi_connect() {
+bool wifi_connect() {
 
     // Debugging
     Serial.println(); Serial.println();
     delay(10);
-    Serial.println("Connecting to WiFi SSID " + String(WLAN_SSID));
+    Serial.println("Connecting to WiFi");
 
-    // Connect
-    WiFi.begin(WLAN_SSID, WLAN_PASS);
-    while (WiFi.status() != WL_CONNECTED) {
-        delay(500);
-        Serial.print(F("."));
+    // Try connecting to WiFi
+    for (int i = 0; i < WIFI_ATTEMPTS; i++) {
+
+        // Wait for WiFi connection
+        if ((wifi_multi.run() == WL_CONNECTED)) {
+
+            // Debug WiFi
+            Serial.println();
+            Serial.print(F("WiFi connected! IP address: "));
+            Serial.print(wifi_client.localIP());
+            Serial.println();
+
+            return true;
+
+        // Not connected yet
+        } else {
+
+            Serial.print(".");
+
+            // Wait 400 ms before retry
+            delay(400);
+        }
     }
-    Serial.println();
 
-    Serial.println(F("WiFi connected"));
-    Serial.println(F("IP address: "));
-    Serial.println(WiFi.localIP());
-    Serial.println();
+    // Giving up on further connection attempts
+    return false;
 
 }
 
