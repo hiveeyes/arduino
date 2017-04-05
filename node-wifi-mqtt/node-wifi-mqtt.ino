@@ -15,13 +15,15 @@
    2017-02-01 Serialize sensor readings en bloc using JSON
    2017-03-31 Fix JSON serialization: Transmit sensor readings as float values.
               Thanks, Matthias and Giuseppe!
-   2017-04-05 Improve efficiency and configuration flexibility
-   2017-04-05 Enable connecting to multiple WiFi access points with multiple attempts
-              Read and transmit battery level
+   2017-04-05 Improve efficiency and configuration flexibility.
+              Enable connecting to multiple WiFi access points with multiple attempts.
+              Read and transmit battery level.
               Thanks, Matthias and Clemens!
-   2017-04-06 Read and transmit free heap memory
-   2017-04-06 Further improve overall configurability and wifi_connect/mqtt_connect
-              regarding retrying
+   2017-04-06 Read and transmit free heap memory.
+              Further improve overall configurability and
+              wifi_connect/mqtt_connect regarding retrying.
+              Give operating system / watchdog timer more breath.
+
 
 
    GNU GPL v3 License
@@ -391,7 +393,9 @@ void setup_sensors() {
         // Reset the scale sensor to 0
         //hx711_sensor.tare();
 
+        // Give operating system / watchdog timer some breath
         yield();
+
     #endif
 
 
@@ -424,6 +428,10 @@ void setup_sensors() {
                 Serial.print(i);
                 Serial.println();
             }
+
+            // Give operating system / watchdog timer some breath
+            yield();
+
         }
 
         // method 2: search()
@@ -470,6 +478,10 @@ void read_temperature_array() {
         // Read single device
         float temperatureC = ds18b20_sensor.getTempC(ds18b20_addresses[i]);
         ds18b20_temperature[i] = temperatureC;
+
+        // Give operating system / watchdog timer some breath
+        yield();
+
     }
 
     #endif
@@ -512,6 +524,9 @@ void read_humidity_temperature() {
                 break;
         }
 
+        // Give operating system / watchdog timer some breath
+        yield();
+
     }
 
     #endif
@@ -534,6 +549,7 @@ void read_weight() {
     // Put the ADC to sleep mode
     hx711_sensor.power_down();
 
+    // Give operating system / watchdog timer some breath
     yield();
 
     #endif
@@ -559,6 +575,9 @@ void read_battery_level() {
     Serial.print("Battery level: ");
     Serial.print(battery_level);
     Serial.println("%");
+
+    // Give operating system / watchdog timer some breath
+    yield();
 
     #endif
 }
