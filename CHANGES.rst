@@ -13,6 +13,7 @@ in-progress
 - :ref:`generic-firmware`: Reduce loop interval when being in bootstrap phase
 - :ref:`node-wifi-mqtt`: Fix Makefile for ESP8266 reported not to work on Ubuntu 16.10. Thanks, Matthias!
 - :ref:`node-gsm-http`: Fix Makefile for ESP8266. Thanks, Matthias!
+- :ref:`node-yun-http`: Add firmware for Mois Box. Thanks, Markus!
 
 
 2017-03-31 0.14.0

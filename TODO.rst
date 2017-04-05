@@ -20,6 +20,19 @@ TODO
 Misc
 ====
 
+
+2017-04-05
+----------
+- Polish https://github.com/hiveeyes/arduino/tree/master/libraries/ADS1231
+
+
+2017-04-03
+----------
+- https://github.com/PaulStoffregen/TimeAlarms
+- https://github.com/pycom/pycom-micropython/blob/master/docs/lopy/quickref.rst
+- https://github.com/pycom/pycom-micropython/blob/master/docs/library/network.LoRa.rst
+
+
 2017-03-31
 ----------
 - Use LWT (Last Will and Testament) MQTT feature
@@ -29,6 +42,11 @@ Misc
     int json_length = root.measureLength();
     char payload[json_length+1];
     root.printTo(payload, sizeof(payload));
+
+  See also: https://github.com/bblanchon/ArduinoJson/issues/75
+
+- Let all devices send a "system boot" annotation
+
 
 2017-01-11
 ----------
