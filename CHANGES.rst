@@ -21,7 +21,9 @@ in-progress
     - Start with single device counts of DHTxx and DS18B20 sensors to make firmware even more basic out of the box.
       Thanks again, Matthias!
     - Modularize and streamline code to better serve educational purposes
-    - Connect to multiple WiFi access points
+    - Enable connecting to multiple WiFi access points with multiple attempts. Thanks, Matthias and Clemens!
+    - Read and transmit battery level. Thanks, Matthias!
+    - Read and transmit free heap memory
 
 
 2017-03-31 0.14.0

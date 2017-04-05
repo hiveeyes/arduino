@@ -16,9 +16,10 @@
    2017-03-31 Fix JSON serialization: Transmit sensor readings as float values.
               Thanks, Matthias and Giuseppe!
    2017-04-05 Improve efficiency and flexibility
-   2017-04-05 Enable connecting to multiple WiFi access points with multiple attempts.
-              Read and transmit battery level.
+   2017-04-05 Enable connecting to multiple WiFi access points with multiple attempts
+              Read and transmit battery level
               Thanks, Matthias and Clemens!
+   2017-04-06 Read and transmit free heap memory
 
 
    GNU GPL v3 License
@@ -288,6 +289,12 @@ const int ds18b20_onewire_pin = 5;
     int battery_level;
 #endif
 
+// Free heap memory
+#if SENSOR_MEMORY_FREE
+    int memory_free;
+#endif
+
+
 
 // ===============
 // Telemetry setup
@@ -535,12 +542,23 @@ void read_battery_level() {
     #endif
 }
 
+void read_memory_free() {
+
+    #if SENSOR_MEMORY_FREE
+
+    memory_free = ESP.getFreeHeap();
+
+    #endif
+
+}
+
 // Read all sensors in sequence
 void read_sensors() {
     read_weight();
     read_temperature_array();
     read_humidity_temperature();
     read_battery_level();
+    read_memory_free();
 }
 
 // Telemetry: Transmit all readings by publishing them to the MQTT bus serialized as JSON
@@ -577,6 +595,10 @@ void transmit_readings() {
 
     #if SENSOR_BATTERY_LEVEL
     json_data["battery_level"]               = battery_level;
+    #endif
+
+    #if SENSOR_MEMORY_FREE
+    json_data["memory_free"]                 = memory_free;
     #endif
 
     #if SENSOR_DUMMY
