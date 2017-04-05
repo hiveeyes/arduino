@@ -279,7 +279,7 @@ void outputStatistic(int decimal) {
 void serial_poll() {
   while (!Serial.available()) {
     #if ARDUINO_VERSION > 106
-    // "yield" is not implemented as noop in older Arduino Core releases, so let's define it.
+    // "yield" is not implemented as noop in older Arduino Core releases
     // See also: https://stackoverflow.com/questions/34497758/what-is-the-secret-of-the-arduino-yieldfunction/34498165#34498165
     yield();
     #endif
