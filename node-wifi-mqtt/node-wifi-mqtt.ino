@@ -88,7 +88,7 @@
 #define DEEPSLEEP_ENABLED       false
 
 // Compute sleep time in microseconds (*ms *us)
-#define DEEPSLEEP_TIME          MEASUREMENT_INTERVAL * 1000UL * 1000UL
+#define DEEPSLEEP_TIME          MEASUREMENT_INTERVAL * 1000UL
 
 
 
