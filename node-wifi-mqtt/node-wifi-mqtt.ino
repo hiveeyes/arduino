@@ -109,8 +109,12 @@
 // The WiFi network credentials for multiple access points
 #define WIFI_SSID_1         "wifi-ssid-1"
 #define WIFI_PASS_1         "wifi-pass-1"
-#define WIFI_SSID_2         "wifi-ssid-2"
-#define WIFI_PASS_2         "wifi-pass-2"
+
+// Add/remove entries as required
+//#define WIFI_SSID_2         "wifi-ssid-2"
+//#define WIFI_PASS_2         "wifi-pass-2"
+//#define WIFI_SSID_3         "wifi-ssid-3"
+//#define WIFI_PASS_3         "wifi-pass-3"
 
 
 // ----
@@ -633,6 +637,7 @@ void read_sensors() {
 }
 
 // Telemetry: Transmit all readings by publishing them to the MQTT bus serialized as JSON
+// TODO: Refactor by using TerkinData
 void transmit_readings() {
 
     // Build JSON object containing sensor readings
@@ -642,7 +647,6 @@ void transmit_readings() {
     // Create telemetry payload by manually mapping sensor readings to telemetry field names.
     // Note: For more advanced use cases, please have a look at the TerkinData C++ library
     //       https://hiveeyes.org/docs/arduino/TerkinData/README.html
-    // TODO: Refactor by using TerkinData
     JsonObject& json_data = jsonBuffer.createObject();
 
 
@@ -706,9 +710,16 @@ void transmit_readings() {
 // Setup WiFi
 void wifi_setup() {
 
-    // Add/remove entries as needed
     wifi_multi.addAP(WIFI_SSID_1, WIFI_PASS_1);
+
+    // Add/remove entries as required
+    #if defined(WIFI_SSID_2) && defined(WIFI_PASS_2)
     wifi_multi.addAP(WIFI_SSID_2, WIFI_PASS_2);
+    #endif
+
+    #if defined(WIFI_SSID_3) && defined(WIFI_PASS_3)
+    wifi_multi.addAP(WIFI_SSID_3, WIFI_PASS_3);
+    #endif
 
 }
 
