@@ -3,9 +3,11 @@
   ----------------------------
             | Scale ADC HX711
 
-  Copyright (C) 2016 by Clemens Gruber
+  Copyright (C) 2016-2017 by Clemens Gruber <clemens@hiveeyes.org>
+  Copyright (C) 2017      by Andreas Motl <andreas@hiveeyes.org>
 
-  2016-07 Clemens Gruber | Initial version
+  2016-07-01 Clemens Gruber        | Initial version
+  2017-04-02 Andreas Motl          | ESP8266 compatibility
 
 
   GNU GPL v3 License
@@ -71,25 +73,23 @@ int weightSamplesNumber = 10;  // take at least 10 readings for adjusting
 
 // libraries
 // load cell
-#include <HX711.h>  // https://github.com/bogde/HX711
-// load cell / HX711 pin definition: Dout 15, SCK 14
-HX711 loadCell(15, 14);    // parameter "gain" is ommited; the default value 128 is used by the library
+#include <HX711.h>      // https://github.com/bogde/HX711
+HX711 loadCell;         // Create HX711 object; The parameter "gain" is ommited, a default value of "128" is used by the library.
 int adjustScale = true;  // flag for adjust vs. operation mode
 long weightSensorValue;
 float weightKg;
 
 // median statistics to eliminate outlier
-#include <RunningMedian.h>  // http://playground.arduino.cc/Main/RunningMedian
+#include <RunningMedian.h>
 RunningMedian weightSamples = RunningMedian(weightSamplesNumber);  // create RunningMedian object
 
-// power saving
-#ifndef ARDUINO_ARCH_ESP8266
-#include <LowPower.h>  // https://github.com/rocketscream/Low-Power
-#endif
 
 // Forward declarations
 void getWeight();
 void outputStatistic(int decimal);
+void serial_poll();
+int  serial_read_byte();
+long serial_read_number();
 
 
 void setup() {
@@ -99,6 +99,9 @@ void setup() {
   Serial.println("Scale Adjustment for Open Hive / HX711");
   Serial.println("--------------------------------------");
   Serial.println();
+
+  // load cell / HX711 pin definition: Dout 15, SCK 14
+  loadCell.begin(15, 14);
 
   // switch off HX711 / load cell
   loadCell.power_down();
@@ -114,10 +117,9 @@ void setup() {
   Serial.println("   (If done, input any character to continue ...)");
   Serial.println();
   Serial.flush();
-  // wait for serial input
-  while(!Serial.available()) ;  // stop until a byte is received notice the ; after the while()
-  Serial.read();  // clear serial input d
 
+  // Wait for keypress
+  serial_read_byte();
 
   // get Weight n times and calculate median
   Serial.println("Get raw values for tare: ");
@@ -134,9 +136,9 @@ void setup() {
   Serial.println("   (If done, input any character to continue ...)");
   Serial.println();
   Serial.flush();
-  // wait for serial input
-  while(!Serial.available()) ;  // stop until a byte is received notice the ; after the while()
-  Serial.read();  // clear serial input
+
+  // Wait for keypress
+  serial_read_byte();
 
   // get Weight n times and calculate median
   Serial.println("Get raw values for lower limit: ");
@@ -152,9 +154,9 @@ void setup() {
   Serial.println("   ... and input weight in gram ...");
   Serial.println();
   Serial.flush();
-  // wait for serial input
-  while(!Serial.available()) ;  // stop until a byte is received notice the ; after the while()
-  long kgValue = Serial.parseInt();
+
+  // Read numeric value from serial port
+  long kgValue = serial_read_number();
 
   // get Weight n times and calculate median
   Serial.print("Get raw values for upper limit \"");
@@ -167,7 +169,7 @@ void setup() {
   long upperValue = weightSamples.getMedian();
 
   // calculate loadCellKgDivider
-  loadCellKgDivider = (upperValue - lowerValue) / (kgValue/1000);
+  loadCellKgDivider = (upperValue - lowerValue) / ((float) kgValue / 1000.0f);
 
   // output calculated parameter
   Serial.println(">> Done! Your calculated parameters:");
@@ -185,9 +187,10 @@ void setup() {
   Serial.println("You can test your calculated settings now!");
   Serial.println("(Input any character to continue ...)");
   Serial.flush();
-  // wait for serial input
-  while(!Serial.available()) ;  // stop until a byte is received notice the ; after the while()
-  Serial.read();  // clear serial input
+
+  // Wait for keypress
+  serial_read_byte();
+
   Serial.println();
 }
 
@@ -219,17 +222,11 @@ void getWeight() {
   // read x times weight and take median
   // do this till running median sample is full
   do {
-    // wait between samples
+
     Serial.flush();
 
-    #ifndef ARDUINO_ARCH_ESP8266
-    for (int i=0; i<waitTimeLoadSamples; i++) {
-      // sleep for one second
-      LowPower.powerDown(SLEEP_1S, ADC_OFF, BOD_OFF); // delay 60 ms
-    }
-    #else
-    delay(60);
-    #endif
+    // Wait some time between samples to reduce influences from heating and wind
+    delay(waitTimeLoadSamples * 1000);
 
     // power HX711 / load cell
     loadCell.power_up();
@@ -275,4 +272,28 @@ void outputStatistic(int decimal) {
   Serial.print("\t");
   Serial.println(weightSamples.getLowest()-weightSamples.getHighest(),decimal);
   Serial.println();
+}
+
+
+// Poll serial port until anything is received
+void serial_poll() {
+  while (!Serial.available()) {
+    #if ARDUINO_VERSION > 106
+    // "yield" is not implemented as noop in older Arduino Core releases
+    // See also: https://stackoverflow.com/questions/34497758/what-is-the-secret-of-the-arduino-yieldfunction/34498165#34498165
+    yield();
+    #endif
+  };
+}
+
+// Read byte from serial port
+int serial_read_byte() {
+  serial_poll();
+  return Serial.read();
+}
+
+// Read numeric value from serial port
+long serial_read_number() {
+  serial_poll();
+  return Serial.parseInt();
 }
