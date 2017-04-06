@@ -154,6 +154,7 @@
 // A dummy sensor publishing static values of "temperature", "humidity" and "weight".
 // Please turn this on when working without any sensor hardware.
 #define SENSOR_DUMMY            false
+// TODO: SENSOR_SINE
 
 // The real sensors
 #define SENSOR_HX711            true
@@ -233,6 +234,7 @@ const int ds18b20_device_order[ds18b20_device_count] = {0};
 const int ds18b20_precision = 12;
 
 // 1-Wire pin for the temperature sensors
+// Note: Pin 5 corresponds to the physical pin D1 of ESP8266 MCUs
 const int ds18b20_onewire_pin = 5;
 
 
