@@ -25,6 +25,7 @@ in-progress
     - Read and transmit battery level. Thanks, Matthias!
     - Read and transmit free heap memory
     - Improve overall configurability and wifi_connect/mqtt_connect re. retrying
+    - Add deep sleep mode
 
 
 2017-03-31 0.14.0

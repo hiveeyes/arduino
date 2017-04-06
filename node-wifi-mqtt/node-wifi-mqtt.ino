@@ -23,7 +23,7 @@
               Further improve overall configurability and
               wifi_connect/mqtt_connect regarding retrying.
               Give operating system / watchdog timer more breath.
-
+              Add deep sleep mode.
 
 
    GNU GPL v3 License
@@ -83,6 +83,13 @@
 
 // Measure and transmit each five minutes
 #define MEASUREMENT_INTERVAL    5 * 60 * 1000
+
+// Whether device should go to deep sleep after measurement
+#define DEEPSLEEP_ENABLED       false
+
+// Compute sleep time in microseconds (*ms *us)
+#define DEEPSLEEP_TIME          MEASUREMENT_INTERVAL * 1000UL * 1000UL
+
 
 
 // ==========================
@@ -337,6 +344,7 @@ Adafruit_MQTT_Publish mqtt_publisher = Adafruit_MQTT_Publish(&mqtt, MQTT_TOPIC);
 // --------------------
 // Forward declarations
 // --------------------
+void measure();
 bool wifi_connect();
 void wifi_setup();
 bool mqtt_connect();
@@ -358,9 +366,39 @@ void setup() {
 
     // Setup all sensors
     setup_sensors();
+
+    #if DEEPSLEEP_ENABLED
+
+        // Measurement and telemetry
+        measure();
+
+        // Have to flush the serial interface before deep sleep?
+        Serial.flush();
+
+        // Go to deep sleep mode
+        // http://www.esp8266.com/wiki/doku.php?id=esp8266_power_usage
+        // http://www.esp8266.com/viewtopic.php?f=32&t=12901
+        ESP.deepSleep(DEEPSLEEP_TIME, WAKE_RF_DEFAULT);
+
+    #endif
+
 }
 
 void loop() {
+
+    #if !DEEPSLEEP_ENABLED
+
+        // Measurement and telemetry
+        measure();
+
+        // Pause some time. After that, continue with the next measurement cycle.
+        delay(MEASUREMENT_INTERVAL);
+
+    #endif
+
+}
+
+void measure() {
 
     // Connect to MQTT broker
     mqtt_connect();
@@ -370,9 +408,6 @@ void loop() {
 
     // Transmit all sensor readings
     transmit_readings();
-
-    // Pause some time. After that, continue with the next measurement cycle.
-    delay(MEASUREMENT_INTERVAL);
 
 }
 
