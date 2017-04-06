@@ -20,10 +20,21 @@ TODO
 Misc
 ====
 
+2017-04-06
+----------
+- Further improvements to :ref:`node-wifi-mqtt`
+
+    - Publish discrete values to the MQTT bus, use MQTT_DISCRETE maybe.
+    - Add debugging using http://playground.arduino.cc/Code/SerialDebugger
+    - Comment: "Connect the D0 pin with RST pin to enable wakeup of the MCU." re. deep sleep mode
+    - @gtuveri: it makes no sense to add #if SENSOR* stuff if SENSOR_DUMMY is true?
+    - @gtuveri: why to proceed within execution if no WiFi connection has been established?
 
 2017-04-05
 ----------
 - Polish https://github.com/hiveeyes/arduino/tree/master/libraries/ADS1231
+- Add http://www.nikolaus-lueneburg.de/2016/10/wemos-d1-mini-battery-shield/
+- Announce at http://forum.sodaq.com/t/hive-scale-code/275 when this works on ESP8266 also
 
 
 2017-04-03
