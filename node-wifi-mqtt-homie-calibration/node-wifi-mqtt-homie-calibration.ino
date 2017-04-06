@@ -31,7 +31,7 @@
   ESPAsyncTCP:        https://github.com/me-no-dev/ESPAsyncTCP
   async-mqtt-client:  https://github.com/marvinroger/async-mqtt-client
 
-  Version 0.9
+  Version 0.9.1
   
 **********************************************************************************************************/
 
@@ -167,6 +167,7 @@ void step3() {
     yield();
     };
   getKilogramDivider();
+  c='x';
 }
 
 void step4() {
