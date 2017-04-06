@@ -9,6 +9,10 @@ CHANGES
 
 in-progress
 ===========
+
+
+2017-04-06 0.15.0
+=================
 - :ref:`scale-adjust-firmware` (`scale-adjust-hx711.ino`_ and `scale-adjust-ads1231.ino`_)
 
     - Make it compile against Espressif/ESP8266
