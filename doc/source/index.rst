@@ -25,7 +25,7 @@ Enjoy reading and exploring this space.
     firmwares
     development
 
-    Contributors <AUTHORS>
+    CONTRIBUTORS
     Changelog <CHANGES>
     LICENSE
 

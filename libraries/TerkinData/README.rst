@@ -274,6 +274,17 @@ ArduinoJson
 |
 
 
+****
+Todo
+****
+.. todo::
+
+    - Add :ref:`BERadio` serialization format
+    - Move to repository https://github.com/daq-tools/terkin
+
+|
+
+
 *********
 Etymology
 *********

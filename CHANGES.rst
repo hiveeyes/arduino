@@ -9,10 +9,38 @@ CHANGES
 
 in-progress
 ===========
-- :ref:`scale-adjust-firmware`: Make `scale-adjust-hx711.ino`_ compile against Espressif/ESP8266
+- Try to fix :ref:`scale-adjust-firmware` regarding ESP8266 compatibility again
+
+
+.. _version-0.15.0:
+
+2017-04-06 0.15.0
+=================
+- :ref:`scale-adjust-firmware` (`scale-adjust-hx711.ino`_ and `scale-adjust-ads1231.ino`_)
+
+    - Make it compile against Espressif/ESP8266
+    - Make it work on the ESP8266 at runtime by satisfying the watchdog. Thanks, Martin!
+    - Properly read numeric value from serial port. Thanks, Matthias!
+    - Fix computing the ``loadCellKgDivider``. Thanks, Clemens!
+    - Fix compilation on Arduino version <= 1.0.6
+
 - :ref:`generic-firmware`: Reduce loop interval when being in bootstrap phase
-- :ref:`node-wifi-mqtt`: Fix Makefile for ESP8266 reported not to work on Ubuntu 16.10. Thanks, Matthias!
 - :ref:`node-gsm-http`: Fix Makefile for ESP8266. Thanks, Matthias!
+- :ref:`node-yun-http`: Add firmware `node-yun-http.ino`_ for Mois Box. Thanks, Markus!
+- Improve the `node-wifi-mqtt.ino`_ firmware for the :ref:`node-wifi-mqtt`:
+
+    - Fix Makefile for ESP8266 reported not to work on Ubuntu 16.10. Thanks, Matthias!
+    - Completely overhaul the basic ESP8266/MQTT firmware making it more efficient and flexible,
+      see also `Improve the basic “node-wifi-mqtt” firmware <https://community.hiveeyes.org/t/improve-the-basic-node-wifi-mqtt-firmware/235>`_.
+      Thanks, Giuseppe and Matthias!
+    - Start with single device counts of DHTxx and DS18B20 sensors to make firmware even more basic out of the box.
+      Thanks again, Matthias!
+    - Modularize and streamline code to better serve educational purposes
+    - Enable connecting to multiple WiFi access points with multiple attempts. Thanks, Matthias and Clemens!
+    - Read and transmit battery level. Thanks, Matthias!
+    - Read and transmit free heap memory
+    - Improve overall configurability and wifi_connect/mqtt_connect re. retrying
+    - Add deep sleep mode
 
 
 2017-03-31 0.14.0

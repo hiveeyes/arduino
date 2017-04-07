@@ -19,9 +19,9 @@
 */
 
 // define individual values for used load cell type
-  //   loadCellZeroOffset: write down the sensor value of the scale with no load and adjust it 
+  //   loadCellZeroOffset: write down the sensor value of the scale with no load and adjust it
   //   loadCellKgDivider: add a load with known weight in kg to the cell, note the sensor value, calculate
-  //   the value for the load and adjust it 
+  //   the value for the load and adjust it
 // Vertauschte Anschlüsse der Wägezellen:
 long loadCellZeroOffset = 6100000;    //die mit den NICHT-versenkten schrauben (erhöhen um den offset zu senken und vice versa)
 long loadCellKgDivider = 5810000;
@@ -29,8 +29,8 @@ long loadCellZeroOffset01 = 33500000; //die mit den versenkten schrauben
 long loadCellKgDivider01 = 3800000;
 
 //for yun:
-#include <Bridge.h>   
-#include <Console.h>  
+#include <Bridge.h>
+#include <Console.h>
 #include <HttpClient.h>
 #include <FileIO.h>
 
@@ -73,13 +73,13 @@ RunningMedian weightSamples01 = RunningMedian(11);
 #define ONE_WIRE_BUS 4
 OneWire OneWire(ONE_WIRE_BUS);
 // Pass our OneWire reference to Dallas Temperature.
-DallasTemperature sensors(&OneWire); 
+DallasTemperature sensors(&OneWire);
 
 #include "DHT.h"
-#define DHT1PIN 2   
+#define DHT1PIN 2
 #define DHT2PIN 3
-#define DHT1TYPE DHT22   
-#define DHT2TYPE DHT22 
+#define DHT1TYPE DHT22
+#define DHT2TYPE DHT22
 DHT dht1(DHT1PIN, DHT1TYPE);
 DHT dht2(DHT2PIN, DHT2TYPE);
 
@@ -88,6 +88,8 @@ DHT dht2(DHT2PIN, DHT2TYPE);
 #include "Adafruit_TSL2591.h"
 Adafruit_TSL2591 tsl = Adafruit_TSL2591(2591); // pass in a number for the sensor identifier
 
+// Forward declarations
+String getTimeStamp();
 
 // Function to read out weight cell.
 void getWeight(void) {
@@ -133,7 +135,7 @@ void configureSensor(void)    // Configures the gain and integration time for th
 
 void simpleRead(void)
 {
-  // Simple data read example. Just read the infrared, fullspecrtrum diode 
+  // Simple data read example. Just read the infrared, fullspecrtrum diode
   // or 'visible' (difference between the two) channels.
   // This can take 100-600 milliseconds! Uncomment whichever of the following you want to read
   lux = tsl.getLuminosity(TSL2591_VISIBLE);
@@ -188,8 +190,8 @@ void add_line()
   //send data
     client.get(dataURL);
     Console.println("sending data...");
-  //if there's incoming data from the net connection send it out the console.  
-    while (client.available()) 
+  //if there's incoming data from the net connection send it out the console.
+    while (client.available())
       {
       char c = client.read();
       Console.print(c);
@@ -236,14 +238,14 @@ void add_line_sd()
   }
 }
 
-String getTimeStamp() 
+String getTimeStamp()
 {
   String result;
   Process time;
   // date is a command line utility to get the date and the time
   // in different formats depending on the additional parameter
   time.begin("date");
-  time.addParameter("+%Y/%m/%d %T");  
+  time.addParameter("+%Y/%m/%d %T");
   time.run();  // run the command
   // read the output of the command
   while (time.available() > 0) {
@@ -256,11 +258,11 @@ String getTimeStamp()
 }
 
 /*
-String getLogSize() 
+String getLogSize()
 {
   String res;
   Process size;
-  size.runShellCommand("du -h /mnt/sda1/arduino/www/datalog.txt | cut -f1"); 
+  size.runShellCommand("du -h /mnt/sda1/arduino/www/datalog.txt | cut -f1");
   while (size.running());
   while (size.available() > 0) {
     char c = size.read();
@@ -277,7 +279,7 @@ void setup()
 //  delay(1000);
   Serial.begin(9600); //init serial port and set baudrate
   Bridge.begin();
-  Console.begin(); 
+  Console.begin();
   FileSystem.begin();
   // a second to initialize:
   delay(1000);
@@ -297,14 +299,14 @@ void setup()
 
 void loop()
 {
-  while (digitalRead(switchPin) == HIGH) 
+  while (digitalRead(switchPin) == HIGH)
     {
       digitalWrite(LED_BUILTIN, HIGH);    // turn the LED on (HIGH is the voltage level)
       Console.println("paused by switch...");
-      delay(5000);  
+      delay(5000);
     }
   digitalWrite(LED_BUILTIN, LOW);    // turn the LED off (LOW is the voltage level)
-//  delay(1000);    
+//  delay(1000);
   //read and prepare sensor data
   sensors.requestTemperatures();      // get temperatures
   temp2 = sensors.getTempCByIndex(0); // Temp in box
