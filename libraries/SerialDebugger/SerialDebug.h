@@ -8,7 +8,7 @@
 #ifndef SERIALDEBUG_H
 #define SERIALDEBUG_H
 
-#include "WProgram.h"
+#include "Arduino.h"
 #include "Print.h"
 #include "PrintCascade.h"
 
@@ -43,7 +43,7 @@ extern SerialDebug SerialDebugger;
 || Changelog:
 ||
 || 1.3 2009-04-15 - Alexander Brevig : No longer need for Arduino core modification
-|| 1.2 2009-04-13 - Alexander Brevig : Made print calls cascadbable
+|| 1.2 2009-04-13 - Alexander Brevig : Made print calls cascadable
 || 1.1 2009-04-12 - Alexander Brevig : Added void append(char* message);
 || 1.0 2009-04-12 - Alexander Brevig : Initial Release
 */
