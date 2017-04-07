@@ -25,6 +25,7 @@
               Give operating system / watchdog timer more breath.
               Add deep sleep mode.
    2017-04-07 Fix DEEPSLEEP_TIME and IP address output. Thanks, Matthias!
+              When SENSOR_DUMMY is enabled, don't use any real sensors. Thanks, Giuseppe!
 
 
    GNU GPL v3 License
@@ -157,10 +158,14 @@
 #define SENSOR_DUMMY            false
 // TODO: SENSOR_SINE
 
-// The real sensors
+// The real environmental sensors
+#if !SENSOR_DUMMY
 #define SENSOR_HX711            true
 #define SENSOR_DHTxx            true
 #define SENSOR_DS18B20          true
+#endif
+
+// Vital hardware data sensors
 #define SENSOR_BATTERY_LEVEL    true
 #define SENSOR_MEMORY_FREE      true
 

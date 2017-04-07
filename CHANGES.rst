@@ -14,6 +14,7 @@ in-progress
 
     - Fix `DEEPSLEEP_TIME` order of magnitude: `MEASUREMENT_INTERVAL` is in ms already. Thanks, Matthias!
     - Fix IP address output. Thanks, Matthias!
+    - When `SENSOR_DUMMY` is enabled, don't use any real sensors. Thanks, Giuseppe!
 
 
 .. _version-0.15.0:
