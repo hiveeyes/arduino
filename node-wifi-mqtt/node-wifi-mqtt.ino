@@ -1,8 +1,8 @@
 /*
 
-                         Hiveeyes node-wifi-mqtt
+                             Hiveeyes node-wifi-mqtt
 
-   Collect beehive sensor data and transmit via WiFi to a MQTT broker.
+   Collect environmental sensor data and transmit it via WiFi to a MQTT broker.
 
    Copyright (C) 2016-2017  The Hiveeyes Developers <hello@hiveeyes.org>
 
@@ -52,10 +52,20 @@
    Hiveeyes node firmware for ESP8266 based on Arduino Core.
 
    This is a basic firmware for the Hiveeyes beehive monitoring system.
-   The purpose is to collect vital data and to transmit it
+   The purpose is to collect environmental data and to transmit it
    via WiFi to the MQTT broker at swarm.hiveeyes.org:1883.
 
+   The received sensor readings will get visualized automatically at
+   https://swarm.hiveeyes.org/grafana/.
+
    Feel free to adapt this code to your own needs. Contributions are welcome!
+
+   The area of application of this firmware is manifold. We are happy to see
+   it deployed in different scenarios than beehive monitoring. You might want
+   to share your stories with us at hello@hiveeyes.org.
+
+   Do you need a flexible backend system for data acquisition and graphing?
+   Please have a look at https://getkotori.org/.
 
    -------------------------------------------------------------------------
 
@@ -261,21 +271,23 @@ const int ds18b20_onewire_pin = 5;
 // Libraries
 // =========
 
-// ------------
-// Connectivity
-// ------------
+// ---------
+// Telemetry
+// ---------
 
-// ESP8266: https://github.com/esp8266/Arduino
+// ESP8266 WiFi
+// https://github.com/esp8266/Arduino
 #include <ESP8266WiFi.h>
 #include <ESP8266WiFiMulti.h>
-
-// JSON serializer
-#include <ArduinoJson.h>
 
 // Adafruit MQTT
 // https://github.com/adafruit/Adafruit_MQTT_Library
 #include "Adafruit_MQTT.h"
 #include "Adafruit_MQTT_Client.h"
+
+// JSON serializer
+// https://github.com/bblanchon/ArduinoJson
+#include <ArduinoJson.h>
 
 
 // -------
@@ -461,8 +473,11 @@ void setup_sensors() {
     // Setup temperature array (multiple DS18B20 sensors)
     #if SENSOR_DS18B20
 
-        ds18b20_sensor.begin();  // start DallasTemperature library
-        ds18b20_sensor.setResolution(ds18b20_precision);  // set resolution of all devices
+        // Start DallasTemperature library
+        ds18b20_sensor.begin();
+
+        // Set resolution for all devices
+        ds18b20_sensor.setResolution(ds18b20_precision);
 
         // Assign address manually. The addresses below will need to be changed
         // to valid device addresses on your bus. Device addresses can be retrieved
@@ -520,7 +535,7 @@ void read_temperature_array() {
 
     Serial.println(F("Read temperature array (DS18B20)"));
 
-    // Request temperature on all devices on the bus
+    // Request temperature from all devices on the bus
 
     // Make it asynchronous
     ds18b20_sensor.setWaitForConversion(false);
@@ -661,6 +676,7 @@ void read_sensors() {
 void transmit_readings() {
 
     // Build JSON object containing sensor readings
+    // TODO: How many data points actually fit into this?
     StaticJsonBuffer<512> jsonBuffer;
 
 
@@ -730,9 +746,10 @@ void transmit_readings() {
 // Setup WiFi
 void wifi_setup() {
 
+    // Add first WiFi access point
     wifi_multi.addAP(WIFI_SSID_1, WIFI_PASS_1);
 
-    // Add/remove entries as required
+    // Add more WiFi access points as required
     #if defined(WIFI_SSID_2) && defined(WIFI_PASS_2)
     wifi_multi.addAP(WIFI_SSID_2, WIFI_PASS_2);
     #endif

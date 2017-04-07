@@ -33,7 +33,9 @@ Misc
     - [x] @gtuveri: it makes no sense to add #if SENSOR* stuff if SENSOR_DUMMY is true?
     - [o] @gtuveri: why to proceed within execution if no WiFi connection has been established?
     - [x] @Thias: ``#define DEEPSLEEP_TIME MEASUREMENT_INTERVAL * 1000UL`` since measurement interval is in ms already
-    - [o] Improve inline comments again
+    - [x] Improve inline comments again
+    - [o] Switch from Adafruit_MQTT to https://github.com/tuanpmt/esp_mqtt or https://github.com/marvinroger/async-mqtt-client?
+    - [o] Add sensor ADS1231
 
 
 2017-04-05
