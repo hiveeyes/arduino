@@ -10,6 +10,10 @@ CHANGES
 in-progress
 ===========
 - Try to fix :ref:`scale-adjust-firmware` regarding ESP8266 compatibility again
+- `node-wifi-mqtt.ino`_ firmware:
+
+    - Fix `DEEPSLEEP_TIME` order of magnitude: `MEASUREMENT_INTERVAL` is in ms already. Thanks, Matthias!
+    - Fix IP address output. Thanks, Matthias!
 
 
 .. _version-0.15.0:

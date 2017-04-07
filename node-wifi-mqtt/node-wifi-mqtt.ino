@@ -24,6 +24,7 @@
               wifi_connect/mqtt_connect regarding retrying.
               Give operating system / watchdog timer more breath.
               Add deep sleep mode.
+   2017-04-07 Fix DEEPSLEEP_TIME and IP address output. Thanks, Matthias!
 
 
    GNU GPL v3 License
