@@ -21,7 +21,8 @@ LIBS = \
     ../libraries/DallasTemperature \
     ../libraries/RobTillaart-Arduino/libraries/DHTstable \
     ../libraries/RobTillaart-Arduino/libraries/RunningMedian \
-    ../libraries/HX711
+    ../libraries/HX711 \
+    ../libraries/ADS1231
 
 # Run makeEspArduino
 include ../tools/makeEspArduino/makeEspArduino.mk

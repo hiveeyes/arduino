@@ -16,6 +16,7 @@ in-progress
     - Fix IP address output. Thanks, Matthias!
     - When `SENSOR_DUMMY` is enabled, don't use any real sensors. Thanks, Giuseppe!
     - Add comment about connecting GPIO#16 to RST for waking up after deep sleep. Thanks, Giuseppe and Matthias!
+    - Add sensor ADS1231. Thanks, Clemens!
 
 
 .. _version-0.15.0:

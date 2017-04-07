@@ -27,6 +27,7 @@
    2017-04-07 Fix DEEPSLEEP_TIME and IP address output. Thanks, Matthias!
               When SENSOR_DUMMY is enabled, don't use any real sensors. Thanks, Giuseppe!
               Add comment about connecting GPIO#16 to RST for waking up after deep sleep. Thanks, Giuseppe and Matthias!
+              Add sensor ADS1231. Thanks, Clemens!
 
 
    GNU GPL v3 License
@@ -182,9 +183,17 @@
 
 // The real environmental sensors
 #if !SENSOR_DUMMY
+
+// Weight scale sensors, choose one
 #define SENSOR_HX711            true
+#define SENSOR_ADS1231          false
+
+// DHTxx Humidity/Temperature sensors
 #define SENSOR_DHTxx            true
+
+// 1-Wire DallasTemperature sensors
 #define SENSOR_DS18B20          true
+
 #endif
 
 // Vital hardware data sensors
@@ -195,12 +204,25 @@
 // -------------------
 // HX711: Scale sensor
 // -------------------
-
-// HX711.DOUT   - pin #14
-// HX711.PD_SCK - pin #12
-#define HX711_PIN_DOUT          14
 #define HX711_PIN_PDSCK         12
+#define HX711_PIN_DOUT          14
 
+
+// ---------------------
+// ADS1231: Scale sensor
+// ---------------------
+#define ADS1231_PIN_DATA            14
+#define ADS1231_PIN_SCL             15
+#define ADS1231_PIN_POWER           16
+#define ADS1231_PIN_CELL_POWER      17
+
+// How often to attempt reading the ADS1231
+#define ADS1231_RETRY_COUNT         10
+
+
+// ---------------
+// General - scale
+// ---------------
 
 // Properly using the load cell requires definition of individual configuration values.
 // This is not just specific to the *type* of the load cell as even
@@ -296,6 +318,8 @@ const int ds18b20_onewire_pin = 5;
 
 // HX711 weight scale sensor
 #if SENSOR_HX711
+
+    // HX711 library
     #include "HX711.h"
 
     // Create HX711 object
@@ -305,6 +329,22 @@ const int ds18b20_onewire_pin = 5;
     float weight;
 
 #endif
+
+
+// ADS1231 weight scale sensor
+#if SENSOR_ADS1231
+
+    // ADS1231 library
+    #include <ADS1231.h>
+
+    // Create ADS1231 object
+    ADS1231 ads1231_sensor;
+
+    // Intermediate data structure for reading the sensor values
+    float weight;
+
+#endif
+
 
 // DHTxx humidity/temperature sensor
 #if SENSOR_DHTxx
@@ -470,6 +510,21 @@ void setup_sensors() {
     #endif
 
 
+    // Setup scale sensor (single ADS1231)
+    #if SENSOR_ADS1231
+
+        // ADS1231 data pins: SCL 15, Data 14, Power 16
+        ads1231_sensor.attach(ADS1231_PIN_SCL, ADS1231_PIN_DATA, ADS1231_PIN_POWER);
+
+        // Load cell power pin
+        pinMode(ADS1231_PIN_CELL_POWER, OUTPUT);
+
+        // Give operating system / watchdog timer some breath
+        yield();
+
+    #endif
+
+
     // Setup temperature array (multiple DS18B20 sensors)
     #if SENSOR_DS18B20
 
@@ -610,21 +665,65 @@ void read_humidity_temperature() {
 
 void read_weight() {
 
+    // TODO: Maybe refactor to generic weight reading library to reduce code footprint in main program
+
+    // HX711 weight scale sensor
     #if SENSOR_HX711
 
-    Serial.println(F("Read weight (HX711)"));
+        Serial.println(F("Read weight (HX711)"));
 
-    hx711_sensor.power_up();
-    weight = hx711_sensor.get_units(5);
+        hx711_sensor.power_up();
+        weight = hx711_sensor.get_units(5);
 
-    // Debugging
-    Serial.println(weight);
+        // Debugging
+        Serial.println(weight);
 
-    // Put the ADC to sleep mode
-    hx711_sensor.power_down();
+        // Put the ADC to sleep mode
+        hx711_sensor.power_down();
 
-    // Give operating system / watchdog timer some breath
-    yield();
+        // Give operating system / watchdog timer some breath
+        yield();
+
+    #endif
+
+
+    // ADS1231 weight scale sensor
+    #if SENSOR_ADS1231
+
+        // Power ADS1231 and load cell
+        digitalWrite(ADS1231_PIN_CELL_POWER, HIGH);
+        ads1231_sensor.power(HIGH);
+
+        // Wait for stabilizing
+        delay(2);
+
+        // Wait for ADS1231 being ready
+        bool sensor_ready = false;
+        for (int i = 0; i < ADS1231_RETRY_COUNT; i++) {
+            if (ads1231_sensor.check()) {
+                sensor_ready = true;
+                break;
+            }
+            // Give operating system / watchdog timer some breath
+            yield();
+        }
+
+        // Sensor isn't ready to read values, abort!
+        if (!sensor_ready) {
+            // TODO: Introduce another magic value for signalling invalid readings?
+            weight = -1;
+            return;
+        }
+
+        // Read raw data input of ADS1231
+        long weightSensorValue = ads1231_sensor.readData();
+
+        // Switch off ADS1231 and load cell
+        ads1231_sensor.power(LOW);
+        digitalWrite(ADS1231_PIN_CELL_POWER, LOW);
+
+        // Compute weight in kg
+        weight = ((float) weightSensorValue - (float) LOADCELL_ZERO_OFFSET) / (float) LOADCELL_KG_DIVIDER;
 
     #endif
 

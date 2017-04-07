@@ -35,7 +35,7 @@ Misc
     - [x] @Thias: ``#define DEEPSLEEP_TIME MEASUREMENT_INTERVAL * 1000UL`` since measurement interval is in ms already
     - [x] Improve inline comments again
     - [o] Switch from Adafruit_MQTT to https://github.com/tuanpmt/esp_mqtt or https://github.com/marvinroger/async-mqtt-client?
-    - [o] Add sensor ADS1231
+    - [x] Add sensor ADS1231
 
 
 2017-04-05
