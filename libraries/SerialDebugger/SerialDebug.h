@@ -15,6 +15,8 @@
 #define  WARNING     	B00000001
 #define  ERROR       	B00000010
 #define  NOTIFICATION   B00000100
+// Alias for "NOTIFICATION"
+#define  INFO           B00000100
 #define  STATUSUPDATE  	B00001000
 
 class SerialDebug : public PrintCascade{

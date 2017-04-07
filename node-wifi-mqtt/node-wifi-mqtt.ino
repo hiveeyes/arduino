@@ -28,6 +28,7 @@
               When SENSOR_DUMMY is enabled, don't use any real sensors. Thanks, Giuseppe!
               Add comment about connecting GPIO#16 to RST for waking up after deep sleep. Thanks, Giuseppe and Matthias!
               Add sensor ADS1231. Thanks, Clemens!
+              Silence debug output by using SerialDebugger to reduce battery drain even more.
 
 
    GNU GPL v3 License
@@ -114,6 +115,9 @@
 
 // Compute sleep time in microseconds (*ms *us)
 #define DEEPSLEEP_TIME          MEASUREMENT_INTERVAL * 1000UL
+
+// Enable debug printing to UART
+#define DEBUG                   true
 
 
 
@@ -293,6 +297,14 @@ const int ds18b20_onewire_pin = 5;
 // Libraries
 // =========
 
+// -------
+// General
+// -------
+// http://playground.arduino.cc/Code/SerialDebugger
+// https://github.com/hiveeyes/arduino/tree/node-wifi-mqtt-silent/libraries/SerialDebugger
+#include <SerialDebug.h>
+
+
 // ---------
 // Telemetry
 // ---------
@@ -434,6 +446,20 @@ void setup() {
     // ...
     Serial.begin(9600);
 
+    if (DEBUG) {
+
+        // If this line is commented out, the binary sketch size will decrease by 332 bytes
+        SerialDebugger.begin(9600);
+
+        // Select which UART to use for debugging
+        //SerialDebugger.begin(2, 9600);
+
+        SerialDebugger.enable(INFO);
+        SerialDebugger.enable(WARNING);
+        SerialDebugger.enable(ERROR);
+
+    }
+
     // Setup WiFi
     wifi_setup();
 
@@ -545,7 +571,7 @@ void setup_sensors() {
         // you would do this to initially discover addresses on the bus and then
         // use those addresses and manually assign them (see above) once you know
         // the devices on your bus (and assuming they don't change).
-        //
+
         // method 1: by index
         // change index to order divices as in nature
         // (an other approach can be to order physical devices ascending to device address on cable)
@@ -553,9 +579,9 @@ void setup_sensors() {
 
             // Get address of single device
             if (!ds18b20_sensor.getAddress(ds18b20_addresses[ds18b20_device_order[i]], i)) {
-                Serial.print(F("Unable to find address for temperature array device "));
-                Serial.print(i);
-                Serial.println();
+                if (SerialDebugger.debug(WARNING, "setup_sensors", "Unable to find address for temperature array device")) {
+                    SerialDebugger.println("Device #" + i);
+                }
             }
 
             // Give operating system / watchdog timer some breath
@@ -588,7 +614,7 @@ void read_temperature_array() {
 
     #if SENSOR_DS18B20
 
-    Serial.println(F("Read temperature array (DS18B20)"));
+    SerialDebugger.debug(INFO, "read_temperature_array", "Read temperature array (DS18B20)");
 
     // Request temperature from all devices on the bus
 
@@ -622,7 +648,7 @@ void read_humidity_temperature() {
 
     #if SENSOR_DHTxx
 
-    Serial.println(F("Read humidity and temperature (DHTxx)"));
+    SerialDebugger.debug(INFO, "read_humidity_temperature", "Read humidity and temperature (DHTxx)");
 
     // Iterate all DHTxx devices
     for (int i=0; i < dht_device_count; i++) {
@@ -641,15 +667,21 @@ void read_humidity_temperature() {
             // Print debug messages when errors occur
 
             case DHTLIB_ERROR_CHECKSUM:
-                Serial.println("DHT checksum error. Device #" + i);
+                if (SerialDebugger.debug(ERROR, "read_humidity_temperature", "DHT checksum error.")) {
+                    SerialDebugger.println("Device #" + i);
+                }
                 break;
 
             case DHTLIB_ERROR_TIMEOUT:
-                Serial.println("DHT timeout error. Device #" + i);
+                if (SerialDebugger.debug(ERROR, "read_humidity_temperature", "DHT timeout error.")) {
+                    SerialDebugger.println("Device #" + i);
+                }
                 break;
 
             default:
-                Serial.println("DHT unknown error. Device #" + i);
+                if (SerialDebugger.debug(ERROR, "read_humidity_temperature", "DHT unknown error.")) {
+                    SerialDebugger.println("Device #" + i);
+                }
                 break;
         }
 
@@ -670,13 +702,15 @@ void read_weight() {
     // HX711 weight scale sensor
     #if SENSOR_HX711
 
-        Serial.println(F("Read weight (HX711)"));
+        SerialDebugger.debug(INFO, "read_weight", "Read weight (HX711)");
 
         hx711_sensor.power_up();
         weight = hx711_sensor.get_units(5);
 
         // Debugging
-        Serial.println(weight);
+        if (SerialDebugger.debug(INFO, "read_weight", "Read weight (HX711)")) {
+            Serial.println("Weight: " + String(weight));
+        }
 
         // Put the ADC to sleep mode
         hx711_sensor.power_down();
@@ -689,6 +723,8 @@ void read_weight() {
 
     // ADS1231 weight scale sensor
     #if SENSOR_ADS1231
+
+        SerialDebugger.debug(INFO, "read_weight", "Read weight (ADS1231)");
 
         // Power ADS1231 and load cell
         digitalWrite(ADS1231_PIN_CELL_POWER, HIGH);
@@ -710,6 +746,7 @@ void read_weight() {
 
         // Sensor isn't ready to read values, abort!
         if (!sensor_ready) {
+            SerialDebugger.debug(ERROR, "read_weight", "ADS1231 not ready");
             // TODO: Introduce another magic value for signalling invalid readings?
             weight = -1;
             return;
@@ -740,14 +777,15 @@ void read_battery_level() {
     // This means our minimum analog read value should be 580 (3.14V)
     // and the maximum analog read value should be 774 (4.2V).
     int adc_level = analogRead(A0);
-    Serial.print("Battery ADC Level: ");
-    Serial.println(adc_level);
+    if (SerialDebugger.debug(INFO, "read_battery_level", "Battery ADC: ")) {
+        SerialDebugger.println(adc_level);
+    }
 
     // Convert battery level to percentage
     battery_level = map(adc_level, 535, 759, 0, 100);
-    Serial.print("Battery level: ");
-    Serial.print(battery_level);
-    Serial.println("%");
+    if (SerialDebugger.debug(INFO, "read_battery_level", "Battery level: ")) {
+        SerialDebugger.print(battery_level).println("%");
+    }
 
     // Give operating system / watchdog timer some breath
     yield();
@@ -834,9 +872,9 @@ void transmit_readings() {
     // Publish data
     // TODO: Refactor to TerkinTelemetry
     if (mqtt_publisher.publish(payload)) {
-        Serial.println(F("MQTT publish succeeded"));
+        SerialDebugger.debug(INFO, "transmit_readings", "MQTT publish succeeded");
     } else {
-        Serial.println(F("MQTT publish failed"));
+        SerialDebugger.debug(ERROR, "transmit_readings", "MQTT publish failed");
     }
 
 }
@@ -864,9 +902,7 @@ void wifi_setup() {
 bool wifi_connect() {
 
     // Debugging
-    Serial.println(); Serial.println();
-    delay(10);
-    Serial.println("Connecting to WiFi");
+    SerialDebugger.debug(INFO, "wifi_connect", "Connecting to WiFi");
 
     // Try connecting to WiFi
     for (int i = 0; i < WIFI_RETRY_COUNT; i++) {
@@ -875,17 +911,17 @@ bool wifi_connect() {
         if ((wifi_multi.run() == WL_CONNECTED)) {
 
             // Debug WiFi
-            Serial.println();
-            Serial.print(F("WiFi connected! IP address: "));
-            Serial.print(WiFi.localIP());
-            Serial.println();
-
+            if (SerialDebugger.debug(INFO, "wifi_connect", "WiFi connected! IP address: ")) {
+                SerialDebugger.println(WiFi.localIP());
+            }
             return true;
 
         // Not connected yet
         } else {
 
-            Serial.print(".");
+            if (SerialDebugger.debug(INFO, "wifi_connect", "Retrying WiFi connection in a few seconds: ")) {
+                SerialDebugger.println(WIFI_RETRY_DELAY);
+            }
 
             // Wait some time before retrying
             delay(WIFI_RETRY_DELAY * 1000);
@@ -902,34 +938,37 @@ bool wifi_connect() {
 bool mqtt_connect() {
 
     if (mqtt.connected()) {
-        Serial.println(F("MQTT connection already alive"));
+        SerialDebugger.debug(INFO, "mqtt_connect", "MQTT connection already alive");
         return true;
     }
 
-    Serial.println(F("Connecting to MQTT broker"));
+    SerialDebugger.debug(INFO, "mqtt_connect", "Connecting to MQTT broker");
 
     // Reconnect loop
     uint8_t retries = MQTT_RETRY_COUNT;
     int8_t ret;
     while ((ret = mqtt.connect()) != 0) {
 
-        Serial.print("Error connecting to MQTT broker: ");
-        Serial.println(mqtt.connectErrorString(ret));
+        if (SerialDebugger.debug(WARNING, "mqtt_connect", "Error connecting to MQTT broker: ")) {
+            SerialDebugger.println(String(mqtt.connectErrorString(ret)).c_str());
+        }
 
         retries--;
         if (retries == 0) {
-            Serial.println(F("Giving up connecting to MQTT broker"));
+            SerialDebugger.debug(ERROR, "mqtt_connect", "Giving up connecting to MQTT broker");
             return false;
         }
 
-        Serial.println("Retrying MQTT connection in 5 seconds");
+        if (SerialDebugger.debug(INFO, "mqtt_connect", "Retrying MQTT connection in a few seconds: ")) {
+            SerialDebugger.println(MQTT_RETRY_DELAY);
+        }
 
         // Wait some time before retrying
         delay(MQTT_RETRY_DELAY * 1000);
     }
 
     if (mqtt.connected()) {
-        Serial.println(F("Successfully connected to MQTT broker"));
+        SerialDebugger.debug(INFO, "mqtt_connect", "Successfully connected to MQTT broker");
         return true;
     }
 

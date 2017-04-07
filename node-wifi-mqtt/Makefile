@@ -14,6 +14,8 @@ LIBS = \
     $(ESP_LIBS)/Wire \
     $(ESP_LIBS)/ESP8266WiFi \
     $(ESP_LIBS)/ESP8266HTTPClient \
+    ../libraries/SerialDebugger/*.h \
+    ../libraries/SerialDebugger/*.cpp \
     ../libraries/Adafruit_MQTT_Library/*.h \
     ../libraries/Adafruit_MQTT_Library/*.cpp \
     ../libraries/ArduinoJson/include \
