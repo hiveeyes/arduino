@@ -20,19 +20,23 @@ TODO
 Misc
 ====
 
+
 2017-04-06
 ----------
 - Further improvements to :ref:`node-wifi-mqtt`
 
-    - Publish discrete values to the MQTT bus, use MQTT_DISCRETE maybe.
-    - Add debugging using http://playground.arduino.cc/Code/SerialDebugger
-    - Comment: "Connect the D0 pin with RST pin to enable wakeup of the MCU." re. deep sleep mode
+    - [o] Publish discrete values to the MQTT bus, use MQTT_DISCRETE maybe.
+    - [o] Add debugging using http://playground.arduino.cc/Code/SerialDebugger
+    - [x] Comment: "Connect the D0 pin with RST pin to enable wakeup of the MCU." re. deep sleep mode
         - On "Adafruit Feather HUZZAH", wire RST with GPIO16,
           see also https://learn.adafruit.com/adafruit-feather-huzzah-esp8266/pinouts
-    - @gtuveri: it makes no sense to add #if SENSOR* stuff if SENSOR_DUMMY is true?
-    - @gtuveri: why to proceed within execution if no WiFi connection has been established?
-    - @Thias: #define DEEPSLEEP_TIME MEASUREMENT_INTERVAL * 1000UL
-              since measurement interval is in ms already
+    - [x] @gtuveri: it makes no sense to add #if SENSOR* stuff if SENSOR_DUMMY is true?
+    - [o] @gtuveri: why to proceed within execution if no WiFi connection has been established?
+    - [x] @Thias: ``#define DEEPSLEEP_TIME MEASUREMENT_INTERVAL * 1000UL`` since measurement interval is in ms already
+    - [x] Improve inline comments again
+    - [o] Switch from Adafruit_MQTT to https://github.com/tuanpmt/esp_mqtt or https://github.com/marvinroger/async-mqtt-client?
+    - [x] Add sensor ADS1231
+
 
 2017-04-05
 ----------

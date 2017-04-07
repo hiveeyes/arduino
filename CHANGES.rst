@@ -10,6 +10,13 @@ CHANGES
 in-progress
 ===========
 - Try to fix :ref:`scale-adjust-firmware` regarding ESP8266 compatibility again
+- `node-wifi-mqtt.ino`_ firmware:
+
+    - Fix `DEEPSLEEP_TIME` order of magnitude: `MEASUREMENT_INTERVAL` is in ms already. Thanks, Matthias!
+    - Fix IP address output. Thanks, Matthias!
+    - When `SENSOR_DUMMY` is enabled, don't use any real sensors. Thanks, Giuseppe!
+    - Add comment about connecting GPIO#16 to RST for waking up after deep sleep. Thanks, Giuseppe and Matthias!
+    - Add sensor ADS1231. Thanks, Clemens!
 
 
 .. _version-0.15.0:

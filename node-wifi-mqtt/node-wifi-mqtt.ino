@@ -1,8 +1,8 @@
 /*
 
-                         Hiveeyes node-wifi-mqtt
+                             Hiveeyes node-wifi-mqtt
 
-   Collect beehive sensor data and transmit via WiFi to a MQTT broker.
+   Collect environmental sensor data and transmit it via WiFi to a MQTT broker.
 
    Copyright (C) 2016-2017  The Hiveeyes Developers <hello@hiveeyes.org>
 
@@ -24,6 +24,10 @@
               wifi_connect/mqtt_connect regarding retrying.
               Give operating system / watchdog timer more breath.
               Add deep sleep mode.
+   2017-04-07 Fix DEEPSLEEP_TIME and IP address output. Thanks, Matthias!
+              When SENSOR_DUMMY is enabled, don't use any real sensors. Thanks, Giuseppe!
+              Add comment about connecting GPIO#16 to RST for waking up after deep sleep. Thanks, Giuseppe and Matthias!
+              Add sensor ADS1231. Thanks, Clemens!
 
 
    GNU GPL v3 License
@@ -49,10 +53,20 @@
    Hiveeyes node firmware for ESP8266 based on Arduino Core.
 
    This is a basic firmware for the Hiveeyes beehive monitoring system.
-   The purpose is to collect vital data and to transmit it
+   The purpose is to collect environmental data and to transmit it
    via WiFi to the MQTT broker at swarm.hiveeyes.org:1883.
 
+   The received sensor readings will get visualized automatically at
+   https://swarm.hiveeyes.org/grafana/.
+
    Feel free to adapt this code to your own needs. Contributions are welcome!
+
+   The area of application of this firmware is manifold. We are happy to see
+   it deployed in different scenarios than beehive monitoring. You might want
+   to share your stories with us at hello@hiveeyes.org.
+
+   Do you need a flexible backend system for data acquisition and graphing?
+   Please have a look at https://getkotori.org/.
 
    -------------------------------------------------------------------------
 
@@ -70,6 +84,15 @@
    Confirmed to be working on:
 
    Adafruit Feather HUZZAH      https://www.adafruit.com/product/2471
+   NodeMCU AMICA R2             http://www.electrodragon.com/product/nodemcu-lua-amica-r2-esp8266-wifi-board/
+
+   -------------------------------------------------------------------------
+
+   More information:
+
+   Adafruit Feather HUZZAH Pinouts      https://learn.adafruit.com/adafruit-feather-huzzah-esp8266/pinouts
+   NodeMCU pin definition               https://nodemcu.readthedocs.io/en/master/en/modules/gpio/
+                                        http://crufti.com/content/images/2015/11/nodemcudevkit_v1-0_io.jpg
 
    -------------------------------------------------------------------------
 
@@ -84,7 +107,9 @@
 // Measure and transmit each five minutes
 #define MEASUREMENT_INTERVAL    5 * 60 * 1000
 
-// Whether device should go to deep sleep after measurement
+// Whether device should go to deep sleep after measurement.
+// To enable wakeup of the MCU, please connect the GPIO#16 pin to the RST pin.
+// On NodeMCU boards, the GPIO#16 pin is also labeled "D0".
 #define DEEPSLEEP_ENABLED       false
 
 // Compute sleep time in microseconds (*ms *us)
@@ -156,10 +181,22 @@
 #define SENSOR_DUMMY            false
 // TODO: SENSOR_SINE
 
-// The real sensors
+// The real environmental sensors
+#if !SENSOR_DUMMY
+
+// Weight scale sensors, choose one
 #define SENSOR_HX711            true
+#define SENSOR_ADS1231          false
+
+// DHTxx Humidity/Temperature sensors
 #define SENSOR_DHTxx            true
+
+// 1-Wire DallasTemperature sensors
 #define SENSOR_DS18B20          true
+
+#endif
+
+// Vital hardware data sensors
 #define SENSOR_BATTERY_LEVEL    true
 #define SENSOR_MEMORY_FREE      true
 
@@ -167,12 +204,25 @@
 // -------------------
 // HX711: Scale sensor
 // -------------------
-
-// HX711.DOUT   - pin #14
-// HX711.PD_SCK - pin #12
-#define HX711_PIN_DOUT          14
 #define HX711_PIN_PDSCK         12
+#define HX711_PIN_DOUT          14
 
+
+// ---------------------
+// ADS1231: Scale sensor
+// ---------------------
+#define ADS1231_PIN_DATA            14
+#define ADS1231_PIN_SCL             15
+#define ADS1231_PIN_POWER           16
+#define ADS1231_PIN_CELL_POWER      17
+
+// How often to attempt reading the ADS1231
+#define ADS1231_RETRY_COUNT         10
+
+
+// ---------------
+// General - scale
+// ---------------
 
 // Properly using the load cell requires definition of individual configuration values.
 // This is not just specific to the *type* of the load cell as even
@@ -243,21 +293,23 @@ const int ds18b20_onewire_pin = 5;
 // Libraries
 // =========
 
-// ------------
-// Connectivity
-// ------------
+// ---------
+// Telemetry
+// ---------
 
-// ESP8266: https://github.com/esp8266/Arduino
+// ESP8266 WiFi
+// https://github.com/esp8266/Arduino
 #include <ESP8266WiFi.h>
 #include <ESP8266WiFiMulti.h>
-
-// JSON serializer
-#include <ArduinoJson.h>
 
 // Adafruit MQTT
 // https://github.com/adafruit/Adafruit_MQTT_Library
 #include "Adafruit_MQTT.h"
 #include "Adafruit_MQTT_Client.h"
+
+// JSON serializer
+// https://github.com/bblanchon/ArduinoJson
+#include <ArduinoJson.h>
 
 
 // -------
@@ -266,6 +318,8 @@ const int ds18b20_onewire_pin = 5;
 
 // HX711 weight scale sensor
 #if SENSOR_HX711
+
+    // HX711 library
     #include "HX711.h"
 
     // Create HX711 object
@@ -275,6 +329,22 @@ const int ds18b20_onewire_pin = 5;
     float weight;
 
 #endif
+
+
+// ADS1231 weight scale sensor
+#if SENSOR_ADS1231
+
+    // ADS1231 library
+    #include <ADS1231.h>
+
+    // Create ADS1231 object
+    ADS1231 ads1231_sensor;
+
+    // Intermediate data structure for reading the sensor values
+    float weight;
+
+#endif
+
 
 // DHTxx humidity/temperature sensor
 #if SENSOR_DHTxx
@@ -440,11 +510,29 @@ void setup_sensors() {
     #endif
 
 
+    // Setup scale sensor (single ADS1231)
+    #if SENSOR_ADS1231
+
+        // ADS1231 data pins: SCL 15, Data 14, Power 16
+        ads1231_sensor.attach(ADS1231_PIN_SCL, ADS1231_PIN_DATA, ADS1231_PIN_POWER);
+
+        // Load cell power pin
+        pinMode(ADS1231_PIN_CELL_POWER, OUTPUT);
+
+        // Give operating system / watchdog timer some breath
+        yield();
+
+    #endif
+
+
     // Setup temperature array (multiple DS18B20 sensors)
     #if SENSOR_DS18B20
 
-        ds18b20_sensor.begin();  // start DallasTemperature library
-        ds18b20_sensor.setResolution(ds18b20_precision);  // set resolution of all devices
+        // Start DallasTemperature library
+        ds18b20_sensor.begin();
+
+        // Set resolution for all devices
+        ds18b20_sensor.setResolution(ds18b20_precision);
 
         // Assign address manually. The addresses below will need to be changed
         // to valid device addresses on your bus. Device addresses can be retrieved
@@ -502,7 +590,7 @@ void read_temperature_array() {
 
     Serial.println(F("Read temperature array (DS18B20)"));
 
-    // Request temperature on all devices on the bus
+    // Request temperature from all devices on the bus
 
     // Make it asynchronous
     ds18b20_sensor.setWaitForConversion(false);
@@ -577,21 +665,65 @@ void read_humidity_temperature() {
 
 void read_weight() {
 
+    // TODO: Maybe refactor to generic weight reading library to reduce code footprint in main program
+
+    // HX711 weight scale sensor
     #if SENSOR_HX711
 
-    Serial.println(F("Read weight (HX711)"));
+        Serial.println(F("Read weight (HX711)"));
 
-    hx711_sensor.power_up();
-    weight = hx711_sensor.get_units(5);
+        hx711_sensor.power_up();
+        weight = hx711_sensor.get_units(5);
 
-    // Debugging
-    Serial.println(weight);
+        // Debugging
+        Serial.println(weight);
 
-    // Put the ADC to sleep mode
-    hx711_sensor.power_down();
+        // Put the ADC to sleep mode
+        hx711_sensor.power_down();
 
-    // Give operating system / watchdog timer some breath
-    yield();
+        // Give operating system / watchdog timer some breath
+        yield();
+
+    #endif
+
+
+    // ADS1231 weight scale sensor
+    #if SENSOR_ADS1231
+
+        // Power ADS1231 and load cell
+        digitalWrite(ADS1231_PIN_CELL_POWER, HIGH);
+        ads1231_sensor.power(HIGH);
+
+        // Wait for stabilizing
+        delay(2);
+
+        // Wait for ADS1231 being ready
+        bool sensor_ready = false;
+        for (int i = 0; i < ADS1231_RETRY_COUNT; i++) {
+            if (ads1231_sensor.check()) {
+                sensor_ready = true;
+                break;
+            }
+            // Give operating system / watchdog timer some breath
+            yield();
+        }
+
+        // Sensor isn't ready to read values, abort!
+        if (!sensor_ready) {
+            // TODO: Introduce another magic value for signalling invalid readings?
+            weight = -1;
+            return;
+        }
+
+        // Read raw data input of ADS1231
+        long weightSensorValue = ads1231_sensor.readData();
+
+        // Switch off ADS1231 and load cell
+        ads1231_sensor.power(LOW);
+        digitalWrite(ADS1231_PIN_CELL_POWER, LOW);
+
+        // Compute weight in kg
+        weight = ((float) weightSensorValue - (float) LOADCELL_ZERO_OFFSET) / (float) LOADCELL_KG_DIVIDER;
 
     #endif
 
@@ -643,6 +775,7 @@ void read_sensors() {
 void transmit_readings() {
 
     // Build JSON object containing sensor readings
+    // TODO: How many data points actually fit into this?
     StaticJsonBuffer<512> jsonBuffer;
 
 
@@ -712,9 +845,10 @@ void transmit_readings() {
 // Setup WiFi
 void wifi_setup() {
 
+    // Add first WiFi access point
     wifi_multi.addAP(WIFI_SSID_1, WIFI_PASS_1);
 
-    // Add/remove entries as required
+    // Add more WiFi access points as required
     #if defined(WIFI_SSID_2) && defined(WIFI_PASS_2)
     wifi_multi.addAP(WIFI_SSID_2, WIFI_PASS_2);
     #endif
