@@ -743,7 +743,7 @@ bool wifi_connect() {
             // Debug WiFi
             Serial.println();
             Serial.print(F("WiFi connected! IP address: "));
-            Serial.print(wifi_client.localIP());
+            Serial.print(WiFi.localIP());
             Serial.println();
 
             return true;
