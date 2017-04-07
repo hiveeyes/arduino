@@ -88,7 +88,7 @@
 #define DEEPSLEEP_ENABLED       false
 
 // Compute sleep time in microseconds (*ms *us)
-#define DEEPSLEEP_TIME          MEASUREMENT_INTERVAL * 1000UL * 1000UL
+#define DEEPSLEEP_TIME          MEASUREMENT_INTERVAL * 1000UL
 
 
 
@@ -743,7 +743,7 @@ bool wifi_connect() {
             // Debug WiFi
             Serial.println();
             Serial.print(F("WiFi connected! IP address: "));
-            Serial.print(wifi_client.localIP());
+            Serial.print(WiFi.localIP());
             Serial.println();
 
             return true;
