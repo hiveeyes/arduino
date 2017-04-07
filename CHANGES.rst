@@ -18,6 +18,8 @@ in-progress
     - Add comment about connecting GPIO#16 to RST for waking up after deep sleep. Thanks, Giuseppe and Matthias!
     - Add sensor ADS1231. Thanks, Clemens!
 
+- Add vanilla “SerialDebugger” library from http://playground.arduino.cc/Code/SerialDebugger
+
 
 .. _version-0.15.0:
 
