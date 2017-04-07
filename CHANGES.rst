@@ -9,6 +9,8 @@ CHANGES
 
 in-progress
 ===========
+- Try to fix :ref:`scale-adjust-firmware` regarding ESP8266 compatibility again
+
 
 .. _version-0.15.0:
 
