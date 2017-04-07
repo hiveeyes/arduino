@@ -26,6 +26,7 @@
               Add deep sleep mode.
    2017-04-07 Fix DEEPSLEEP_TIME and IP address output. Thanks, Matthias!
               When SENSOR_DUMMY is enabled, don't use any real sensors. Thanks, Giuseppe!
+              Add comment about connecting GPIO#16 to RST for waking up after deep sleep. Thanks, Giuseppe and Matthias!
 
 
    GNU GPL v3 License
@@ -72,6 +73,15 @@
    Confirmed to be working on:
 
    Adafruit Feather HUZZAH      https://www.adafruit.com/product/2471
+   NodeMCU AMICA R2             http://www.electrodragon.com/product/nodemcu-lua-amica-r2-esp8266-wifi-board/
+
+   -------------------------------------------------------------------------
+
+   More information:
+
+   Adafruit Feather HUZZAH Pinouts      https://learn.adafruit.com/adafruit-feather-huzzah-esp8266/pinouts
+   NodeMCU pin definition               https://nodemcu.readthedocs.io/en/master/en/modules/gpio/
+                                        http://crufti.com/content/images/2015/11/nodemcudevkit_v1-0_io.jpg
 
    -------------------------------------------------------------------------
 
@@ -86,7 +96,9 @@
 // Measure and transmit each five minutes
 #define MEASUREMENT_INTERVAL    5 * 60 * 1000
 
-// Whether device should go to deep sleep after measurement
+// Whether device should go to deep sleep after measurement.
+// To enable wakeup of the MCU, please connect the GPIO#16 pin to the RST pin.
+// On NodeMCU boards, the GPIO#16 pin is also labeled "D0".
 #define DEEPSLEEP_ENABLED       false
 
 // Compute sleep time in microseconds (*ms *us)

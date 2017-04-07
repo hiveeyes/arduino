@@ -27,7 +27,7 @@ Misc
 
     - [o] Publish discrete values to the MQTT bus, use MQTT_DISCRETE maybe.
     - [o] Add debugging using http://playground.arduino.cc/Code/SerialDebugger
-    - [o] Comment: "Connect the D0 pin with RST pin to enable wakeup of the MCU." re. deep sleep mode
+    - [x] Comment: "Connect the D0 pin with RST pin to enable wakeup of the MCU." re. deep sleep mode
         - On "Adafruit Feather HUZZAH", wire RST with GPIO16,
           see also https://learn.adafruit.com/adafruit-feather-huzzah-esp8266/pinouts
     - [x] @gtuveri: it makes no sense to add #if SENSOR* stuff if SENSOR_DUMMY is true?
