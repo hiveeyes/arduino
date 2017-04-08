@@ -42,9 +42,9 @@ void Terrine::log(const char *message, bool newline) {
         }
     #elif defined(ARDUINO)
         if (newline) {
-            Serial.println(message);
+            SERIAL_PORT_HARDWARE.println(message);
         } else {
-            Serial.print(message);
+            SERIAL_PORT_HARDWARE.print(message);
         }
         #ifdef ARDUINO
             delay(TERRINE_SERIAL_DELAY);
@@ -66,9 +66,9 @@ void Terrine::log(bool newline) {
         }
     #elif defined(ARDUINO)
         if (newline) {
-            Serial.println("");
+            SERIAL_PORT_HARDWARE.println("");
         } else {
-            Serial.print("");
+            SERIAL_PORT_HARDWARE.print("");
         }
         #ifdef ARDUINO
             delay(TERRINE_SERIAL_DELAY);
@@ -86,10 +86,10 @@ void Terrine::log(int value) {
         _d(value);
     #else
         #ifdef ARDUINO
-            Serial.println(value);
+            SERIAL_PORT_HARDWARE.println(value);
             delay(TERRINE_SERIAL_DELAY);
         #elif defined(__unix__)
-            Serial.println(std::to_string(value).c_str());
+            SERIAL_PORT_HARDWARE.println(std::to_string(value).c_str());
         #else
             std::cout << value << std::endl;
         #endif
@@ -108,11 +108,11 @@ void Terrine::logmem() {
         _d("free: n/a");
     #else
         #ifdef ARDUINO
-            Serial.print("free: ");
-            Serial.println(memfree());
+            SERIAL_PORT_HARDWARE.print("free: ");
+            SERIAL_PORT_HARDWARE.println(memfree());
             delay(TERRINE_SERIAL_DELAY);
         #elif defined(__unix__)
-            Serial.println(std::to_string(memfree()).c_str());
+            SERIAL_PORT_HARDWARE.println(std::to_string(memfree()).c_str());
         #else
             log("free: ", false);
             log(std::to_string(memfree()).c_str(), true);
