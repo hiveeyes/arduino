@@ -31,6 +31,7 @@ in-progress
     - Add firmware builder helper to Makefile for node-wifi-mqtt-homie
 
 - Properly define and use ``HE_CONTAINERS`` in :ref:`generic-firmware`
+- :ref:`node-gsm-http`: Use boolean #define feature flags
 
 
 .. _version-0.15.0:
