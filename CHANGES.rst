@@ -18,6 +18,8 @@ in-progress
     - Add comment about connecting GPIO#16 to RST for waking up after deep sleep. Thanks, Giuseppe and Matthias!
     - Add sensor ADS1231. Thanks, Clemens!
 
+- node-gprs-http: Use boolean #define feature flags
+
 
 .. _version-0.15.0:
 
