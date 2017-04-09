@@ -1,8 +1,22 @@
 /***********************************************************************************************************
    mois Yun Beescale
-   (c)2017 Markus Euskirchen
+   Collect sensor data, send it via GSM to local SD, flatfile on webserver, and Hiveeyes' Kotori/InfluxDB.
+   
+   (c)2014-2017 Markus Euskirchen
    https://www.euse.de/wp/blog/series/bienenwaage2/
    https://github.com/bee-mois/beescale
+   
+   Changes
+   -------
+   2014-04-04 Initial version
+   2015-01-12 Added second scale
+   2015-03-14 Modularized code into functions, code cleanup, thanks Alexander!
+   2016-10-30 Change from Wifi to ethernet
+   2016-11-15 Median instead average
+   2017-02-26 Change from Ethernet-Shield to Yun-Shield
+   2017-03-06 Added DHT22
+   2017-03-09 Added switch, SD for local backup
+   2017-03-12 Added TSL2591 digital light sensor
    
    GNU GPL v3 License
    ------------------
@@ -21,25 +35,25 @@
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA
    -------------------------------------------------------------------------
    
-  Credits: Alexander Wilms for a first modularized/functionized loop.
-           Hiveeyes Developers for pushing me forward.
+   Credits: Alexander Wilms for a first modularized/functionized loop.
+            Hiveeyes Developers for pushing me forward.
   
   Used libraries:
-  Bridge:               Yun Standard
-  Console:              Yun Standard
-  HttpClient:           Yun Standard
-  FileIO:               Yun Standard
-  ADS1231:		          http://forum.arduino.cc/index.php?action=dlattach;topic=131086.0;attach=67564
-                        maybe better (?): https://github.com/rfjakob/barwin-arduino/tree/master/lib/ads1231
-  RunningMedian:	      https://github.com/RobTillaart/Arduino/tree/master/libraries/RunningMedian
-  SPI:                  Arduino Standard
-  digitalWriteFast:     https://github.com/watterott/Arduino-Libs/tree/master/digitalWriteFast
-  OneWire:              https://github.com/PaulStoffregen/OneWire
-  DallasTemperature:	  https://github.com/milesburton/Arduino-Temperature-Control-Library
-  DHT:	      	        https://github.com/adafruit/DHT-sensor-library
-  Wire:                 Arduino Standard
-  Adafruit_Sensor:      https://github.com/adafruit/Adafruit_Sensor
-  Adafruit_TSL2591:     https://github.com/adafruit/Adafruit_TSL2591_Library
+   Bridge:               Yun Standard
+   Console:              Yun Standard
+   HttpClient:           Yun Standard
+   FileIO:               Yun Standard
+   ADS1231:		          http://forum.arduino.cc/index.php?action=dlattach;topic=131086.0;attach=67564
+                         maybe better (?): https://github.com/rfjakob/barwin-arduino/tree/master/lib/ads1231
+   RunningMedian:	       https://github.com/RobTillaart/Arduino/tree/master/libraries/RunningMedian
+   SPI:                  Arduino Standard
+   digitalWriteFast:     https://github.com/watterott/Arduino-Libs/tree/master/digitalWriteFast
+   OneWire:              https://github.com/PaulStoffregen/OneWire
+   DallasTemperature:	 https://github.com/milesburton/Arduino-Temperature-Control-Library
+   DHT:	      	       https://github.com/adafruit/DHT-sensor-library
+   Wire:                 Arduino Standard
+   Adafruit_Sensor:      https://github.com/adafruit/Adafruit_Sensor
+   Adafruit_TSL2591:     https://github.com/adafruit/Adafruit_TSL2591_Library
 **********************************************************************************************************/
 
 // define individual values for used load cell type
