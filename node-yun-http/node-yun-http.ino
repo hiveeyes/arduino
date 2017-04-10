@@ -1,22 +1,60 @@
-/*
-  Yun Open Bee Hive Scale GET-Sketch
-  2015-01 by mois, more: http://wbk.in-berlin.de/wp/blog/series/bienenwaage/
-  2015-03 modified by Alexander Wilms
-  Dieser Sketch von mois ist lizensiert unter einer Creative Commons Namensnennung - Nicht-kommerziell - Weitergabe unter gleichen Bedingungen 4.0 International Lizenz.
-  This code by mois is licensed under a Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License.
-
-  Changelog:
-  2015-03-14 Alexander Wilms - Modularized code into functions, adjusted loop order to avoid program hangs in case of client/network/transmit errors. Code cleanup.
-  2016-10-30 mois  - Verbindung umgestellt auf Ethernet hinter OpenWRT-Router
-  2016-11-15 mois  - Zeile 116: Median statt Average
-  2017-02-20 mois  - zweite Wägezelle wieder eingebaut
-  2017-02-26 mois  - für Yun: Bridgeverwendung aktiviert, Kontroll-LED eingebaut, GET Request
-  2017-02-27 mois  - Serverantwort auf die Console leiten
-  2017-03-06 mois  - DHT22 eingebaut
-  2017-03-09 mois  - Schalter; SD-Backup eingebaut
-  2017-03-12 mois  - TSL2591 eingebaut; überflüssige Kommentare und Optionen gelöscht.
-  2017-03-14 mois  - TSL2591 optimiert: simple read!
-*/
+/***********************************************************************************************************
+   mois Yun Beescale
+   Collect sensor data, send it via GSM to local SD, flatfile on webserver, and Hiveeyes' Kotori/InfluxDB.
+   
+   (c)2014-2017 Markus Euskirchen
+   https://www.euse.de/wp/blog/series/bienenwaage2/
+   https://github.com/bee-mois/beescale
+   
+   Changes
+   -------
+   2014-04-04 Initial version
+   2015-01-12 Added second scale
+   2015-03-14 Modularized code into functions, code cleanup, thanks Alexander!
+   2016-10-30 Change from Wifi to ethernet
+   2016-11-15 Median instead average
+   2017-02-26 Change from Ethernet-Shield to Yun-Shield
+   2017-03-06 Added DHT22
+   2017-03-09 Added switch, SD for local backup
+   2017-03-12 Added TSL2591 digital light sensor
+   
+   GNU GPL v3 License
+   ------------------
+   This program is free software; you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation; either version 3 of the License, or
+   (at your option) any later version.
+   This program is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+   You should have received a copy of the GNU General Public License
+   along with this program; if not, see:
+   <http://www.gnu.org/licenses/gpl-3.0.txt>,
+   or write to the Free Software Foundation,
+   Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA
+   -------------------------------------------------------------------------
+   
+   Credits: Alexander Wilms for a first modularized/functionized loop.
+            Hiveeyes Developers for pushing me forward.
+  
+  Used libraries:
+   Bridge:               Yun Standard
+   Console:              Yun Standard
+   HttpClient:           Yun Standard
+   FileIO:               Yun Standard
+   ADS1231:		          http://forum.arduino.cc/index.php?action=dlattach;topic=131086.0;attach=67564
+                         maybe better (?): https://github.com/rfjakob/barwin-arduino/tree/master/lib/ads1231
+   RunningMedian:	       https://github.com/RobTillaart/Arduino/tree/master/libraries/RunningMedian
+   SPI:                  Arduino Standard
+   digitalWriteFast:     https://github.com/watterott/Arduino-Libs/tree/master/digitalWriteFast
+   OneWire:              https://github.com/PaulStoffregen/OneWire
+   DallasTemperature:	 https://github.com/milesburton/Arduino-Temperature-Control-Library
+   DHT:	      	       https://github.com/adafruit/DHT-sensor-library
+   Wire:                 Arduino Standard
+   Adafruit_Sensor:      https://github.com/adafruit/Adafruit_Sensor
+   Adafruit_TSL2591:     https://github.com/adafruit/Adafruit_TSL2591_Library
+**********************************************************************************************************/
 
 // define individual values for used load cell type
   //   loadCellZeroOffset: write down the sensor value of the scale with no load and adjust it
