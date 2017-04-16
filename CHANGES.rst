@@ -19,6 +19,8 @@ in-progress
     - Add sensor ADS1231. Thanks, Clemens!
 
 - Make :ref:`firmware-builder` support architecture "ESP"
+    - Add variables ``TARGET_BOARD_TAG`` and ``TARGET_BOARD_SUB`` to helper output
+
 - Properly define and use ``HE_CONTAINERS`` in :ref:`generic-firmware`
 
 
