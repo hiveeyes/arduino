@@ -22,7 +22,7 @@
    MQTT bus serialized as JSON dictionary, all of which
    is beyond the scope of this MCU code.
 
-   Software release 0.15.0
+   Software release 0.16.0
 
    Copyright (C) 2014-2016  Richard Pobering <einsiedlerkrebs@ginnungagap.org>
    Copyright (C) 2014-2016  Andreas Motl <andreas.motl@elmyra.de>
