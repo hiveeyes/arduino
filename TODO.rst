@@ -21,6 +21,11 @@ Misc
 ====
 
 
+2017-04-09
+----------
+- [o] Make SerialDebugger optionally use SERIAL_PORT_HARDWARE
+
+
 2017-04-06
 ----------
 - Further improvements to :ref:`node-wifi-mqtt`

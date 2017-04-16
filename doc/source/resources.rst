@@ -24,7 +24,7 @@
 
 .. Open Hive
 .. _Open Hive Box: https://hiveeyes.org/docs/system/vendor/open-hive/#open-hive-seeeduino-stalker
-.. _Open Hive WiFi Solar: https://www.facebook.com/media/set/?set=a.10208134828588174.1073741836.1224510416&type=1&l=bc626d9585
+.. _Open Hive WiFi Solar: https://community.hiveeyes.org/t/open-hive-wifi-solar-adafruit-huzzah/247
 
 
 .. Software and protocols
