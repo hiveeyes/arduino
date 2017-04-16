@@ -20,6 +20,7 @@ in-progress
 
 - Make :ref:`firmware-builder` support architecture "ESP"
     - Add variables ``TARGET_BOARD_TAG`` and ``TARGET_BOARD_SUB`` to helper output
+    - Add firmware builder helper to Makefile for node-wifi-mqtt-homie
 
 - Properly define and use ``HE_CONTAINERS`` in :ref:`generic-firmware`
 
