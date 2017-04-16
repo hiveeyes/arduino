@@ -9,6 +9,12 @@ CHANGES
 
 in-progress
 ===========
+
+
+.. _version-0.16.0:
+
+2017-04-16 0.16.0
+=================
 - Try to fix :ref:`scale-adjust-firmware` regarding ESP8266 compatibility again
 - `node-wifi-mqtt.ino`_ firmware:
 
