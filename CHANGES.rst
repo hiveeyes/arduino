@@ -19,6 +19,7 @@ in-progress
     - Add sensor ADS1231. Thanks, Clemens!
 
 - Make :ref:`firmware-builder` support architecture "ESP"
+- Properly define and use ``HE_CONTAINERS`` in :ref:`generic-firmware`
 
 
 .. _version-0.15.0:

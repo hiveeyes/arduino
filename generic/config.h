@@ -26,7 +26,7 @@
 #define HE_RFM69_OTA              false
 #define HE_BERadio                false
 #define HE_RADIO                  false
-//#define HE_CONTAINERS             false
+#define HE_CONTAINERS             false
 
 
 #define IS_NODE                   false
@@ -153,7 +153,7 @@
     #define HX711_OFFSET          8361975
 
     #define HX711_KNOWN_WEIGHT     21901.f
-    #ifdef HE_CONTAINERS
+    #if HE_CONTAINERS
         #define CONT_WGHT        true
     #endif
 #endif
