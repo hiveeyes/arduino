@@ -25,9 +25,9 @@
 #
 # A STL and iostream implementation for Arduino based on uClibc++.
 #
-STL_LIB_PATH        := $(USER_LIB_PATH)/ArduinoSTL
-CPPFLAGS            += -I$(STL_LIB_PATH)
-LOCAL_CPP_SRCS      += $(wildcard $(STL_LIB_PATH)/src/*.cpp)
+#STL_LIB_PATH        := $(USER_LIB_PATH)/ArduinoSTL
+#CPPFLAGS            += -I$(STL_LIB_PATH)
+#LOCAL_CPP_SRCS      += $(wildcard $(STL_LIB_PATH)/src/*.cpp)
 
 
 # DHTlib
