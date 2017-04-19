@@ -3,6 +3,7 @@
 .. _open-hive-firmware:
 .. _open-hive-firmware-gprs:
 .. _node-gsm-http:
+.. _node-gprs-http:
 .. _node-wifi-http:
 
 ###################################
