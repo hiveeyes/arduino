@@ -10,6 +10,7 @@ CHANGES
 in-progress
 ===========
 - :ref:`node-yun-http`: Make it compile from the :ref:`firmware-builder` on Arduino Core 1.5.6.2 on Linux
+- Prepare :ref:`scale-adjust-firmware` for :ref:`firmware-builder` with ESP8266
 
 
 .. _version-0.16.0:

@@ -24,3 +24,9 @@ BUILD_EXTRA_FLAGS += -DARDUINO_ARCH_ESP8266=true
 
 # Run makeEspArduino
 include ../../tools/makeEspArduino/makeEspArduino.mk
+
+### FWBUILDER_DIR
+### Include helpers from Firmware-Builder directory.
+FWBUILDER_DIR     = ../../tools/Firmware-Builder
+include $(FWBUILDER_DIR)/Helper.mk
+
