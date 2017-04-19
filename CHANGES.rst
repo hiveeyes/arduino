@@ -9,6 +9,7 @@ CHANGES
 
 in-progress
 ===========
+- :ref:`node-yun-http`: Make it compile from the :ref:`firmware-builder` on Arduino Core 1.5.6.2 on Linux
 
 
 .. _version-0.16.0:
