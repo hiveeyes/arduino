@@ -3,6 +3,10 @@
 ### For detailled explanations about all the avalaible options,
 ### please refer to https://github.com/sudar/Arduino-Makefile/blob/master/arduino-mk-vars.md
 
+### TARGET
+### Name of this thing
+TARGET            = scale-adjust-ads1231
+
 ### PROJECT_DIR
 ### This is the path to where you have created/cloned your project
 PROJECT_DIR       = ../..
