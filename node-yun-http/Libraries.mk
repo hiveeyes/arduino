@@ -26,8 +26,7 @@
 # https://github.com/arduino-libraries/Bridge
 #
 BRIDGE_LIB_PATH     := $(USER_LIB_PATH)/YunBridgeLibrary/src
-CPPFLAGS            += -I$(BRIDGE_LIB_PATH)
-LOCAL_CPP_SRCS      += $(wildcard $(BRIDGE_LIB_PATH)/*.cpp)
+CXXFLAGS            += -I$(BRIDGE_LIB_PATH)
 
 
 # Watterott Arduino-Libs
