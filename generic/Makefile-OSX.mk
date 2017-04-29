@@ -36,7 +36,7 @@ USER_LIB_PATH     :=  $(realpath $(PROJECT_DIR)/libraries)
 ### For Arduino IDE 1.0.x
 ### Only BOARD_TAG is needed. It must be set to the board you are currently using. (i.e uno, mega2560, etc.)
 # BOARD_TAG         = mega2560
-# BOARD_TAG         = pro328
+BOARD_TAG         = pro328
 
 ### For Arduino IDE 1.6.x
 ### Both BOARD_TAG and BOARD_SUB are needed. They must be set to the board you are currently using. (i.e BOARD_TAG = uno, mega, etc. & BOARD_SUB = atmega2560, etc.)

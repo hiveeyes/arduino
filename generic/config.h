@@ -6,7 +6,7 @@
  * All settings for controlling the behavior and role
  * of the firmware should be made inside this file.
  *
- * Software release 0.14.0
+ * Software release 0.16.0
  *
  * Copyright (C) 2014-2017  Richard Pobering <einsiedlerkrebs@ginnungagap.org>
  * Copyright (C) 2014-2017  Andreas Motl <andreas.motl@elmyra.de>
@@ -14,7 +14,7 @@
 **/
 
 
-#define HE_DEBUG                  true               // turn on debug output and choose below
+#define HE_DEBUG                  false               // turn on debug output and choose below
 #define SERIAL_BAUD               115200         // serial baud rate
 #define BLINKPERIOD               500            // LED blinking period in ms
 #define BOOTSTRAP_LOOP_COUNT      15             // How often to loop fast when booting
@@ -26,7 +26,7 @@
 #define HE_RFM69_OTA              false
 #define HE_BERadio                false
 #define HE_RADIO                  false
-//#define HE_CONTAINERS             false
+#define HE_CONTAINERS             false
 
 
 #define IS_NODE                   false
@@ -66,10 +66,10 @@
 #if HE_DEBUG                                  /**    fine grade debug settings     ***
                                                  ***              * *                 **/
     #define DEBUG_FRAME           false
-    #define DEBUG_RADIO           true              // set to 1 for radio debug
+    #define DEBUG_RADIO           false              // set to 1 for radio debug
     #define DEBUG_SPI_FLASH       false              // set to 1 for SPI-flash debug
     #define DEBUG_SENSORS         false              // set to 1 for sensor debug
-    #define DEBUG_BERadio         true              // set to 1 for  HE_BERadio degub
+    #define DEBUG_BERadio         false              // set to 1 for  HE_BERadio degub
     #define DEBUG_MEMORY          false
 
 #endif                                           /**              * *                 **/
@@ -153,7 +153,7 @@
     #define HX711_OFFSET          8361975
 
     #define HX711_KNOWN_WEIGHT     21901.f
-    #ifdef HE_CONTAINERS
+    #if HE_CONTAINERS
         #define CONT_WGHT        true
     #endif
 #endif

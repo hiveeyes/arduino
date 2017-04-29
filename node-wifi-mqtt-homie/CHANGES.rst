@@ -12,6 +12,13 @@ in-progress
 - Set some custom settings as default, limited at the moment by issue:
  https://github.com/marvinroger/homie-esp8266/issues/323
 
+2017-03-27 0.9.4
+=================
+- Add temperature compensation in gram per degree
+
+2017-03-27 0.9.3
+=================
+- ommited for the non battery version
 
 2017-03-28 0.9.2
 =================

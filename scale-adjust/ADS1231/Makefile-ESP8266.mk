@@ -14,19 +14,19 @@
 LIBS = \
     $(ESP_LIBS)/esp8266 \
     $(ESP_LIBS)/GDBStub \
-    $(ESP_LIBS)/SD \
     $(ESP_LIBS)/SPI \
     $(ESP_LIBS)/Wire \
-    $(ESP_LIBS)/ESP8266WiFi \
-    $(ESP_LIBS)/ESP8266HTTPClient \
-    ../libraries/ADS1231 \
-    ../libraries/OneWire \
-    ../libraries/DallasTemperature \
-    ../libraries/RobTillaart-Arduino/libraries/DHTstable \
-    ../libraries/RobTillaart-Arduino/libraries/RunningMedian
+    ../../libraries/ADS1231 \
+    ../../libraries/RobTillaart-Arduino/libraries/RunningMedian
 
 # For ESP8266 (makeEspArduino)
 BUILD_EXTRA_FLAGS += -DARDUINO_ARCH_ESP8266=true
 
 # Run makeEspArduino
-include ../tools/makeEspArduino/makeEspArduino.mk
+include ../../tools/makeEspArduino/makeEspArduino.mk
+
+### FWBUILDER_DIR
+### Include helpers from Firmware-Builder directory.
+FWBUILDER_DIR     = ../../tools/Firmware-Builder
+include $(FWBUILDER_DIR)/Helper.mk
+

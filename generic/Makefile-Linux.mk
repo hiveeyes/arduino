@@ -83,3 +83,9 @@ endif
 
 ### path to Arduino.mk, inside the ARDMK_DIR, don't touch.
 include $(ARDMK_DIR)/Arduino.mk
+
+### FWBUILDER_DIR
+### Include helpers from Firmware-Builder directory.
+FWBUILDER_DIR     = $(PROJECT_DIR)/tools/Firmware-Builder
+include $(FWBUILDER_DIR)/Helper.mk
+

@@ -6,6 +6,6 @@
 
 // Medium
 #define HE_RADIO                true
-#define HE_RH69                 true
+#define HE_RH69                 false
 
 // Details

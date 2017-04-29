@@ -20,6 +20,43 @@ TODO
 Misc
 ====
 
+
+2017-04-09
+----------
+- [o] Make SerialDebugger optionally use SERIAL_PORT_HARDWARE
+
+
+2017-04-06
+----------
+- Further improvements to :ref:`node-wifi-mqtt`
+
+    - [o] Publish discrete values to the MQTT bus, use MQTT_DISCRETE maybe.
+    - [o] Add debugging using http://playground.arduino.cc/Code/SerialDebugger
+    - [x] Comment: "Connect the D0 pin with RST pin to enable wakeup of the MCU." re. deep sleep mode
+        - On "Adafruit Feather HUZZAH", wire RST with GPIO16,
+          see also https://learn.adafruit.com/adafruit-feather-huzzah-esp8266/pinouts
+    - [x] @gtuveri: it makes no sense to add #if SENSOR* stuff if SENSOR_DUMMY is true?
+    - [o] @gtuveri: why to proceed within execution if no WiFi connection has been established?
+    - [x] @Thias: ``#define DEEPSLEEP_TIME MEASUREMENT_INTERVAL * 1000UL`` since measurement interval is in ms already
+    - [x] Improve inline comments again
+    - [o] Switch from Adafruit_MQTT to https://github.com/tuanpmt/esp_mqtt or https://github.com/marvinroger/async-mqtt-client?
+    - [x] Add sensor ADS1231
+
+
+2017-04-05
+----------
+- Polish https://github.com/hiveeyes/arduino/tree/master/libraries/ADS1231
+- Add http://www.nikolaus-lueneburg.de/2016/10/wemos-d1-mini-battery-shield/
+- Announce at http://forum.sodaq.com/t/hive-scale-code/275 when this works on ESP8266 also
+
+
+2017-04-03
+----------
+- https://github.com/PaulStoffregen/TimeAlarms
+- https://github.com/pycom/pycom-micropython/blob/master/docs/lopy/quickref.rst
+- https://github.com/pycom/pycom-micropython/blob/master/docs/library/network.LoRa.rst
+
+
 2017-03-31
 ----------
 - Use LWT (Last Will and Testament) MQTT feature
@@ -29,6 +66,11 @@ Misc
     int json_length = root.measureLength();
     char payload[json_length+1];
     root.printTo(payload, sizeof(payload));
+
+  See also: https://github.com/bblanchon/ArduinoJson/issues/75
+
+- Let all devices send a "system boot" annotation
+
 
 2017-01-11
 ----------
