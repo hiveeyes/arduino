@@ -14,7 +14,7 @@
 **/
 
 
-#define HE_DEBUG                  true               // turn on debug output and choose below
+#define HE_DEBUG                  false               // turn on debug output and choose below
 #define SERIAL_BAUD               115200         // serial baud rate
 #define BLINKPERIOD               500            // LED blinking period in ms
 #define BOOTSTRAP_LOOP_COUNT      15             // How often to loop fast when booting
@@ -66,10 +66,10 @@
 #if HE_DEBUG                                  /**    fine grade debug settings     ***
                                                  ***              * *                 **/
     #define DEBUG_FRAME           false
-    #define DEBUG_RADIO           true              // set to 1 for radio debug
+    #define DEBUG_RADIO           false              // set to 1 for radio debug
     #define DEBUG_SPI_FLASH       false              // set to 1 for SPI-flash debug
     #define DEBUG_SENSORS         false              // set to 1 for sensor debug
-    #define DEBUG_BERadio         true              // set to 1 for  HE_BERadio degub
+    #define DEBUG_BERadio         false              // set to 1 for  HE_BERadio degub
     #define DEBUG_MEMORY          false
 
 #endif                                           /**              * *                 **/

@@ -314,7 +314,7 @@ void setup() {
     // -------------
     // Bootstrapping
     // -------------
-    Serial.begin(SERIAL_BAUD);          // setup serial
+    SERIAL_PORT_HARDWARE.begin(SERIAL_BAUD);          // setup serial
     #if HE_DEBUG
         terrine.log(separator.c_str());
         terrine.log("SETUP");
@@ -385,13 +385,13 @@ void setup() {
         #if ENABLE_ATC
             radio.enableAutoPower(RFM69_TARGET_RSSI);
             #if DEBUG_RADIO
-                Serial.println("RFM69 ATC enabled");
+                SERIAL_PORT_HARDWARE.println("RFM69 ATC enabled");
             #endif
         #endif
         radio.sleep();
         #if DEBUG_RADIO
             sprintf(buff, "Transmitting at %d Mhz...", RFM69_FREQUENCY==RF69_433MHZ ? 433 : RFM69_FREQUENCY==RF69_868MHZ ? 868 : 915);
-            Serial.println(buff);
+            SERIAL_PORT_HARDWARE.println(buff);
         #endif
     #endif
 
@@ -471,24 +471,24 @@ void setup() {
     // ---------
     #if HE_FLASH
         #if DEBUG_SPI_FLASH
-            Serial.println("SPI Flash setup");
+            SERIAL_PORT_HARDWARE.println("SPI Flash setup");
         #endif
         if (flash.initialize()){
             #if DEBUG_SPI_FLASH
-                Serial.print("SPI Flash Init OK ... UniqueID (MAC): ");
+                SERIAL_PORT_HARDWARE.print("SPI Flash Init OK ... UniqueID (MAC): ");
             #endif
             flash.readUniqueId();
             #if DEBUG_SPI_FLASH
                 for (byte i=0;i<8;i++){
-                    Serial.print(flash.UNIQUEID[i], HEX);
-                    Serial.print(' ');
+                    SERIAL_PORT_HARDWARE.print(flash.UNIQUEID[i], HEX);
+                    SERIAL_PORT_HARDWARE.print(' ');
                     }
-                Serial.println();
+                SERIAL_PORT_HARDWARE.println();
             #endif
             }
         else
         #if DEBUG_SPI_FLASH
-        Serial.println("SPI Flash Init FAIL! (is chip present?)");
+        SERIAL_PORT_HARDWARE.println("SPI Flash Init FAIL! (is chip present?)");
         #endif
     #endif
 
@@ -543,7 +543,7 @@ void loop() {
         #endif
 
         #if DEBUG_BERadio
-             Serial.println("cSb");
+             SERIAL_PORT_HARDWARE.println("cSb");
              delay(200);
         #endif
 
@@ -565,7 +565,7 @@ void loop() {
         #endif
 
         #if DEBUG_BERadio
-             Serial.println("cSe");
+             SERIAL_PORT_HARDWARE.println("cSe");
              delay(200);
         #endif
 
@@ -579,7 +579,7 @@ void loop() {
         transceive();
     #endif
     #if HE_RH69 && IS_GATEWAY
-        //Serial.println("YYY");
+        //SERIAL_PORT_HARDWARE.println("YYY");
         gatewayReceive69();
     #endif
     #if HE_RH95 && IS_GATEWAY
@@ -606,7 +606,7 @@ void loop() {
 #if HE_TEMPERATURE
     void readTemperature() {
         #if DEBUG_SENSORS
-            Serial.println("rT");
+            SERIAL_PORT_HARDWARE.println("rT");
         #endif
         sensors.requestTemperatures();
         tempL->push_back(sensors.getTempCByIndex(0));
@@ -614,9 +614,9 @@ void loop() {
         tempL->push_back(sensors.getTempCByIndex(2));
         tempL->push_back(sensors.getTempCByIndex(3));
         #if DEBUG_SENSORS
-            Serial.println("dT");
+            SERIAL_PORT_HARDWARE.println("dT");
             for (double value: *tempL){
-                Serial.println(value);
+                SERIAL_PORT_HARDWARE.println(value);
             }
         #endif
     }
@@ -625,7 +625,7 @@ void loop() {
 #if HE_HUMIDITY
     void readHumidity(){
         #if DEBUG_SENSORS
-            Serial.println("rHT");
+            SERIAL_PORT_HARDWARE.println("rHT");
         #endif
         dht1.getHumidity();          // the first reading of DHT is the last one.
         dht1.getTemperature();          // the first reading of DHT is the last one.
@@ -635,7 +635,7 @@ void loop() {
         tempbuf0 = dht1.getTemperature();
 
         #if DEBUG_SENSORS
-            Serial.print("...");
+            SERIAL_PORT_HARDWARE.print("...");
         #endif
         delay(2000);
 
@@ -644,11 +644,11 @@ void loop() {
                 break;
             }
             #if DEBUG_SENSORS
-                Serial.print(".");
+                SERIAL_PORT_HARDWARE.print(".");
             #endif
             delay(2000);
         }
-        Serial.println();
+        SERIAL_PORT_HARDWARE.println();
         if (!isnan(humbuf0) || !isnan(tempbuf0)){
             humL->push_back(humbuf0);
             tempL->push_back(tempbuf0);
@@ -657,17 +657,17 @@ void loop() {
             humL->push_back(BAD_VALUE);
             tempL->push_back(BAD_VALUE);
             #if DEBUG_SENSORS
-                Serial.println("rHTna");
+                SERIAL_PORT_HARDWARE.println("rHTna");
             #endif
         }
         #if DEBUG_SENSORS
-            Serial.println("dH");
+            SERIAL_PORT_HARDWARE.println("dH");
             for (double value: *humL){
-                Serial.println(value);
+                SERIAL_PORT_HARDWARE.println(value);
             }
-            Serial.println("dT");
+            SERIAL_PORT_HARDWARE.println("dT");
             for (double value: *tempL){
-                Serial.println(value);
+                SERIAL_PORT_HARDWARE.println(value);
             }
         #endif
     }
@@ -676,16 +676,16 @@ void loop() {
 #if HE_SCALE
     void readScale(){
         #if DEBUG_SENSORS
-            Serial.println("rS");
+            SERIAL_PORT_HARDWARE.println("rS");
         #endif
         scale.power_up();
         wghtL->push_back(scale.read_average(3));              // get the raw data of the scale
         wghtL->push_back(scale.get_units(3));                 // get the scaled data
         scale.power_down();
         #if DEBUG_SENSORS
-            Serial.println("dS");
+            SERIAL_PORT_HARDWARE.println("dS");
             for (double value: *wghtL){
-                Serial.println(value);
+                SERIAL_PORT_HARDWARE.println(value);
             }
         #endif
     }
@@ -696,11 +696,11 @@ void loop() {
             radio.sleep();
             rACK = 1;
             //#ifdef DEBUG_RADIO
-            Serial.println(" sending done");
+            SERIAL_PORT_HARDWARE.println(" sending done");
             //#endif
         }
         //#ifdef DEBUG_RADIO
-        else Serial.print(" not send");
+        else SERIAL_PORT_HARDWARE.print(" not send");
         //#endif
         radio.sleep();
         rACK = 0;
@@ -713,22 +713,22 @@ void receivePackages(){
    #if HE_RFM69
    if (radio.receiveDone()){
        #ifdef DEBUG_RADIO
-       Serial.print('[');Serial.print(radio.SENDERID, DEC);Serial.print("] ");
+       SERIAL_PORT_HARDWARE.print('[');SERIAL_PORT_HARDWARE.print(radio.SENDERID, DEC);SERIAL_PORT_HARDWARE.print("] ");
        for (byte i = 0; i < radio.DATALEN; i++)
-           Serial.print((char)radio.DATA[i]);
-           Serial.print("   [RX_RSSI:");Serial.print(radio.RSSI);Serial.print("]");
+           SERIAL_PORT_HARDWARE.print((char)radio.DATA[i]);
+           SERIAL_PORT_HARDWARE.print("   [RX_RSSI:");SERIAL_PORT_HARDWARE.print(radio.RSSI);SERIAL_PORT_HARDWARE.print("]");
        #endif
        if (radio.ACKRequested()){
            radio.sendACK();
            #ifdef DEBUG_RADIO
-           Serial.print(" - ACK sent");
+           SERIAL_PORT_HARDWARE.print(" - ACK sent");
            #endif
            }
        #if HE_ARDUINO
        Blink(LED,3);
        #endif
        #ifdef DEBUG_RADIO
-       Serial.println();
+       SERIAL_PORT_HARDWARE.println();
        #endif
        }
    radio.sleep();
@@ -781,17 +781,17 @@ void receivePackages(){
                   uint8_t len = sizeof(buf69);
                   uint8_t from;
                   if (manager69.recvfromAckTimeout(buf69, &len, 2000, &from)){
-                        Serial.print("got reply from : 0x");
-                        Serial.print(from, HEX);
-                        Serial.print(": ");
-                        Serial.println((char*)buf69);
+                        SERIAL_PORT_HARDWARE.print("got reply from : 0x");
+                        SERIAL_PORT_HARDWARE.print(from, HEX);
+                        SERIAL_PORT_HARDWARE.print(": ");
+                        SERIAL_PORT_HARDWARE.println((char*)buf69);
                   }
                   else{
-                        Serial.println("No reply, is rf95_reliable_datagram_server running?");
+                        SERIAL_PORT_HARDWARE.println("No reply, is rf95_reliable_datagram_server running?");
                   }
             }
             else
-            Serial.println("sendtoWait failed");
+            SERIAL_PORT_HARDWARE.println("sendtoWait failed");
         #else
             manager69.sendtoWait(buf69, sizeof(buf69), HE_RH69_GATEWAY_ID);
         #endif
@@ -856,7 +856,7 @@ void receivePackages(){
                       terrine.log("@", false);
                       terrine.log(from);
                   #endif
-                  if (success){Serial.println((char*)buf69); Serial.println();}
+                  if (success){SERIAL_PORT_HARDWARE.println((char*)buf69); SERIAL_PORT_HARDWARE.println();}
         }
         memset(&buf69[0], 0, len);
     }
@@ -878,7 +878,7 @@ void receivePackages(){
                       terrine.log("@", false);
                       terrine.log(from);
                   #endif
-                  if (success){Serial.println((char*)buf95); Serial.println();}
+                  if (success){SERIAL_PORT_HARDWARE.println((char*)buf95); SERIAL_PORT_HARDWARE.println();}
         }
         memset(&buf95[0], 0, len);
     }
