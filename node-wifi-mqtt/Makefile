@@ -14,13 +14,20 @@ LIBS = \
     $(ESP_LIBS)/Wire \
     $(ESP_LIBS)/ESP8266WiFi \
     $(ESP_LIBS)/ESP8266HTTPClient \
-    ../libraries/Adafruit_MQTT_Library/*.{h,cpp} \
+    ../libraries/Adafruit_MQTT_Library/*.h \
+    ../libraries/Adafruit_MQTT_Library/*.cpp \
     ../libraries/ArduinoJson/include \
     ../libraries/OneWire \
     ../libraries/DallasTemperature \
     ../libraries/RobTillaart-Arduino/libraries/DHTstable \
     ../libraries/RobTillaart-Arduino/libraries/RunningMedian \
-    ../libraries/HX711
+    ../libraries/HX711 \
+    ../libraries/ADS1231
 
 # Run makeEspArduino
 include ../tools/makeEspArduino/makeEspArduino.mk
+
+### FWBUILDER_DIR
+### Include helpers from Firmware-Builder directory.
+FWBUILDER_DIR     = ../tools/Firmware-Builder
+include $(FWBUILDER_DIR)/Helper.mk

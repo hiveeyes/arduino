@@ -6,7 +6,7 @@
  * All settings for controlling the behavior and role
  * of the firmware should be made inside this file.
  *
- * Software release 0.14.0
+ * Software release 0.16.0
  *
  * Copyright (C) 2014-2017  Richard Pobering <einsiedlerkrebs@ginnungagap.org>
  * Copyright (C) 2014-2017  Andreas Motl <andreas.motl@elmyra.de>
@@ -26,7 +26,7 @@
 #define HE_RFM69_OTA              false
 #define HE_BERadio                false
 #define HE_RADIO                  false
-//#define HE_CONTAINERS             false
+#define HE_CONTAINERS             false
 
 
 #define IS_NODE                   false
@@ -153,7 +153,7 @@
     #define HX711_OFFSET          8361975
 
     #define HX711_KNOWN_WEIGHT     21901.f
-    #ifdef HE_CONTAINERS
+    #if HE_CONTAINERS
         #define CONT_WGHT        true
     #endif
 #endif

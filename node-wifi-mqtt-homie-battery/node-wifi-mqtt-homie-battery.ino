@@ -52,7 +52,7 @@
 #include <RunningMedian.h>
 
 #define FW_NAME "node-wifi-mqtt-homie-battery"
-#define FW_VERSION "1.0.6b"
+#define FW_VERSION "0.9.4"
 const int DEFAULT_SLEEP_TIME = 600;
 
 // PINs
@@ -65,6 +65,8 @@ const int DEFAULT_SLEEP_TIME = 600;
 */
 const long DEFAULT_WEIGHT_OFFSET = 154231; // Load cell zero offset. 
 const float DEFAULT_KILOGRAM_DIVIDER = 21.76;  // Load cell value per kilogram.
+const float DEFAULT_CALIBRATION_TEMPERATURE = 20.0; // Temperature at which the scale has been calibrated for Temperature compensation
+const float DEFAULT_CALIBRATION_FACTOR_GRAM_DEGREE = 0.0; // Calibration factor in gram per degree
 
 /*
  * Scale should be calibrated with a regulated input of 3.3V!
@@ -83,6 +85,8 @@ const float DEFAULT_VCC_ADJUST = 0.13;
 HomieSetting<long> sleepTimeSetting("sleepTime", "SleepTime in seconds (max. 3600s!), default is 60s");
 HomieSetting<long> weightOffsetSetting("weightOffset", "Offset value to zero. Use BeeScale-Calibration.ino to determine.");
 HomieSetting<double> kilogramDividerSetting("kilogramDivider", "Scale value per kilogram. Use BeeScale-Calibration.ino to determine.");
+HomieSetting<double> calibrationTemperatureSetting("calibrationTemperature", "Outside Temperature at which the scale has been calibrated");
+HomieSetting<double> calibrationFactorSetting("calibrationFactor", "Calibration Factor in gram per degree. 0.0 to disable adjustment");
 HomieSetting<double> vccAdjustSetting("vccAdjust", "Calibration value for input voltage. See sketch for details.");
 
 HX711 scale;
@@ -106,8 +110,13 @@ extern "C" {
 #define STATE_SLEEP_WAKE 1
 #define STATE_CONNECT_WIFI 4
 
+// For connection loss detection    
+#define SLEEP_AFTER_X_TIMES_NO_WIFI     3
+#define SLEEP_AFTER_X_TIMES_NO_MQTT     3
+int wifi_disconnect_event_count = 0;
+int mqtt_disconnect_event_count = 0;
+
 #define BATT_WARNING_VOLTAGE 3.2          // Voltage for Low-Bat warning
-//#define WIFI_CONNECT_TIMEOUT_S 20         // max time for wifi connect to router, if exceeded reset //FIXME
 
 // RTC-MEM Adresses
 #define RTC_BASE 65
@@ -178,13 +187,13 @@ void getWeight() {
   scale.begin(DOUT, PD_SCK);
   scale.set_scale(kilogramDividerSetting.get());  //initialize scale
   scale.set_offset(weightOffsetSetting.get());    //initialize scale
-  Serial << endl << endl;
-  Serial << "Reading scale, hold on" << endl;
+  Homie.getLogger() << endl << endl;
+  Homie.getLogger() << "Reading scale, hold on" << endl;
   scale.power_up();
   for (int i = 0; i < 4; i++) {
     float WeightRaw = scale.get_units(10);
     yield();
-    Serial << "✔ Raw measurements: " << WeightRaw << "g" << endl;
+    Homie.getLogger() << "✔ Raw measurements: " << WeightRaw << "g" << endl;
     WeightSamples.add(WeightRaw);
     delay(500);                 
     yield();
@@ -192,28 +201,37 @@ void getWeight() {
   scale.power_down();
   
   weight = WeightSamples.getMedian();
+
+  //temperature compensation
+  Homie.getLogger() << "✔ uncompensated median Weight: " << weight << "g" << endl;
+  float calibrationTemperature = calibrationTemperatureSetting.get();
+  float calibrationFactor = calibrationFactorSetting.get();
+  if (temperature1 < calibrationTemperature) weight = weight+(fabs(temperature1 - calibrationTemperature)*calibrationFactor);
+  if (temperature1 > calibrationTemperature) weight = weight-(fabs(temperature1 - calibrationTemperature)*calibrationFactor);
+  Homie.getLogger() << "✔ compensated median Weight: " << weight << "g" << endl;
+
   weight = weight / 1000 ;      // we want kilogram
 }
 
 void getVolt() {
     raw_voltage = ESP.getVcc();
     vcc_adjust = vccAdjustSetting.get();
-    Serial << "Voltage adjust value is: " << vcc_adjust << "V" << endl;
+    Homie.getLogger() << "Voltage adjust value is: " << vcc_adjust << "V" << endl;
     voltage = raw_voltage / 1000 + vcc_adjust;
 }
         
 void transmit() {
-    Serial << "Weight: " << weight << " kg" << endl;
+    Homie.getLogger() << "Weight: " << weight << " kg" << endl;
     weightNode.setProperty("kilogram").setRetained(false).send(String(weight));
 
-    Serial << "Temperature0: " << temperature0 << " °C" << endl;
+    Homie.getLogger() << "Temperature0: " << temperature0 << " °C" << endl;
     temperatureNode0.setProperty("degrees").setRetained(false).send(String(temperature0));
 
-    Serial << "Temperature1: " << temperature1 << " °C" << endl;
+    Homie.getLogger() << "Temperature1: " << temperature1 << " °C" << endl;
     temperatureNode1.setProperty("degrees").setRetained(false).send(String(temperature1));
 
-    Serial << "Raw Input Voltage: " << raw_voltage << " V" << endl;
-    Serial << "Corrected Input Voltage: " << voltage << " V" << endl;
+    Homie.getLogger() << "Raw Input Voltage: " << raw_voltage << " V" << endl;
+    Homie.getLogger() << "Corrected Input Voltage: " << voltage << " V" << endl;
     batteryNode.setProperty("volt").setRetained(true).send(String(voltage));
 
     StaticJsonBuffer<200> jsonBuffer;
@@ -224,7 +242,7 @@ void transmit() {
     root["VCC"] = voltage; 
     String values;
     root.printTo(values);
-    Serial << "Json data:" << values << endl;
+    Homie.getLogger() << "Json data:" << values << endl;
     jsonNode.setProperty("__json__").setRetained(false).send(values);
 
     /*
@@ -236,24 +254,55 @@ void transmit() {
     {
       batAlarmNode.setProperty("alarm").setRetained(true).send("true");
       SLEEP_TIME = 0;
-      Serial << F("✖✖✖ Battery critically low, sleeping forever ✖✖✖") << endl;
+      Homie.getLogger() << F("✖✖✖ Battery critically low, sleeping forever ✖✖✖") << endl;
     }else
     {
       batAlarmNode.setProperty("alarm").setRetained(true).send("false");
       SLEEP_TIME = sleepTimeSetting.get();
-      Serial << "✔ Sleeping for " << SLEEP_TIME << " seconds" << endl;
+      Homie.getLogger() << "✔ Sleeping for " << SLEEP_TIME << " seconds" << endl;
     }
 }
 
 void onHomieEvent(const HomieEvent& event) {
   switch(event.type) {
+    case HomieEventType::WIFI_DISCONNECTED:
+      Homie.getLogger() << "Wi-Fi disconnected, reason: " << (int8_t)event.wifiReason << endl;
+      if ((int8_t)event.wifiReason != 8)
+      {
+        wifi_disconnect_event_count++;
+        Homie.getLogger() << "✖✖✖ Could not connect to WIFI. Event #" << wifi_disconnect_event_count << ". ✖✖✖" << endl;
+        if (wifi_disconnect_event_count >= SLEEP_AFTER_X_TIMES_NO_WIFI) 
+        {
+          wifi_disconnect_event_count = 0;
+          Homie.getLogger() << "✖✖✖ Could not connect to WLAN. Preparing for deep sleep... ✖✖✖" << endl;
+          Homie.prepareToSleep(); 
+        }
+      }
+    break;
+    case HomieEventType::MQTT_DISCONNECTED:
+      Homie.getLogger() << "MQTT disconnected, reason: " << (int8_t)event.mqttReason << endl;
+      if ((int8_t)event.mqttReason != 0)
+      {
+        mqtt_disconnect_event_count++;
+        Homie.getLogger() << "✖✖✖ Could not connect to MQTT Broker. Event #" << mqtt_disconnect_event_count << ". ✖✖✖" << endl;
+        if (mqtt_disconnect_event_count >= SLEEP_AFTER_X_TIMES_NO_MQTT)
+        {
+          mqtt_disconnect_event_count = 0;
+          Homie.getLogger() << "✖✖✖ Could not connect to MQTT Broker. Preparing for deep sleep... ✖✖✖" << endl;
+          Homie.prepareToSleep();
+        }
+      }
+    break;
     case HomieEventType::MQTT_CONNECTED:
       transmit();
       Homie.getLogger() << "✔ Data transmitted, preparing for deep sleep..." << endl;
       Homie.prepareToSleep();
     break;
+    case HomieEventType::MQTT_PACKET_ACKNOWLEDGED:
+      Homie.getLogger() << "MQTT packet acknowledged, packetId: " << event.packetId << endl;
+    break;
     case HomieEventType::READY_TO_SLEEP:
-      Serial << "✔ Ready to sleep" << endl;
+      Homie.getLogger() << "✔ Ready to sleep" << endl;
       buf[0] = STATE_SLEEP_WAKE;
       system_rtc_mem_write(RTC_STATE, buf, 1); // set state for next wakeUp
       ESP.deepSleep(SLEEP_TIME*1000000, WAKE_RF_DISABLED);
@@ -271,7 +320,7 @@ void setup() {
   system_rtc_mem_read(RTC_BASE, buf, 2); // read 2 bytes from RTC-MEMORY to get our state
   
   Serial.begin(115200);
-  Serial << endl << endl;
+  Homie.getLogger() << endl << endl;
 
   if ((buf[0] != 0x55) || (buf[1] != 0xaa))  // cold start, magic number is not present in rtc
   { state = STATE_COLDSTART;
@@ -308,14 +357,17 @@ void setup() {
       break;      
   
     case STATE_CONNECT_WIFI:
+     sleepTimeSetting.setDefaultValue(DEFAULT_SLEEP_TIME);
     /*
-     * Can't set default, see issue #323
+     * Can't set more than one value to default, see issue #323
      * https://github.com/marvinroger/homie-esp8266/issues/323
-      sleepTimeSetting.setDefaultValue(DEFAULT_SLEEP_TIME);
+     */
       weightOffsetSetting.setDefaultValue(DEFAULT_WEIGHT_OFFSET);
       kilogramDividerSetting.setDefaultValue(DEFAULT_KILOGRAM_DIVIDER);
       vccAdjustSetting.setDefaultValue(DEFAULT_VCC_ADJUST);
-    */
+      calibrationTemperatureSetting.setDefaultValue(DEFAULT_CALIBRATION_TEMPERATURE);
+      calibrationFactorSetting.setDefaultValue(DEFAULT_CALIBRATION_FACTOR_GRAM_DEGREE);
+    
       //get all measurements *BEFORE* WIFI get's active. This saves around 4s at full mA
       getTemperatures();
       getWeight();

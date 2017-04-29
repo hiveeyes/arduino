@@ -24,7 +24,7 @@ battery lifetime a lot.
 
 .. Todo::
 
-    - Alarm handler for low battery
+    - Describe how to determine scale's temperature compensation values.
 
 
 .. include:: CHANGES.rst

@@ -30,3 +30,8 @@ LIBS = \
 
 # Run makeEspArduino
 include ../tools/makeEspArduino/makeEspArduino.mk
+
+### FWBUILDER_DIR
+### Include helpers from Firmware-Builder directory.
+FWBUILDER_DIR     = ../tools/Firmware-Builder
+include $(FWBUILDER_DIR)/Helper.mk
