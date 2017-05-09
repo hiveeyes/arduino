@@ -912,7 +912,7 @@ bool wifi_connect() {
 
             // Debug WiFi
             if (SerialDebugger.debug(INFO, "wifi_connect", "WiFi connected! IP address: ")) {
-                SerialDebugger.println(WiFi.localIP());
+                SerialDebugger.println(WiFi.localIP().toString().c_str());
             }
             return true;
 
