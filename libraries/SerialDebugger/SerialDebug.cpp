@@ -37,7 +37,7 @@ void SerialDebug::begin(unsigned int baudrate){
   printer = &Serial;
 }
 
-void SerialDebug::begin(uint8_t uart, unsigned int baudrate){ 
+void SerialDebug::begin(uint8_t uart, unsigned int baudrate){
   serialPort = uart;
   enabled=true;
   switch (uart){
@@ -50,12 +50,12 @@ void SerialDebug::begin(uint8_t uart, unsigned int baudrate){
   }
 }
 
-void SerialDebug::enable(uint8_t type){ 
-  debugState = debugState | type; 
+void SerialDebug::enable(uint8_t type){
+  debugState = debugState | type;
 }
 
 void SerialDebug::disable(uint8_t type){
-  debugState = debugState & ~type; 
+  debugState = debugState & ~type;
 }
 
 void SerialDebug::toggle(uint8_t type){
@@ -67,7 +67,7 @@ void SerialDebug::toggle(uint8_t type){
 }
 
 bool SerialDebug::debug(uint8_t type, char* source, char* message){
-  
+
   if (enabled && ((debugState & type)==type)){
     println().print(millis()).print(" - ");
 	if ((debugState & type)==ERROR){ print("ERROR:"); }
@@ -86,7 +86,7 @@ SerialDebug SerialDebugger;
 || Changelog:
 ||
 || 2009-04-15 - Alexander Brevig : No longer need for Arduino core modification
-|| 2009-04-15 - Alexander Brevig : Fixed a bug in debug and write 
+|| 2009-04-15 - Alexander Brevig : Fixed a bug in debug and write
 || 2009-04-12 - Alexander Brevig : Implemented cascadable print functions
 || 2009-04-12 - Alexander Brevig : Implemented void append(char* message);
 || 2009-04-12 - Alexander Brevig : Initial Release
