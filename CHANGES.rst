@@ -19,6 +19,7 @@ in-progress
     - Add sensor ADS1231. Thanks, Clemens!
 
 - Add vanilla “SerialDebugger” library from http://playground.arduino.cc/Code/SerialDebugger
+- SerialDebugger: Fix newlines and label in output
 
 
 .. _version-0.15.0:

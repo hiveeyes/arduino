@@ -72,9 +72,9 @@ bool SerialDebug::debug(uint8_t type, char* source, char* message){
     println().print(millis()).print(" - ");
 	if ((debugState & type)==ERROR){ print("ERROR:"); }
 	else if ((debugState & type)==WARNING){ print("WARNING:"); }
-	else if ((debugState & type)==NOTIFICATION){ print("NOTIFICATION:"); }
+	else if ((debugState & type)==NOTIFICATION){ print("INFO:"); }
 	else if ((debugState & type)==STATUSUPDATE){ print("STATUS:"); }
-	print("\n\t\t").print(source).print(" | ").print(message).print(" ");
+	print("\t").print(source).print(" | ").print(message).print(" ");
 	return true;
   }
   return false;
