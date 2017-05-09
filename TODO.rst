@@ -21,6 +21,25 @@ Misc
 ====
 
 
+2017-04-20
+----------
+- Make more #define's @ node-gprs-http-firmware-builder::
+
+    const long loadCellZeroOffset = 38623;
+    //  const long loadCellKgDivider  = 22053;
+    // 1/2 value for single side measurement, so that 1 kg is displayed as 2 kg
+    const long loadCellKgDivider  = 11026;
+
+- With the "Modern, flexible firmware: WiFi, MQTT, JSON" firmware, decode and interpolate the
+  topology information from the channel address into appropriate firmware variables:
+  https://community.hiveeyes.org/t/firmware-builder-beta/265
+
+- check out workbench@elbanco:/opt/esp-open-sdk after resizing /opt
+
+    - https://github.com/pfalcon/esp-open-sdk
+    - http://domoticx.com/sdk-esp8266-xtensa-architecture-toolchain/
+
+
 2017-04-09
 ----------
 - [o] Make SerialDebugger optionally use SERIAL_PORT_HARDWARE
