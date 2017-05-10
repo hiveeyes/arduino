@@ -580,7 +580,7 @@ void setup_sensors() {
             // Get address of single device
             if (!ds18b20_sensor.getAddress(ds18b20_addresses[ds18b20_device_order[i]], i)) {
                 if (SerialDebugger.debug(WARNING, "setup_sensors", "Unable to find address for temperature array device")) {
-                    SerialDebugger.println("Device #" + i);
+                    SerialDebugger.print("Device #" + i);
                 }
             }
 
@@ -668,19 +668,19 @@ void read_humidity_temperature() {
 
             case DHTLIB_ERROR_CHECKSUM:
                 if (SerialDebugger.debug(ERROR, "read_humidity_temperature", "DHT checksum error.")) {
-                    SerialDebugger.println("Device #" + i);
+                    SerialDebugger.print("Device #" + i);
                 }
                 break;
 
             case DHTLIB_ERROR_TIMEOUT:
                 if (SerialDebugger.debug(ERROR, "read_humidity_temperature", "DHT timeout error.")) {
-                    SerialDebugger.println("Device #" + i);
+                    SerialDebugger.print("Device #" + i);
                 }
                 break;
 
             default:
                 if (SerialDebugger.debug(ERROR, "read_humidity_temperature", "DHT unknown error.")) {
-                    SerialDebugger.println("Device #" + i);
+                    SerialDebugger.print("Device #" + i);
                 }
                 break;
         }
@@ -709,7 +709,7 @@ void read_weight() {
 
         // Debugging
         if (SerialDebugger.debug(INFO, "read_weight", "Read weight (HX711)")) {
-            Serial.println("Weight: " + String(weight));
+            SerialDebugger.print("Weight: ").print(weight);
         }
 
         // Put the ADC to sleep mode
@@ -778,13 +778,13 @@ void read_battery_level() {
     // and the maximum analog read value should be 774 (4.2V).
     int adc_level = analogRead(A0);
     if (SerialDebugger.debug(INFO, "read_battery_level", "Battery ADC: ")) {
-        SerialDebugger.println(adc_level);
+        SerialDebugger.print(adc_level);
     }
 
     // Convert battery level to percentage
     battery_level = map(adc_level, 535, 759, 0, 100);
     if (SerialDebugger.debug(INFO, "read_battery_level", "Battery level: ")) {
-        SerialDebugger.print(battery_level).println("%");
+        SerialDebugger.print(battery_level).print("%");
     }
 
     // Give operating system / watchdog timer some breath
@@ -912,7 +912,7 @@ bool wifi_connect() {
 
             // Debug WiFi
             if (SerialDebugger.debug(INFO, "wifi_connect", "WiFi connected! IP address: ")) {
-                SerialDebugger.println(WiFi.localIP().toString().c_str());
+                SerialDebugger.print(WiFi.localIP().toString().c_str());
             }
             return true;
 
@@ -920,7 +920,7 @@ bool wifi_connect() {
         } else {
 
             if (SerialDebugger.debug(INFO, "wifi_connect", "Retrying WiFi connection in a few seconds: ")) {
-                SerialDebugger.println(WIFI_RETRY_DELAY);
+                SerialDebugger.print(WIFI_RETRY_DELAY);
             }
 
             // Wait some time before retrying
@@ -950,7 +950,7 @@ bool mqtt_connect() {
     while ((ret = mqtt.connect()) != 0) {
 
         if (SerialDebugger.debug(WARNING, "mqtt_connect", "Error connecting to MQTT broker: ")) {
-            SerialDebugger.println(String(mqtt.connectErrorString(ret)).c_str());
+            SerialDebugger.print(String(mqtt.connectErrorString(ret)).c_str());
         }
 
         retries--;
@@ -960,7 +960,7 @@ bool mqtt_connect() {
         }
 
         if (SerialDebugger.debug(INFO, "mqtt_connect", "Retrying MQTT connection in a few seconds: ")) {
-            SerialDebugger.println(MQTT_RETRY_DELAY);
+            SerialDebugger.print(MQTT_RETRY_DELAY);
         }
 
         // Wait some time before retrying
