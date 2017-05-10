@@ -17,6 +17,7 @@ in-progress
 
     - Improve SerialDebugger output
     - Fix output of local ip address with SerialDebugger
+    - Improve connectivity flow
 
 
 .. _version-0.16.0:

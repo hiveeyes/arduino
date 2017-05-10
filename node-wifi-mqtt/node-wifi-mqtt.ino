@@ -24,7 +24,7 @@
               wifi_connect/mqtt_connect regarding retrying.
               Give operating system / watchdog timer more breath.
               Add deep sleep mode.
-   2017-04-07 Fix DEEPSLEEP_TIME and IP address output. Thanks, Matthias!
+   2017-04-07 Fix IP address output. Thanks, Matthias!
               When SENSOR_DUMMY is enabled, don't use any real sensors. Thanks, Giuseppe!
               Add comment about connecting GPIO#16 to RST for waking up after deep sleep. Thanks, Giuseppe and Matthias!
               Add sensor ADS1231. Thanks, Clemens!
@@ -105,16 +105,13 @@
 // General configuration
 // =====================
 
-// Measure and transmit each five minutes
-#define MEASUREMENT_INTERVAL    5 * 60 * 1000
+// How often to measure and transmit (seconds)
+#define MEASUREMENT_INTERVAL    5 * 60
 
 // Whether device should go to deep sleep after measurement.
 // To enable wakeup of the MCU, please connect the GPIO#16 pin to the RST pin.
 // On NodeMCU boards, the GPIO#16 pin is also labeled "D0".
 #define DEEPSLEEP_ENABLED       false
-
-// Compute sleep time in microseconds (*ms *us)
-#define DEEPSLEEP_TIME          MEASUREMENT_INTERVAL * 1000UL
 
 // Enable debug printing to UART
 #define DEBUG                   true
@@ -130,10 +127,10 @@
 // ----
 
 // How often to retry connecting to the WiFi network
-#define WIFI_RETRY_COUNT    15
+#define WIFI_RETRY_COUNT    5
 
 // How long to delay between WiFi (re)connection attempts (seconds)
-#define WIFI_RETRY_DELAY    0.4f
+#define WIFI_RETRY_DELAY    1.5f
 
 // The WiFi network credentials for multiple access points
 #define WIFI_SSID_1         "wifi-ssid-1"
@@ -154,7 +151,7 @@
 #define MQTT_RETRY_COUNT    5
 
 // How long to delay between MQTT (re)connection attempts (seconds)
-#define MQTT_RETRY_DELAY    5.0f
+#define MQTT_RETRY_DELAY    1.5f
 
 // The address of the MQTT broker to connect to
 #define MQTT_BROKER         "swarm.hiveeyes.org"
@@ -208,8 +205,8 @@
 // -------------------
 // HX711: Scale sensor
 // -------------------
-#define HX711_PIN_PDSCK         12
-#define HX711_PIN_DOUT          14
+#define HX711_PIN_PDSCK             12
+#define HX711_PIN_DOUT              14
 
 
 // ---------------------
@@ -463,9 +460,6 @@ void setup() {
     // Setup WiFi
     wifi_setup();
 
-    // Connect to WiFi
-    wifi_connect();
-
     // Setup all sensors
     setup_sensors();
 
@@ -474,13 +468,13 @@ void setup() {
         // Measurement and telemetry
         measure();
 
-        // Have to flush the serial interface before deep sleep?
-        Serial.flush();
-
         // Go to deep sleep mode
         // http://www.esp8266.com/wiki/doku.php?id=esp8266_power_usage
         // http://www.esp8266.com/viewtopic.php?f=32&t=12901
-        ESP.deepSleep(DEEPSLEEP_TIME, WAKE_RF_DEFAULT);
+        if (SerialDebugger.debug(INFO, "duty", "Going to deep sleep mode for")) {
+            SerialDebugger.print(MEASUREMENT_INTERVAL).print("seconds");
+        }
+        ESP.deepSleep(MEASUREMENT_INTERVAL * 1000UL * 1000UL, WAKE_RF_DEFAULT);
 
     #endif
 
@@ -494,7 +488,10 @@ void loop() {
         measure();
 
         // Pause some time. After that, continue with the next measurement cycle.
-        delay(MEASUREMENT_INTERVAL);
+        if (SerialDebugger.debug(INFO, "duty", "Delaying main loop for")) {
+            SerialDebugger.print(MEASUREMENT_INTERVAL).print("seconds");
+        }
+        delay(MEASUREMENT_INTERVAL * 1000UL);
 
     #endif
 
@@ -502,8 +499,15 @@ void loop() {
 
 void measure() {
 
+    // Connect to WiFi
+    if (!wifi_connect()) {
+        return;
+    }
+
     // Connect to MQTT broker
-    mqtt_connect();
+    if (!mqtt_connect()) {
+        return;
+    }
 
     // Read all sensors
     read_sensors();
@@ -901,6 +905,11 @@ void wifi_setup() {
 // TODO: Refactor to TerkinTelemetry
 bool wifi_connect() {
 
+    // If already connected, don't do anything and signal success
+    if (WiFi.status() == WL_CONNECTED) {
+        return true;
+    }
+
     // Debugging
     SerialDebugger.debug(INFO, "wifi_connect", "Connecting to WiFi");
 
@@ -911,7 +920,7 @@ bool wifi_connect() {
         if ((wifi_multi.run() == WL_CONNECTED)) {
 
             // Debug WiFi
-            if (SerialDebugger.debug(INFO, "wifi_connect", "WiFi connected! IP address: ")) {
+            if (SerialDebugger.debug(INFO, "wifi_connect", "WiFi connected. IP address:")) {
                 SerialDebugger.print(WiFi.localIP().toString().c_str());
             }
             return true;
@@ -919,8 +928,8 @@ bool wifi_connect() {
         // Not connected yet
         } else {
 
-            if (SerialDebugger.debug(INFO, "wifi_connect", "Retrying WiFi connection in a few seconds: ")) {
-                SerialDebugger.print(WIFI_RETRY_DELAY);
+            if (SerialDebugger.debug(INFO, "wifi_connect", "Checking for WiFi connection in")) {
+                SerialDebugger.print(WIFI_RETRY_DELAY).print("seconds");
             }
 
             // Wait some time before retrying
@@ -937,8 +946,8 @@ bool wifi_connect() {
 // TODO: Refactor to TerkinTelemetry
 bool mqtt_connect() {
 
+    // If already connected, don't do anything and signal success
     if (mqtt.connected()) {
-        SerialDebugger.debug(INFO, "mqtt_connect", "MQTT connection already alive");
         return true;
     }
 
@@ -949,7 +958,7 @@ bool mqtt_connect() {
     int8_t ret;
     while ((ret = mqtt.connect()) != 0) {
 
-        if (SerialDebugger.debug(WARNING, "mqtt_connect", "Error connecting to MQTT broker: ")) {
+        if (SerialDebugger.debug(WARNING, "mqtt_connect", "Error connecting to MQTT broker:")) {
             SerialDebugger.print(String(mqtt.connectErrorString(ret)).c_str());
         }
 
@@ -959,8 +968,8 @@ bool mqtt_connect() {
             return false;
         }
 
-        if (SerialDebugger.debug(INFO, "mqtt_connect", "Retrying MQTT connection in a few seconds: ")) {
-            SerialDebugger.print(MQTT_RETRY_DELAY);
+        if (SerialDebugger.debug(INFO, "mqtt_connect", "Retrying MQTT connection in")) {
+            SerialDebugger.print(MQTT_RETRY_DELAY).print("seconds");
         }
 
         // Wait some time before retrying
@@ -968,7 +977,9 @@ bool mqtt_connect() {
     }
 
     if (mqtt.connected()) {
-        SerialDebugger.debug(INFO, "mqtt_connect", "Successfully connected to MQTT broker");
+        if (SerialDebugger.debug(INFO, "mqtt_connect", "Successfully connected to MQTT broker")) {
+            SerialDebugger.print(MQTT_BROKER);
+        }
         return true;
     }
 
