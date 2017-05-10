@@ -19,7 +19,7 @@ in-progress
     - Add sensor ADS1231. Thanks, Clemens!
 
 - Add vanilla “SerialDebugger” library from http://playground.arduino.cc/Code/SerialDebugger
-- `node-wifi-mqtt.ino`_ firmware:
+- Update `node-wifi-mqtt.ino`_ firmware. Thanks, Matthias and Giuseppe!
 
     - Improve SerialDebugger output
     - Fix output of local ip address with SerialDebugger
