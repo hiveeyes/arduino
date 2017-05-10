@@ -10,8 +10,13 @@ CHANGES
 in-progress
 ===========
 - :ref:`node-yun-http`: Make it compile from the :ref:`firmware-builder` on Arduino Core 1.5.6.2 on Linux
-- Prepare the :ref:`generic-firmware` and :ref:`scale-adjust-firmware` for :ref:`firmware-builder` 
+- Prepare the :ref:`generic-firmware` and :ref:`scale-adjust-firmware` for :ref:`firmware-builder`
 - Improve firmware building for :ref:`scale-adjust-firmware` re. artefact naming
+- Add vanilla “SerialDebugger” library from http://playground.arduino.cc/Code/SerialDebugger
+- Update `node-wifi-mqtt.ino`_ firmware. Thanks, Matthias and Giuseppe!
+
+    - Improve SerialDebugger output
+    - Fix output of local ip address with SerialDebugger
 
 
 .. _version-0.16.0:
