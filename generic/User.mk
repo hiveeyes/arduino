@@ -33,10 +33,10 @@ BOARD_SUB         = 8MHzatmega328
 
 ### MONITOR_PORT
 ### The port your board is connected to. Using an '*' tries all the ports and finds the right one.
-#MONITOR_PORT       = /dev/ttyUSB0
+MONITOR_PORT       = /dev/ttyUSB0
 
 ### MONITOR_BAUDRATE: Use appropriate Serial baudrate
-#MONITOR_BAUDRATE  = 115200
+MONITOR_BAUDRATE  = 115200
 
 ### Program to access UART TTY
 MONITOR_CMD       = picocom

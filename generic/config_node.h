@@ -8,6 +8,10 @@
 #define HE_RADIO                true
 #define HE_RH69                 true
 
+// Debug
+#define HE_DEBUG                  true               // turn on debug output and choose below
+#define DEBUG_SENSORS             true              // set to 1 for sensor debug
+
 // Details
 #define HE_SLEEP                  true              // enable sleeping
 #define HE_SCALE                  true
@@ -22,3 +26,8 @@
 #define HE_RHTCP                  false              // RadioHead RH_TCP driver
 #define HE_FLASH                  false              // Enable SPI-flash
 
+// Scale
+
+
+#define HX711_OFFSET          8361975
+#define HX711_KNOWN_WEIGHT     21901
