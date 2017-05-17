@@ -63,12 +63,12 @@
 
 int SENDERID2 = 2;
 //Date/Time,Weight,Outside Temp,Outside Humid,Inside Temp,Inside Humid,Brood Temp,Voltage
-String DATA2 = ",4.143,28.9,33.7,25.2,34.7,26.6,26.8,26.6,26.6,26.4,4.26";
+String DATA2 = "4.143,28.9,33.7,25.2,34.7,26.6,26.8,26.6,26.6,26.4,4.26";
 int DATALEN2 = DATA2.length();
 
 //Date/Time,Weight,Outside Temp,Outside Humid,Inside Temp,Inside Humid,H1 Temp,H2 Temp,H3 Temp,H4 Temp,H5 Temp,Voltage
 int SENDERID3 = 3;
-String DATA3 = ",1.001,16.5,83.9,16.2,81.6,16.1,3.9";
+String DATA3 = "1.001,16.5,83.9,16.2,81.6,16.1,3.9";
 int DATALEN3 = DATA3.length();
 
 
@@ -105,10 +105,14 @@ void loop() {
 */
 
     Serial.print(SENDERID2, DEC);
+    Serial.print(",,");
     Serial.println(DATA2);
+
     Serial.print(SENDERID3, DEC);
+    Serial.print(",,");
     Serial.println(DATA3);
-    
+
+    delay(1000);
 
 }
 
