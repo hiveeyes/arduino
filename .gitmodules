@@ -57,3 +57,6 @@
 [submodule "libraries/DS3231"]
 	path = libraries/DS3231
 	url = https://github.com/jcastaneyra/ds3231_library
+[submodule "libraries/Sodaq_BMP085"]
+	path = libraries/Sodaq_BMP085
+	url = https://github.com/SodaqMoja/Sodaq_BMP085
