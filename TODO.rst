@@ -1,5 +1,7 @@
 .. include:: resources.rst
 
+.. _todo:
+
 ####
 TODO
 ####
@@ -10,9 +12,187 @@ TODO
 
 ----
 
+
+****
+2017
+****
+
+Misc
+====
+
+
+2017-04-20
+----------
+- Make more #define's @ node-gprs-http-firmware-builder::
+
+    const long loadCellZeroOffset = 38623;
+    //  const long loadCellKgDivider  = 22053;
+    // 1/2 value for single side measurement, so that 1 kg is displayed as 2 kg
+    const long loadCellKgDivider  = 11026;
+
+- With the "Modern, flexible firmware: WiFi, MQTT, JSON" firmware, decode and interpolate the
+  topology information from the channel address into appropriate firmware variables:
+  https://community.hiveeyes.org/t/firmware-builder-beta/265
+
+- check out workbench@elbanco:/opt/esp-open-sdk after resizing /opt
+
+    - https://github.com/pfalcon/esp-open-sdk
+    - http://domoticx.com/sdk-esp8266-xtensa-architecture-toolchain/
+
+
+2017-04-09
+----------
+- [o] Make SerialDebugger optionally use SERIAL_PORT_HARDWARE
+
+
+2017-04-06
+----------
+- Further improvements to :ref:`node-wifi-mqtt`
+
+    - [o] Publish discrete values to the MQTT bus, use MQTT_DISCRETE maybe.
+    - [o] Add debugging using http://playground.arduino.cc/Code/SerialDebugger
+    - [x] Comment: "Connect the D0 pin with RST pin to enable wakeup of the MCU." re. deep sleep mode
+        - On "Adafruit Feather HUZZAH", wire RST with GPIO16,
+          see also https://learn.adafruit.com/adafruit-feather-huzzah-esp8266/pinouts
+    - [x] @gtuveri: it makes no sense to add #if SENSOR* stuff if SENSOR_DUMMY is true?
+    - [o] @gtuveri: why to proceed within execution if no WiFi connection has been established?
+    - [x] @Thias: ``#define DEEPSLEEP_TIME MEASUREMENT_INTERVAL * 1000UL`` since measurement interval is in ms already
+    - [x] Improve inline comments again
+    - [o] Switch from Adafruit_MQTT to https://github.com/tuanpmt/esp_mqtt or https://github.com/marvinroger/async-mqtt-client?
+    - [x] Add sensor ADS1231
+
+
+2017-04-05
+----------
+- Polish https://github.com/hiveeyes/arduino/tree/master/libraries/ADS1231
+- Add http://www.nikolaus-lueneburg.de/2016/10/wemos-d1-mini-battery-shield/
+- Announce at http://forum.sodaq.com/t/hive-scale-code/275 when this works on ESP8266 also
+
+
+2017-04-03
+----------
+- https://github.com/PaulStoffregen/TimeAlarms
+- https://github.com/pycom/pycom-micropython/blob/master/docs/lopy/quickref.rst
+- https://github.com/pycom/pycom-micropython/blob/master/docs/library/network.LoRa.rst
+
+
+2017-03-31
+----------
+- Use LWT (Last Will and Testament) MQTT feature
+  http://www.hivemq.com/blog/mqtt-essentials-part-9-last-will-and-testament
+- Update TerkinData with appropriate JSON serialization::
+
+    int json_length = root.measureLength();
+    char payload[json_length+1];
+    root.printTo(payload, sizeof(payload));
+
+  See also: https://github.com/bblanchon/ArduinoJson/issues/75
+
+- Let all devices send a "system boot" annotation
+
+
+2017-01-11
+----------
+- Document ADS1231 patch for ESP8266, write to forum
+- generic.ino: Rename RESCEIVER_ID to RECEIVER_ID
+- Augment calibration sketches to send calibration values to backend?
+- Use PlatformIO
+- Rename repository from "arduino" to "firmware"
+- node-wifi-mqtt: Submit data as JSON container
+- # If you like this project, please add a star!
+- Test framework based on gtest: https://github.com/google/googletest
+
+2017-01-10
+----------
+- Should use recent ESP8266 Arduino Core, see also https://github.com/esp8266/Arduino/compare/2.3.0...master
+- Properly document correct libraries for individual sketches (A. Nickel)
+- https://github.com/mike-matera/ArduinoSTL/pull/4
+
+2017-01-09
+----------
+- https://github.com/bogde/HX711/pull/59
+- Alternative libraries for ADS1231:
+
+    - https://github.com/rfjakob/barwin-arduino/tree/master/lib/ads1231
+    - | https://github.com/jensfranke/ads-1231-particle-library
+      | see also: https://community.particle.io/t/library-for-ads-1231-bee-hive-weigh-scale/21719
+
+- http://forum.sodaq.com/c/beekeeping
+- Rename node-gprs-http to node-gsm-wifi-http
+- node-openhive: Make HTTP interface compatible with Hiveeyes backend
+- node-openhive: Make feature flags compatible with firmware builder
+
+
 ****
 2016
 ****
+
+Misc
+====
+
+2016-12-15
+----------
+RaspIO setup
+
+- Hardware jumper to decouple SPI from RFM69
+
+- Compile using::
+
+    cat Makefile-Linux.mk
+
+    # RasPIO Hiveeyes, 2016-12-15
+    BOARD_TAG         = gert328
+    MCU = atmega328p
+    F_CPU = 12000000L
+    ISP_PROG = gpio
+    FORCE_MONITOR_PORT = true
+
+- Upload using::
+
+    sudo avrdude -P gpio -c gpio -p atmega328p -v -U flash:w:../../bin/src/gert328/src.hex
+
+- Enable UART on /dev/ttyS0::
+
+    root@raspberrypi:~# cat /boot/config.txt | grep uart
+    enable_uart=1
+
+- Use the **correct** serial device::
+
+    screen /dev/ttyS0 115200
+
+.. seealso:: http://raspberrypi.stackexchange.com/questions/47671/why-my-program-wont-communicate-through-ttyama0-on-raspbian-jessie
+
+- Stop picocom::
+
+    CTRL + A + X
+
+
+2016-12-02
+----------
+- [o] Investigate alternative HX711 library
+
+    - http://www.arduinolibraries.info/libraries/queuetue-digital-balance-library
+    - http://www.arduinolibraries.info/libraries/queuetue-hx711-library
+    - https://github.com/queuetue/Q2-Balance-Arduino-Library
+    - https://github.com/queuetue/Q2-HX711-Arduino-Library
+
+- [o] Migrate from StandardCplusplus to ArduinoSTL?
+    - https://github.com/mike-matera/ArduinoSTL
+    - http://platformio.org/lib/show/750/ArduinoSTL
+    - See also https://github.com/maniacbug/StandardCplusplus/pull/20
+
+
+2016-11-01
+----------
+- [o] Provide complete Zip Snapshot of Repository contents
+
+
+2016-11-01
+----------
+- [o] Add http://platformio.org/
+- [o] Add https://nodemcu-build.com/
+- [o] Add https://www.heise.de/developer/artikel/Auf-Kommando-3361570.html
+
 
 Bugs
 ====

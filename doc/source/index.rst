@@ -11,61 +11,58 @@
 Hiveeyes Arduino documentation
 ##############################
 
-This is the documentation for the `Hiveeyes Arduino repository`_.
-The firmware source code supports different hardware.
-Feel welcome to explore this space.
-
-******
-Topics
-******
+This is the firmware source code documentation of the `Hiveeyes project`_,
+a beehive monitoring system made of open source software and hardware components.
+For an overview about the whole system, please have a look at :ref:`hiveeyes-system`.
+Enjoy reading and exploring this space.
 
 .. toctree::
     :maxdepth: 1
-    :glob:
+    :hidden:
 
     README
+
+    firmwares
+    development
+
+    CONTRIBUTORS
+    Changelog <CHANGES>
+    LICENSE
+
     BERadio/README
+    TerkinData/README
     firmware-builder
+
+
+************
+Introduction
+************
+Please have a look at the :ref:`README` about how to setup this thing.
+It also describes the structure of the `Hiveeyes Arduino repository`_,
+which supports different kinds of firmwares matching different environments.
+
 
 *********
 Firmwares
 *********
+There are different firmwares for different flavours of sensor nodes.
 
-.. toctree::
-    :maxdepth: 1
-    :glob:
+- :ref:`firmware-overview`
 
-    firmware/generic/README
-    firmware/node-gprs-http/README
-    firmware/scale-adjust/README
+Stable:
 
+- :ref:`WiFi sensor node <node-wifi-mqtt>`
+- :ref:`WiFi sensor node based on Homie <node-wifi-mqtt-homie>`
+- :ref:`GPRS sensor node <open-hive-firmware-gprs>`
+- :ref:`Radio sensor and gateway nodes <firmwares-beradio>`
+- :ref:`scale-adjust-firmware`
 
-*******
-Details
-*******
+In development:
 
-Development
-===========
-
-.. toctree::
-    :maxdepth: 1
-    :glob:
-
-    CHANGES
-    TODO
-
-
-Research
-========
-
-.. toctree::
-    :maxdepth: 1
-    :glob:
-
-    BERadio/research
-    BERadio/firmware-size
-
-.. seealso:: Specification and more at :ref:`beradio`.
+- :ref:`generic-firmware`
+- :ref:`open-hive-firmware-rfm69-node`
+- :ref:`open-hive-firmware-rfm69-gateway-sdcard`
+- :ref:`open-hive-firmware-rfm69-gateway-uart`
 
 
 .. Indices and tables

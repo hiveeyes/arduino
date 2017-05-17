@@ -28,24 +28,56 @@ Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA
 #ifdef ARDUINO
     #include <Arduino.h>
     #include <MemoryFree.h>
+#elif defined(__unix__)
+#else
+    #include <iostream>
 #endif
 
 void Terrine::log(const char *message, bool newline) {
-    #if defined SIMULAVR
+    #ifdef SIMULAVR
         if (newline) {
             _d(message);
         } else {
             _l(message);
         }
-    #else
+    #elif defined(ARDUINO)
         if (newline) {
-            Serial.println(message);
+            SERIAL_PORT_HARDWARE.println(message);
         } else {
-            Serial.print(message);
+            SERIAL_PORT_HARDWARE.print(message);
         }
         #ifdef ARDUINO
             delay(TERRINE_SERIAL_DELAY);
         #endif
+    #else
+        std::cout << message;
+        if (newline) {
+            std::cout << std::endl;
+        }
+    #endif
+}
+
+void Terrine::log(bool newline) {
+    #ifdef SIMULAVR
+        if (newline) {
+            _d("");
+        } else {
+            _l("");
+        }
+    #elif defined(ARDUINO)
+        if (newline) {
+            SERIAL_PORT_HARDWARE.println("");
+        } else {
+            SERIAL_PORT_HARDWARE.print("");
+        }
+        #ifdef ARDUINO
+            delay(TERRINE_SERIAL_DELAY);
+        #endif
+    #else
+        std::cout << "";
+        if (newline) {
+            std::cout << std::endl;
+        }
     #endif
 }
 
@@ -54,10 +86,12 @@ void Terrine::log(int value) {
         _d(value);
     #else
         #ifdef ARDUINO
-            Serial.println(value);
+            SERIAL_PORT_HARDWARE.println(value);
             delay(TERRINE_SERIAL_DELAY);
+        #elif defined(__unix__)
+            SERIAL_PORT_HARDWARE.println(std::to_string(value).c_str());
         #else
-            Serial.println(std::to_string(value).c_str());
+            std::cout << value << std::endl;
         #endif
     #endif
 }
@@ -73,12 +107,15 @@ void Terrine::logmem() {
     #ifdef SIMULAVR
         _d("free: n/a");
     #else
-        Serial.print("free: ");
         #ifdef ARDUINO
-            Serial.println(memfree());
+            SERIAL_PORT_HARDWARE.print("free: ");
+            SERIAL_PORT_HARDWARE.println(memfree());
             delay(TERRINE_SERIAL_DELAY);
+        #elif defined(__unix__)
+            SERIAL_PORT_HARDWARE.println(std::to_string(memfree()).c_str());
         #else
-            Serial.println(std::to_string(memfree()).c_str());
+            log("free: ", false);
+            log(std::to_string(memfree()).c_str(), true);
         #endif
     #endif
 }

@@ -27,6 +27,8 @@ and :ref:`beradio-c++` libraries as well as a bunch of other ones.
 Synopsis
 ********
 
+RF multi-hop yak shaving.
+
 .. graphviz:: synopsis.dot
 
 This firmware can satisfy different purposes:
@@ -41,9 +43,11 @@ This firmware can satisfy different purposes:
 
     - A gateway node receives RFM95 (LoRa) radio signals and emits
       the payloads to its UART interface connected to the gateway
-      SoC (e.g. a RaspberryPi). The decoding will be handled by
-      the downstream gateway software :ref:`beradio-python`,
-      which in turn forwards it to the MQTT bus.
+      SoC (e.g. a RaspberryPi) running the :ref:`BERadio forwarder <beradio-python>`.
+
+The :ref:`BERadio forwarder <beradio-python>` will decode the data according
+to the :ref:`beradio-spec` and forward it to the MQTT bus serialized as JSON
+dictionary, all of which is beyond the scope of this MCU code.
 
 
 *********

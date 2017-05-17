@@ -9,22 +9,164 @@ CHANGES
 
 in-progress
 ===========
+- :ref:`node-yun-http`: Make it compile from the :ref:`firmware-builder` on Arduino Core 1.5.6.2 on Linux
+- Prepare the :ref:`generic-firmware` and :ref:`scale-adjust-firmware` for :ref:`firmware-builder`
+- Improve firmware building for :ref:`scale-adjust-firmware` re. artefact naming
+- Add vanilla “SerialDebugger” library from http://playground.arduino.cc/Code/SerialDebugger
+- Update `node-wifi-mqtt.ino`_ firmware. Thanks, Matthias and Giuseppe!
+
+    - Improve SerialDebugger output
+    - Fix output of local ip address with SerialDebugger
+    - Improve connectivity flow
+
+
+.. _version-0.16.0:
+
+2017-04-16 0.16.0
+=================
+- Try to fix :ref:`scale-adjust-firmware` regarding ESP8266 compatibility again
+- `node-wifi-mqtt.ino`_ firmware:
+
+    - Fix ``DEEPSLEEP_TIME`` order of magnitude: ``MEASUREMENT_INTERVAL`` is in ms already. Thanks, Matthias!
+    - Fix IP address output. Thanks, Matthias!
+    - When ``SENSOR_DUMMY`` is enabled, don't use any real sensors. Thanks, Giuseppe!
+    - Add comment about connecting ``GPIO#16`` to ``RST`` for waking up after deep sleep. Thanks, Giuseppe and Matthias!
+    - Add sensor ADS1231. Thanks, Clemens!
+
+- Improve :ref:`firmware-builder`
+
+    - Add support for architecture "ESP"
+    - Add variables ``TARGET_BOARD_TAG`` and ``TARGET_BOARD_SUB`` to firmware builder helper output
+    - Add firmware builder helper to Makefile for node-wifi-mqtt-homie
+
+- Properly define and use ``HE_CONTAINERS`` in :ref:`generic-firmware`
+
+
+.. _version-0.15.0:
+
+2017-04-06 0.15.0
+=================
+- :ref:`scale-adjust-firmware` (`scale-adjust-hx711.ino`_ and `scale-adjust-ads1231.ino`_)
+
+    - Make it compile against Espressif/ESP8266
+    - Make it work on the ESP8266 at runtime by satisfying the watchdog. Thanks, Martin!
+    - Properly read numeric value from serial port. Thanks, Matthias!
+    - Fix computing the ``loadCellKgDivider``. Thanks, Clemens!
+    - Fix compilation on Arduino version <= 1.0.6
+
+- :ref:`generic-firmware`: Reduce loop interval when being in bootstrap phase
+- :ref:`node-gsm-http`: Fix Makefile for ESP8266. Thanks, Matthias!
+- :ref:`node-yun-http`: Add firmware `node-yun-http.ino`_ for Mois Box. Thanks, Markus!
+- Improve the `node-wifi-mqtt.ino`_ firmware for the :ref:`node-wifi-mqtt`:
+
+    - Fix Makefile for ESP8266 reported not to work on Ubuntu 16.10. Thanks, Matthias!
+    - Completely overhaul the basic ESP8266/MQTT firmware making it more efficient and flexible,
+      see also `Improve the basic “node-wifi-mqtt” firmware <https://community.hiveeyes.org/t/improve-the-basic-node-wifi-mqtt-firmware/235>`_.
+      Thanks, Giuseppe and Matthias!
+    - Start with single device counts of DHTxx and DS18B20 sensors to make firmware even more basic out of the box.
+      Thanks again, Matthias!
+    - Modularize and streamline code to better serve educational purposes
+    - Enable connecting to multiple WiFi access points with multiple attempts. Thanks, Matthias and Clemens!
+    - Read and transmit battery level. Thanks, Matthias!
+    - Read and transmit free heap memory
+    - Improve overall configurability and wifi_connect/mqtt_connect re. retrying
+    - Add deep sleep mode
+
+
+2017-03-31 0.14.0
+=================
+- Add slot, build infrastructure and dependency libraries for :ref:`mois-node`
+- Update GPRSbee library to 1.9.2
+- Update OneWire library to 2.3.3
+- Update HX711 library incorporating our fix »Define “yield” as noop for older Arduino Core releases«
+- Update Arduino-Makefile and makeEspArduino tools
+- Improve firmwares :ref:`node-wifi-mqtt-homie` and :ref:`node-wifi-mqtt-homie-battery`
+- :ref:`node-wifi-mqtt`:
+
+    - Fix JSON serialization: Transmit sensor readings as float values and improve robustness. Thanks, Matthias and Giuseppe!
+    - Improve configuration and documentation, last but not least regarding MQTT authentication.
+
+
+2017-03-17 0.13.0
+=================
+- Add x-www-form-urlencoded serialization to :ref:`lib-terkin-data` library
+- Fix JSON serialization: Don’t convert values to string
+- Improve CSV serialization demo: Set float precision to three digits
+
+
+2017-02-01 unreleased
+=====================
+- Add JSON serialization to :ref:`lib-terkin-data` library
+
+
+2017-01-14 0.12.0
+=================
+- Add ArduinoSTL, a STL and iostream implementation for Arduino based on uClibc++
+- Update firmware for :ref:`node-wifi-mqtt` (`node-wifi-mqtt.ino`_). Thanks Clemens and Karsten!
+
+    - Make things actually work
+    - Add dependency "Adafruit_MQTT_Library"
+    - Add more sensors
+    - Add Makefile and documentation
+
+- Improve Homie Firmware for :ref:`node-wifi-mqtt-homie`
+
+    - Add dependencies as git submodules
+    - Add Makefile
+
+- Add :ref:`lib-terkin-data` library: Flexible data collection for decoupling sensor reading and telemetry domains
+
+
+2017-01-10 0.11.0
+=================
+- Add firmware for :ref:`node-wifi-mqtt-homie` (`node-wifi-mqtt-homie.ino`_).
+  Contributed as `PR #1`_ by Alexander Wilms of `Imkerverein Nettetal e.V.`_. Thanks a bunch!
+- Update firmware for :ref:`open-hive-firmware-gprs`: (`node-gprs-http.ino`_). Thanks, Clemens!
+
+    - Add support for HX711
+    - Add support for ESP8266
+
+- Add "makeEspArduino", a makefile for ESP8266 Arduino projects by Peter Lerup
+- Pull update to HX711 submodule
+- Fix compilation errors for ADS1231 library on ESP8266
+- Improve documentation
+
+.. _PR #1: https://github.com/hiveeyes/arduino/pull/1
+
+
+2016-11-01 0.10.0
+=================
+- Add sketch and update documentation about CSV payload transmission and forwarding to UART using a JeeLink device
+  to complete the Open Hive RFM69 trio: :ref:`open-hive-firmware-rfm69-gateway-uart` (`gateway-rfm69-csv-uart.ino`_).
+  Thanks Richard!
+- Update sketch (beta release) and add documentation about :ref:`node-wifi-mqtt` (`node-wifi-mqtt.ino`_).
+  Thanks Clemens and Karsten!
+
+
+2016-09-17 0.9.0
+================
 - Add documentation about :ref:`scale-adjust-firmware`.
+- Update firmware for :ref:`open-hive-firmware-gprs` "`node-gprs-http.ino`_": Modularize sensors and debugging. Thanks, Clemens!
+- Add firmwares for Open Hive RFM69 tandem with build infrastructure and documentation
+
+    - :ref:`open-hive-firmware-rfm69-node`: `node-rfm69-csv.ino`_
+    - :ref:`open-hive-firmware-rfm69-gateway-sdcard`: `gateway-rfm69-csv-sdcard.ino`_
+
+- Improve documentation
 
 
 2016-07-08 0.8.1
 ================
-- Add documentation about the new :ref:`generic-firmware`.
+- Add documentation about the new :ref:`generic-firmware`, "`generic.ino`_".
 - Switch “node-gprs-http” sketch from Rob Tillaarts DHTlib to DHTstable, as suggested by Clemens. Thanks again!
 
 
 2016-07-08 0.8.0
 ================
 - Make building “generic” sketch for x86_64 a bit easier, just do ``cd generic; ./sim/build``.
-- Add vanilla Open Hive sensor node sketch from Clemens Gruber as “node-gprs-http.ino”. Thanks, Clemens!
+- Add :ref:`open-hive-firmware-gprs` from Clemens Gruber as "`node-gprs-http.ino`_". Thanks, Clemens!
 - Satisfy dependencies of “node-gprs-http” per git submodules (mostly), accompanied by Arduino Makefile yak shaving.
-- Add documentation about “node-gprs-http” at :ref:`open-hive-firmware`.
-- Add load cell adjustment sketches. Thanks again, Clemens!
+- Add :ref:`scale-adjust-firmware`. Thanks again, Clemens!
 - Finish restructuring work on "generic" sketch. Proof-of-Concept "node69-transceiver69x95-gateway95" is working!
 
 

@@ -1,0 +1,24 @@
+{
+	"wifi":	{
+		"ssid": "Network_1",
+		"password": "Very secure password"
+	},
+	"mqtt":	{
+		"host": "mqtt-hostname or ip",
+		"port": 1883,
+		"base_topic": "hiveeyes/<beekeeper-id>/<location>/",
+		"auth": true,
+		"username": "user",
+		"password": "password"
+	},
+	"name":"<esp-node-id eg. hive1>",
+	"ota": {
+		"enabled":true
+	},
+	"device_id":"<esp-node-id eg. hive1>",
+	"settings": {
+    		"sleepTime": 60,
+                "weightOffset": 244017.00,
+                "kilogramDivider": 22.27
+  	}
+}

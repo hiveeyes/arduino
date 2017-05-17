@@ -1,0 +1,30 @@
+#!/bin/bash
+#
+# usage: ./build csv_basic.cpp
+# The executable will be saved in the current directory
+
+INPUT=$1
+OUTPUT=$(basename $INPUT ".cpp")
+
+LIB_DIR="../.."
+TERRINE="${LIB_DIR}/Terrine"
+TERKINDATA="${LIB_DIR}/TerkinData"
+ARDUINOJSON="${LIB_DIR}/ArduinoJson"
+INCLUDE="-I$TERRINE -I$TERKINDATA -I$ARDUINOJSON"
+
+#CPP=g++
+#CPP=clang++
+#CPP=/opt/local/bin/g++-mp-4.9
+CPP=/opt/local/bin/g++-mp-5
+#CPP=/opt/local/bin/gcc-mp-5
+#CPP=/opt/local/bin/clang++-mp-3.4
+
+# ./sim/compat.h
+CPP_FLAGS="-x c++ -lstdc++ -std=gnu++11 -Os -fno-exceptions -ffunction-sections -fdata-sections -pedantic -fpermissive"
+CPP_FLAGS_MORE="-Wall -Wextra -Wno-builtin-macro-redefined -Wno-unused-function -fdiagnostics-color -DHAVE_ARDUINO_JSON"
+
+$CPP -g -I. $INCLUDE $CPP_FLAGS $CPP_FLAGS_MORE \
+    $INPUT \
+    $TERRINE/Terrine.cpp $TERKINDATA/TerkinData.cpp \
+    -o $OUTPUT
+

@@ -1,4 +1,4 @@
-ino==0.3.6
+Sphinx==1.5.5
+sphinx_rtd_theme==0.2.4
 bumpversion==0.5.3
-Sphinx==1.4.1
-sphinx_rtd_theme==0.1.9
+#ino==0.3.6

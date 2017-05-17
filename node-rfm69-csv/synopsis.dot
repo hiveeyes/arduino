@@ -1,0 +1,32 @@
+// Synopsis of Open Hive RFM69 sensor node
+digraph open_hive_rfm69_sensor_firmware_synopsis {
+
+    // Options
+    rankdir=LR;
+    ranksep=0.5;
+
+    // Style
+    //graph [splines=ortho];
+    node [pin=true, shape="box", fontname="Verdana"];
+    edge [fontname="Verdana"];
+
+    // Graph nodes represent hardware node units
+    "sensor-1"      [label="Sensor node 1"];
+    "sensor-2"      [label="Sensor node 2"];
+    "sensor-N"      [label="Sensor node N"];
+    "gateway"       [label="Gateway node\nArduino Yún"];
+    "sd"            [label="SD card", style=dashed];
+
+    // Graph edges represent radio families and
+    // protocols spoken between node units.
+    "sensor-1"      -> "gateway"        [label="RFM69, CSV"];
+    "sensor-2"      -> "gateway";
+    "sensor-N"      -> "gateway";
+    "gateway"       -> "sd"             [style=dashed];
+
+    // Draw a dotted line between sensor-2
+    // and sensor-N, but retain node positions.
+    "sensor-2"      -> "sensor-N"       [dir=none, style=dotted];
+    {rank=same; "sensor-1"; "sensor-2"; "sensor-N" };
+
+}
