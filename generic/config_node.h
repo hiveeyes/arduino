@@ -7,10 +7,12 @@
 // Medium
 #define HE_RADIO                true
 #define HE_RH69                 true
+#define RH69_RESCEIVER_ID       3              // ID of next RESCEIVER (gateway | transceiver)
 
 // Debug
 #define HE_DEBUG                  true               // turn on debug output and choose below
 #define DEBUG_SENSORS             true              // set to 1 for sensor debug
+#define BOOTSTRAP_LOOP_COUNT      15             // How often to loop fast when booting
 
 // Details
 #define HE_SLEEP                  true              // enable sleeping
@@ -29,5 +31,5 @@
 // Scale
 
 
-#define HX711_OFFSET          8361975
-#define HX711_KNOWN_WEIGHT     21901
+#define HX711_OFFSET          -25018
+#define HX711_KNOWN_WEIGHT     21623

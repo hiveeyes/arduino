@@ -51,8 +51,6 @@ ifeq "$(HE_ROLE)" "gateway"
 
 BOARD_TAG         = uno
 MONITOR_CMD       = picocom
-MONITOR_PORT       = /dev/ttyUSB1
-MONITOR_BAUDRATE  = 115200
 
 endif
 

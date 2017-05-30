@@ -150,8 +150,8 @@ void setup() {
   // Step 3: weight upper limit
   Serial.println(">> Step 3: weight upper limit");
   Serial.println("   --------------------------");
-  Serial.println("   Put a know load on the scale! ...");
-  Serial.println("   ... and input weight in gram ...");
+  Serial.println("   Additionaly add known load on the scale! ...");
+  Serial.println("   ... and input its weight in gram ...");
   Serial.println();
   Serial.flush();
 
