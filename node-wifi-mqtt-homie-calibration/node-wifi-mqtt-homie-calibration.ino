@@ -31,7 +31,7 @@
   ESPAsyncTCP:        https://github.com/me-no-dev/ESPAsyncTCP
   async-mqtt-client:  https://github.com/marvinroger/async-mqtt-client
 
-  Version 0.9.1
+  Version 0.9.5
   
 **********************************************************************************************************/
 
@@ -83,9 +83,6 @@ void getTemperatures() {
   temperature1 = sensors.getTempCByIndex(1);
 }
 
-
-
-
 void getOffset() {
   yield();
     for (int i = 0; i < 10; i++) {
@@ -105,6 +102,7 @@ void getOffset() {
 
 
 void getKilogramDivider() {
+  yield();
     for (int i = 0; i < 10; i++) {
       Serial.print(".");
       scale.power_up();
@@ -112,6 +110,7 @@ void getKilogramDivider() {
       yield();
       weightSamples.add(weightValue);
       scale.power_down();
+      yield();
       delay(500);
       yield();
     }
@@ -122,7 +121,6 @@ void getKilogramDivider() {
 void getVccAdjust() {
     raw_voltage = ESP.getVcc();
     vcc_adjust = (3300 - raw_voltage) / 1000;
-
 }
 
 
@@ -136,7 +134,9 @@ void step1() {
   Serial << "  in *gram* here and press ENTER when done...     " << endl; 
   Serial.flush();
   while(!Serial.available()) {
-  knownWeight = Serial.parseInt();
+    yield();
+    ESP.wdtFeed();
+    knownWeight = Serial.parseInt();
   }
 }
 
@@ -148,8 +148,9 @@ void step2() {
   Serial << "        press 1 and ENTER to continue...         " << endl;
   Serial.flush();
   while (c!='1') {
-    c = Serial.read();
     yield();
+    ESP.wdtFeed();
+    c = Serial.read();
     };
   getOffset();
   c='x';
@@ -163,8 +164,9 @@ void step3() {
   Serial << "    scale press 1 and ENTER when you are done    " << endl;
   Serial.flush();
   while (c!='1') {
-    c = Serial.read();
     yield();
+    ESP.wdtFeed();
+    c = Serial.read();
     };
   getKilogramDivider();
   c='x';
@@ -180,8 +182,9 @@ void step4() {
   Serial << "        press 1 and ENTER to continue...         " << endl;
   Serial.flush();
   while (c!='1') {
-    c = Serial.read();
     yield();
+    ESP.wdtFeed();
+    c = Serial.read();
   }
   getTemperatures();
   c='x';
@@ -197,8 +200,9 @@ void step5() {
   Serial << "        press 1 and ENTER to continue...         " << endl;
   Serial.flush();
   while (c!='1') {
-    c = Serial.read();
     yield();
+    ESP.wdtFeed();
+    c = Serial.read();
   }
   getVccAdjust();
   c='x';
@@ -226,8 +230,9 @@ void testResults() {
   Serial << "-------------------------------------------------" << endl;
   Serial.flush();
   while (c!='1') {
-    c = Serial.read();
     yield();
+    ESP.wdtFeed();
+    c = Serial.read();
   }
   getWeight();
   c='x';
@@ -256,8 +261,8 @@ void getWeight() {
 
 
 void setup() {
-  wdt_disable();
-  wdt_enable(300000);
+  //wdt_disable();
+  //wdt_enable(3000);
   WiFi.forceSleepBegin();
   yield();
   Serial.begin(115200);
