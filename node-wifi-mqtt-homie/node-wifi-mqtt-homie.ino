@@ -44,8 +44,15 @@
 HX711 scale;
 
 #define FW_NAME "node-wifi-mqtt-homie"
-#define FW_VERSION "0.9.4"
+#define FW_VERSION "0.9.5"
 const int DEFAULT_SEND_INTERVAL = 60;
+
+//Workaround for https://github.com/bblanchon/ArduinoJson/issues/566
+#define ARDUINOJSON_USE_DOUBLE 0
+//function to round to two decimals
+float round2two(float tmp) {
+  return ((int)(tmp * 100)) / 100.00;
+}
 
 // PINs
 #define ONE_WIRE_BUS 14
@@ -119,11 +126,13 @@ void getTemperatures() {
 }
 
 void getWeight() {
+  scale.set_scale(kilogramDividerSetting.get());  //initialize scale
+  scale.set_offset(weightOffsetSetting.get());    //initialize scale
   Homie.getLogger() << endl << endl;
   Homie.getLogger() << "Reading scale, hold on" << endl;
   scale.power_up();
-  for (int i = 0; i < 4; i++) {
-    float WeightRaw = scale.get_units(10);
+  for (int i = 0; i < 3; i++) {
+    float WeightRaw = scale.get_units(3);
     yield();
     Homie.getLogger() << "✔ Raw measurements: " << WeightRaw << "g" << endl;
     WeightSamples.add(WeightRaw);
@@ -172,13 +181,15 @@ void loopHandler() {
 
     StaticJsonBuffer<200> jsonBuffer;
     JsonObject& root = jsonBuffer.createObject();
-    root["Weight"] = weight;
-    root["Temp1"] = temperature0;
-    root["Temp2"] = temperature1;
+    root["Weight"] = round2two(weight);
+    root["Temp1"] = round2two(temperature0);
+    root["Temp2"] = round2two(temperature1);
     String values;
     root.printTo(values);
     Homie.getLogger() << "Json data:" << values << endl;
     jsonNode.setProperty("__json__").setRetained(false).send(values);
+
+    //Homie.getLogger() << "Heap size: " << ESP.getFreeHeap() << " bytes, ";
     
     lastSent = millis();
   }
@@ -202,8 +213,6 @@ void setup() {
   calibrationFactorSetting.setDefaultValue(DEFAULT_CALIBRATION_FACTOR_GRAM_DEGREE);
 
   scale.begin(DOUT, PD_SCK);
-  scale.set_scale(kilogramDividerSetting.get());  //initialize scale
-  scale.set_offset(weightOffsetSetting.get());    //initialize scale
 
   temperatureNode0.advertise("unit");
   temperatureNode0.advertise("degrees");
