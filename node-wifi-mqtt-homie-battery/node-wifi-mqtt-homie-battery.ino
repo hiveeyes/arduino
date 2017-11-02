@@ -53,7 +53,7 @@
 #include <Ticker.h>
 
 #define FW_NAME "node-wifi-mqtt-homie-battery"
-#define FW_VERSION "0.9.5"
+#define FW_VERSION "0.10.0"
 const int DEFAULT_SLEEP_TIME = 600;
 
 //Workaround for https://github.com/bblanchon/ArduinoJson/issues/566
