@@ -35,11 +35,11 @@
 
 /*
  * Some notes to increase battery runtime:
- * You should remove and short out the input polarity protection diode 
- * if you are using this sketch with the PCB/Design from 
+ * You should remove and short out the input polarity protection diode
+ * if you are using this sketch with the PCB/Design from
  * https://www.imker-nettetal.de/bienen-nsa/ESP8266-BeeScale1_1.fzz
  * to avoid unnecessary voltage drop. But don't mix polarity!
- * 
+ *
  * Also you should remove any unnecessary power indicator LED to save
  * a couple om mA. (e.g. on ESP-07 the red power indicator LED)
  */
@@ -71,7 +71,7 @@ float round2two(float tmp) {
 /* Use sketch BeeScale-Calibration.ino to determine these calibration values.
    Set them here or use HomieSetting via config.json or WebApp/MQTT
 */
-const long DEFAULT_WEIGHT_OFFSET = 666; // Load cell zero offset. 
+const long DEFAULT_WEIGHT_OFFSET = 666; // Load cell zero offset.
 const float DEFAULT_KILOGRAM_DIVIDER = 21.59;  // Load cell value per kilogram.
 const float DEFAULT_CALIBRATION_TEMPERATURE = 23.44; // Temperature at which the scale has been calibrated for Temperature compensation
 const float DEFAULT_CALIBRATION_FACTOR_GRAM_DEGREE = 0.0; // Calibration factor in gram per degree
@@ -178,7 +178,7 @@ void getTemperatures() {
   // call sensors.requestTemperatures() to issue a global temperature
   // request to all devices on the bus
   sensors.requestTemperatures(); // Send the command to get temperatures
-  
+
   temperature0 = sensors.getTempCByIndex(0);
   if (temperature0 == -127) {                  //ignore wrong reading
     delay(100);
@@ -206,10 +206,10 @@ void getWeight() {
     //yield();
     Homie.getLogger() << "✔ Raw measurements: " << WeightRaw << " g" << endl;
     WeightSamples.add(WeightRaw);
-    delay(500);                 
+    delay(500);
     yield();
   }
-  
+
   weight = WeightSamples.getMedian();
 
   //temperature compensation
@@ -229,13 +229,13 @@ void getVolt() {
     Homie.getLogger() << "Voltage adjust value is: " << vcc_adjust << "V" << endl;
     voltage = raw_voltage / 1000 + vcc_adjust;
 }
-        
+
 void transmit() {
     //debug MTU
     delay(100);
     Homie.getLogger() << "Weight: " << weight << " kg" << endl;
     weightNode.setProperty("kilogram").setRetained(false).send(String(weight));
-    
+
     Homie.getLogger() << "Temperature0: " << temperature0 << " °C" << endl;
     temperatureNode0.setProperty("degrees").setRetained(false).send(String(temperature0));
 
@@ -253,7 +253,7 @@ void transmit() {
     root["Weight"] = round2two(weight);
     root["Temp1"] = round2two(temperature0);
     root["Temp2"] = round2two(temperature1);
-    root["VCC"] = round2two(voltage); 
+    root["VCC"] = round2two(voltage);
     String values;
     root.printTo(values);
     Homie.getLogger() << "Json data:" << values << endl;
@@ -261,7 +261,7 @@ void transmit() {
 
     /*
      * determine low battery, sleep forever to save lithium cell.
-     * we could go lower, but scale is calibrated at 3.3V so we    
+     * we could go lower, but scale is calibrated at 3.3V so we
      * would get wrong readings.
     */
     if (voltage <= LOW_BATTERY)
@@ -284,13 +284,13 @@ void max_run() {
     /*
     buf[0] = STATE_SLEEP_WAKE;
     system_rtc_mem_write(RTC_STATE, buf, 1); // set state for next wakeUp
-    ESP.deepSleep(SLEEP_TIME*1000000, WAKE_RF_DISABLED);    
+    ESP.deepSleep(SLEEP_TIME*1000000, WAKE_RF_DISABLED);
     */
     SLEEP_TIME = sleepTimeSetting.get();
     Homie.getLogger() << "✔ Preparing for " << SLEEP_TIME << " seconds sleep" << endl;
     Homie.prepareToSleep();
   }
-  
+
 }
 
 
@@ -299,13 +299,13 @@ void onHomieEvent(const HomieEvent& event) {
     case HomieEventType::NORMAL_MODE:
 
     timeout.attach(1.0, max_run);
-    
+
     getTemperatures();
     getWeight();
     getVolt();
     Homie.getLogger() << "DEBUG: After measurements: " << millis() / 1000 << endl;
     break;
-    
+
     case HomieEventType::MQTT_READY:
     //debug MTU?
       delay(100);
@@ -328,11 +328,11 @@ void loopHandler() {
 }
 
 void setup() {
-   
+
   WiFi.forceSleepBegin();  // send wifi directly to sleep to reduce power consumption
   yield();
   system_rtc_mem_read(RTC_BASE, buf, 2); // read 2 bytes from RTC-MEMORY to get our state
-  
+
   Serial.begin(115200);
   Homie.getLogger() << endl << endl;
 
@@ -368,12 +368,12 @@ void setup() {
       system_rtc_mem_write(RTC_STATE, buf, 1); // set state for next wakeUp
       ESP.deepSleep(10, WAKE_RFCAL);
       yield();
-      break;      
-  
-    case STATE_CONNECT_WIFI:  
+      break;
+
+    case STATE_CONNECT_WIFI:
       Homie.disableLedFeedback(); // collides with Serial on ESP07
       Homie.onEvent(onHomieEvent);
-     
+
      sleepTimeSetting.setDefaultValue(DEFAULT_SLEEP_TIME);
     /*
      * Can't set more than one value to default, see issue #323
@@ -389,9 +389,9 @@ void setup() {
       WiFi.forceSleepWake();
       delay(500);
       wifi_set_sleep_type(MODEM_SLEEP_T);
-        
+
       Homie_setFirmware(FW_NAME, FW_VERSION);
-      Homie.setSetupFunction(setupHandler).setLoopFunction(loopHandler);  
+      Homie.setSetupFunction(setupHandler).setLoopFunction(loopHandler);
 
       weightNode.advertise("unit");
       weightNode.advertise("kilogram");

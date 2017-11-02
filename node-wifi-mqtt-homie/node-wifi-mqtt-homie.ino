@@ -62,7 +62,7 @@ float round2two(float tmp) {
 /* Use sketch BeeScale-Calibration.ino to determine these calibration values.
    Set them here or use HomieSetting via config.json or WebApp/MQTT
 */
-const float DEFAULT_WEIGHT_OFFSET = 244017.00; // Load cell zero offset. 
+const float DEFAULT_WEIGHT_OFFSET = 244017.00; // Load cell zero offset.
 const float DEFAULT_KILOGRAM_DIVIDER = 22.27;  // Load cell value per kilogram.
 const float DEFAULT_CALIBRATION_TEMPERATURE = 20.0; // Temperature at which the scale has been calibrated for Temperature compensation
 const float DEFAULT_CALIBRATION_FACTOR_GRAM_DEGREE = 0.0; // Calibration factor in gram per degree
@@ -136,11 +136,11 @@ void getWeight() {
     yield();
     Homie.getLogger() << "✔ Raw measurements: " << WeightRaw << "g" << endl;
     WeightSamples.add(WeightRaw);
-    delay(500);                 
+    delay(500);
     yield();
   }
   scale.power_down();
-  
+
   weight = WeightSamples.getMedian();
 
   //temperature compensation
@@ -190,7 +190,7 @@ void loopHandler() {
     jsonNode.setProperty("__json__").setRetained(false).send(values);
 
     //Homie.getLogger() << "Heap size: " << ESP.getFreeHeap() << " bytes, ";
-    
+
     lastSent = millis();
   }
 }
@@ -225,7 +225,7 @@ void setup() {
 
   batteryNode.advertise("unit");
   batteryNode.advertise("volt");
-  
+
   Homie.setup();
 }
 
