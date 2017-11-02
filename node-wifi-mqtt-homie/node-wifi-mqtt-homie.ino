@@ -44,7 +44,7 @@
 HX711 scale;
 
 #define FW_NAME "node-wifi-mqtt-homie"
-#define FW_VERSION "0.9.5"
+#define FW_VERSION "0.10.0"
 const int DEFAULT_SEND_INTERVAL = 60;
 
 //Workaround for https://github.com/bblanchon/ArduinoJson/issues/566
