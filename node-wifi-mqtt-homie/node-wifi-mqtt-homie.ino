@@ -44,8 +44,15 @@
 HX711 scale;
 
 #define FW_NAME "node-wifi-mqtt-homie"
-#define FW_VERSION "0.9.4"
+#define FW_VERSION "0.10.0"
 const int DEFAULT_SEND_INTERVAL = 60;
+
+//Workaround for https://github.com/bblanchon/ArduinoJson/issues/566
+#define ARDUINOJSON_USE_DOUBLE 0
+//function to round to two decimals
+float round2two(float tmp) {
+  return ((int)(tmp * 100)) / 100.00;
+}
 
 // PINs
 #define ONE_WIRE_BUS 14
@@ -55,7 +62,7 @@ const int DEFAULT_SEND_INTERVAL = 60;
 /* Use sketch BeeScale-Calibration.ino to determine these calibration values.
    Set them here or use HomieSetting via config.json or WebApp/MQTT
 */
-const float DEFAULT_WEIGHT_OFFSET = 244017.00; // Load cell zero offset. 
+const float DEFAULT_WEIGHT_OFFSET = 244017.00; // Load cell zero offset.
 const float DEFAULT_KILOGRAM_DIVIDER = 22.27;  // Load cell value per kilogram.
 const float DEFAULT_CALIBRATION_TEMPERATURE = 20.0; // Temperature at which the scale has been calibrated for Temperature compensation
 const float DEFAULT_CALIBRATION_FACTOR_GRAM_DEGREE = 0.0; // Calibration factor in gram per degree
@@ -119,19 +126,21 @@ void getTemperatures() {
 }
 
 void getWeight() {
+  scale.set_scale(kilogramDividerSetting.get());  //initialize scale
+  scale.set_offset(weightOffsetSetting.get());    //initialize scale
   Homie.getLogger() << endl << endl;
   Homie.getLogger() << "Reading scale, hold on" << endl;
   scale.power_up();
-  for (int i = 0; i < 4; i++) {
-    float WeightRaw = scale.get_units(10);
+  for (int i = 0; i < 3; i++) {
+    float WeightRaw = scale.get_units(3);
     yield();
     Homie.getLogger() << "✔ Raw measurements: " << WeightRaw << "g" << endl;
     WeightSamples.add(WeightRaw);
-    delay(500);                 
+    delay(500);
     yield();
   }
   scale.power_down();
-  
+
   weight = WeightSamples.getMedian();
 
   //temperature compensation
@@ -172,14 +181,16 @@ void loopHandler() {
 
     StaticJsonBuffer<200> jsonBuffer;
     JsonObject& root = jsonBuffer.createObject();
-    root["Weight"] = weight;
-    root["Temp1"] = temperature0;
-    root["Temp2"] = temperature1;
+    root["Weight"] = round2two(weight);
+    root["Temp1"] = round2two(temperature0);
+    root["Temp2"] = round2two(temperature1);
     String values;
     root.printTo(values);
     Homie.getLogger() << "Json data:" << values << endl;
     jsonNode.setProperty("__json__").setRetained(false).send(values);
-    
+
+    //Homie.getLogger() << "Heap size: " << ESP.getFreeHeap() << " bytes, ";
+
     lastSent = millis();
   }
 }
@@ -202,8 +213,6 @@ void setup() {
   calibrationFactorSetting.setDefaultValue(DEFAULT_CALIBRATION_FACTOR_GRAM_DEGREE);
 
   scale.begin(DOUT, PD_SCK);
-  scale.set_scale(kilogramDividerSetting.get());  //initialize scale
-  scale.set_offset(weightOffsetSetting.get());    //initialize scale
 
   temperatureNode0.advertise("unit");
   temperatureNode0.advertise("degrees");
@@ -216,7 +225,7 @@ void setup() {
 
   batteryNode.advertise("unit");
   batteryNode.advertise("volt");
-  
+
   Homie.setup();
 }
 
