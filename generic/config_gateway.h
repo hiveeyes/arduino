@@ -6,6 +6,7 @@
 
 // Medium
 #define HE_RADIO                true
-#define HE_RH69                 false
+#define HE_RH69                 true
+#define HE_RH95                 false              // RadioHead RH_RF95 driver
 
 // Details

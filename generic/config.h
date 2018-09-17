@@ -19,18 +19,31 @@
 #define BLINKPERIOD               500            // LED blinking period in ms
 #define BOOTSTRAP_LOOP_COUNT      15             // How often to loop fast when booting
 #define HE_SLEEP                  false              // enable sleeping
+
 #define HE_SCALE                  false
 #define HE_HUMIDITY               false
 #define HE_TEMPERATURE            false
+#define HE_BAROMETER              false
+
 #define HE_DEMODATA               false
 #define HE_RFM69_OTA              false
 #define HE_BERadio                false
 #define HE_RADIO                  false
 #define HE_CONTAINERS             false
-#define IS_NODE                   true
+#define HE_SLEEP                  false              // set to 1 for sleeping
+#define HE_SCALE                  false
+#define HE_HUMIDITY               false
+#define HE_TEMPERATURE            false
+#define HE_BERadio                false
+
+#define HE_RADIO                  false
+
+#define IS_NODE                   false
 #define IS_TRANSCEIVER            false
 #define IS_GATEWAY                false
 
+#define HE_RH69                   false              // RadioHead RH_RF69 driver
+#define HE_RH95                   false              // RadioHead RH_RF95 driver
 
 #define HE_RFM69                  false              // LowPowerLab RFM69 library
 #define HE_RH69                   false              // RadioHead RH_RF69 driver
@@ -160,12 +173,16 @@
 #ifdef HE_SCALE
     #define HX711_SCK                 A0             // SCK pin of hx711
     #define HX711_DT                  A1             // DT pin for hx711
-    #define HX711_OFFSET          8361975
+    #define HX711_OFFSET          -25018
 
-    #define HX711_KNOWN_WEIGHT     21901.f
+    #define HX711_KNOWN_WEIGHT     21623
     #if HE_CONTAINERS
         #define CONT_WGHT        true
     #endif
+#endif
+
+#ifdef HE_BAROMETER
+
 #endif
 
                                                  /**            * * * *               ***
