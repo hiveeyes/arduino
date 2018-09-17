@@ -27,7 +27,6 @@
 #define HE_BERadio                false
 #define HE_RADIO                  false
 #define HE_CONTAINERS             false
-
 #define IS_NODE                   true
 #define IS_TRANSCEIVER            false
 #define IS_GATEWAY                false
@@ -64,12 +63,12 @@
 
 #if HE_DEBUG                                  /**    fine grade debug settings     ***
                                                  ***              * *                 **/
-    #define DEBUG_FRAME           true
+    #define DEBUG_FRAME           false
     #define DEBUG_RADIO           true              // set to 1 for radio debug
-    #define DEBUG_SPI_FLASH       true              // set to 1 for SPI-flash debug
-    #define DEBUG_SENSORS         true              // set to 1 for sensor debug
-    #define DEBUG_BERadio         true              // set to 1 for  HE_BERadio degub
-    #define DEBUG_MEMORY          true
+    #define DEBUG_SPI_FLASH       false              // set to 1 for SPI-flash debug
+    #define DEBUG_SENSORS         false              // set to 1 for sensor debug
+    #define DEBUG_BERadio         false              // set to 1 for  HE_BERadio degub
+    #define DEBUG_MEMORY          false
     #define DEBUG_LED             true
     #define DEBUG_SEND_INFRA      true
 #endif                                           /**              * *                 **/
@@ -79,14 +78,14 @@
     #define  BERadio_profile           "h1"           //  HE_BERadio profile
     #define  HE_HIVE_ID                2
     #define  BAD_VALUE             -273.15
-    #define  BERadio_DELAY         100
+    #define  BERadio_DELAY         50
     #if HE_CONTAINERS == false
         #define HE_CONTAINERS      true
     #endif
 #endif
 
 #if HE_SLEEP
-    #define SLEEP_MINUTES             15             // sleeptime in about minutes
+    #define SLEEP_MINUTES             1             // sleeptime in about minutes
 #endif
 
 #if DEBUG_SEND_INFRA && HE_CONTAINERS
@@ -140,7 +139,7 @@
 
 #ifdef  HE_HUMIDITY
     #define DHT_AMOUNT                1
-    #define DHT_PIN1                  7              // DHT pin #1
+    #define DHT_PIN1                  8              // DHT pin #1
     #define DHT_PIN2                  6              // DHT pin #2
     #define DHT_TYPE                  DHT22          // DHT type (dht22)
     #if HE_CONTAINERS
@@ -244,11 +243,13 @@
 #endif                                           /**              * *                 **/
 
 #if DEBUG_LED
-    #define LED_DELAY                50
+    #define LED_TIME                1000
 #endif
                                                  /**            * * * *               ***
                                                  ***   automatic compiler directives  ***
-                                                 ***             * * *                **/
+
+ 
+                                                  ***             * * *                **/
 #ifdef __AVR_ATmega1284P__
     #define LED                   15             // most Megas have LED_PINs on D15
     #define FLASH_SS              23             // and FLASH SS on D23
