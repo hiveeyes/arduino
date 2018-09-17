@@ -586,15 +586,10 @@ void loop() {
     #if HE_SCALE
         readScale();
     #endif
-<<<<<<< HEAD
     #if HE_BAROMETER
         readBarometer();
     #endif
-        #if HE
-// Medium_RH69 && IS_TRANSCEIVER
-=======
-        #if HE_RH69 && IS_TRANSCEIVER
->>>>>>> 233383700df33b95825211615e45583d437d76d4
+    #if HE_RH69 && IS_TRANSCEIVER
         transceive();
     #endif
     #if HE_RH95 && IS_GATEWAY
