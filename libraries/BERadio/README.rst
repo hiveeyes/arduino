@@ -118,3 +118,9 @@ Terrine
     | Application boilerplate for convenient MCU development
     | https://github.com/hiveeyes/arduino/tree/master/libraries/Terrine
 
+****
+TODO
+****
+
+- prevent sending empty lists
+- allow sending plain int's
