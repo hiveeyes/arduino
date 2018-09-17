@@ -35,8 +35,15 @@
 #define HE_RFM69                  false              // LowPowerLab RFM69 library
 #define HE_RH69                   false              // RadioHead RH_RF69 driver
 #define HE_RH95                   false              // RadioHead RH_RF95 driver
-#define HE_RHTCP                  false              // RadioHead RH_TCP driver
 #define HE_FLASH                  false              // Enable SPI-flash
+
+#define HE_DEMODATA               false
+#define HE_RFM69_OTA              false
+//#define HE_CONTAINERS             false
+
+
+
+
 
 
 // Compute custom configuration file
@@ -64,7 +71,7 @@
 #if HE_DEBUG                                  /**    fine grade debug settings     ***
                                                  ***              * *                 **/
     #define DEBUG_FRAME           false
-    #define DEBUG_RADIO           true              // set to 1 for radio debug
+    #define DEBUG_RADIO           false              // set to 1 for radio debug
     #define DEBUG_SPI_FLASH       false              // set to 1 for SPI-flash debug
     #define DEBUG_SENSORS         false              // set to 1 for sensor debug
     #define DEBUG_BERadio         false              // set to 1 for  HE_BERadio degub
@@ -85,7 +92,7 @@
 #endif
 
 #if HE_SLEEP
-    #define SLEEP_MINUTES             1             // sleeptime in about minutes
+    #define SLEEP_MINUTES             15             // sleeptime in about minutes
 #endif
 
 #if DEBUG_SEND_INFRA && HE_CONTAINERS

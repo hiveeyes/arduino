@@ -885,6 +885,8 @@ void receivePackages(){
                         terrine.log("SUCCESS95: ", false);
                         terrine.log(success95);
                         terrine.log((char*)buf69);
+                    #elif HE_DEBUG
+                        terrine.log((char*)buf69);
                     #endif
                     memset(&buf69[0], 0, len69);
                     bool sleep95 = rh95.sleep();
