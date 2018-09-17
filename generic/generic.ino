@@ -174,6 +174,19 @@ Terrine terrine;
         float wght0 = 0, wght1 = 0;
     #endif
 #endif
+
+#if HE_BAROMETER
+    #include <Adafruit_BMP085.h>
+    #include <Wire.h>
+    Adafruit_BMP085 bmp;
+    void readBarometer();
+#endif
+
+// ----
+// Serialisation
+// ----
+
+
 #if HE_BERadio
     #include <BERadio.h>
     #include <EmBencode.h>                  // https://github.com/jcw/embencode
@@ -194,11 +207,15 @@ Terrine terrine;
 #if CONT_HUM
     FloatList *humL = new FloatList();
 #endif
+#if CONT_TEMP
+    FloatList *tempL = new FloatList();
+#endif
 #if CONT_WGHT
     FloatList *wghtL = new FloatList();
 #endif
-#if CONT_TEMP
-    FloatList *tempL = new FloatList();
+#if CONT_BARO
+    FloatList *altiL = new FloatList();
+    FloatList *presL = new FloatList();
 #endif
 #if CONT_INFRA    
     //FloatList *bootsL = new FloatList();
@@ -255,9 +272,9 @@ Terrine terrine;
 #endif
 
 #if HE_RH69
+    #include <SPI.h>
     #include <RH_RF69.h>
     #include <RHReliableDatagram.h>
-    #include <SPI.h>
     RH_RF69 rh69(RH69_SS, RH69_IRQ);
     uint8_t buf69[RH69_MAX_MESSAGE_LEN];
     int rssi69;
@@ -476,6 +493,13 @@ void setup() {
         scale.set_scale(HX711_KNOWN_WEIGHT);           // this is the difference between the raw data of a known weight and an emprty scale
     #endif
 
+    #if HE_BAROMETER
+        #if DEBUG_SENSORS
+            terrine.log("Barometer");
+        #endif
+        bmp.begin();
+// Medium
+    #endif
 
     // ---------
     // SPI Flash
@@ -543,6 +567,10 @@ void loop() {
     #if CONT_WGHT
         wghtL->clear();
     #endif
+    #if CONT_BARO
+        altiL->clear();
+        presL->clear();
+    #endif
 
     #if HE_TEMPERATURE
         readTemperature();
@@ -553,7 +581,11 @@ void loop() {
     #if HE_SCALE
         readScale();
     #endif
-        #if HE_RH69 && IS_TRANSCEIVER
+    #if HE_BAROMETER
+        readBarometer();
+    #endif
+        #if HE
+// Medium_RH69 && IS_TRANSCEIVER
         transceive();
     #endif
     #if HE_RH95 && IS_GATEWAY
@@ -593,9 +625,19 @@ void loop() {
             wghtL->push_back(63);
         #endif
 
-        message->add("t", *tempL);
-        message->add("h", *humL);
-        message->add("w", *wghtL);
+        #if HE_TEMPERATURE
+            message->add("t", *tempL);
+        #endif
+        #if HE_HUMIDITY
+            message->add("h", *humL);
+        #endif
+        #if HE_SCALE
+            message->add("w", *wghtL);
+        #endif
+        #if HE_BAROMETER
+            message->add("p", *presL);
+            message->add("a", *altiL);
+        #endif
         #if DEBUG_MEMORY
             terrine.logmem();
         #endif
@@ -619,8 +661,10 @@ void loop() {
 
     #endif
 
-    #if IS_NODE 
-        Blink(LED, LED_TIME);
+    #if DEBUG_LED
+        #if IS_NODE 
+            Blink(LED, LED_TIME);
+        #endif 
     #endif 
 
     #if HE_RH69 && IS_TRANSCEIVER
@@ -737,6 +781,29 @@ void loop() {
         #endif
     }
 #endif
+
+// get barometer data //
+
+#if HE_BAROMETER
+    void readBarometer(){
+        #if DEBUG_SENSORS
+            SERIAL_PORT_HARDWARE.println("rB");
+        #endif
+        presL->push_back(bmp.readPressure());
+        altiL->push_back(bmp.readAltitude(BAROMETER_MSLP));
+        #if DEBUG_SENSORS
+            SERIAL_PORT_HARDWARE.println("dP");
+            for (double value: *presL){
+                SERIAL_PORT_HARDWARE.println(value);
+            }
+            SERIAL_PORT_HARDWARE.println("dA");
+            for (double value: *altiL){
+                SERIAL_PORT_HARDWARE.println(value);
+            }
+        #endif
+    }
+#endif
+
 #if HE_RFM69
     void sendData(){
         if (radio.sendWithRetry(RFM69_GATEWAY_ID, (const void*)(&theData.buff), sizeof(theData))){

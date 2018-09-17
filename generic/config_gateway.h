@@ -10,3 +10,4 @@
 #define HE_RH95                 false              // RadioHead RH_RF95 driver
 
 // Details
+#define DEBUG_RADIO             true

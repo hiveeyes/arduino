@@ -55,6 +55,9 @@
 //#define HE_CONTAINERS             false
 
 
+#ifndef SERIAL_PORT_HARDWARE
+	#define SERIAL_PORT_HARDWARE  Serial
+#endif
 
 
 
@@ -96,7 +99,7 @@
 
 #if HE_BERadio
     #define  BERadio_profile           "h1"           //  HE_BERadio profile
-    #define  HE_HIVE_ID                2
+    #define  HE_HIVE_ID                4
     #define  BAD_VALUE             -273.15
     #define  BERadio_DELAY         50
     #if HE_CONTAINERS == false
@@ -183,6 +186,15 @@
 
 #ifdef HE_BAROMETER
 
+    // the I2C pins are hardcoded in the Sodaq_BMP085.h lib
+    // SCL to i2c clock - on '168/'328 Arduino Uno/Duemilanove/etc thats Analog 5
+    // SDA to i2c data - on '168/'328 Arduino Uno/Duemilanove/etc thats Analog 4
+
+    #define BAROMETER_MSLP         100474          // Mean sea level pressure in Pascal (100474 ~ 34m)
+    #if HE_CONTAINERS
+        #define CONT_BARO        true
+    #endif
+
 #endif
 
                                                  /**            * * * *               ***
@@ -191,7 +203,7 @@
 #ifdef HE_RADIO
     #define RH_ACK_TIMEOUT           200
     #if HE_RH69                                     /**   RadioHead's HE_RH69radio lib     **/
-        #define RH69_NODE_ID          99             //    radio topology
+        #define RH69_NODE_ID          42             //    radio topology
         #define RH69_RESCEIVER_ID       1              // ID of next RESCEIVER (gateway | transceiver)
         //#define RH69_TRANSCEIVER_ID   3              //
 

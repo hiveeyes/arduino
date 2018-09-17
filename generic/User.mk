@@ -44,6 +44,31 @@ MONITOR_CMD       = picocom
 endif
 
 
+##########################################################
+### "weather" device: Board and programming configuration ###
+##########################################################
+ifeq "$(HE_ROLE)" "weather"
+
+### BOARD_TAG & BOARD_SUB for Arduino IDE 1.0.x
+BOARD_TAG         = pro
+
+### BOARD_TAG for Arduino IDE 1.6.x
+#BOARD_TAG         = uno
+BOARD_SUB         = 8MHzatmega328
+
+### MONITOR_PORT
+### The port your board is connected to. Using an '*' tries all the ports and finds the right one.
+MONITOR_PORT       = /dev/ttyUSB0
+
+### MONITOR_BAUDRATE: Use appropriate Serial baudrate
+MONITOR_BAUDRATE  = 115200
+
+### Program to access UART TTY
+MONITOR_CMD       = picocom
+
+endif
+
+
 #############################################################
 ### "Gateway" device: Board and programming configuration ###
 #############################################################

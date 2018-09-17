@@ -97,4 +97,6 @@
 [submodule "libraries/Adafruit_DHT"]
 	path = libraries/Adafruit_DHT
 	url = https://github.com/adafruit/DHT-sensor-library
-
+[submodule "libraries/Adafruit-BMP085-Library"]
+	path = libraries/Adafruit-BMP085-Library
+	url = https://github.com/adafruit/Adafruit-BMP085-Library.git
