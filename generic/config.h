@@ -36,6 +36,12 @@
 #define HE_TEMPERATURE            false
 #define HE_BERadio                false
 
+#define HE_SLEEP                  false              // set to 1 for sleeping
+#define HE_SCALE                  false
+#define HE_HUMIDITY               false
+#define HE_TEMPERATURE            false
+#define HE_BERadio                false
+
 #define HE_RADIO                  false
 
 #define IS_NODE                   false
