@@ -10,7 +10,7 @@
   transp:   | GSM via HTTP
             | WiFi via HTTP (ESP8266)
 
-  Copyright (C) 2013-2017 by Clemens Gruber
+  Copyright (C) 2013-2019 by Clemens Gruber
 
 
   Changes
@@ -20,6 +20,7 @@
   2016-06-20 Clemens Gruber | Modularization of upload URL
   2016-09-17 Clemens Gruber | Modularization of sensors and debugging
   2017-01-09 Clemens Gruber | Add support for HX711 and ESP8266
+  2017-04-30 Clemens Gruber | Add support for Seeeduino Stalker v3.1
 
 
   GNU GPL v3 License
@@ -44,6 +45,7 @@
   D4, D10      Power (LOW is power on), CS - SD
   D6, D7       2x DHTxx [out,in]
   D8           DS18B20 one-wire array
+  D9           Power for bee GPRS and 3.3V on Seeeduino Stalker 3.1
   D12 D13      DTR, CTS - GSM
   D14 D15 D16  Data, SCL, Power - ADS1231
   D14 D12      Dour, SCK - HX711 (ESP8266)
@@ -61,10 +63,11 @@
 #define isScale
 #define isScaleADS1231
 //#define isScaleHX711
-#define isTemperatureArray
+//#define isTemperatureArray
 #define isHumidityTemperature
 #define isRTC  // define for ESP8266 also! gets time from server
 //#define isSD
+#define isStalker31  // for the updated board Seeeduino Stalker v3.1
 #define isBattery
 
 #define isGSM
@@ -73,6 +76,7 @@
     #define isWifi
 #endif
 
+//#define isWifi
 //#define isEthernet
 // comments this line in case you are using GSM as upload path
 // GSM and Serial debug using the same pins and interfere
@@ -81,10 +85,10 @@
 // ** RTC / timekeeping
 // --------------------
 // update interval for sensor reading in seconds
-// unsigned long updateInterval = 60UL * 20;  // s*m*h*d
+unsigned long updateInterval = 60UL * 60;  // s*m*h*d
 // ESP8266: maximun update interval is 1 hour due to variable size limitations
 // (we'll fix that in a later version)
-unsigned long updateInterval = 60UL * 60UL;  // s*m*h*d  // seems it take 11 sec longer than in theory
+//unsigned long updateInterval = 60UL*5UL;  // s*m*h*d  // seems it take 11 sec longer than in theory
 
 // keep in mind that very low values make no sense here!
 // sensor reading takes time, scale reads load multiple to
@@ -98,7 +102,7 @@ unsigned long updateInterval = 60UL * 60UL;  // s*m*h*d  // seems it take 11 sec
   const char uploadNode[]       = "1";
   // and user credentials
   const char uploadUserName[]   = "your-user-name";
-  const char uploadUserId[]     = "your-id";
+  const char uploadUserId[]     = "your-user-id";
   // server, path and upload script
   const char uploadDomain[]     = "data.example.com";
   const char uploadFolderFile[] = "apiary/upload.php";
@@ -109,15 +113,15 @@ unsigned long updateInterval = 60UL * 60UL;  // s*m*h*d  // seems it take 11 sec
 // ----------------
 #ifdef isGSM
   // specify your APN here, specific for your network operator
-  #define APN "internet.eplus.de"
+  #define APN "internet.telekom"
 #endif
 
 // ** WiFi
 // -------
 #ifdef isWifi
   // specify your SSID an PW here, specific for your local WiFi
-  #define WLAN_SSID  "your-ssid"
-  #define WLAN_PW    "your-pw"
+  #define WLAN_SSID  "your-wifi-ssid"
+  #define WLAN_PW    "your-wifi-pass"
 #endif
 
 // ** load cell characteristic
@@ -134,10 +138,12 @@ unsigned long updateInterval = 60UL * 60UL;  // s*m*h*d  // seems it take 11 sec
   //   add a load with known weight in kg to the scale, note the
   //   sesor value, calculate the value for a 1 kg load and adjust
   //   it here
-  const long loadCellZeroOffset = 38623;
-//  const long loadCellKgDivider  = 22053;
-  // 1/2 value for single side measurement, so that 1 kg is displayed as 2 kg
-  const long loadCellKgDivider  = 11026;
+
+  // Note: Use 1/2 value for single side measurement,
+  //       so that 1 kg is displayed as 2 kg.
+
+  const long loadCellZeroOffset = 50682624;
+  const long loadCellKgDivider  = 5895655;
 
   // wait between samples
   // 3 sec is a good delay so that load cell did not warm up
@@ -168,7 +174,7 @@ unsigned long updateInterval = 60UL * 60UL;  // s*m*h*d  // seems it take 11 sec
   // how much pins have DHTxx devices connected?
   const int humidityNumDevices = 1;
   // pins with DHTxx device, pin 6, pin 7
-  const int humidityPins[humidityNumDevices] = {4};
+  const int humidityPins[humidityNumDevices] = {6};
 #endif
 
 // ** temperature array / DS18B20
@@ -185,15 +191,15 @@ unsigned long updateInterval = 60UL * 60UL;  // s*m*h*d  // seems it take 11 sec
   // resolution for all devices (9, 10, 11 or 12 bits)
   const int temperaturePrecision = 12;
   // pin for the temperature sensors
-  const int temperaturePin = 5;
+  const int temperaturePin = 7;
 #endif
 
 // ** SD card
 // ----------
 #ifdef isSD
   // data upload to server, path and file
-  const char sdStorageUploadPath[]  = "/upload2/";
-  const char sdStorageUploadFile[]  = "d-new.txt";
+  const char sdStorageUploadPath[]  = "/upload/";
+  const char sdStorageUploadFile[]  = "new-data.txt";
 
   // data archive, path
   const char sdStorageArchivePath[] = "/archive/";
@@ -207,7 +213,8 @@ unsigned long updateInterval = 60UL * 60UL;  // s*m*h*d  // seems it take 11 sec
 // do not use spaces before or after an comma
 //const char datasetHeader[] = "Date/Time,Weight,Outside Temp,Outside Humid,Inside Temp,Inside Humid,H1 Temp,H2 Temp,H3 Temp,H4 Temp,H5 Temp,Voltage";
 //const char datasetHeader[] = "Date/Time,Weight,Outside Temp,Outside Humid,Inside Temp,Voltage";
-const char datasetHeader[] = "Datum/Zeit,Gewicht,Aussen-Temperatur,Aussen-Feuchtigkeit,Brut-Temperatur,Spannung";
+//const char datasetHeader[] = "Datum/Zeit,Gewicht,Aussen-Temperatur,Aussen-Feuchtigkeit,Brut-Temperatur,Spannung";
+const char datasetHeader[] = "Datum/Zeit,Gewicht,Aussen-Temperatur,Aussen-Feuchtigkeit,Batterie-Spannung";
 
 // -------------------------+----
 // variables you can modify | END
@@ -295,7 +302,7 @@ const char datasetHeader[] = "Datum/Zeit,Gewicht,Aussen-Temperatur,Aussen-Feucht
   OneWire oneWire(temperaturePin);  // oneWire instance to communicate with any OneWire devices (not just DS18B20)
   DallasTemperature temperatureSensors(&oneWire);        // pass oneWire reference to DallasTemperature
   uint8_t deviceAddressArray[temperatureNumDevices][8];  // arrays for device addresses
-  const char gradC[4]={' ','°','C','\0'};                // degree sign
+  const char gradC[4]={' ','d','C','\0'};                // degree sign
 #endif
 
 // power saving
@@ -356,6 +363,17 @@ const char datasetHeader[] = "Datum/Zeit,Gewicht,Aussen-Temperatur,Aussen-Feucht
 
 
 void setup () {
+
+  // power switching Stalker board version 3.1
+  #ifdef isStalker31
+    // in version 3.1 of the Seeeduino Stalker a power switching pin
+    // for 3.3 V and the GPRS pins / bee socket was introduced:
+    // set pin 9 high to switch power on
+    pinMode(9, OUTPUT);
+    digitalWrite(9, HIGH);
+    delay(500);
+  #endif
+
   // debug and GSM
   Serial.begin(9600);
   #ifdef isDebug
@@ -575,6 +593,12 @@ void setup () {
       // add x seconds (interval time) to start time
       interruptTime = DateTime(start.get() + updateInterval);
     #endif
+  #endif
+
+  // switch power off for 3.3 V pin and bee socket
+  #ifdef isStalker31
+    Serial.flush();
+    digitalWrite(9, LOW);
   #endif
 }
 
@@ -854,12 +878,16 @@ void setup () {
 // read the battery level from the analog pin.
 //
 // ** for Lipo 4.2V
+// * Seeeduino Stalker has 10M and 2M voltage divider resistors
+//
+// * Open Hive Wifi Solar (ESP8266) and Open Hive ProMini Solar
 // Our 1M & 220K voltage divider takes the max lipo value of
 // 4.2V and drops it to 0.757V max. This means our min analog
 // read value should be 580 (3.14V / 0.566V) and the max analog
 // read value should be 774 (4.2V / 0.757).
 //
 // ** for 4x 1,5 V AA battery = 6 V
+// * Open Hive Wifi (ESP8266) and Open Hive ProMini with battery
 // Our 1.5M & 220K voltage divider takes the max battery value of
 // 6V and drops it to 0.767V max. This means our min analog
 // read value should be 411 (3.14V / 0.402V) and the max analog
@@ -868,13 +896,16 @@ void setup () {
   void getVoltage() {
     int batteryValue = analogRead(batteryPin); // read battery as analog value
 
+    // Set voltage divider based on device and operation mode, values are in Mega Ohm
+    //float voltageDivider = (analogMax / 1024) * (1.5 + 0.22) / 2;   // Open Hive Battery
+    //float voltageDivider = (analogMax / 1024) * (1 + 0.22) / 2;     // Open Hive Solar
+    float voltageDivider = (analogMax / 1024) * (10 + 2) / 2;       // Seeeduino Stalker
+
     // Compute voltage based on voltage divider resistors
-    float voltage = batteryValue * (analogMax / 1024) * (10 + 2) / 2;  // voltage divider, values in Mega Ohm
+    float voltage = batteryValue * voltageDivider;
 
     // Write to char array
     dtostrf(voltage,5,2,voltageChar);  // write to char array
-
-
   }
 #endif
 
@@ -896,6 +927,17 @@ void setup () {
 // ------------
 
 void loop () {
+  // switch power for 3.3 V pin and bee socket on
+  #ifdef isStalker31
+    digitalWrite(9, HIGH);
+    // wait for stabilizing
+    delay(500);
+
+    // change pinmode for 0,1 to default
+//    pinMode(0, INPUT);
+//    pinMode(1, OUTPUT);
+  #endif
+
   // update data
   //
   // update timestamp
@@ -1092,6 +1134,7 @@ void loop () {
         delay(400);
       }
     }
+
     // go sleeping
     unsigned long runningTime = millis() * 1000UL;  // in us!
     unsigned long sleepTime = (updateInterval * 1000UL*1000UL) - runningTime;  // s (*ms*us)
@@ -1120,6 +1163,18 @@ void loop () {
 
   #ifdef isSD
     writeToSd(dataset);
+  #endif
+
+  // switch power off for 3.3 V pin and bee socket
+  #ifdef isStalker31
+    // power off
+    digitalWrite(9, LOW);
+
+    // there is also a recommendation to set pin 0 and 1 to
+    // input for power saving
+    Serial.flush();
+    pinMode(0, INPUT);
+    pinMode(1, INPUT);
   #endif
 
   // manage sleeping and wake up
