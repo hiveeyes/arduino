@@ -13,6 +13,19 @@ TODO
 ----
 
 
+
+****
+2019
+****
+
+
+2019-01-09
+==========
+- Look at https://github.com/SergiusTheBest/plog,
+  a portable, simple and extensible C++ logging library
+
+
+
 ****
 2017
 ****

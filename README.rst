@@ -76,6 +76,21 @@ Archlinux packages
 * community/avr-libc
 
 
+Mac OS X Homebrew packages
+--------------------------
+::
+
+    # GNU AVR Toolchain as formulae for Homebrew
+    # https://github.com/osx-cross/homebrew-avr
+    brew tap osx-cross/avr
+    brew install avr-gcc
+
+::
+
+    # The Arduino HAL
+    brew cask install arduino
+
+
 *******
 Operate
 *******
