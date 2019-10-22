@@ -10,7 +10,7 @@ PROJECT_DIR       = ..
 
 ### AVR_TOOLS_DIR
 ### Path to the AVR tools directory such as avr-gcc, avr-g++, etc.
-AVR_TOOLS_DIR     = /opt/local
+AVR_TOOLS_DIR     = /usr/local
 #AVR_TOOLS_DIR     = /Applications/Arduino.app/Contents/Resources/Java/hardware/tools/avr
 
 ### AVR_GCC_VERSION
@@ -23,26 +23,26 @@ ARDMK_DIR         = $(PROJECT_DIR)/tools/Arduino-Makefile
 
 ### ARDUINO_DIR
 ### Path to the Arduino application and ressources directory.
-### For Arduino IDE 1.0.x
-ARDUINO_DIR       = /Applications/Arduino.app/Contents/Resources/Java
-### For Arduino IDE 1.6.x
-# ARDUINO_DIR       = /Applications/Arduino.app/Contents/Java
+### For Arduino 1.0.x
+# ARDUINO_DIR       = /Applications/Arduino.app/Contents/Resources/Java
+### For Arduino 1.6.x and 1.8.x
+ARDUINO_DIR       = /Applications/Arduino.app/Contents/Java
 
 ### USER_LIB_PATH
 ### Path to where the your project's libraries are stored.
 USER_LIB_PATH     :=  $(realpath $(PROJECT_DIR)/libraries)
 
 ### BOARD_TAG & BOARD_SUB
-### For Arduino IDE 1.0.x
+### For Arduino 1.0.x
 ### Only BOARD_TAG is needed. It must be set to the board you are currently using. (i.e uno, mega2560, etc.)
 # BOARD_TAG         = mega2560
-BOARD_TAG         = pro328
+# BOARD_TAG         = pro328
 
-### For Arduino IDE 1.6.x
+### For Arduino 1.6.x and 1.8.x
 ### Both BOARD_TAG and BOARD_SUB are needed. They must be set to the board you are currently using. (i.e BOARD_TAG = uno, mega, etc. & BOARD_SUB = atmega2560, etc.)
 ### Note: for the Arduino Uno, only BOARD_TAG is mandatory and BOARD_SUB can be equal to anything
-#BOARD_TAG         = uno
-#BOARD_SUB         = atmega328p
+BOARD_TAG         = uno
+BOARD_SUB         = atmega328p
 
 ### MONITOR_BAUDRATE
 ### It must be set to Serial baudrate value you are using.
