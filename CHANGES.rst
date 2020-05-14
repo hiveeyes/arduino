@@ -9,15 +9,33 @@ CHANGES
 
 in-progress
 ===========
+
+
+.. _version-0.17.0:
+
+2020-05-14 0.17.0
+=================
 - :ref:`node-yun-http`: Make it compile from the :ref:`firmware-builder` on Arduino Core 1.5.6.2 on Linux
 - Prepare the :ref:`generic-firmware` and :ref:`scale-adjust-firmware` for :ref:`firmware-builder`
 - Improve firmware building for :ref:`scale-adjust-firmware` re. artefact naming
 - Add vanilla “SerialDebugger” library from http://playground.arduino.cc/Code/SerialDebugger
 - Update `node-wifi-mqtt.ino`_ firmware. Thanks, Matthias and Giuseppe!
-
     - Improve SerialDebugger output
     - Fix output of local ip address with SerialDebugger
     - Improve connectivity flow
+- node-wifi-mqtt-homie: Workaround for ArduinoJson regarding float precision.
+  Thanks, Alex!
+- Update EmBencode library
+- Add howto about PlatformIO
+- Add support for Seeeduino Stalker v3.1 to Open Hive GSM sensor node firmware
+- node-esp8266-generic: ESP8266 Wemos D1 mini based scale with Wifi / GSM support for SIM800.
+  Thanks, Stefan!
+- Update documentation
+- Update Makefiles for macOS
+- Bare-Arduino-Project: update to the latest master. Thanks, Hoijui!
+- node-esp32-generic: ESP32 TTGO-T-CALL based scale with Wifi / GSM support for SIM800.
+  Thanks, Stefan!
+- Update URL to UUID generator. Thanks, Alan and Weef!
 
 
 .. _version-0.16.0:
