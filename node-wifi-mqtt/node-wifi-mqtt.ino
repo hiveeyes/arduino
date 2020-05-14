@@ -159,7 +159,7 @@
 
 // A MQTT client ID, which should be unique across multiple devices for a user.
 // Maybe use your MQTT_USERNAME and the date and time the sketch was compiled
-// or just use an UUID (https://www.uuidgenerator.net/) or other random value.
+// or just use an UUID (https://www.uuidtools.com/) or other random value.
 #define MQTT_CLIENT_ID      ""
 
 // The credentials to authenticate with the MQTT broker
