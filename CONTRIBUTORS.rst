@@ -11,5 +11,8 @@ Authors/contributors in order of appearance:
 * Alexander Wilms   -- https://www.imker-nettetal.de/
 * Matthias Büchner
 * Giuseppe Tuveri
+* Stefan Ulmer      -- ulmi@gmx.de
+* Robin Vobruba     -- robin.vobruba@gmx.net
+* Weef
 
 Thanks a bunch!
