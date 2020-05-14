@@ -52,8 +52,8 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'Hiveeyes Arduino'
-copyright = u'2013-2018, Hiveeyes Developers'
-author = u'Hiveeyes Developers'
+copyright = u'2013-2020, The Hiveeyes Developers'
+author = u'The Hiveeyes Developers'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
