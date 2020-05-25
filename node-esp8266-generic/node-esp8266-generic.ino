@@ -126,6 +126,16 @@ int sleepTimeS = 900;  // 15-Minuten SleepTimer als Startwert
 // MQTT
 // ----
 
+// Note that the "testdrive" channel as outlined within "MQTT_TOPIC" is not
+// authenticated and can be used anonymously.
+//
+// To publish data to a personal data channel, please ask for appropriate
+// credentials at https://community.hiveeyes.org/ or hello@hiveeyes.org.
+//
+// Documentation:
+// https://community.hiveeyes.org/t/messdaten-an-die-hiveeyes-plattform-ubermitteln/1813
+// https://community.hiveeyes.org/t/zugangsdaten-anfragen-und-account-erstellen/2193
+
 // How often to retry connecting to the MQTT broker
 #define MQTT_RETRY_COUNT    5
 
@@ -139,20 +149,18 @@ int sleepTimeS = 900;  // 15-Minuten SleepTimer als Startwert
 // A MQTT client ID, which should be unique across multiple devices for a user.
 // Maybe use your MQTT_USERNAME and the date and time the sketch was compiled
 // or just use an UUID (https://www.uuidtools.com/) or other random value.
-#define MQTT_CLIENT_ID      "xxxxxxxx-yyyy-xxxx-yyyy-zzzzzzzzzzzz"                   // Hier eigenen Werte eintragen
 
+// Hier eigenen Wert eintragen.
+#define MQTT_CLIENT_ID      "random-123"
 
-// The credentials to authenticate with the MQTT broker
-#define MQTT_USERNAME       "DeinLoginName"                                            // Eigenen Login Daten bei den netten Team von Hiveeyes via hello@hiveeyes.org anfragen.
+// The credentials to authenticate with the MQTT broker.
+// Eigene Login-Daten beim netten Team von Hiveeyes anfragen (s.o.)
+#define MQTT_USERNAME       "DeinLoginName"
 #define MQTT_PASSWORD       "DeinKennwort"
 
 // The MQTT topic to transmit sensor readings to.
-// Note that the "testdrive" channel is not authenticated and can be used anonymously.
-// To publish to a protected data channel owned by you, please ask for appropriate
-// credentials at https://community.hiveeyes.org/ or hello@hiveeyes.org.
-    
-#define MQTT_TOPIC          "hiveeyes/xxxxxxxx-yyyy-xxxx-yyyy-zzzzzzzzzzzz/spielwiese/node-1/data.json" 
-//#define MQTT_TOPIC        "hiveeyes/-------MQTT-CLIENT-ID-von-oben------/spielwiese/node-1/data.json"     //ggfs. beim Pfad beim Team von hiveeyes noch nachfragen.
+#define MQTT_TOPIC          "hiveeyes/testdrive/spielwiese/node-1/data.json"
+
 
 #if GSM_ENABLED
 
