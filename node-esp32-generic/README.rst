@@ -89,4 +89,4 @@ Pictures
 .. figure:: https://community.hiveeyes.org/uploads/default/optimized/2X/d/d3994ea5a4556598ba5b1c0f0d9baab587444943_2_375x500.jpeg
     :target: https://community.hiveeyes.org/uploads/default/original/2X/d/d3994ea5a4556598ba5b1c0f0d9baab587444943.jpeg
 
-.. figure:: Bienenwaage 5.0 TTGO-T-CALL_Leiterplatte.png
+.. figure:: Bienenwaage%205.0%20TTGO-T-CALL_Leiterplatte.png
