@@ -102,9 +102,9 @@ Hinweise
     const char pass[] = ""; // GPRS Password
 
 
-    // SIM card PIN (leave empty, if not defined)
-
-    const char simPIN[]   = "1234"; //PIN gegen eignen Wert austauschen
+    // Unlock SIM card using PIN
+    #define GSM_USE_PIN true
+    const char simPIN[]   = "1234"; // PIN gegen eigenen Wert austauschen
 
 
   int gsm_csq; //Variable für GSM Signal Stärke
@@ -664,10 +664,10 @@ void gsm_setup() {
   modem.restart();
 
 // Unlock your SIM card with a PIN if needed
- if ( simPIN && modem.getSimStatus() != 3 ) {
+ if (GSM_USE_PIN && modem.getSimStatus() != 3) {
     modem.simUnlock(simPIN);
-Serial.print("GetSimStatus:");
-Serial.print(simPIN);
+    Serial.print("GetSimStatus:");
+    Serial.print(simPIN);
   }
 
 #endif
