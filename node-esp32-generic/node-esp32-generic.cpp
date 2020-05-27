@@ -1,21 +1,56 @@
-#include <Arduino.h>
-
-// Sketch ist für TTGO-T-CALL mit dem SIM800 Modul ausgelegt
-
-// Farbecode Anschlußkabel BOSCHE H40A
 /*
+
+Bienenwaage 5.0 TTGO-T-CALL
+https://github.com/hiveeyes/arduino/tree/master/node-esp32-generic
+
+
+Telemetry | GSM or WiFi
+-----------------------
+sensors:  | Scale
+          | Temperature
+          | Battery
+transp:   | GSM via MQTT
+          | WiFi via MQTT
+
+Copyright (C) 2019-2020 by Stefan Ulmer
+
+
+GNU GPL v3 License
+------------------
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+The license can be viewed at
+http://www.gnu.org/licenses/gpl-3.0.txt
+
+
+
+Farbcodes Anschlußkabel BOSCHE H40A
+-----------------------------------
 +E Rot
 +A Grün
 -E Schwarz
 -A Weiß
 Shield Lila
-*/  
 
-//Hinweis: Die WPA2 Verbindung wurde noch nicht mit dem ESP32 verifziert.
-//Hinweis: Der Sensor Count für den Temperatur Sensor gibt 0 aus - Messung selbst 
+Hinweise
+--------
+- Sketch ist für TTGO-T-CALL mit dem SIM800 Modul ausgelegt.
+- Die WPA2 Verbindung wurde noch nicht mit dem ESP32 verifiziert.
+- Der Sensor Count für den Temperatur Sensor gibt 0 aus - Messung selbst.
+- #define MAXBUFFERSIZE (2048) in Adafruit_MQTT.h anpassen,
+  da ansonsten nicht alle Daten übermittelt werden können.
 
-//Wichtig: #define MAXBUFFERSIZE (2048) in Adafruit_MQTT.h anpassen, da ansonsten nicht alle Daten übermittelt werden können 
+*/
 
+#include <Arduino.h>
 
 #define GSM_ENABLED             true    //Bei FALSE wird automatisch WIFI aktiviert
 #define WEIGHT                  true
@@ -932,7 +967,7 @@ void read_weatherunderground() {
     while (!client.available()) {
       //  delay(200);
       delay(10000);
-      Serial.print("client not availabel connect: ");
+      Serial.print("Waiting for connection to Weather Underground");
     }
 
     // Read all the lines of the reply from server and print them to Serial
