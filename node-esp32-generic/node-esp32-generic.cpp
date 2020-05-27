@@ -18,27 +18,27 @@ Shield Lila
 
 
 #define GSM_ENABLED             true    //Bei FALSE wird automatisch WIFI aktiviert
-#define WEIGHT                  true 
-#define SENSOR_DS18B20          true  
+#define WEIGHT                  true
+#define SENSOR_DS18B20          true
 #define SENSOR_BATTERY_LEVEL    false  // falls Spannungsmessung über Spannungsteiler erfolgen soll, wenn kein SIM800 Modul verwendet wird.
 #define DEEPSLEEP_ENABLED       true  // Code ist aktuell nur auf TRUE ausgelegt, falls False, muß noch im main() ein Delay eingebaut werden.
 #define SLEEP_TIMER             true  // SleepDauer abhängig vom Ladezustand, Sleep_Timer noch nicht mit Wifi verifziert.
 #define WUNDERGROUND            true  // funktionert aktuell nur mit GSM_ENABLED false
-#define WIFI_ENTERPRISE         false  // Unterstützung von WPA2 Enterprise Verschlüsselung, falls FALSE wird der WifiManager verwendet, 
-#define SLEEP_SHORT             false   // Steuerung der Sleepdauer - 5 min/15 min oder 15 min/60 min 
+#define WIFI_ENTERPRISE         false  // Unterstützung von WPA2 Enterprise Verschlüsselung, falls FALSE wird der WifiManager verwendet,
+#define SLEEP_SHORT             false   // Steuerung der Sleepdauer - 5 min/15 min oder 15 min/60 min
 
 
 #if GSM_ENABLED
 
   #define WIFI_ACTIVE false
-  
+
   #define TINY_GSM_MODEM_SIM800
-  #define TINY_GSM_RX_BUFFER   1024 
+  #define TINY_GSM_RX_BUFFER   1024
 
   #include <Wire.h>
   #include <TinyGsmClient.h>
   #define SerialAT Serial1
-  
+
 
   // TTGO T-Call pins
     #define MODEM_RST            5
@@ -48,7 +48,7 @@ Shield Lila
     #define MODEM_RX             26
     #define I2C_SDA              21
     #define I2C_SCL              22
-  
+
     /* Daten für Netzclub SIM Karte
     const char apn[]  = "pinternet.interkom.de";  //Abhängig vom Netzprovider - ggfs.auf eigene Werte anpassen.
     const char user[] = "";                       //Abhängig vom Netzprovider
@@ -68,21 +68,21 @@ Shield Lila
 
 
     // SIM card PIN (leave empty, if not defined)
-  
+
     const char simPIN[]   = "1234"; //PIN gegen eignen Wert austauschen
 
 
   int gsm_csq; //Variable für GSM Signal Stärke
-  
+
 #else
 
   #define WIFI_ACTIVE true
   long wifi_rssi ; // Wifi Signalstärke
-  
+
 #endif
 
 #if SENSOR_BATTERY_LEVEL
-  int adc_level;  
+  int adc_level;
 #endif
 
 // Variablen für Spanungsmessung, werden unabhängig der Messmethode (Spannungsteiler o. SIM800 Modul benötigt)
@@ -118,9 +118,9 @@ float voltage;
   #include <EEPROM.h>
   int power_save_mode = 0;
   int address = 1;     // Willkürlich von mir festgelegt das im EEPROM an Adresse 1 der Wert für den Ladezustand abgelegt wird.
-  int voltbe4;         // Wert der vorherigen Messung 
+  int voltbe4;         // Wert der vorherigen Messung
   int voltbelow = 75;  // Schwellwert für die Aktivierung des PowerSave Modus (Verlängerung des SleepTimers auf 60 min)
-  
+
 #endif
 
 
@@ -133,7 +133,7 @@ float voltage;
 #endif
 
 int sleepTimeS;
-#define uS_TO_S_FACTOR 1000000LL 
+#define uS_TO_S_FACTOR 1000000LL
 
 // Boot Counter - Wert wird mit jedem WakeUp des ESP hochgezählt, 0 bei Kaltstart
 RTC_DATA_ATTR int bootCount = 0;
@@ -198,7 +198,7 @@ TwoWire I2CPower = TwoWire(0);
   TinyGsmClient client(modem);
   TinyGsmClient clientMQTT(modem);
 
-  
+
     #define IP5306_ADDR          0x75
     #define IP5306_REG_SYS_CTL0  0x00
 
@@ -234,13 +234,13 @@ Adafruit_MQTT_Publish mqtt_publisher = Adafruit_MQTT_Publish(&mqtt, MQTT_TOPIC);
 
   #include <HX711.h>
   #include <RunningMedian.h>  // http://playground.arduino.cc/Main/RunningMedian
-  
+
   // Aktuelle HX711 Library verwendet deshalb anstatt #define -> const int und ; am Ende ;-)
   //#define SCALE_DOUT_PIN_A D5 // DT
   //#define SCALE_SCK_PIN_A D3 // SCK
 
   const int SCALE_DOUT_PIN_A = 33;// DT
-  const int SCALE_SCK_PIN_A = 32;// SCK 
+  const int SCALE_SCK_PIN_A = 32;// SCK
 
   //#define SCALE_DOUT_PIN_B D2 // DT
   //#define SCALE_SCK_PIN_B D1 // SCK
@@ -256,7 +256,7 @@ Adafruit_MQTT_Publish mqtt_publisher = Adafruit_MQTT_Publish(&mqtt, MQTT_TOPIC);
 
   float Taragewicht_A = 226743;  // Hier ist der Wert aus der Kalibrierung einzutragen
   float Skalierung_A = 41.647;  // Hier ist der Wert aus der Kalibrierung einzutragen
-  
+
   float Taragewicht_B = -238537;  // Hier ist der Wert aus der Kalibrierung einzutragen
   float Skalierung_B = -42.614;  // Hier ist der Wert aus der Kalibrierung einzutragen
 
@@ -276,28 +276,28 @@ Adafruit_MQTT_Publish mqtt_publisher = Adafruit_MQTT_Publish(&mqtt, MQTT_TOPIC);
 
   // Temperatur Sensoren DS18B20 connectet to Pin 4
   #define DS18B20_PIN 4
-  
+
   // 1-Wire library
   #include <OneWire.h>
-  
+
   // DS18B20/DallasTemperature library
   #include <DallasTemperature.h>
-  
+
   // For communicating with any 1-Wire device (not just DS18B20)
   OneWire oneWire(DS18B20_PIN);
-  
+
   // Initialize DallasTemperature library with reference to 1-Wire object
   DallasTemperature sensors(&oneWire);
-  
+
   // Device Adresses - dedected by oneWireSearch.ino or Multiple similar
   // Update device adress for your Sensor
-  
+
   uint8_t Sensor1 [8] = { 0x28, 0xFF, 0xCF, 0xBD, 0xA4, 0x16, 0x04, 0x46 };  // Nr. 3 grüne Schrift
   uint8_t Sensor2 [8] = { 0x28, 0xFF, 0x67, 0x65, 0x51, 0x16, 0x04, 0xEE }; // langes Kabel
-  
+
   // Define Variable to hold temperature value for Sensor1
   float temps1;
-  
+
   // Define Variable to hold temperature value for Sensor2
   float temps2;
 
@@ -307,14 +307,14 @@ Adafruit_MQTT_Publish mqtt_publisher = Adafruit_MQTT_Publish(&mqtt, MQTT_TOPIC);
 
   // Weatherundeground
   const char* weatherhost = "api.weather.com";
-  
+
   // TextFinder Lib used for text extractation of XML Data
   #include <TextFinder.h>
-  
+
   // Define variable as "char" as they will be extracted via finder.string of XML Data
   char currentTemp[8];
   char currentHumidity[8];
-  
+
   // Weatherunderground Station - Alternative Station IMNCHEN1945
   // Weatherunderground Station - Alternative Station IBAYERNM74
   const char*  WUG_Station = "IMUNICH323";
@@ -341,7 +341,7 @@ void read_weatherunderground();
 
 
 void setup() {
-  
+
 Serial.begin(115200);
 
 //Increment boot number and print it every reboot
@@ -351,7 +351,7 @@ Serial.println("Boot number: " + String(bootCount));
 #if WIFI_ACTIVE
 
   #if WIFI_ENTERPRISE
-    
+
     Serial.println("Booting WPA2 Enterprise Wifi Mode ");
 
     // WPA2 Connection starts here
@@ -379,8 +379,8 @@ Serial.println("Boot number: " + String(bootCount));
   esp_wifi_sta_wpa2_ent_set_password((uint8_t *)password, strlen(password)); //provide password
   esp_wpa2_config_t config = WPA2_CONFIG_INIT_DEFAULT(); //set config settings to default
   esp_wifi_sta_wpa2_ent_enable(&config); //set config settings to enable function
-  WiFi.begin(ssid); 
-    
+  WiFi.begin(ssid);
+
     // WPA2 Connection ends here
     /*
     // Wait for connection AND IP address from DHCP
@@ -405,14 +405,14 @@ Serial.println("Boot number: " + String(bootCount));
   Serial.println("IP address: ");
   Serial.println(WiFi.localIP());
 
-  /* 
+  /*
     while (WiFi.waitForConnectResult() != WL_CONNECTED) {
       Serial.println("Connection Failed! Rebooting...");
 
       Serial.println("ESP8266 in sleep for 1 min mode");
       esp_sleep_enable_timer_wakeup(60 * uS_TO_S_FACTOR);
 	  esp_deep_sleep_start();
-      delay(100);      
+      delay(100);
     }
     */
 
@@ -433,7 +433,7 @@ Serial.println("Boot number: " + String(bootCount));
       //Go to sleep now
       esp_sleep_enable_timer_wakeup(60 * uS_TO_S_FACTOR);
 	  esp_deep_sleep_start();
-      delay(100);     
+      delay(100);
     }
 
   #endif
@@ -472,7 +472,7 @@ Serial.println(" ->");
 setup_weight();
 
 
-#ifdef SENSOR_DS18B20 
+#ifdef SENSOR_DS18B20
   Serial.println(" ->");
   Serial.println("Setup Temp Sensor");
 
@@ -483,17 +483,17 @@ setup_weight();
 }
 
 void loop() {
-  
+
 
   Serial.println("MQTT Connect");
 
   if (!mqtt_connect()) {
     return;
   }
-  
+
   Serial.println("Read Weight");
   read_weight();
-  
+
   Serial.println("Read Temperatur Sensor");
   read_tempsensor();
 
@@ -505,7 +505,7 @@ void loop() {
 
   Serial.println("Set Sleep Timer");
   power4sleep();
-  
+
   Serial.println("Transmit Reading");
   transmit_readings();
 
@@ -519,7 +519,7 @@ void loop() {
       Serial.println("Going to sleep ");
       esp_sleep_enable_timer_wakeup(sleepTimeS * uS_TO_S_FACTOR);
 	    esp_deep_sleep_start();
-      delay(100);   
+      delay(100);
   #endif
 
 }
@@ -534,7 +534,7 @@ void setup_weight() {
     // Waage A Setup
     scale_A.set_offset(Taragewicht_A);
     scale_A.set_scale(Skalierung_A);
-  
+
     // Waage B Setup
     scale_B.set_offset(Taragewicht_B);
     scale_B.set_scale(Skalierung_B);
@@ -546,7 +546,7 @@ void setup_weight() {
 void read_weight() {
 
   #if WEIGHT
-  
+
     //clearRunningMedian Sample
     GewichtSamples_A.clear();
     GewichtSamples_B.clear();
@@ -589,12 +589,12 @@ void read_weight() {
       Serial.print("Gewicht A: ");
       Serial.print(AktuellesGewicht_A);
       Serial.println(" g");
-      
+
       Serial.print("Gewicht B: ");
       Serial.print(AktuellesGewicht_B);
       Serial.println(" g");
-      
-    } 
+
+    }
   #endif
 }
 
@@ -603,7 +603,7 @@ void gsm_setup() {
 
 #if GSM_ENABLED
 
-  
+
   I2CPower.begin(I2C_SDA, I2C_SCL, 400000);
 
   // Keep power when running from battery
@@ -665,8 +665,8 @@ void gsm_connect() {
     // Sleep für 60 Sekunden
      esp_sleep_enable_timer_wakeup(60 * uS_TO_S_FACTOR);
 	   esp_deep_sleep_start();
-     delay(100);   
-    
+     delay(100);
+
     return;
   }
   Serial.println("GPRS Connection established");
@@ -708,7 +708,7 @@ void gsm_disconnect() {
   Serial.println("GPRS Disconnect");
   modem.gprsDisconnect();
 
-  // For dem Sleep  - Modem RadioOFF schalten 
+  // For dem Sleep  - Modem RadioOFF schalten
   Serial.println("GSM Radio Off ");
   modem.radioOff();
 
@@ -764,7 +764,7 @@ bool mqtt_connect() {
     retries--;
     if (retries == 0) {
       Serial.println("Giving up connecting to MQTT broker");
-      
+
       // Falls keine MQTT Verbindung aufgebaut werden kann, hängen wir hier ewig in der Schleife
       // da solange die Funktion mqtt.connect aufgerufen wird
       // deshalb fangen wir von vorne an in dem wir den ESP 1min schlafen geht und die Schleife von vorne beginnt
@@ -777,7 +777,7 @@ bool mqtt_connect() {
 
           esp_sleep_enable_timer_wakeup(60 * uS_TO_S_FACTOR);
 	        esp_deep_sleep_start();
-          delay(100);   
+          delay(100);
 
       return false;
     }
@@ -853,8 +853,8 @@ void read_battery_level() {
   // 1024 / 3,3  * 1,73 = 537 1,73V laut spannungsteiler bei 4,2 V mit 4,7k & 3,3k
   // 1024 / 3,3  * 1,3 = 400 1,3V lt. spannungsteiler bei 3,14 V mit 4,7k & 3,3 k
 
-  
-  
+
+
   adc_level = analogRead(A0);
   Serial.print("ADC_level: ");
   Serial.println(adc_level);
@@ -867,7 +867,7 @@ void read_battery_level() {
   Serial.print("Voltage: ");
   voltage = adc_level * 4.2 / 537 ;
   Serial.println( voltage );
-  
+
   // Give operating system / watchdog timer some breath
   yield();
 #endif
@@ -895,7 +895,7 @@ void power4sleep() {
 
     // Wert wird Abhängig vom #define SLEEP_SHORT gesetzt
 
-    sleepTimeS = sleepTimerLong; 
+    sleepTimeS = sleepTimerLong;
     power_save_mode = 1;
 
   }
@@ -915,7 +915,7 @@ void power4sleep() {
     Serial.println(sleepTimeS);
     Serial.print("Set Power Save to:");
     Serial.println(power_save_mode);
-    
+
 #endif
 
 }
@@ -941,9 +941,9 @@ void read_weatherunderground() {
     //   while (client.available()) {
     String line = client.readStringUntil('\r');
 
-    finder.getString("<humidity>", "</humidity>", currentHumidity, 8) ;
+    finder.getString("<humidity>", "</humidity>", currentHumidity, 8);
 
-    finder.getString("<temp_c>", "</temp_c>", currentTemp, 8) ;
+    finder.getString("<temp_c>", "</temp_c>", currentTemp, 8);
 
     Serial.println("closing connection");
   }
@@ -1005,7 +1005,7 @@ void transmit_readings() {
   // json5: json_data.printTo(Serial);
   // für json6:
 
-  
+
   serializeJsonPretty(doc, Serial);
   Serial.println();
 
