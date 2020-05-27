@@ -52,13 +52,13 @@ Hinweise
 
 #include <Arduino.h>
 
-#define GSM_ENABLED             true    //Bei FALSE wird automatisch WIFI aktiviert
+#define GSM_ENABLED             true    // Bei FALSE wird automatisch WIFI aktiviert
 #define WEIGHT                  true
 #define SENSOR_DS18B20          true
-#define SENSOR_BATTERY_LEVEL    false  // falls Spannungsmessung über Spannungsteiler erfolgen soll, wenn kein SIM800 Modul verwendet wird.
+#define SENSOR_BATTERY_LEVEL    false  // Falls Spannungsmessung über Spannungsteiler erfolgen soll, wenn kein SIM800 Modul verwendet wird.
 #define DEEPSLEEP_ENABLED       true  // Code ist aktuell nur auf TRUE ausgelegt, falls False, muß noch im main() ein Delay eingebaut werden.
 #define SLEEP_TIMER             true  // SleepDauer abhängig vom Ladezustand, Sleep_Timer noch nicht mit Wifi verifziert.
-#define WUNDERGROUND            true  // funktionert aktuell nur mit GSM_ENABLED false
+#define WUNDERGROUND            false  // Funktioniert aktuell nur mit GSM_ENABLED false
 #define WIFI_ENTERPRISE         false  // Unterstützung von WPA2 Enterprise Verschlüsselung, falls FALSE wird der WifiManager verwendet,
 #define SLEEP_SHORT             false   // Steuerung der Sleepdauer - 5 min/15 min oder 15 min/60 min
 
@@ -340,22 +340,21 @@ Adafruit_MQTT_Publish mqtt_publisher = Adafruit_MQTT_Publish(&mqtt, MQTT_TOPIC);
 
 #if WUNDERGROUND
 
-  // Weatherundeground
-  const char* weatherhost = "api.weather.com";
+  #include <HTTPClient.h>
 
-  // TextFinder Lib used for text extractation of XML Data
-  #include <TextFinder.h>
+  // Weatherundeground
+  const char* WUG_SERVER = "api.weather.com";
 
   // Define variable as "char" as they will be extracted via finder.string of XML Data
-  char currentTemp[8];
-  char currentHumidity[8];
+  float currentTemp;
+  float currentHumidity;
 
   // Weather Underground API key.
-  const char* WUG_API_KEY = "IMUNICH323";
+  String WUG_API_KEY = "6532...";
 
   // Weather Underground Station.
   // Alternative stations: IMNCHEN1945, IBAYERNM74
-  const char* WUG_STATION_ID = "IMUNICH323";
+  String WUG_STATION_ID = "IMUNICH323";
 
 #endif
 
@@ -374,7 +373,7 @@ void setup_tempsensor();
 void read_tempsensor();
 void read_battery_level();
 void power4sleep();
-void read_weatherunderground();
+bool read_weatherunderground();
 
 
 
@@ -958,35 +957,92 @@ void power4sleep() {
 
 }
 
-void read_weatherunderground() {
+bool read_weatherunderground() {
 
-#if WUNDERGROUND
+  bool success = false;
 
-  if (client.connect(weatherhost, 80))
-  {
-    String wurl = "/v2/pws/observations/current?apiKey=" + WUG_API_KEY + "&stationId=" + WUG_STATION_ID + "&format=xml&units=m";
-    client.print(String("GET ") + wurl + " HTTP/1.1\r\n" + "Host: " + weatherhost + "\r\n" +  "Connection: close\r\n\r\n");
+#if WUNDERGROUND and !GSM_ENABLED
 
-    while (!client.available()) {
-      //  delay(200);
-      delay(10000);
-      Serial.print("Waiting for connection to Weather Underground");
-    }
-
-    // Read all the lines of the reply from server and print them to Serial
-    TextFinder finder(client);  // Keine Ahnung wozu - aber ohne intanzierung läuft der Textfinder nicht
-
-    //   while (client.available()) {
-    String line = client.readStringUntil('\r');
-
-    finder.getString("<humidity>", "</humidity>", currentHumidity, 8);
-
-    finder.getString("<temp_c>", "</temp_c>", currentTemp, 8);
-
-    Serial.println("closing connection");
+  while (!client.available()) {
+    //  delay(200);
+    delay(10000);
+    Serial.print("Waiting for WiFi connection");
   }
 
+  HTTPClient http;
+  String wug_uri = "/v2/pws/observations/current?apiKey=" + WUG_API_KEY + "&stationId=" + WUG_STATION_ID + "&format=json&units=m";
+
+  // Make HTTP request.
+  http.begin(client, WUG_SERVER, 80, wug_uri);
+  int httpCode = http.GET();
+  if (httpCode == HTTP_CODE_OK) {
+
+    // Allocate the JsonDocument
+    DynamicJsonDocument doc(35 * 1024);
+
+    // Deserialize the JSON document.
+    DeserializationError error = deserializeJson(doc, http.getStream());
+
+    // Test if parsing succeeds.
+    if (error) {
+      Serial.print(F("deserializeJson() failed: "));
+      Serial.println(error.c_str());
+      goto wug_end;
+    }
+
+    // Extract data from JSON.
+    /*
+    {
+        "observations": [
+            {
+                "country": "DE",
+                "epoch": 1590600612,
+                "humidity": 42,
+                "lat": 48.122421,
+                "lon": 11.665054,
+                "metric": {
+                    "dewpt": 5,
+                    "elev": 528,
+                    "heatIndex": 18,
+                    "precipRate": 0.0,
+                    "precipTotal": 0.0,
+                    "pressure": 1027.77,
+                    "temp": 18,
+                    "windChill": 18,
+                    "windGust": 0,
+                    "windSpeed": 0
+                },
+                "neighborhood": "Renkenweg",
+                "obsTimeLocal": "2020-05-27 19:30:12",
+                "obsTimeUtc": "2020-05-27T17:30:12Z",
+                "qcStatus": 1,
+                "realtimeFrequency": null,
+                "softwareType": "EasyWeatherV1.1.4",
+                "solarRadiation": 24.2,
+                "stationID": "IMUNICH323",
+                "uv": 0.0,
+                "winddir": 111
+            }
+        ]
+    }
+    */
+    JsonObject root = doc.as<JsonObject>();
+    JsonObject observation = root["observations"][0].as<JsonObject>();
+    currentHumidity = observation["humidity"];
+    currentTemp = observation["metric"]["temp"];
+    success = true;
+
+  } else {
+    Serial.printf("Connection to Weather Underground failed, error: %s", http.errorToString(httpCode).c_str());
+  }
+
+wug_end:
+
+  http.end();
+
 #endif
+
+  return success;
 
 }
 

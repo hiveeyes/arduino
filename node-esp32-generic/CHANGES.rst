@@ -13,6 +13,7 @@ Development
 - Add file header
 - Improve wording
 - Improve configuration for Weather Underground
+- Use JSON format for getting information from Weather Underground
 
 
 ****************
