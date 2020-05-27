@@ -6,11 +6,18 @@ Bienenwaage 5.0 CHANGES
 ***********
 Development
 ***********
+- Update URL to UUID generator. Thanks, @weef!
+- Improve MQTT configuration section
+- Improve build environment and add documentation
+- Fix whitespace
+- Add file header
+- Improve wording
+- Improve configuration for Weather Underground
 
 
-**************
-2020-xx-xx 2.x
-**************
+****************
+2020-04-26 2.0.0
+****************
 - Port auf ESP32
 
 

@@ -350,9 +350,12 @@ Adafruit_MQTT_Publish mqtt_publisher = Adafruit_MQTT_Publish(&mqtt, MQTT_TOPIC);
   char currentTemp[8];
   char currentHumidity[8];
 
-  // Weatherunderground Station - Alternative Station IMNCHEN1945
-  // Weatherunderground Station - Alternative Station IBAYERNM74
-  const char*  WUG_Station = "IMUNICH323";
+  // Weather Underground API key.
+  const char* WUG_API_KEY = "IMUNICH323";
+
+  // Weather Underground Station.
+  // Alternative stations: IMNCHEN1945, IBAYERNM74
+  const char* WUG_STATION_ID = "IMUNICH323";
 
 #endif
 
@@ -961,7 +964,7 @@ void read_weatherunderground() {
 
   if (client.connect(weatherhost, 80))
   {
-    String wurl = "/v2/pws/observations/current?apiKey=6532d6454b8aa370768e63d6ba5a832e&stationId=IMUNICH323&format=xml&units=m" ;
+    String wurl = "/v2/pws/observations/current?apiKey=" + WUG_API_KEY + "&stationId=" + WUG_STATION_ID + "&format=xml&units=m";
     client.print(String("GET ") + wurl + " HTTP/1.1\r\n" + "Host: " + weatherhost + "\r\n" +  "Connection: close\r\n\r\n");
 
     while (!client.available()) {
