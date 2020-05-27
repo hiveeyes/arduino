@@ -7,3 +7,5 @@ tags
 /doc/build
 /bin
 /tmp
+.pio
+.venv*
