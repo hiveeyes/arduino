@@ -89,7 +89,7 @@ float weight2;
 long weightSensorValue01;
 float weightKg01;
 boolean weightKgTrusted01 = false;
-static char cKg00[6];
+static char cKg00[8];
 static char cKg01[8];
 String dataURL = "";
 int switchPin = 11;   // switch is connected to pin 11
