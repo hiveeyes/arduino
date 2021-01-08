@@ -276,7 +276,7 @@ void gsm_poweron();
 void gsm_SleepMode2On();
 void gsm_SleepModeOff();
 bool mqtt_connect();
-void transmit_reaadings();
+void transmit_readings();
 void setup_weight();
 void read_weight();
 void setup_tempsensor();
