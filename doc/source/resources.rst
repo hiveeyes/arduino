@@ -64,6 +64,8 @@
 .. _node-wifi-mqtt-homie.ino: https://github.com/hiveeyes/arduino/blob/master/node-wifi-mqtt-homie/node-wifi-mqtt-homie.ino
 .. _node-wifi-mqtt-homie-battery.ino: https://github.com/hiveeyes/arduino/blob/master/node-wifi-mqtt-homie-battery/node-wifi-mqtt-homie-battery.ino
 
+.. ulmi
+.. _node-esp8266-generic.ino: https://github.com/hiveeyes/arduino/blob/master/node-esp8266-generic/node-esp8266-generic.ino
 .. Kotori
 .. _Kotori: https://getkotori.org/docs/
 
@@ -166,6 +168,9 @@
 .. _HTTPie: http://httpie.org
 .. _HttpRequester: https://addons.mozilla.org/en-us/firefox/addon/httprequester/
 
+
+.. _PlatformIO: https://platformio.org/
+.. _NodeMCU: https://en.wikipedia.org/wiki/NodeMCU
 
 
 .. Clearfix in reStructuredText

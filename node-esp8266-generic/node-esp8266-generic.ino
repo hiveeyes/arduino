@@ -49,15 +49,16 @@ Shield Lila
 //Version 1.19 Echtdaten werden an als node-2 geführt deshabl spielwiese/node-2/data.json, anstatt node-4 an den bisher zu testzwecken übermittelt wurde.
 //Version 1.20 Version um Tippfehler bereinigt und für Upload auf GitHub vorbereitet
 //Version 1.20 public - User / Login Credentials entfernt
+//Version 1.21 Modernisierung und PlatformIO Build-Umgebung
 
 
 #define GSM_ENABLED             false  // Bei FALSE wird automatisch WIFI aktiviert
 #define WEIGHT                  true
 #define SENSOR_DS18B20          false  // Aktuell ohne Funktion, da zu wenig PINS zwangsweise false da ich pin D5 für die Waage benötige
-#define SENSOR_BATTERY_LEVEL    false  // falls Spannungsmessung über Spannungsteiler erfolgen soll, wenn kein SIM800 Modul verwendet wird.
+#define SENSOR_BATTERY_LEVEL    false  // Falls Spannungsmessung über Spannungsteiler erfolgen soll, wenn kein SIM800 Modul verwendet wird.
 #define DEEPSLEEP_ENABLED       true   // Code ist aktuell nur auf TRUE ausgelegt, falls False, muß noch im main() ein Delay eingebaut werden.
-#define SLEEP_TIMER             true   // SleepDauer abhängig vom Ladezustand, Sleep_Timer noch nicht mit Wifi verifziert.
-#define WUNDERGROUND            false  //funktionert aktuell nur mit GSM_ENABLED false
+#define SLEEP_TIMER             true   // Sleep-Dauer abhängig vom Ladezustand, Sleep_Timer noch nicht mit Wifi verifziert.
+#define WUNDERGROUND            false  // Funktionert aktuell nur mit GSM_ENABLED false
 
 
 #if GSM_ENABLED
@@ -639,10 +640,13 @@ void setup_tempsensor() {
 
   Serial.println("Temperaturmessung mit dem DS18B20 ");
 
-  // Start Dallas Tempeartur Library / Instanz
+  // Start Dallas Temperature Library / Instanz
   sensors.begin();  // DS18B20 starten
 
   // Präzision auf 12 Bit
+#ifndef TEMP_12_BIT
+#define TEMP_12_BIT 0x7F // 12 bit
+#endif
   sensors.setResolution(TEMP_12_BIT);
 
   //Anzahl Sensoren ausgeben
