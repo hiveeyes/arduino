@@ -196,8 +196,8 @@ Adafruit_MQTT_Publish mqtt_publisher = Adafruit_MQTT_Publish(&mqtt, MQTT_TOPIC);
   #define SCALE_DOUT_PIN_B D2 // DT
   #define SCALE_SCK_PIN_B D1 // SCK
 
-  HX711 scale_A(SCALE_DOUT_PIN_A, SCALE_SCK_PIN_A);
-  HX711 scale_B(SCALE_DOUT_PIN_B, SCALE_SCK_PIN_B);
+  HX711 scale_A;
+  HX711 scale_B;
 
   long AktuellesGewicht_A = 0;
   long AktuellesGewicht_B = 0;
@@ -380,6 +380,10 @@ void loop() {
 void setup_weight() {
 
   #if WEIGHT
+
+    scale_A.begin(SCALE_DOUT_PIN_A, SCALE_SCK_PIN_A);
+    scale_B.begin(SCALE_DOUT_PIN_B, SCALE_SCK_PIN_B);
+
     // Waage A Setup
     scale_A.set_offset(Taragewicht_A);
     scale_A.set_scale(Skalierung_A);
