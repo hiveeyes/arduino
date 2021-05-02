@@ -21,6 +21,7 @@ Basic WiFi/MQTT sensor node
 ************
 Introduction
 ************
+
 A beehive monitoring sensor node based on the `Adafruit Feather HUZZAH`_, featuring an ESP8266_ MCU.
 Telemetry data is transmitted using WiFi/MQTT.
 The most recent firmware version is available at `node-wifi-mqtt.ino`_.
@@ -105,33 +106,20 @@ Configure WiFi and MQTT settings::
 
 Build
 =====
-The build system is based on `makeESPArduino`_, a Makefile for ESP8286 Arduino projects.
 
-Setup SDK::
-
-    mkdir ~/sdk; cd ~/sdk
-    git clone https://github.com/esp8266/Arduino esp8266-arduino
-
-    # Download appropriate Espressif SDK
-    cd esp8266-arduino/tools
-    ./get.py
+The build system is based on PlatformIO_.
 
 Build firmware::
 
-    # Announce path to SDK
-    export ESP_ROOT=~/sdk/esp8266-arduino
-
-    # Run Makefile
     make
-
-Enable more verbose output::
-
-    export VERBOSE=true
 
 
 Upload to MCU
 =============
 ::
 
+    export MCU_PORT=/dev/ttyUSB0
     make upload
 
+
+.. _PlatformIO: https://platformio.org/

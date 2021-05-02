@@ -29,7 +29,8 @@
               Add comment about connecting GPIO#16 to RST for waking up after deep sleep. Thanks, Giuseppe and Matthias!
               Add sensor ADS1231. Thanks, Clemens!
               Silence debug output by using SerialDebugger to reduce battery drain even more.
-   2021-05-02 Use SerialDebug library by Joao Lopes.
+   2021-05-02 Modernize code by using the SerialDebug library by Joao Lopes and
+              add build environment based on PlatformIO.
 
 
    GNU GPL v3 License
