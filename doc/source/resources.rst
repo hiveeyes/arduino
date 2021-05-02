@@ -66,6 +66,8 @@
 
 .. ulmi
 .. _node-esp8266-generic.ino: https://github.com/hiveeyes/arduino/blob/master/node-esp8266-generic/node-esp8266-generic.ino
+.. _node-esp32-generic.ino: https://github.com/hiveeyes/arduino/blob/master/node-esp32-generic/node-esp32-generic.ino
+
 .. Kotori
 .. _Kotori: https://getkotori.org/docs/
 
