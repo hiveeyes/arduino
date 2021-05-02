@@ -159,7 +159,7 @@ int sleepTimeS = 900;  // 15-Minuten SleepTimer als Startwert
 #define MQTT_PASSWORD       "DeinKennwort"
 
 // The MQTT topic to transmit sensor readings to.
-#define MQTT_TOPIC          "hiveeyes/testdrive/spielwiese/node-1/data.json"
+#define MQTT_TOPIC          "hiveeyes/testdrive/area-42/node-1/data.json"
 
 
 #if GSM_ENABLED
