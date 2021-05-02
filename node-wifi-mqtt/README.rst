@@ -120,6 +120,3 @@ Upload to MCU
 
     export MCU_PORT=/dev/ttyUSB0
     make upload
-
-
-.. _PlatformIO: https://platformio.org/
