@@ -51,7 +51,7 @@ Shield Lila
 //Version 1.20 public - User / Login Credentials entfernt
 
 
-#define GSM_ENABLED             true    //Bei FALSE wird automatisch WIFI aktiviert
+#define GSM_ENABLED             false  // Bei FALSE wird automatisch WIFI aktiviert
 #define WEIGHT                  true
 #define SENSOR_DS18B20          false  // Aktuell ohne Funktion, da zu wenig PINS zwangsweise false da ich pin D5 für die Waage benötige
 #define SENSOR_BATTERY_LEVEL    false  // falls Spannungsmessung über Spannungsteiler erfolgen soll, wenn kein SIM800 Modul verwendet wird.
