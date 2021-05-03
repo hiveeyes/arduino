@@ -24,11 +24,11 @@
   Credits: Marvin Roger for the awesome Homie Framework: https://github.com/marvinroger/homie-esp8266
 
   Used libraries:
-  HX711:		            https://github.com/bogde/HX711
-  RunningMedian:	      https://github.com/RobTillaart/Arduino/tree/master/libraries/RunningMedian
-  Homie-esp8266 v2.0.0:	https://github.com/marvinroger/homie-esp8266
-  Bounce2:	          	https://github.com/thomasfredericks/Bounce2
-  ESPAsyncTCP:	      	https://github.com/me-no-dev/ESPAsyncTCP
+  HX711:                https://github.com/bogde/HX711
+  RunningMedian:        https://github.com/RobTillaart/Arduino/tree/master/libraries/RunningMedian
+  Homie-esp8266 v2.0.0: https://github.com/marvinroger/homie-esp8266
+  Bounce2:              https://github.com/thomasfredericks/Bounce2
+  ESPAsyncTCP:          https://github.com/me-no-dev/ESPAsyncTCP
   async-mqtt-client:    https://github.com/marvinroger/async-mqtt-client
 
 **********************************************************************************************************/
