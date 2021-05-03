@@ -21,6 +21,7 @@ README
 ************
 Introduction
 ************
+
 This is the documentation for the `Hiveeyes Arduino repository`_ of the `Hiveeyes project`_,
 a beehive monitoring system. Enjoy reading!
 
@@ -28,13 +29,15 @@ All Arduino Core based firmware source code is living here.
 We support different hardware, so there are different flavors
 of the firmware, reflected by the directory naming convention
 ``<purpose>-<transport>-<protocol>``.
-There are firmwares for ATmega328_ and ESP8266_ MCUs.
+
+There are firmwares for ATmega328_, ESP8266_ and ESP32_ MCUs.
 
 * ``purpose``   role name, either *node* or *gateway*
 * ``transport`` name of the physical transport mechanism, e.g. *rfm69*, *gprs* or *wifi*.
 * ``protocol``  name of the transmission protocol, e.g. *beradio*, *mqtt*, *http* or *any*.
 
-Most programs use `Arduino-Makefile`_ for building while there are still some based on Ino_.
+For building, most programs are using PlatformIO_, but some are still using
+`Arduino-Makefile`_ and even others are still based on Ino_.
 
 
 *****
@@ -53,58 +56,31 @@ Get source code with all dependency libraries and tools::
 Toolchain
 =========
 
+PlatformIO_ is the recommended build environment.
+
 Arduino IDE
 -----------
 If you want to use the Arduino IDE, you have to install all necessary libraries manually.
-The sources of the libraries can be found in the header of each sketch (.ino).
-In this case, copy the desired sketch into your Arduino IDE and pick the appropriate
-libraries from the ``libraries/`` folder.
+In each programs subdirectory, there is a ``platformio.ini`` which will give you a clue
+about the libraries to use.
 
-.. seealso:: https://www.arduino.cc/en/Guide/Libraries
-
-
-Debian packages
----------------
-::
-
-    apt-get install arduino-core
-
-
-Archlinux packages
-------------------
-* aur/arduino 1:1.6.8
-* community/avr-libc
-
-
-Mac OS X Homebrew packages
---------------------------
-::
-
-    # GNU AVR Toolchain as formulae for Homebrew
-    # https://github.com/osx-cross/homebrew-avr
-    brew tap osx-cross/avr
-    brew install avr-gcc
-
-::
-
-    # The Arduino HAL
-    brew cask install arduino
+PlatformIO
+----------
+When using PlatformIO_, installing all dependency libraries will be managed automatically.
 
 
 *******
 Operate
 *******
-For operative tasks like compiling, `Arduino-Makefile`_ is in the loop.
 
 
 Compile
 =======
 ::
 
-    cd node-gprs-any
-    make --file Makefile-Linux.mk
+    cd node-esp32-generic
+    make
 
-After a successful build, find the firmware at ``bin/node-gprs-any/pro328/node-gprs-any.hex``.
 
 
 Upload to MCU
@@ -112,12 +88,7 @@ Upload to MCU
 To build a firmware hex file, upload it to the MCU and
 finally start a serial port monitor, do::
 
-    cd generic
-
-    # Prepare appropriate Makefile (use Makefile-OSX.mk on OSX)
-    ln -s Makefile-Linux.mk Makefile
-
-    # Compile and upload to chip
+    export MCU_PORT=/dev/ttyUSB0
     make upload
 
     # Run serial port monitor
@@ -146,4 +117,3 @@ Documentation
 Licensed under the Creative Commons `CC-BY-SA 4.0 license`_.
 
 .. _CC-BY-SA 4.0 license: https://creativecommons.org/licenses/by-sa/4.0/
-

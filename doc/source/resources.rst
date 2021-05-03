@@ -31,7 +31,7 @@
 .. ----------------------
 
 .. Source code
-.. _node-gprs-any.ino: https://github.com/hiveeyes/arduino/blob/master/node-gprs-any/node-gprs-any.ino
+.. _node-terkin-next.ino: https://github.com/hiveeyes/arduino/blob/master/node-terkin-next/node-terkin-next.ino
 .. _node-rfm69-beradio.ino: https://github.com/hiveeyes/arduino/blob/master/node-rfm69-beradio/src/node-rfm69-beradio.ino
 .. _gateway-rfm69-beradio.ino: https://github.com/hiveeyes/arduino/blob/master/gateway-rfm69-beradio/src/gateway-rfm69-beradio.ino
 .. _generic.ino: https://github.com/hiveeyes/arduino/blob/master/generic/generic.ino

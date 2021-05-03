@@ -178,11 +178,10 @@ The next generation firmwares are currently a work in progress.
     * - Name
       - Description
 
-    * - node-gprs-any
-      - We started working on `node-gprs-any.ino`_, a playground sketch
+    * - node-terkin-next
+      - We started working on `node-terkin-next.ino`_, a playground sketch
         for building a generic transmitter machinery in June 2016.
 
     * - :ref:`generic-firmware`
       - We started working on `generic.ino`_, a flexible software breadboard
-        for nodes, transceivers and gateways in June 2016.
-
+        for RFM-based nodes, transceivers and gateways in June 2016.
