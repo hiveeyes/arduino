@@ -21,8 +21,10 @@ ESP8266 beehive scale based on Homie
 ************
 Introduction
 ************
+
 A beehive monitoring sensor node based on a ESP8266 module and a custom made PCB.
 Telemetry data is transmitted using WiFi/MQTT.
+
 The standard firmware is based on the `ESP8266 framework for Homie`_,
 its most recent version is available at `node-wifi-mqtt-homie.ino`_.
 However, the PCB (`ESP8266-BeeScale.fzz`_) can be used with any firmware.
@@ -77,25 +79,10 @@ The PCB can be downloaded in Fritzing format from `ESP8266-BeeScale.fzz`_.
     PCB - Bottom view.
 
 
-********
-Firmware
-********
-.. highlight:: bash
+*************
+Configuration
+*************
 
-
-Clone git repository
-====================
-::
-
-    # Get hold of the source code repository including all dependencies
-    git clone --recursive https://github.com/hiveeyes/arduino
-
-    # Select this firmware
-    cd node-wifi-mqtt-homie
-
-
-Configure
-=========
 .. highlight:: c++
 
 Have a look at the source code `node-wifi-mqtt-homie.ino`_ and adapt
@@ -108,45 +95,49 @@ Configure load cell calibration settings::
     const float cell_divider = 22.27; // Load cell divider
 
 
-Build
-=====
-The build system is based on `makeESPArduino`_, a Makefile for ESP8286 Arduino projects.
+
+******************
+Build instructions
+******************
 
 .. highlight:: bash
 
-Setup SDK::
+Clone git repository
+====================
+::
 
-    mkdir ~/sdk; cd ~/sdk
-    git clone https://github.com/esp8266/Arduino esp8266-arduino
+    # Get hold of the source code repository including all dependencies
+    git clone https://github.com/hiveeyes/arduino
 
-    # Download appropriate Espressif SDK
-    cd esp8266-arduino/tools
-    ./get.py
+    # Select this firmware
+    cd node-wifi-mqtt-homie
+
+
+Build
+=====
+
+The build system is based on PlatformIO_.
 
 Build firmware::
 
-    # Announce path to SDK
-    export ESP_ROOT=~/sdk/esp8266-arduino
-
-    # Run Makefile
     make
 
-Enable more verbose output::
+After successfully building it, you will find firmware images at
 
-    export VERBOSE=true
-
+- .pio/build/esp07/firmware.bin
+- .pio/build/esp07/firmware.elf
 
 Upload to MCU
 =============
 ::
 
+    export MCU_PORT=/dev/ttyUSB0
     make upload
 
 
-
-*************
-Configuration
-*************
+*********************
+Runtime configuration
+*********************
 .. highlight:: bash
 
 The Homie firmware offers different ways of runtime configuration.
@@ -228,4 +219,3 @@ Todo
 
 
 .. _Homie custom settings: https://homie-esp8266.readme.io/docs/custom-settings
-
