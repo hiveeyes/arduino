@@ -1,15 +1,13 @@
 /*
    
-                       Open Hive node-gprs-any
+                       Open Hive Terkin Next
  
    Collect sensor data, serialize as JSON and send it through GPRSbee.
    HTTP is preferred, however FTP, SMS, TCP and MQTT will be at your service.
     
-   Software release 0.16.0
-
-   Copyright (C) 2015-2016  Andreas Motl <andreas.motl@elmyra.de>
-   Copyright (C) 2015-2016  Clemens Gruber <mail@clemens-gruber.de>
-   Copyright (C) 2015-2016  Richard Pobering <einsiedlerkrebs@ginnungagap.org>
+   Copyright (C) 2015-2016  Clemens Gruber <clemens@hiveeyes.org>
+   Copyright (C) 2015-2016  Richard Pobering <richard@hiveeyes.org>
+   Copyright (C) 2015-2021  Andreas Motl <andreas@hiveeyes.org>
 
    <https://hiveeyes.org>
 
