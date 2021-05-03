@@ -72,7 +72,24 @@ information, adjust ``WUG_API_KEY`` and ``WUG_STATION_ID``.
 ******************
 Build instructions
 ******************
+
+Clone git repository
+====================
 ::
+
+    # Get hold of the source code repository including all dependencies
+    git clone https://github.com/hiveeyes/arduino
+
+    # Select this firmware
+    cd node-esp32-generic
+
+
+Build
+=====
+
+The build system is based on PlatformIO_.
+
+Build firmware::
 
     make
 
@@ -80,6 +97,13 @@ After successfully building it, you will find firmware images at
 
 - .pio/build/ttgo-t1/firmware.bin
 - .pio/build/ttgo-t1/firmware.elf
+
+Upload to MCU
+=============
+::
+
+    export MCU_PORT=/dev/ttyUSB0
+    make upload
 
 
 ********

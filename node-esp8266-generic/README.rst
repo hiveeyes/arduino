@@ -18,6 +18,8 @@ Bienenwaage 2.0 NodeMCU
     all inline links will be working there.
 
 
+.. highlight:: bash
+
 *****
 About
 *****
@@ -106,28 +108,13 @@ information, adjust ``WUG_API_KEY`` and ``WUG_STATION_ID``.
 ******************
 Build instructions
 ******************
-::
-
-    make
-
-After successfully building it, you will find firmware images at
-
-- .pio/build/nodemcu/firmware.bin
-- .pio/build/nodemcu/firmware.elf
-
-
-********
-Firmware
-********
-.. highlight:: bash
-
 
 Clone git repository
 ====================
 ::
 
     # Get hold of the source code repository including all dependencies
-    git clone --recursive https://github.com/hiveeyes/arduino
+    git clone https://github.com/hiveeyes/arduino
 
     # Select this firmware
     cd node-esp8266-generic
@@ -141,6 +128,11 @@ The build system is based on PlatformIO_.
 Build firmware::
 
     make
+
+After successfully building it, you will find firmware images at
+
+- .pio/build/nodemcu/firmware.bin
+- .pio/build/nodemcu/firmware.elf
 
 Upload to MCU
 =============
