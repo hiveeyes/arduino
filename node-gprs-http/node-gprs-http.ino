@@ -10,7 +10,7 @@
   transp:   | GSM via HTTP
             | WiFi via HTTP (ESP8266)
 
-  Copyright (C) 2013-2019 by Clemens Gruber
+  Copyright (C) 2013-2021 by Clemens Gruber <clemens@hiveeyes.org>
 
 
   Changes
@@ -21,6 +21,7 @@
   2016-09-17 Clemens Gruber | Modularization of sensors and debugging
   2017-01-09 Clemens Gruber | Add support for HX711 and ESP8266
   2017-04-30 Clemens Gruber | Add support for Seeeduino Stalker v3.1
+  2021-05-03 Andreas Motl   | Use PlatformIO as build environment
 
 
   GNU GPL v3 License

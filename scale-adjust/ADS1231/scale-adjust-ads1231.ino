@@ -4,10 +4,11 @@
             | Scale ADC ADS1231
 
   Copyright (C) 2016-2017 by Clemens Gruber <clemens@hiveeyes.org>
-  Copyright (C) 2017      by Andreas Motl <andreas@hiveeyes.org>
+  Copyright (C) 2017-2021 by Andreas Motl <andreas@hiveeyes.org>
 
   2016-03-01 Clemens Gruber        | Initial version
   2017-04-02 Andreas Motl          | ESP8266 compatibility
+  2021-05-03 Andreas Motl          | Add PlatformIO build environment
 
 
   GNU GPL v3 License
