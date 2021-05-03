@@ -120,67 +120,27 @@ Configure load cell calibration settings::
     Read about :ref:`scale-adjust-firmware` to get these values.
 
 
-*****
+******************
+Build instructions
+******************
+
 Build
-*****
-.. highlight:: bash
+=====
 
-Build for AVR
-=============
-The build system is based on `Arduino-Makefile`_, a Makefile for Arduino projects.
-
-::
-
-    # Select appropriate Makefile
-    ln -s Makefile-Linux.mk Makefile
-
-    # Build firmware
-    make
-
-.. note:: You might want to adjust the appropriate Makefile to match your environment.
-
-
-Upload to MCU
--------------
-::
-
-    make upload
-
-
-
-Build for ESP8266
-=================
-The build system is based on `makeESPArduino`_, a Makefile for ESP8286 Arduino projects.
-
-Setup SDK::
-
-    mkdir ~/sdk; cd ~/sdk
-    git clone https://github.com/esp8266/Arduino esp8266-arduino
-
-    # Download appropriate Espressif SDK
-    cd esp8266-arduino/tools
-    ./get.py
-
-Announce path to SDK::
-
-    export ESP_ROOT=~/sdk/esp8266-arduino
+The build system is based on PlatformIO_.
 
 Build firmware::
 
-    # Announce path to SDK
-    export ESP_ROOT=~/sdk/esp8266-arduino
+    make
 
-    # Run Makefile
-    make -f Makefile-ESP8266.mk
+After successfully building it, you will find firmware images at
 
-Enable more verbose output::
-
-    export VERBOSE=true
-
+- .pio/build/nodemcu/firmware.bin
+- .pio/build/nodemcu/firmware.elf
 
 Upload to MCU
--------------
+=============
 ::
 
-    make -f Makefile-ESP8266.mk upload
-
+    export MCU_PORT=/dev/ttyUSB0
+    make upload
