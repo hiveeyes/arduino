@@ -21,7 +21,8 @@ The program currently compiles for
 
 - AVR ATmega328
 - Espressif ESP8266
-- Espressif ESP32, ESP32S2
+- Espressif ESP32
+- Espressif ESP32S2
 - ARM SAMD Cortex-M0
 
 

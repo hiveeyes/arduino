@@ -28,7 +28,9 @@
 #define TerkinTelemetry_h
 
 #include <ArduinoJson.h>                // https://github.com/bblanchon/ArduinoJson
+#if USE_GPRSBEE
 #include <GPRSbee.h>                    // https://github.com/SodaqMoja/GPRSbee
+#endif
 
 namespace Terkin {
 
@@ -137,6 +139,7 @@ namespace Terkin {
      * Transmitter component wrapping the GPRSbeeClass of the Sodaq GSM modem driver.
      *
     **/
+#if USE_GPRSBEE
     class GPRSbeeTransmitter : public GenericJsonTransmitter {
         public:
             GPRSbeeTransmitter(GPRSbeeClass& driver, const char *apn);
@@ -149,8 +152,14 @@ namespace Terkin {
             const char *_apnpwd;
             bool _authenticated = false;
     };
+#endif
 
-
+    class ESPHTTPTransmitter : public GenericJsonTransmitter {
+    public:
+        ESPHTTPTransmitter();
+        bool transmit(const char *uri, JsonObject& data);
+    protected:
+    };
 
 }
 

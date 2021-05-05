@@ -139,6 +139,8 @@ bool TelemetryManager::transmit(const char *address_path, JsonObject& data) {
  *
 **/
 
+#if USE_GPRSBEE
+
 // Initialize without APN authentication
 GPRSbeeTransmitter::GPRSbeeTransmitter(GPRSbeeClass& driver, const char *apn)
     :
@@ -195,3 +197,101 @@ bool GPRSbeeTransmitter::transmit(const char *uri, JsonObject& data) {
     return retval;
 
 }
+#endif
+
+
+#if defined ARDUINO_ARCH_ESP8266 || defined ARDUINO_ARCH_ESP32
+
+// https://github.com/esp8266/Arduino/blob/2.7.4/libraries/ESP8266HTTPClient/examples/BasicHttpClient/BasicHttpClient.ino#L43-L72
+
+#if defined ARDUINO_ARCH_ESP8266
+#include <DNSServer.h>
+#include <ESP8266WiFi.h>
+#include <ESP8266WiFiMulti.h>
+#include <ESP8266HTTPClient.h>
+#elif defined ARDUINO_ARCH_ESP32
+#include <WiFi.h>
+#include <WiFiMulti.h>
+#include <HTTPClient.h>
+#endif
+
+void sendRequest(const char *uri) {
+    WiFiClient client;
+
+    HTTPClient http;
+
+    Serial.print("[HTTP] begin...\n");
+    if (http.begin(client, uri)) {
+
+
+      Serial.print("[HTTP] GET...\n");
+      // start connection and send HTTP header
+      int httpCode = http.GET();
+
+      // httpCode will be negative on error
+      if (httpCode > 0) {
+        // HTTP header has been send and Server response header has been handled
+        Serial.printf("[HTTP] GET... code: %d\n", httpCode);
+
+        // file found at server
+        if (httpCode == HTTP_CODE_OK || httpCode == HTTP_CODE_MOVED_PERMANENTLY) {
+          String payload = http.getString();
+          Serial.println(payload);
+        }
+      } else {
+        Serial.printf("[HTTP] GET... failed, error: %s\n", http.errorToString(httpCode).c_str());
+      }
+
+      http.end();
+    } else {
+      Serial.printf("[HTTP} Unable to connect\n");
+    }
+}
+
+ESPHTTPTransmitter::ESPHTTPTransmitter()
+{}
+
+// The transmit method obtains a reference to a JsonObject
+// which will get serialized before handing the payload
+// over to the appropriate driver component.
+bool ESPHTTPTransmitter::transmit(const char *uri, JsonObject& data) {
+
+    // Serialize data
+    char payload[256];
+    data.printTo(payload, sizeof(payload));
+
+    // Transmit data
+    // Derived from https://github.com/SodaqMoja/GPRSbee/wiki#do-a-http-post
+    //const char testData[] = "testdata3 = hello world with newline\n";
+    char response[50];
+    memset(response, 0, sizeof(response));
+    bool retval;
+
+    sendRequest(uri);
+
+    /*
+    if (!_authenticated) {
+        // Without APN authentication
+        //retval = _driver.doHTTPPOSTWithReply(_apn, uri, payload, strlen(payload), response, sizeof(response));
+    } else {
+        // With APN authentication
+        //retval = _driver.doHTTPPOSTWithReply(_apn, _apnuser, _apnpwd, uri, payload, strlen(payload), response, sizeof(response));
+    }
+    */
+
+    // FIXME: Enable debugging
+    /*
+    if (retval) {
+        print(F("Post result: "));
+        print('"');
+        print(buffer);
+        println('"');
+    } else {
+        println(F("Post failed!"));
+    }
+    */
+
+    return retval;
+
+}
+#endif
