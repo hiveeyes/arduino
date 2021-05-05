@@ -5,7 +5,7 @@ $(eval pio       := $(venvpath)/bin/pio)
 
 
 build: setup-virtualenv
-	$(pio) run
+	$(pio) run # --verbose
 
 upload: setup-virtualenv
 	$(pio) run --target upload --upload-port=${MCU_PORT}

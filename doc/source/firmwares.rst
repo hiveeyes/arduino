@@ -148,7 +148,7 @@ List of radio-based firmwares using CSV serialization.
 
 Tools
 =====
-List of tool firmware.
+List of auxiliary firmwares.
 
 .. list-table::
     :widths: 20 40
@@ -178,10 +178,10 @@ The next generation firmwares are currently a work in progress.
     * - Name
       - Description
 
-    * - node-terkin-next
-      - We started working on `node-terkin-next.ino`_, a playground sketch
-        for building a generic transmitter machinery in June 2016.
-
     * - :ref:`generic-firmware`
       - We started working on `generic.ino`_, a flexible software breadboard
         for RFM-based nodes, transceivers and gateways in June 2016.
+
+    * - node-pipa
+      - We started working on the *Hiveeyes Pipa Datalogger*, a playground
+        for building a generic C++ datalogger framework in January 2017.

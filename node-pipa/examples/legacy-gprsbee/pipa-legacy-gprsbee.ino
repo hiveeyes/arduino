@@ -1,10 +1,9 @@
 /*
    
-                       Open Hive Terkin Next
+                 Hiveeyes Pipa Datalogger for GPRSbee
  
    Collect sensor data, serialize as JSON and send it through GPRSbee.
-   HTTP is preferred, however FTP, SMS, TCP and MQTT will be at your service.
-    
+
    Copyright (C) 2015-2016  Clemens Gruber <clemens@hiveeyes.org>
    Copyright (C) 2015-2016  Richard Pobering <richard@hiveeyes.org>
    Copyright (C) 2015-2021  Andreas Motl <andreas@hiveeyes.org>
@@ -29,15 +28,12 @@
 
 -------------------------------------------------------------------------   
 
-   Open Hive node sketch for Arduino based platforms
-
    This is an Arduino sketch for the Hiveeyes bee monitoring system.
    The purpose is to collect vital data of a bee hive and transmit it
-   over a GPRSbee module to the data collection server.
+   to the data collection server.
 
-   The sensor data could be temperature (via DS18B20 or DHT),
-   humidity (DHT) or a load cell (H30A with HX711). Other sensors can 
-   easily be added. 
+   The sensor data could be temperature (DS18B20), humidity (BME280)
+   or a load cell (H30A with HX711). Other sensors can easily be added.
 
    After the sensor data is collected, it gets serialized to JSON,
    which will be the transmitted in the body of a HTTP POST request.
@@ -58,21 +54,6 @@
 
 
 -------------------------------------------------------------------------   
-
-----
-Todo
-----
-- [x] Allow (non-SSL) HTTP on the backend side
-- [o] Add #define for GPRSBEE_APNUSER and GPRSBEE_APNPASS, rename other to GPRSBEE_APNGW
-- [o] Add code for reading sensors of "Open Hive Seeedunio Stalker"
-- [o] Try to stay in sync with "node-rfm69-beradio.ino"
-
-    - Put all settings into "#define" header (e.g. scale)
-    - Fix #define DEBUG-switch issue
-    - Clean up code
-
-- [o] Maybe use better configuration, see https://github.com/marvinroger/homie-esp8266/blob/master/src/Homie/Datatypes/ConfigStruct.hpp
-
 */
 
 
@@ -93,6 +74,7 @@ Todo
 
 // GPRSbee
 // -------
+#define USE_GPRSBEE         true
 #define GPRSBEE_AP_NAME     "internet.eplus.de"     // https://en.wikipedia.org/wiki/Access_Point_Name
 #define GPRSBEE_AP_AUTH     true
 #define GPRSBEE_AP_USER     "testuser"
@@ -107,7 +89,6 @@ Todo
 // =======
 
 // TODO: No sensors yet. This is just a telemetry demo program.
-
 
 
 // ******************************************
@@ -134,11 +115,14 @@ Todo
 // Libraries
 // ---------
 #include <ArduinoJson.h>                // https://github.com/bblanchon/ArduinoJson
+#if USE_GPRSBEE
 #include <GPRSbee.h>                    // https://github.com/SodaqMoja/GPRSbee
+#endif
 #include <Terkin.h>                     // https://github.com/hiveeyes/arduino/tree/master/libraries/Terkin
 #include <Hiveeyes.h>                   // https://github.com/hiveeyes/arduino/tree/master/libraries/Hiveeyes
 #include <OpenHive.h>                   // https://github.com/hiveeyes/arduino/tree/master/libraries/OpenHive
 #include <Wire.h>                       // Arduino
+
 
 
 // Imports
@@ -146,6 +130,12 @@ Todo
 using namespace Terkin;
 using namespace Hiveeyes;
 using namespace OpenHive;
+
+
+
+// ******************************************
+//                  Sensors
+// ******************************************
 
 
 
@@ -165,7 +155,9 @@ TelemetryNode& setup_telemetry_gprsbee(bool wait_usb);
 void setup() {
 
     // Telemetry setup
+#if USE_GPRSBEE
     telemetry = &setup_telemetry_gprsbee(true);
+#endif
 
     // Sensor setup
     // FIXME: No sensors yet. This is just a telemetry demo program.
@@ -207,6 +199,7 @@ void loop() {
  * communicate using a Sodaq GPRSbee device.
  *
 **/
+#if USE_GPRSBEE
 TelemetryNode& setup_telemetry_gprsbee(bool wait_usb = false) {
 
 
@@ -245,3 +238,4 @@ TelemetryNode& setup_telemetry_gprsbee(bool wait_usb = false) {
     return node;
 
 }
+#endif
