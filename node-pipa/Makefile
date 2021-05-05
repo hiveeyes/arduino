@@ -15,6 +15,7 @@ $(eval pio       := $(venvpath)/bin/pio)
 build: setup-virtualenv
 	cd examples/legacy-gprsbee; $(pio) run # --verbose
 	cd examples/pipa-espressif; $(pio) run # --verbose
+	cd examples/pipa-envirodiy; $(pio) run # --verbose
 
 upload: setup-virtualenv
 	$(pio) run --target upload --upload-port=${MCU_PORT}

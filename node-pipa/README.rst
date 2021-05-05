@@ -30,11 +30,17 @@ The program currently compiles for
 Usage
 *****
 
-::
+Build all examples for all available platforms::
 
-    git clone https://github.com/hiveeyes/arduino
+    git clone --recursive https://github.com/hiveeyes/arduino
     cd arduino/node-pipa
     make
+
+Build specific examples::
+
+    source .venv/bin/activate
+    cd examples/pipa-envirodiy
+    pio run
 
 
 *******
