@@ -60,10 +60,6 @@
 [submodule "tools/makeEspArduino"]
 	path = tools/makeEspArduino
 	url = https://github.com/plerup/makeEspArduino
-[submodule "libraries/ArduinoSTL"]
-	path = libraries/ArduinoSTL
-	url = https://github.com/hiveeyes/ArduinoSTL
-	branch = operator-fixes
 [submodule "libraries/Adafruit_MQTT_Library"]
 	path = libraries/Adafruit_MQTT_Library
 	url = https://github.com/adafruit/Adafruit_MQTT_Library

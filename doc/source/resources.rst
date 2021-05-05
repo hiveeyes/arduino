@@ -132,6 +132,7 @@
 .. _UUID4: https://en.wikipedia.org/wiki/Universally_unique_identifier#Version_4_.28random.29
 .. _ELF: https://en.wikipedia.org/wiki/Executable_and_Linkable_Format
 .. _STL: https://en.wikipedia.org/wiki/Standard_Template_Library
+.. _ArduinoSTL: https://github.com/mike-matera/ArduinoSTL
 
 .. SDKs
 .. _Arduino: https://www.arduino.cc/

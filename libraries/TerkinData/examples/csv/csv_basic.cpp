@@ -1,7 +1,7 @@
 /**
  *
  * TerkinData:  Flexible data collection for decoupling sensor reading and telemetry domains
- * JSON example: Collect measurement readings and serialize to JSON
+ * CSV example: Collect measurement readings and serialize to CSV
  *
  *
  *  Copyright (C) 2017  Andreas Motl <andreas.motl@elmyra.de>
@@ -42,6 +42,12 @@ void DataManager::setup() {
     (*this->sensor_field_mapping)[string("dht.0.hum")]    = string("humidity-outside");
     (*this->sensor_field_mapping)[string("ds18b20.0")]    = string("temperature-inside");
 
+    // Optionally prefix CSV header line with string
+    this->csv_header_prefix = new std::string("## ");
+
+    // Optionally set float serialization precision
+    this->float_precision = 3;
+
 }
 
 DataManager *datamgr = new DataManager();
@@ -71,7 +77,7 @@ void basic_single() {
     measurement->data["ds18b20.0"]   = 33.33f;
     measurement->data["voltage"]     = 3.843f;
 
-    // Display measurement in JSON format
+    // Display measurement in CSV format
     dump(measurement);
 
     // Free memory
@@ -94,7 +100,7 @@ void basic_missing() {
     measurement->data["dht.0.hum"]   = 84.84f;
     measurement->data["voltage"]     = 3.843f;
 
-    // Display measurement in JSON format
+    // Display measurement in CSV format
     dump(measurement);
 
     // Free memory
@@ -104,24 +110,36 @@ void basic_missing() {
 
 void dump(Measurement *measurement) {
 
-    // Serialize data into JSON format
-    std::string data_record = datamgr->json_data(*measurement);
+    // Serialize data into CSV format
+    std::string data_header = datamgr->csv_header();
+    std::string data_record = datamgr->csv_data(*measurement);
 
     // Output
+    terrine.log("header: ", false);
+    terrine.log(data_header.c_str());
+
     terrine.log("data:   ", false);
     terrine.log(data_record.c_str());
 
     terrine.log();
 }
 
+// Program entrypoint for glibc.
 int main() {
 
-    terrine.log("=======================");
-    terrine.log("TerkinData JSON example");
-    terrine.log("=======================");
+    terrine.log("======================");
+    terrine.log("TerkinData CSV example");
+    terrine.log("======================");
     terrine.log();
 
     basic_single();
     basic_missing();
 
+}
+
+// Program entrypoints for Arduino.
+void setup() {
+    main();
+}
+void loop() {
 }

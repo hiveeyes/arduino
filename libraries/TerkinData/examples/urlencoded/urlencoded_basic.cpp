@@ -114,6 +114,7 @@ void dump(Measurement *measurement) {
     terrine.log();
 }
 
+// Program entrypoint for glibc.
 int main() {
 
     terrine.log("========================================");
@@ -124,4 +125,11 @@ int main() {
     basic_single();
     basic_missing();
 
+}
+
+// Program entrypoints for Arduino.
+void setup() {
+    main();
+}
+void loop() {
 }

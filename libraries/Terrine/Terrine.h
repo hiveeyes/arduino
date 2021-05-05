@@ -26,7 +26,7 @@ Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA
 #define Terrine_h
 
 #if defined ARDUINO
-    // In main
+    #include <Arduino.h>
 #elif defined SIMULAVR
     #include <simulavr.h>
 #elif defined __unix__

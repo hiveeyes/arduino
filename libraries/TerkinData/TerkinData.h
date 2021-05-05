@@ -1,9 +1,9 @@
 /**
  *
- * TerkinData: Flexible data collection for decoupling sensor reading and telemetry domains
+ * TerkinData: Flexible data collection for decoupling sensor reading and
+ *             telemetry domains.
  *
- *
- *  Copyright (C) 2017  Andreas Motl <andreas.motl@elmyra.de>
+ *  Copyright (C) 2017-2021  Andreas Motl <andreas.motl@elmyra.de>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU Lesser General Public License as published by
@@ -22,7 +22,7 @@
 
     // Standard C++ (STL) for Arduino for dynamic data structures like vector and map.
     // Required for AVR only, STL already seems to be included in Espressif SDK.
-    #ifndef ARDUINO_ARCH_ESP8266
+    #if ARDUINO_ARCH_AVR
         #include <ArduinoSTL.h>
     #endif
 
@@ -34,8 +34,10 @@
 #endif
 
 // Dynamic data containers
+#include <string>
 #include <vector>
 #include <map>
+
 
 namespace TerkinData {
 
@@ -193,10 +195,26 @@ namespace TerkinUtil {
         #endif
     }
 
-    #if not defined(ARDUINO)
-
     // http://www.cplusplus.com/reference/ctime/strftime/
     static std::string now_iso() {
+        #if defined(ARDUINO)
+        return std::string("FIXME: ISO timestamp on AVR");
+        /*
+        //#include <time.h>
+
+        //TimeElements tm;
+        //tm tms;
+        //time_t t = makeTime(tm);
+        time_t t = mktime();
+        //#include "time.h"
+        time_t t = now();
+        char buff[] = "20180810T143000Z";
+        sprintf(buff, "%02d-%02d-%02dT%02d:%02d:%02d", year(t), month(t), day(t), hour(t), minute(t), second(t));
+        //return std::string(isotime().c_str());
+        //return std::string(t);
+        return std::string(buff);
+        */
+        #else
         time_t rawtime;
         struct tm * timeinfo;
         char buffer [80];
@@ -207,9 +225,9 @@ namespace TerkinUtil {
         strftime(buffer, 80, "%FT%TZ", timeinfo);
 
         return std::string(buffer);
+        #endif
     }
 
-    #endif
 
 
     // https://github.com/zenmanenergy/ESP8266-Arduino-Examples/blob/master/helloWorld_urlencoded/urlencode.ino

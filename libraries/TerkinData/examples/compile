@@ -1,10 +1,9 @@
 #!/bin/bash
-#
-# usage: ./build csv_basic.cpp
-# The executable will be saved in the current directory
+# Build example programs against glibc.
+# Usage: ./compile csv_basic.cpp
 
 INPUT=$1
-OUTPUT=$(basename $INPUT ".cpp")
+OUTPUT=build/$(basename $INPUT ".cpp")
 
 LIB_DIR="../.."
 TERRINE="${LIB_DIR}/Terrine"
@@ -13,18 +12,15 @@ ARDUINOJSON="${LIB_DIR}/ArduinoJson"
 INCLUDE="-I$TERRINE -I$TERKINDATA -I$ARDUINOJSON"
 
 #CPP=g++
-#CPP=clang++
-#CPP=/opt/local/bin/g++-mp-4.9
-CPP=/opt/local/bin/g++-mp-5
-#CPP=/opt/local/bin/gcc-mp-5
-#CPP=/opt/local/bin/clang++-mp-3.4
+CPP=clang
+#CPP=/opt/local/bin/g++-mp-5
 
 # ./sim/compat.h
-CPP_FLAGS="-x c++ -lstdc++ -std=gnu++11 -Os -fno-exceptions -ffunction-sections -fdata-sections -pedantic -fpermissive"
+CPP_FLAGS="-x c++ -lstdc++ -std=gnu++11 -Os -fno-exceptions -ffunction-sections -fdata-sections -fpermissive"
 CPP_FLAGS_MORE="-Wall -Wextra -Wno-builtin-macro-redefined -Wno-unused-function -fdiagnostics-color -DHAVE_ARDUINO_JSON"
+# -pedantic
 
 $CPP -g -I. $INCLUDE $CPP_FLAGS $CPP_FLAGS_MORE \
     $INPUT \
     $TERRINE/Terrine.cpp $TERKINDATA/TerkinData.cpp \
     -o $OUTPUT
-
