@@ -1,8 +1,8 @@
 /*
    
-                 Hiveeyes Pipa Datalogger for GPRSbee
+                       Hiveeyes Pipa Datalogger
  
-   Collect sensor data, serialize as JSON and send it through GPRSbee.
+   A software spike to submit data using native WiFi on Espressif chips.
 
    Copyright (C) 2015-2016  Clemens Gruber <clemens@hiveeyes.org>
    Copyright (C) 2015-2016  Richard Pobering <richard@hiveeyes.org>
@@ -69,20 +69,8 @@
 #define HE_API_URL      "http://swarm.hiveeyes.org/api-notls/"
 #define HE_USER         "testdrive"
 #define HE_SITE         "area-42"
-#define HE_HIVE         "pipa-gprsbee-01"
+#define HE_HIVE         "pipa-espwifi-01"
 
-
-// GPRSbee
-// -------
-#define USE_GPRSBEE         true
-#define GPRSBEE_AP_NAME     "internet.eplus.de"     // https://en.wikipedia.org/wiki/Access_Point_Name
-#define GPRSBEE_AP_AUTH     true
-#define GPRSBEE_AP_USER     "testuser"
-#define GPRSBEE_AP_PASS     "12345"
-
-#define GPRSBEE_VCC     7    // 23
-#define GPRSBEE_ONOFF   -1
-#define GPRSBEE_STATUS  8
 
 
 // Sensors
@@ -115,9 +103,6 @@
 // Libraries
 // ---------
 #include <ArduinoJson.h>                // https://github.com/bblanchon/ArduinoJson
-#if USE_GPRSBEE
-#include <GPRSbee.h>                    // https://github.com/SodaqMoja/GPRSbee
-#endif
 #include <Terkin.h>                     // https://github.com/hiveeyes/arduino/tree/master/libraries/Terkin
 #include <Hiveeyes.h>                   // https://github.com/hiveeyes/arduino/tree/master/libraries/Hiveeyes
 #include <OpenHive.h>                   // https://github.com/hiveeyes/arduino/tree/master/libraries/OpenHive
@@ -139,6 +124,7 @@ using namespace OpenHive;
 
 
 
+
 // ******************************************
 //                Main program
 // ******************************************
@@ -148,15 +134,15 @@ using namespace OpenHive;
 TelemetryNode *telemetry;
 
 // Forward declarations
-TelemetryNode& setup_telemetry_gprsbee(bool wait_usb);
+TelemetryNode& setup_telemetry_esphttp_json();
 
 
 // Setup function
 void setup() {
 
     // Telemetry setup
-#if USE_GPRSBEE
-    telemetry = &setup_telemetry_gprsbee(true);
+#if USE_ESPHTTP_JSON
+    telemetry = &setup_telemetry_esphttp_json();
 #endif
 
     // Sensor setup
@@ -190,43 +176,23 @@ void loop() {
 
 }
 
+
 /**
  *
  * Setup function for initializing a TelemetryNode instance
  * with appropriate components in individual setups.
  *
  * Here, the machinery is instructed to
- * communicate using a Sodaq GPRSbee device.
+ * communicate using WiFi on an Espressif device.
  *
 **/
-#if USE_GPRSBEE
-TelemetryNode& setup_telemetry_gprsbee(bool wait_usb = false) {
-
-
-    /* Setup transmitter hardware */
-
-    // GPRS setup
-    Serial.begin(19200);          // Serial is connected to SIM900 GPRSbee
-
-    // Initialize GPRSbee device
-    gprsbee.initAutonomoSIM800(Serial, GPRSBEE_VCC, GPRSBEE_ONOFF, GPRSBEE_STATUS);
-
-    // Make sure the GPRSbee is switched off when starting up
-    gprsbee.off();
-    if (wait_usb) {
-        Serial.println(F("Please disconnect USB within 5 seconds."));
-        delay(5000);
-    }
-
+#if USE_ESPHTTP_JSON
+TelemetryNode& setup_telemetry_esphttp_json() {
 
     /* Setup telemetry client with pluggable components */
 
     // Transmitter
-    #if GPRSBEE_AP_AUTH
-        GPRSbeeTransmitter transmitter(gprsbee, GPRSBEE_AP_NAME, GPRSBEE_AP_USER, GPRSBEE_AP_PASS);
-    #else
-        GPRSbeeTransmitter transmitter(gprsbee, GPRSBEE_AP_NAME);
-    #endif
+    ESPHTTPTransmitter transmitter;
 
     // Telemetry manager
     TelemetryManager manager(transmitter, HE_API_URL);
