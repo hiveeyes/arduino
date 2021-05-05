@@ -25,8 +25,7 @@ Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA
 
 #include <Terrine.h>
 
-#ifdef ARDUINO
-    #include <Arduino.h>
+#if ARDUINO && !ESP32
     #include <MemoryFree.h>
 #elif defined(__unix__)
 #else
@@ -97,8 +96,10 @@ void Terrine::log(int value) {
 }
 
 int Terrine::memfree() {
-    #ifdef ARDUINO
+    #if ARDUINO_ARCH_AVR
         return freeMemory();
+    #elif ARDUINO_ARCH_ESP8266 || ARDUINO_ARCH_ESP32
+        return ESP.getFreeHeap();
     #else
         return -1;
     #endif

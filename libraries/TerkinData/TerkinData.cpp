@@ -1,9 +1,9 @@
 /**
  *
- * TerkinData: Flexible data collection for decoupling sensor reading and telemetry domains
+ * TerkinData: Flexible data collection for decoupling sensor reading and
+ *             telemetry domains.
  *
- *
- *  Copyright (C) 2017  Andreas Motl <andreas.motl@elmyra.de>
+ *  Copyright (C) 2017-2021  Andreas Motl <andreas.motl@elmyra.de>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU Lesser General Public License as published by
