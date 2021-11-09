@@ -62,8 +62,10 @@
 //             User configuration
 // ******************************************
 
-// Communication
-// =============
+
+// ==========================
+// Connectivity configuration
+// ==========================
 
 // Telemetry
 // ---------
@@ -74,12 +76,53 @@
 
 
 
-// Sensors
-// =======
-
-// TODO: No sensors yet. This is just a telemetry demo program.
+// ====================
+// Sensor configuration
+// ====================
 
 #define SENSOR_BME280   true
+#define SENSOR_HX711    true
+
+// --------------------------
+// BME280: Temperature sensor
+// --------------------------
+// The BME280 can be addressed either as 0x77 (Adafruit default) or
+// 0x76 (Grove default). Either can be physically modified for the other
+// address.
+#define BME280_PIN_POWER    -1
+#define BME280_I2C_ADDRESS  0x77
+
+// -------------------
+// HX711: Scale sensor
+// -------------------
+#define HX711_PIN_DOUT  14 // DT
+#define HX711_PIN_PDSCK 12 // SCK
+
+
+// ---------------
+// General - scale
+// ---------------
+
+// Properly using the load cell requires definition of individual configuration values.
+// This is not just specific to the *type* of the load cell as even
+// load cells of the *same* type / model have individual characteristics.
+
+// To measure these values, please have a look at the firmwares for load cell adjustment:
+// https://hiveeyes.org/docs/arduino/firmware/scale-adjust/README.html
+
+
+// This is the raw sensor value for "0 kg".
+// Write down the sensor value of the scale sensor with no load and adjust it here.
+#define LOADCELL_ZERO_OFFSET    38623.0f
+
+// This is the raw sensor value for a load weighing exactly 1 kg.
+// Add a load with known weight in kg to the scale sensor, note the
+// sensor value, calculate the value for a 1 kg load and adjust it here.
+#define LOADCELL_KG_DIVIDER     22053
+
+// Note: Use value * 0.5 for asymmetric / single side measurement,
+// so that 1 kg is displayed as 2 kg.
+//#define LOADCELL_KG_DIVIDER     11026
 
 
 // ******************************************
@@ -125,6 +168,9 @@ using namespace OpenHive;
 //                  Sensors
 // ******************************************
 
+//Variable* variableList_at1min[] = {new AOSongAM2315_Humidity(&am2315),
+//                                   new AOSongAM2315_Temp(&am2315)};
+
 #if SENSOR_BME280
 
 // Example sensor from EnviroDIY ModularSensors.
@@ -133,8 +179,8 @@ using namespace OpenHive;
 
 // The BME280 can be addressed either as 0x77 (Adafruit default) or 0x76 (Grove
 // default). Either can be physically modified for the other address.
-const int8_t BME280Power = -1;  // Power pin (-1 if unconnected)
-uint8_t      BMEi2c_addr = 0x76;
+const int8_t BME280Power = BME280_PIN_POWER;  // Power pin (-1 if unconnected)
+uint8_t      BMEi2c_addr = BME280_I2C_ADDRESS;
 
 // Create a Bosch BME280 sensor object.
 BoschBME280 bme280(BME280Power, BMEi2c_addr);
@@ -148,6 +194,27 @@ Variable* bme280Press =
         new BoschBME280_Pressure(&bme280, "12345678-abcd-1234-ef00-1234567890ab");
 Variable* bme280Alt =
         new BoschBME280_Altitude(&bme280, "12345678-abcd-1234-ef00-1234567890ab");
+
+#endif
+
+
+#if SENSOR_HX711
+
+// HX711 implementation for "EnviroDIY ModularSensors".
+// https://github.com/EnviroDIY/ModularSensors
+#include <AviaSemiHX711.h>
+
+// The BME280 can be addressed either as 0x77 (Adafruit default) or 0x76 (Grove
+// default). Either can be physically modified for the other address.
+//const int8_t BME280Power = -1;  // Power pin (-1 if unconnected)
+//uint8_t      BMEi2c_addr = 0x76;
+
+// Create a Bosch BME280 sensor object.
+AviaSemiHX711 hx711(HX711_PIN_PDSCK, HX711_PIN_DOUT, LOADCELL_ZERO_OFFSET, LOADCELL_KG_DIVIDER);
+
+// Create a single variable pointer for the HX711.
+Variable* hx711Weight =
+    new AviaSemiHX711_Weight(&hx711, "23456789-abcd-1234-ef00-1234567890ab");
 
 #endif
 
@@ -192,8 +259,9 @@ void loop() {
     // TODO: No sensors yet. This is just a telemetry demo program.
     JsonObject& data_temparray = openhive_temparray.read_demo();
 
-    // Read an EnviroDIY sensor.
+    // Read some EnviroDIY sensors.
     bme280.update();
+    hx711.update();
 
 
     // 2. Transmit data
