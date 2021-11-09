@@ -1,4 +1,4 @@
-$(eval venvpath  := .venv3)
+$(eval venvpath  := .venv)
 $(eval python    := $(venvpath)/bin/python)
 $(eval pip       := $(venvpath)/bin/pip)
 $(eval pio       := $(venvpath)/bin/pio)

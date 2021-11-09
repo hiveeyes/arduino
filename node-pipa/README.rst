@@ -30,17 +30,25 @@ The program currently compiles for
 Usage
 *****
 
-Build all examples for all available platforms::
+Build all examples for all available environments::
 
     git clone --recursive https://github.com/hiveeyes/arduino
     cd arduino/node-pipa
     make
 
-Build specific examples::
+Build specific examples for all available environments::
 
     source .venv/bin/activate
     cd examples/pipa-envirodiy
     pio run
+
+Build specific examples for specific environment::
+
+    # Build for AVR ATmega328
+    pio run --environment=avr328 --verbose
+
+    # List available environments
+    pio run --list-targets
 
 
 *******
