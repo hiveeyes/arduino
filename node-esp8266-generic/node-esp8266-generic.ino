@@ -50,6 +50,7 @@ Shield Lila
 //Version 1.20 Version um Tippfehler bereinigt und für Upload auf GitHub vorbereitet
 //Version 1.20 public - User / Login Credentials entfernt
 //Version 1.21 Modernisierung und PlatformIO Build-Umgebung
+//Version 1.22 Migration zu ArduinoJson 6
 
 
 #define GSM_ENABLED             false  // Bei FALSE wird automatisch WIFI aktiviert
@@ -785,13 +786,13 @@ void transmit_readings() {
 
   // Build JSON object containing sensor readings
   // TODO: How many data points actually fit into this?
-  StaticJsonBuffer<1024> jsonBuffer;
+  StaticJsonDocument<1024> jsonBuffer;
 
 
   // Create telemetry payload by manually mapping sensor readings to telemetry field names.
   // Note: For more advanced use cases, please have a look at the TerkinData C++ library
   //       https://hiveeyes.org/docs/arduino/TerkinData/README.html
-  JsonObject& json_data = jsonBuffer.createObject();
+  JsonObject json_data = jsonBuffer.to<JsonObject>();
 
   #if WUNDERGROUND
     json_data["WXD_Temp"]        = currentTemp;
@@ -820,13 +821,13 @@ void transmit_readings() {
   json_data["voltage"]           = voltage;
 
   // Debugging
-  json_data.printTo(Serial);
+  serializeJson(json_data, Serial);
 
 
   // Serialize data
-  int json_length = json_data.measureLength();
+  int json_length = measureJson(json_data);
   char payload[json_length + 1];
-  json_data.printTo(payload, sizeof(payload));
+  serializeJson(json_data, payload, sizeof(payload));
 
   // Publish data
   // TODO: Refactor to TerkinTelemetry
