@@ -32,7 +32,7 @@ The most recent firmware version is always available at `node-yun-http.ino`_.
 
 
 .. figure:: http://www.dragino.com/media/k2/galleries/105/YunShieldv2.4_10.png
-    :target: http://www.dragino.com/products/yunshield/item/105-yun-shield-v2-4.html
+    :target: https://wiki1.dragino.com/index.php/Yun_Shield
     :alt: Dragino Yun Shield v2.4
     :width: 450px
     :align: right
