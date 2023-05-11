@@ -90,7 +90,7 @@
 .. _RFM69 to MQTT gateway using ESP8266: https://harizanov.com/2015/11/rfm69-to-mqtt-gateway-using-esp8266/
 
 .. _Arduino Yún Shield: https://www.arduino.cc/en/Main/ArduinoYunShield
-.. _Dragino Yun Shield v2.4: http://www.dragino.com/products/yunshield/item/105-yun-shield-v2-4.html
+.. _Dragino Yun Shield v2.4: https://wiki1.dragino.com/index.php/Yun_Shield
 
 .. JeeLabs
 .. _JeeLabs: http://jeelabs.org/
