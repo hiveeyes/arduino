@@ -7,6 +7,7 @@
 ################
 Mois sensor node
 ################
+
 .. highlight:: bash
 
 .. tip::
@@ -18,10 +19,12 @@ Mois sensor node
 ************
 Introduction
 ************
+
 This firmware powers the `Mois Box`_, based on the `Arduino Yún Shield`_-compatible `Dragino Yun Shield v2.4`_.
 Telemetry data is transmitted to a `custom PHP receiver program <https://github.com/bee-mois/beescale/blob/master/add_line2.php>`_
 over HTTP using the `Yún HTTP Client`_ from the `Bridge Library for Yún devices`_. It is also stored locally on a SD card.
 The most recent firmware version is always available at `node-yun-http.ino`_.
+
 
 .. figure:: https://ptrace.hiveeyes.org/2017-03-21_mois-node-yun-http.jpg
     :alt: Mois Box with electronics
@@ -78,8 +81,8 @@ Configure firmware
 ==================
 .. highlight:: c++
 
-Have a look at the source code `node-yun-http.ino`_ and adapt
-feature flags and setting variables according to your environment:
+Have a look at the source code `node-yun-http.ino`_ and adapt feature flags and setting
+variables according to your environment.
 
 Configure load cell calibration settings::
 
@@ -93,32 +96,38 @@ Configure load cell calibration settings::
 
 .. tip::
 
-    Read about :ref:`scale-adjust-firmware` to get these values.
+    Read about :ref:`scale-adjust-firmware` to determine those values.
 
 
 *****
 Build
 *****
+
 .. highlight:: bash
 
-Build for AVR
-=============
-The build system is based on `Arduino-Makefile`_, a Makefile for Arduino projects.
+The build system is based on `PlatformIO`_, which will install toolchains and build
+your customized firmware without efforts. All you need is a Python installation.
 
 ::
 
-    # Select appropriate Makefile
-    ln -s Makefile-Linux.mk Makefile
-
     # Build firmware
-    make
+    make build
 
-.. note:: You might want to adjust the appropriate Makefile to match your environment.
+.. note::
+
+    If you need to build for different targets, or if you want to modernize your dependencies,
+    you may want to adjust the ``platformio.ini`` file, to match your needs.
+
+    In order to make changes to the firmware, edit the ``node-yun-http.ino`` file, and
+    invoke ``make build`` to build it again.
 
 
 Upload to MCU
--------------
+=============
 ::
 
+    export MCU_PORT=/dev/ttyUSB0
     make upload
 
+
+.. _PlatformIO: https://platformio.org/
