@@ -1,0 +1,2 @@
+#ino==0.3.6
+platformio<7

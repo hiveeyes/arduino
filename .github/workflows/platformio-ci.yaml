@@ -1,0 +1,72 @@
+name: PlatformIO CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  # Allow job to be triggered manually.
+  workflow_dispatch:
+
+# Cancel in-progress jobs when pushing to the same branch.
+concurrency:
+  cancel-in-progress: true
+  group: ${{ github.workflow }}-${{ github.ref }}
+
+jobs:
+
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Acquire sources
+        uses: actions/checkout@v3
+        with:
+          submodules: 'recursive'
+
+      - name: Cache PlatformIO
+        uses: actions/cache@v3
+        with:
+          path: ~/.pio
+          key: ${{ runner.os }}-${{ hashFiles('**/lockfiles') }}
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+          cache-dependency-path: |
+            requirements*.txt
+
+      - name: Install PlatformIO
+        run: |
+          pip install --upgrade --requirement requirements-test.txt
+
+      - name: Build scale-adjust / ADS1231
+        if: success() || failure()
+        run: |
+          pio run --project-dir scale-adjust/ADS1231
+
+      - name: Build scale-adjust / HX711
+        if: success() || failure()
+        run: |
+          pio run --project-dir scale-adjust/HX711
+
+      - name: Build node-gprs-http
+        if: success() || failure()
+        run: |
+          pio run --project-dir node-gprs-http
+
+      - name: Build node-wifi-mqtt
+        if: success() || failure()
+        run: |
+          pio run --project-dir node-wifi-mqtt
+
+      - name: Build node-esp8266-generic
+        if: success() || failure()
+        run: |
+          pio run --project-dir node-esp8266-generic
+
+      - name: Build node-esp32-generic
+        if: success() || failure()
+        run: |
+          pio run --project-dir node-esp32-generic
