@@ -51,9 +51,6 @@
 [submodule "libraries/RobTillaart-Arduino"]
 	path = libraries/RobTillaart-Arduino
 	url = https://github.com/RobTillaart/Arduino
-[submodule "libraries/RobTillaart-libDHT"]
-	path = libraries/RobTillaart-libDHT
-	url = https://github.com/RobTillaart/libDHT
 [submodule "libraries/DS3231"]
 	path = libraries/DS3231
 	url = https://github.com/jcastaneyra/ds3231_library
