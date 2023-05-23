@@ -3,8 +3,23 @@ name: PlatformIO CI
 on:
   push:
     branches: [ main ]
+    paths:
+      - '.github/workflows/platformio-ci.yaml'
+      - 'scale-adjust/**'
+      - 'node-gprs-http/**'
+      - 'node-wifi-mqtt/**'
+      - 'node-esp8266-generic/**'
+      - 'node-esp32-generic/**'
   pull_request:
     branches: [ main ]
+    paths:
+      - '.github/workflows/platformio-ci.yaml'
+      - 'scale-adjust/**'
+      - 'node-gprs-http/**'
+      - 'node-wifi-mqtt/**'
+      - 'node-esp8266-generic/**'
+      - 'node-esp32-generic/**'
+
   # Allow job to be triggered manually.
   workflow_dispatch:
 
