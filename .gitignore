@@ -1,5 +1,5 @@
 /.idea
-/.venv*
+.venv*
 .build
 ino.ini
 *.swp

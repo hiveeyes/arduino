@@ -7,14 +7,17 @@
 
 .. _hiveeyes-arduino:
 
-##############################
-Hiveeyes Arduino documentation
-##############################
+#######################################
+Hiveeyes Arduino firmware documentation
+#######################################
 
 This is the firmware source code documentation of the `Hiveeyes project`_,
 a beehive monitoring system made of open source software and hardware components.
 For an overview about the whole system, please have a look at :ref:`hiveeyes-system`.
 Enjoy reading and exploring this space.
+
+Please also visit the `Hiveeyes Community Forum`_, where all development and
+discussions are taking place these days.
 
 .. toctree::
     :maxdepth: 1
@@ -27,7 +30,6 @@ Enjoy reading and exploring this space.
 
     CONTRIBUTORS
     Changelog <CHANGES>
-    LICENSE
 
     BERadio/README
     TerkinData/README
@@ -72,3 +74,5 @@ In development:
 .. * :ref:`modindex`
 .. * :ref:`search`
 
+
+.. _Hiveeyes Community Forum: https://community.hiveeyes.org/
