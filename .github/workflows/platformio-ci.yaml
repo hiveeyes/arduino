@@ -47,6 +47,7 @@ jobs:
       node-wifi-mqtt: ${{ steps.changes.outputs.node-wifi-mqtt }}
       node-esp8266-generic: ${{ steps.changes.outputs.node-esp8266-generic }}
       node-esp32-generic: ${{ steps.changes.outputs.node-esp32-generic }}
+      node-wifi-mqtt-homie: ${{ steps.changes.outputs.node-wifi-mqtt-homie }}
       node-yun-http: ${{ steps.changes.outputs.node-yun-http }}
     steps:
       - uses: actions/checkout@v3
@@ -64,6 +65,10 @@ jobs:
               - 'node-esp8266-generic/**'
             node-esp32-generic:
               - 'node-esp32-generic/**'
+            node-wifi-mqtt-homie:
+              - 'node-wifi-mqtt-homie/**'
+              - 'node-wifi-mqtt-homie-battery/**'
+              - 'node-wifi-mqtt-homie-calibration/**'
             node-yun-http:
               - 'node-yun-http/**'
 
@@ -131,3 +136,10 @@ jobs:
         if: ${{ needs.changes.outputs.node-yun-http == 'true' }}
         run: |
           pio run --project-dir node-yun-http
+
+      - name: Build node-wifi-mqtt-homie-*
+        if: ${{ needs.changes.outputs.node-wifi-mqtt-homie == 'true' }}
+        run: |
+          pio run --project-dir node-wifi-mqtt-homie
+          pio run --project-dir node-wifi-mqtt-homie-battery
+          pio run --project-dir node-wifi-mqtt-homie-calibration
