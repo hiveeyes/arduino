@@ -2,9 +2,17 @@
 
 .. _README:
 
-######
-README
-######
+##########################
+Hiveeyes Arduino Firmwares
+##########################
+
+
+.. image:: https://github.com/hiveeyes/arduino/actions/workflows/platformio-ci.yaml/badge.svg
+    :target: https://github.com/hiveeyes/arduino/actions/workflows/platformio-ci.yaml
+    :alt: PlatformIO CI outcome
+
+
+[![PlatformIO CI](https://github.com/hiveeyes/arduino/actions/workflows/platformio-ci.yaml/badge.svg)](https://github.com/hiveeyes/arduino/actions/workflows/platformio-ci.yaml)
 
 .. contents::
    :local:
@@ -56,17 +64,17 @@ Get source code with all dependency libraries and tools::
 Toolchain
 =========
 
-PlatformIO_ is the recommended build environment.
+PlatformIO
+----------
+We recommend to use PlatformIO_. Installing all dependency libraries will be managed
+automatically, accurately, and reproducibly, and you will be able to choose between
+CLI and UI operations.
 
 Arduino IDE
 -----------
 If you want to use the Arduino IDE, you have to install all necessary libraries manually.
 In each programs subdirectory, there is a ``platformio.ini`` which will give you a clue
 about the libraries to use.
-
-PlatformIO
-----------
-When using PlatformIO_, installing all dependency libraries will be managed automatically.
 
 
 *******
