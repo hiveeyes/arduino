@@ -54,19 +54,14 @@ jobs:
         with:
           filters: |
             scale-adjust:
-              - '.github/workflows/platformio-ci.yaml'
               - 'scale-adjust/**'
             node-gprs-http:
-              - '.github/workflows/platformio-ci.yaml'
               - 'node-gprs-http/**'
             node-wifi-mqtt:
-              - '.github/workflows/platformio-ci.yaml'
               - 'node-wifi-mqtt/**'
             node-esp8266-generic:
-              - '.github/workflows/platformio-ci.yaml'
               - 'node-esp8266-generic/**'
             node-esp32-generic:
-              - '.github/workflows/platformio-ci.yaml'
               - 'node-esp32-generic/**'
 
   build:
