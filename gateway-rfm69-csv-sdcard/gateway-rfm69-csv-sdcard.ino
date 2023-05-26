@@ -69,7 +69,7 @@ void setup() {
     radio.setHighPower();
   #endif
   radio.encrypt(ENCRYPTKEY);
-  radio.promiscuous(promiscuousMode);
+  radio.spyMode(promiscuousMode);
 
   Serial.println(FREQUENCY);
 }

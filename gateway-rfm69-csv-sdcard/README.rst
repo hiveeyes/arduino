@@ -44,11 +44,8 @@ Build on your workstation
     # Select this firmware
     cd gateway-rfm69-csv-sdcard
 
-    # Select appropriate Makefile
-    ln -s Makefile-Linux.mk Makefile
-
     # Build firmware
-    make
+    make build
 
     # Upload to MCU
     make upload
