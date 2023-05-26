@@ -95,9 +95,9 @@ String dataURL = "";
 int switchPin = 11;   // switch is connected to pin 11
 uint16_t lux = 0;
 
-#include <ADS1231.h>
-ADS1231 loadCell;  // create ADS1231 object
-ADS1231 loadCell01;
+#include <ADS1232.h>
+ADS1232 loadCell;  // create ADS1231 object
+ADS1232 loadCell01;
 #include <RunningMedian.h>
 // RunningMedian sample size is 11
 RunningMedian weightSamples = RunningMedian(11);  // create RunningMedian object
@@ -132,13 +132,13 @@ String getTimeStamp();
 // Function to read out weight cell.
 void getWeight(void) {
   // ADS1231 ready?
-  if (loadCell.check())
+  if (loadCell.is_ready())
   {
     for (int i = 0; i < 10; i++) {
       delay(200);
       // read input of ADS1231:
-      weightSensorValue = loadCell.readData();
-      weightSensorValue01 = loadCell01.readData();
+      loadCell.read(weightSensorValue);
+      loadCell01.read(weightSensorValue01);
       // calculate weight in kg
       weightKg = ((float)weightSensorValue - loadCellZeroOffset) / loadCellKgDivider;
       weightKg01 = ((float)weightSensorValue01 - loadCellZeroOffset01) / loadCellKgDivider01;
@@ -321,10 +321,10 @@ void setup()
   FileSystem.begin();
   // a second to initialize:
   delay(1000);
-  // load cell / ADS1231 pin definition: SCL 7, Data 6, PowerDown 10
-  loadCell.attach(7,6,10);
-  // second load cell / ADS1231 pin definition: SCL 8, Data 5, PowerDown 9
-  loadCell01.attach(8,5,9);
+  // load cell / ADS1231 pin definition: Data 6, SCL 7, PowerDown 10
+  loadCell.begin(6,7,10);
+  // second load cell / ADS1231 pin definition: Data 5, SCL 8, PowerDown 9
+  loadCell01.begin(5,8,9);
   sensors.begin();    // start DallasTemperature Lib
   // Switch LED: initialize digital pin LED_BUILTIN as an output.
   pinMode(LED_BUILTIN, OUTPUT);
