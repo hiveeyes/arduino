@@ -22,9 +22,6 @@
 [submodule "tools/Bare-Arduino-Project"]
 	path = tools/Bare-Arduino-Project
 	url = https://github.com/ladislas/Bare-Arduino-Project
-[submodule "libraries/GPRSbee"]
-	path = libraries/GPRSbee
-	url = https://github.com/SodaqMoja/GPRSbee
 [submodule "libraries/DHT"]
 	path = libraries/DHT
 	url = https://github.com/markruys/arduino-DHT
