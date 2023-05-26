@@ -45,6 +45,3 @@
 [submodule "tools/makeEspArduino"]
 	path = tools/makeEspArduino
 	url = https://github.com/plerup/makeEspArduino
-[submodule "libraries/YunBridgeLibrary"]
-	path = libraries/YunBridgeLibrary
-	url = https://github.com/arduino-libraries/Bridge
