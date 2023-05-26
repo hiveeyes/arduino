@@ -11,18 +11,9 @@ Hiveeyes Arduino Firmwares
     :target: https://github.com/hiveeyes/arduino/actions/workflows/platformio-ci.yaml
     :alt: PlatformIO CI outcome
 
-
-[![PlatformIO CI](https://github.com/hiveeyes/arduino/actions/workflows/platformio-ci.yaml/badge.svg)](https://github.com/hiveeyes/arduino/actions/workflows/platformio-ci.yaml)
-
-.. contents::
-   :local:
-   :depth: 1
-
-----
-
 .. tip::
 
-    You might want to `continue reading on our documentation space <https://hiveeyes.org/docs/arduino/>`_,
+    Please `continue reading this document on our documentation space <https://hiveeyes.org/docs/arduino/>`_,
     all inline links will be working there.
 
 
@@ -35,7 +26,7 @@ a beehive monitoring system. Enjoy reading!
 
 All Arduino Core based firmware source code is living here.
 We support different hardware, so there are different flavors
-of the firmware, reflected by the directory naming convention
+of firmwares, reflected by the directory naming convention
 ``<purpose>-<transport>-<protocol>``.
 
 There are firmwares for ATmega328_, ESP8266_ and ESP32_ MCUs.
@@ -44,8 +35,8 @@ There are firmwares for ATmega328_, ESP8266_ and ESP32_ MCUs.
 * ``transport`` name of the physical transport mechanism, e.g. *rfm69*, *gprs* or *wifi*.
 * ``protocol``  name of the transmission protocol, e.g. *beradio*, *mqtt*, *http* or *any*.
 
-For building, most programs are using PlatformIO_, but some are still using
-`Arduino-Makefile`_ and even others are still based on Ino_.
+For building, most programs are using `PlatformIO`_, but some are still using
+`Arduino-Makefile`_ and even others may be still based on `Ino`_.
 
 
 *****
@@ -66,7 +57,7 @@ Toolchain
 
 PlatformIO
 ----------
-We recommend to use PlatformIO_. Installing all dependency libraries will be managed
+We recommend to use `PlatformIO`_. Installing all dependency libraries will be managed
 automatically, accurately, and reproducibly, and you will be able to choose between
 CLI and UI operations.
 
