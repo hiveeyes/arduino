@@ -54,9 +54,6 @@
 [submodule "tools/makeEspArduino"]
 	path = tools/makeEspArduino
 	url = https://github.com/plerup/makeEspArduino
-[submodule "libraries/Adafruit_MQTT_Library"]
-	path = libraries/Adafruit_MQTT_Library
-	url = https://github.com/adafruit/Adafruit_MQTT_Library
 [submodule "libraries/YunBridgeLibrary"]
 	path = libraries/YunBridgeLibrary
 	url = https://github.com/arduino-libraries/Bridge
