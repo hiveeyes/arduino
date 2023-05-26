@@ -28,9 +28,6 @@
 [submodule "libraries/DHT"]
 	path = libraries/DHT
 	url = https://github.com/markruys/arduino-DHT
-[submodule "libraries/DallasTemperature"]
-	path = libraries/DallasTemperature
-	url = https://github.com/milesburton/Arduino-Temperature-Control-Library
 [submodule "libraries/EmBencode"]
 	path = libraries/EmBencode
 	url = https://github.com/hiveeyes/embencode
