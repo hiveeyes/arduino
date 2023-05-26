@@ -1,24 +1,30 @@
+#
+# Run workflow, step, or job based on file changes GitHub Actions
+# https://how.wtf/run-workflow-step-or-job-based-on-file-changes-github-actions.html
+#
+# GitHub Actions run on certain file type change
+# https://www.scivision.dev/github-actions-selective-run/
+#
+
 name: PlatformIO CI
 
 on:
   push:
     branches: [ main ]
     paths:
-      - '.github/workflows/platformio-ci.yaml'
-      - 'scale-adjust/**'
-      - 'node-gprs-http/**'
-      - 'node-wifi-mqtt/**'
-      - 'node-esp8266-generic/**'
-      - 'node-esp32-generic/**'
+      - "**.cpp"
+      - "**.h"
+      - "**.ini"
+      - "**.ino"
+      - "**.yaml"
   pull_request:
     branches: [ main ]
     paths:
-      - '.github/workflows/platformio-ci.yaml'
-      - 'scale-adjust/**'
-      - 'node-gprs-http/**'
-      - 'node-wifi-mqtt/**'
-      - 'node-esp8266-generic/**'
-      - 'node-esp32-generic/**'
+      - "**.cpp"
+      - "**.h"
+      - "**.ini"
+      - "**.ino"
+      - "**.yaml"
 
   # Allow job to be triggered manually.
   workflow_dispatch:
@@ -30,7 +36,38 @@ concurrency:
 
 jobs:
 
+  changes:
+    runs-on: ubuntu-latest
+    outputs:
+      scale-adjust: ${{ steps.changes.outputs.scale-adjust }}
+      node-gprs-http: ${{ steps.changes.outputs.node-gprs-http }}
+      node-wifi-mqtt: ${{ steps.changes.outputs.node-wifi-mqtt }}
+      node-esp8266-generic: ${{ steps.changes.outputs.node-esp8266-generic }}
+      node-esp32-generic: ${{ steps.changes.outputs.node-esp32-generic }}
+    steps:
+      - uses: actions/checkout@v3
+      - uses: dorny/paths-filter@v2
+        id: changes
+        with:
+          filters: |
+            scale-adjust:
+              - '.github/workflows/platformio-ci.yaml'
+              - 'scale-adjust/**'
+            node-gprs-http:
+              - '.github/workflows/platformio-ci.yaml'
+              - 'node-gprs-http/**'
+            node-wifi-mqtt:
+              - '.github/workflows/platformio-ci.yaml'
+              - 'node-wifi-mqtt/**'
+            node-esp8266-generic:
+              - '.github/workflows/platformio-ci.yaml'
+              - 'node-esp8266-generic/**'
+            node-esp32-generic:
+              - '.github/workflows/platformio-ci.yaml'
+              - 'node-esp32-generic/**'
+
   build:
+    needs: changes
     runs-on: ubuntu-latest
     steps:
       - name: Acquire sources
@@ -57,31 +94,31 @@ jobs:
           pip install --upgrade --requirement requirements-test.txt
 
       - name: Build scale-adjust / ADS1231
-        if: success() || failure()
+        if: ${{ needs.changes.outputs.scale-adjust == 'true' }}
         run: |
           pio run --project-dir scale-adjust/ADS1231
 
       - name: Build scale-adjust / HX711
-        if: success() || failure()
+        if: ${{ needs.changes.outputs.scale-adjust == 'true' }}
         run: |
           pio run --project-dir scale-adjust/HX711
 
       - name: Build node-gprs-http
-        if: success() || failure()
+        if: ${{ needs.changes.outputs.node-gprs-http == 'true' }}
         run: |
           pio run --project-dir node-gprs-http
 
       - name: Build node-wifi-mqtt
-        if: success() || failure()
+        if: ${{ needs.changes.outputs.node-wifi-mqtt == 'true' }}
         run: |
           pio run --project-dir node-wifi-mqtt
 
       - name: Build node-esp8266-generic
-        if: success() || failure()
+        if: ${{ needs.changes.outputs.node-esp8266-generic == 'true' }}
         run: |
           pio run --project-dir node-esp8266-generic
 
       - name: Build node-esp32-generic
-        if: success() || failure()
+        if: ${{ needs.changes.outputs.node-esp32-generic == 'true' }}
         run: |
           pio run --project-dir node-esp32-generic
