@@ -48,6 +48,3 @@
 [submodule "libraries/YunBridgeLibrary"]
 	path = libraries/YunBridgeLibrary
 	url = https://github.com/arduino-libraries/Bridge
-[submodule "libraries/Watterott-Arduino-Libs"]
-	path = libraries/Watterott-Arduino-Libs
-	url = https://github.com/watterott/Arduino-Libs
