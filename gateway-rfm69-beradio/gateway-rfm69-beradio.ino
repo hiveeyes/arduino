@@ -109,7 +109,7 @@ void setup() {
   radio.setPowerLevel(POWERLEVEL);      // lower power setting for missing antenna
 #endif
   radio.encrypt(KEY);
-  radio.promiscuous(promiscuousMode);
+  radio.spyMode(promiscuousMode);
   char buff[50];
 
 #ifdef DEBUG
