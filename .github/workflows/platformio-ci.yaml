@@ -5,6 +5,9 @@
 # GitHub Actions run on certain file type change
 # https://www.scivision.dev/github-actions-selective-run/
 #
+# GitHub Actions configuration for PlatformIO
+# https://docs.platformio.org/en/stable/integration/ci/github-actions.html
+#
 
 name: PlatformIO CI
 
@@ -78,8 +81,11 @@ jobs:
       - name: Cache PlatformIO
         uses: actions/cache@v3
         with:
-          path: ~/.pio
-          key: ${{ runner.os }}-${{ hashFiles('**/lockfiles') }}
+          path: |
+            ~/.cache/pip
+            ~/.platformio/.cache
+            ~/.pio
+          key: ${{ runner.os }}-pio
 
       - name: Setup Python
         uses: actions/setup-python@v4
