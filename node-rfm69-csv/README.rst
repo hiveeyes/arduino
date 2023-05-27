@@ -44,14 +44,10 @@ Build on your workstation
     # Select this firmware
     cd node-rfm69-csv
 
-    # Select appropriate Makefile
-    ln -s Makefile-Linux.mk Makefile
-
     # Build firmware
-    make
+    make build
 
     # Upload to MCU
     make upload
 
 .. note:: You might want to adjust the appropriate Makefile to match your environment.
-

@@ -148,7 +148,7 @@ OneWire oneWire(temperaturePin); // oneWire instance to communicate with any One
 DallasTemperature temperatureSensors(&oneWire);  // pass oneWire reference to DallasTemperature
 //was DeviceAddress insideThermometer, outsideThermometer;
 uint8_t deviceAddressArray[temperatureNumDevices][8]; // arrays for device addresses
-const char gradC[4]={' ','°','C','\0'};  // degree sign
+//const char gradC[4]={' ','°','C','\0'};  // degree sign
 
 // power saving
 #include <LowPower.h>

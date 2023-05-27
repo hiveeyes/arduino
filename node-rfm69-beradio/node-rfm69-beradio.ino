@@ -76,12 +76,12 @@
 // Libraries 
 
 #include <RFM69.h>                      // https://github.com/LowPowerLab/RFM69
-#include <RFM69_ATC.h>                  //https://github.com/LowPowerLab/RFM69
-#include <SPI.h>                  
+#include <RFM69_ATC.h>
+#include <RFM69_OTA.h>
+#include <SPI.h>
 #include <SPIFlash.h>                   // https://github.com/LowPowerLab/SPIFlash
 #include <avr/wdt.h>
-#include <WirelessHEX69.h>              // https://github.com/einsiedlerkrebs/WirelessProgramming 
-#include <EmBencode.h>                  // https://github.com/jcw/embencode
+#include <EmBencode.h>                  // https://github.com/hiveeyes/embencode
 #include <LowPower.h>                   // https://github.com/LowPowerLab/LowPower
 #include <HX711.h>                      // https://github.com/bogde/HX711
 #include <DHT.h>                        // https://github.com/markruys/arduino-DHT
@@ -156,10 +156,10 @@ RFM69_ATC radio;
 #else
 RFM69 radio;
 #endif
-HX711 scale(HX711_DT, HX711_SCK);
+HX711 scale;
 SPIFlash flash(FLASH_SS, FLASH_MANUFACTURER_ID);
 OneWire oneWire(ONE_WIRE_BUS);
-DallasTemperature sensors(&oneWire);
+DallasTemperature ds18b20(&oneWire);
 
 // variables //
 
@@ -191,8 +191,6 @@ Payload theData;
 void setup(){
     pinMode(LED, OUTPUT);               // setup onboard LED
     Serial.begin(SERIAL_BAUD);          // setup serial
-
-  //dht.begin();
 
 // radio setup
     #ifdef DEBUG
@@ -246,12 +244,13 @@ void setup(){
     #ifdef DEBUG
     Serial.println("\nsetting up Sensors");
     #endif
-    sensors.begin();
+    ds18b20.begin();
 
     #ifdef DEBUG_SENSORS
     Serial.println("OneWire set");
     #endif
-    scale.set_offset(8361975);          // the offset of the scale, is raw output without any weight, get this first and then do set.scale  
+    scale.begin(HX711_DT, HX711_SCK);
+    scale.set_offset(8361975);          // the offset of the scale, is raw output without any weight, get this first and then do set.scale
     scale.set_scale(21901.f);           // this is the difference between the raw data of a known weight and an emprty scale 
     #ifdef DEBUG_SENSORS
     Serial.println("scale set");
@@ -352,11 +351,11 @@ void requestOneWire() {
     Serial.println();
     Serial.println("requesting OneWire devices");
     #endif
-    sensors.requestTemperatures();
-    temp0 = sensors.getTempCByIndex(0);
-    temp1 = sensors.getTempCByIndex(1);
-    temp2 = sensors.getTempCByIndex(2);
-    temp3 = sensors.getTempCByIndex(3);
+    ds18b20.requestTemperatures();
+    temp0 = ds18b20.getTempCByIndex(0);
+    temp1 = ds18b20.getTempCByIndex(1);
+    temp2 = ds18b20.getTempCByIndex(2);
+    temp3 = ds18b20.getTempCByIndex(3);
     #ifdef DEBUG_SENSORS
     Serial.println("Readings:");
     Serial.print(temp0, 3);
