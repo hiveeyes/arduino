@@ -131,10 +131,7 @@ Build on your workstation
     # Upload to MCU.
     make upload
 
-.. note::
-
-    You might want to adjust the corresponding settings in ``platformio.ini`` to match
-    your setup.
+.. tip:: Please inspect the ``platformio.ini`` file, and adjust it to match your setup.
 
 
 Configuration

@@ -25,11 +25,11 @@ Initialize a new firmware flavour
 =================================
 The following steps are needed to initialize a new project inside the multivariant repository::
 
-    # Make new project directory following the naming convention
+    # Create new project directory following the naming convention.
     mkdir purpose-transport-protocol
 
-    # Install build tooling (Arduino-Makefile)
-    cp tools/Bare-Arduino-Project/Makefile-* purpose-transport-protocol/
+    # Initialize project directory by bootstrapping from another project.
+    cp generic/{Makefile,platformio.ini} purpose-transport-protocol/
 
 
 Libraries as git submodules

@@ -167,10 +167,6 @@
 .. _Bridge Library for Yún devices: https://www.arduino.cc/en/Reference/YunBridgeLibrary
 
 .. Tools
-.. _Ino: http://inotool.org
-.. _Arduino-Makefile: https://github.com/sudar/Arduino-Makefile
-.. _makeESPArduino: https://github.com/plerup/makeEspArduino
-.. _Bare-Arduino-Project: https://github.com/ladislas/Bare-Arduino-Project
 .. _HTTPie: http://httpie.org
 .. _HttpRequester: https://addons.mozilla.org/en-us/firefox/addon/httprequester/
 

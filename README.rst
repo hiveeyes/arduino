@@ -35,8 +35,7 @@ There are firmwares for ATmega328_, ESP8266_ and ESP32_ MCUs.
 * ``transport`` name of the physical transport mechanism, e.g. *rfm69*, *gprs* or *wifi*.
 * ``protocol``  name of the transmission protocol, e.g. *beradio*, *mqtt*, *http* or *any*.
 
-For building, most programs are using `PlatformIO`_, but some are still using
-`Arduino-Makefile`_ and even others may be still based on `Ino`_.
+For building, all programs are using `PlatformIO`_.
 
 
 *****
@@ -59,7 +58,7 @@ PlatformIO
 ----------
 We recommend to use `PlatformIO`_. Installing all dependency libraries will be managed
 automatically, accurately, and reproducibly, and you will be able to choose between
-CLI and UI operations.
+CLI and UI operations, see `PlatformIO IDE`_.
 
 Arduino IDE
 -----------
