@@ -131,7 +131,7 @@
 .. Foundation technologies, protocols and subsystem services
 .. _Bencode: https://en.wikipedia.org/wiki/Bencode
 .. _Bencoding: https://wiki.theory.org/BitTorrentSpecification#Bencoding
-.. _MQTT: http://mqtt.org/
+.. _MQTT: https://mqtt.org/
 .. _UUID4: https://en.wikipedia.org/wiki/Universally_unique_identifier#Version_4_.28random.29
 .. _ELF: https://en.wikipedia.org/wiki/Executable_and_Linkable_Format
 .. _STL: https://en.wikipedia.org/wiki/Standard_Template_Library
@@ -178,6 +178,8 @@
 .. _Arduino Uno: https://en.wikipedia.org/wiki/Arduino_Uno
 .. _multi-hop: https://en.wikipedia.org/wiki/Multi-hop_routing
 .. _LinkIt Smart 7688 Duo: https://community.hiveeyes.org/t/linkit-smart-7688-duo/105
+.. _picocom: https://github.com/npat-efault/picocom
+.. _yak shaving: http://www.catb.org/jargon/html/Y/yak-shaving.html
 
 
 .. Clearfix in reStructuredText

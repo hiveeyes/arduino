@@ -1,49 +1,43 @@
 // vim: tabstop=8 expandtab shiftwidth=4 softtabstop=4
-/*
+/**
+ *
+ * Generic software breadboard for nodes, relays, and gateways.
+ *
+ * Copyright (C) 2014-2017  Richard Pobering <richard@hiveeyes.org>, https://hiveeyes.org
+ * Copyright (C) 2014-2023  Andreas Motl <andreas@hiveeyes.org>, https://hiveeyes.org
+ *
+ * Firmware file: "generic.ino".
+ *
+ * All configuration adjustments regarding the behavior and operation mode
+ * (node vs. relay vs. gateway), should be conducted within the "config.h"
+ * file.
+ *
+ * Please create an issue if you think something is not working properly,
+ * or if some feature is missing.
+ *
+ * -- https://github.com/hiveeyes/arduino/issues
+ *
+**/
 
-   Generic software breadboard for nodes, relays, and gateways.
+/**
 
-   This firmware can satisfy different purposes:
+The firmware serves different purposes, you can configure it as a »sensor node«,
+»telemetry relay node«, or »network gateway node«.
 
-   - A sensor node collects sensor data, encodes it with BERadio
-     and sends it through a RFM69 radio module, either directly
-     to a gateway node, or to an intermediary telemetry relay node.
+- A **sensor node** collects sensor data, encodes it using BERadio, and sends it through
+  a RFM69 radio module directly to a network gateway node, or to an intermediary telemetry
+  relay node.
 
-   - A telemetry relay node receives radio signals on RFM69
-     and emits them to RFM95 (LoRa). The messages are processed
-     opaque, no decoding takes place here.
+- A **telemetry relay node** receives radio signals on RFM69 and emits them to RFM95
+  (LoRa). The messages are processed opaque, no decoding takes place here.
 
-   - A gateway node receives RFM95 (LoRa) radio signals and emits
-     the payloads to its UART interface connected to the gateway
-     SoC (e.g. a RaspberryPi) running the BERadio forwarder.
+- The **network gateway node** receives RFM95 (LoRa) radio signals and emits the message
+  payloads to its UART interface connected to the gateway computer.
 
-   The BERadio forwarder will decode the data according
-   to the BERadio specification and forward it to the
-   MQTT bus serialized as JSON dictionary, all of which
-   is beyond the scope of this MCU code.
-
-   Software release 0.16.0
-
-   Copyright (C) 2014-2017  Richard Pobering <richard@hiveeyes.org>
-   Copyright (C) 2014-2023  Andreas Motl <andreas@hiveeyes.org>
-
-   <https://hiveeyes.org>
-
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 3 of the License, or
-   (at your option) any later version.
-
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
-
-   You should have received a copy of the GNU General Public License
-   along with this program; if not, see:
-   <http://www.gnu.org/licenses/gpl-3.0.txt>,
-   or write to the Free Software Foundation,
-   Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA
+- The **gateway computer**, for example a Linux machine like the Raspberry Pi, is running
+  the BERadio forwarder application. It will decode the data
+  according to the BERadio specification, and forward it to the TCP/IP network using the
+  `MQTT`_ protocol, serialized as JSON dictionary.
 
 -------------------------------------------------------------------------
 
@@ -66,23 +60,49 @@
    This code is for use with HE_BERadio at the gateway side, e.g.
    as a forwarder from serial to mqtt.
 
-   The creation of this code is strongly influenced by other projects, so
-   credits goes to
-   them: <https://hiveeyes.org/docs/beradio/README.html#credits>
+   The creation of this code is strongly influenced by the excellent work
+   from a number of people on other projects.
+
+   - BERadio: https://hiveeyes.org/docs/beradio/credits.html
 
    Feel free to adapt this code to your own needs.
 
 -------------------------------------------------------------------------
 
-   Futher informations can be obtained at:
+   Further information can be obtained at:
 
    Project                      https://hiveeyes.org/
-   Source code                  https://github.com/hiveeyes/
+   Source code                  https://github.com/hiveeyes
 
    Documentation
    System                       https://hiveeyes.org/docs/system/
    Arduino                      https://hiveeyes.org/docs/arduino/
    BERadio                      https://hiveeyes.org/docs/beradio/
+
+   BERadio                      https://hiveeyes.org/docs/beradio/
+   BERadio specification        https://hiveeyes.org/docs/beradio/beradio.html
+   BERadio forwarder            https://hiveeyes.org/docs/beradio/handbook.html
+
+-------------------------------------------------------------------------
+
+   License
+   -------
+
+   This program is free software; you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation; either version 3 of the License, or
+   (at your option) any later version.
+
+   This program is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+
+   You should have received a copy of the GNU General Public License
+   along with this program; if not, see:
+   <http://www.gnu.org/licenses/gpl-3.0.txt>,
+   or write to the Free Software Foundation,
+   Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA
 
 -------------------------------------------------------------------------
 

@@ -1,6 +1,6 @@
 // Specific configuration settings for overriding settings in `config.h`.
 
-// Role
+// Operation mode
 #define IS_NODE                 true
 
 // General
