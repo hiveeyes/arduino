@@ -43,7 +43,10 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       scale-adjust: ${{ steps.changes.outputs.scale-adjust }}
+      gateway-rfm69: ${{ steps.changes.outputs.gateway-rfm69 }}
+      generic: ${{ steps.changes.outputs.generic }}
       node-gprs-http: ${{ steps.changes.outputs.node-gprs-http }}
+      node-rfm69: ${{ steps.changes.outputs.node-rfm69 }}
       node-wifi-mqtt: ${{ steps.changes.outputs.node-wifi-mqtt }}
       node-esp8266-generic: ${{ steps.changes.outputs.node-esp8266-generic }}
       node-esp32-generic: ${{ steps.changes.outputs.node-esp32-generic }}
@@ -57,8 +60,14 @@ jobs:
           filters: |
             scale-adjust:
               - 'scale-adjust/**'
+            gateway-rfm69:
+              - 'gateway-rfm69-*/**'
+            generic:
+              - 'generic/**'
             node-gprs-http:
               - 'node-gprs-http/**'
+            node-rfm69:
+              - 'node-rfm69-*/**'
             node-wifi-mqtt:
               - 'node-wifi-mqtt/**'
             node-esp8266-generic:
@@ -112,10 +121,28 @@ jobs:
         run: |
           pio run --project-dir scale-adjust/HX711
 
+      - name: Build gateway-rfm69-*
+        if: ${{ needs.changes.outputs.gateway-rfm69 == 'true' }}
+        run: |
+          pio run --project-dir gateway-rfm69-beradio
+          pio run --project-dir gateway-rfm69-csv-sdcard
+          pio run --project-dir gateway-rfm69-csv-uart
+
+      - name: Build generic
+        if: ${{ needs.changes.outputs.generic == 'true' }}
+        run: |
+          pio run --project-dir generic
+
       - name: Build node-gprs-http
         if: ${{ needs.changes.outputs.node-gprs-http == 'true' }}
         run: |
           pio run --project-dir node-gprs-http
+
+      - name: Build node-rfm69-*
+        if: ${{ needs.changes.outputs.node-rfm69 == 'true' }}
+        run: |
+          pio run --project-dir node-rfm69-beradio
+          pio run --project-dir node-rfm69-csv
 
       - name: Build node-wifi-mqtt
         if: ${{ needs.changes.outputs.node-wifi-mqtt == 'true' }}
