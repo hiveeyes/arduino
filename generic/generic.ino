@@ -24,8 +24,8 @@
 
    Software release 0.16.0
 
-   Copyright (C) 2014-2016  Richard Pobering <einsiedlerkrebs@ginnungagap.org>
-   Copyright (C) 2014-2016  Andreas Motl <andreas.motl@elmyra.de>
+   Copyright (C) 2014-2017  Richard Pobering <richard@hiveeyes.org>
+   Copyright (C) 2014-2023  Andreas Motl <andreas@hiveeyes.org>
 
    <https://hiveeyes.org>
 
@@ -168,7 +168,7 @@ Terrine terrine;
 #endif
 #if HE_SCALE
     #include <HX711.h>                      // https://github.com/bogde/HX711
-    HX711 scale(HX711_DT, HX711_SCK);
+    HX711 scale;
     void readScale();
     #ifndef HE_CONTAINERS
         float wght0 = 0, wght1 = 0;
@@ -461,6 +461,7 @@ void setup() {
         #if DEBUG_SENSORS
             terrine.log("Scale");
         #endif
+        scale.begin(HX711_DT, HX711_SCK);
         scale.set_offset(HX711_OFFSET);          // the offset of the scale, is raw output without any weight, get this first and then do set.scale
         scale.set_scale(HX711_KNOWN_WEIGHT);           // this is the difference between the raw data of a known weight and an emprty scale
     #endif
@@ -934,4 +935,3 @@ void BERadioMessage::dprint(int value) {
     terrine.log(value);
 }
 #endif
-
