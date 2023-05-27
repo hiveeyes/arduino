@@ -2,12 +2,18 @@
  *
  * Generic software breadboard for nodes, relays, and gateways.
  *
- * Configuration file: "config.h".
- * All settings for controlling the behavior and role
- * of the firmware should be made inside this file.
- *
  * Copyright (C) 2014-2017  Richard Pobering <richard@hiveeyes.org>
  * Copyright (C) 2014-2023  Andreas Motl <andreas@hiveeyes.org>
+ *
+ * Configuration file: "config.h".
+ *
+ * All configuration adjustments regarding the behavior and operation mode
+ * (node vs. relay vs. gateway), should be conducted within this file.
+ *
+ * Please create an issue if you think something is not working properly,
+ * or if some feature is missing.
+ *
+ * -- https://github.com/hiveeyes/arduino/issues
  *
 **/
 

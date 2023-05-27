@@ -15,7 +15,7 @@ docs-html: virtualenv
 
 virtualenv: setup-virtualenv
 	@echo Install packages from requirements-docs.txt
-	$(pip) install --upgrade --requirement requirements-docs.txt
+	$(pip) install --quiet --upgrade --requirement requirements-docs.txt
 
 
 
