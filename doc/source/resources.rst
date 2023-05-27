@@ -81,11 +81,15 @@
 .. -----------
 
 .. Atmel
+.. _Atmel: https://en.wikipedia.org/wiki/Atmel
+.. _Microchip: https://en.wikipedia.org/wiki/Microchip_Technology
+.. _AVR microcontroller family: https://en.wikipedia.org/wiki/MegaAVR
 .. _ATmega328: https://en.wikipedia.org/wiki/ATmega328
 .. _Seeeduino Stalker v2.3: http://wiki.seeedstudio.com/wiki/Seeeduino_Stalker_v2.3
 
-.. ESP8266
+.. Espressif
 .. _ESP8266: https://en.wikipedia.org/wiki/ESP8266
+.. _ESP32: https://en.wikipedia.org/wiki/ESP32
 .. _Adafruit Feather HUZZAH: https://www.adafruit.com/product/2821
 .. _RFM69 to MQTT gateway using ESP8266: https://harizanov.com/2015/11/rfm69-to-mqtt-gateway-using-esp8266/
 
@@ -172,7 +176,12 @@
 
 
 .. _PlatformIO: https://platformio.org/
+.. _PlatformIO IDE: https://platformio.org/platformio-ide
 .. _NodeMCU: https://en.wikipedia.org/wiki/NodeMCU
+
+.. _Arduino Uno: https://en.wikipedia.org/wiki/Arduino_Uno
+.. _multi-hop: https://en.wikipedia.org/wiki/Multi-hop_routing
+.. _LinkIt Smart 7688 Duo: https://community.hiveeyes.org/t/linkit-smart-7688-duo/105
 
 
 .. Clearfix in reStructuredText

@@ -1,11 +1,8 @@
-/.idea
-.venv*
+.idea
 .build
-ino.ini
+.pio
+.venv*
 *.swp
-tags
 /doc/build
 /bin
 /tmp
-.pio
-.venv*
