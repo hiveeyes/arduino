@@ -1,15 +1,15 @@
 // vim: tabstop=8 expandtab shiftwidth=4 softtabstop=4
 /*
 
-   Generic software breadboard for nodes, transceivers and gateways.
+   Generic software breadboard for nodes, relays, and gateways.
 
    This firmware can satisfy different purposes:
 
    - A sensor node collects sensor data, encodes it with BERadio
-     and sends it through a RFM69 radio module to a gateway node
-     or a protocol transceiver node.
+     and sends it through a RFM69 radio module, either directly
+     to a gateway node, or to an intermediary telemetry relay node.
 
-   - A protocol transceiver node receives radio signals on RFM69
+   - A telemetry relay node receives radio signals on RFM69
      and emits them to RFM95 (LoRa). The messages are processed
      opaque, no decoding takes place here.
 
@@ -238,7 +238,7 @@ Terrine terrine;
     #include <SPI.h>
     RH_RF95 rh95(RH95_SS, RH95_IRQ);
     uint8_t buf95[RH_RF95_MAX_MESSAGE_LEN];
-    #if HE_RH95 && IS_TRANSCEIVER
+    #if HE_RH95 && IS_RELAY
         void transceive();
         RHReliableDatagram manager95(rh95, RH95_RECEIVER_ID);
     #elif HE_RH95 && IS_GATEWAY
@@ -255,7 +255,7 @@ Terrine terrine;
     #include <SPI.h>
     RH_RF69 rh69(RH69_SS, RH69_IRQ);
     uint8_t buf69[RH69_MAX_MESSAGE_LEN];
-    #if HE_RH69 && IS_TRANSCEIVER
+    #if HE_RH69 && IS_RELAY
         void transceive();
         RHReliableDatagram manager69(rh69, RH69_RECEIVER_ID);
     #elif HE_RH69 && IS_GATEWAY
@@ -333,8 +333,8 @@ void setup() {
         terrine.log("booting: ... ", false);
         #if IS_NODE
             terrine.log("Hiveeyes node ");
-        #elif IS_TRANSCEIVER
-            terrine.log("Hiveeyes transceiver ");
+        #elif IS_RELAY
+            terrine.log("Hiveeyes relay ");
         #else
             terrine.log("Hiveeyes gateway ");
         #endif
@@ -576,7 +576,7 @@ void loop() {
     #endif
 
 
-    #if HE_RH69 && IS_TRANSCEIVER
+    #if HE_RH69 && IS_RELAY
         transceive();
     #endif
     #if HE_RH69 && IS_GATEWAY
@@ -799,7 +799,7 @@ void receivePackages(){
     }
 #endif
 */
-#if HE_RH95 && HE_RH69 && IS_TRANSCEIVER
+#if HE_RH95 && HE_RH69 && IS_RELAY
     void transceive(){
         digitalWrite(RH95_SS, HIGH);
         if (manager69.available()){

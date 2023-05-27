@@ -14,16 +14,16 @@ digraph generic_firmware_synopsis {
     "sensor-1"      [label="Sensor node 1"];
     "sensor-2"      [label="Sensor node 2"];
     "sensor-N"      [label="Sensor node N"];
-    "transceiver"   [label="Protocol transceiver node"];
+    "relay"         [label="Telemetry relay node"];
     "gateway"       [label="Gateway node"];
     "soc"           [label="SoC machine", style=dashed];
 
     // Graph edges represent radio families and
     // protocols spoken between node units.
-    "sensor-1"      -> "transceiver"    [label="RFM69"];
-    "sensor-2"      -> "transceiver";
-    "sensor-N"      -> "transceiver";
-    "transceiver"   -> "gateway"        [label="RFM95\n(LoRa)"];
+    "sensor-1"      -> "relay"          [label="RFM69"];
+    "sensor-2"      -> "relay";
+    "sensor-N"      -> "relay";
+    "relay"         -> "gateway"        [label="RFM95\n(LoRa)"];
     "gateway"       -> "soc"            [label="UART", style=dashed];
 
     // Draw a dotted line between sensor-2
