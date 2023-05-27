@@ -180,7 +180,7 @@ The next generation firmwares are currently a work in progress.
 
     * - :ref:`generic-firmware`
       - We started working on `generic.ino`_, a flexible software breadboard
-        for RFM-based nodes, transceivers and gateways in June 2016.
+        for RFM-based nodes, relays, and gateways, in June 2016.
 
     * - node-pipa
       - We started working on the *Hiveeyes Pipa Datalogger*, a playground

@@ -1,6 +1,6 @@
 /**
  *
- * Generic software breadboard for nodes, transceivers and gateways.
+ * Generic software breadboard for nodes, relays, and gateways.
  *
  * Configuration file: "config.h".
  * All settings for controlling the behavior and role
@@ -30,7 +30,7 @@
 #define HE_CONTAINERS             false
 
 #define IS_NODE                   false
-#define IS_TRANSCEIVER            false
+#define IS_RELAY                  false
 #define IS_GATEWAY                false
 
 #define HE_RFM69                  false              // LowPowerLab RFM69 library
@@ -48,7 +48,7 @@
  *
  * Synopsis:
  *
- *     PLATFORMIO_BUILD_FLAGS="-D CUSTOM_CONFIG=config_foo.h" pio run --environment=transceiver
+ *     PLATFORMIO_BUILD_FLAGS="-D CUSTOM_CONFIG=config_foo.h" pio run --environment=relay
  *
  */
 
@@ -144,14 +144,14 @@
 
 
 /*
-#if IS_TRANSCEIVER
+#if IS_RELAY
     #define IS_NODE                false
     #define IS_GATEWAY             false
 #elif IS_GATEWAY
     #define IS_NODE                false
-    #define IS_TRANSCEIVER         false
+    #define IS_RELAY               false
 #elif IS_NODE
-    #define IS_TRANSCEIVER         false
+    #define IS_RELAY               false
     #define IS_GATEWAY             false
 #endif
 */
@@ -205,8 +205,8 @@
     // RadioHead's HE_RH69radio lib
     #if HE_RH69
         #define RH69_NODE_ID          99             // Radio topology
-        #define RH69_RECEIVER_ID       1             // ID of next receiver (gateway | transceiver)
-        //#define RH69_TRANSCEIVER_ID   3
+        #define RH69_RECEIVER_ID       1             // ID of next hop (relay | gateway)
+        //#define RH69_RELAY_ID          3
 
         #define RH69_IRQ              2             // radio pins
         #define RH69_SS               10              //
@@ -220,9 +220,9 @@
     #if HE_RH95
 
         #define RH95_NODE_ID          99             // Radio topology
-        #define RH95_RECEIVER_ID       1             // ID of next receiver (gateway | transceiver)
-        //#define RH95_TRANSCEIVER_ID   3
-        #if IS_TRANSCEIVER
+        #define RH95_RECEIVER_ID       1             // ID of next hop (relay | gateway)
+        //#define RH95_RELAY_ID          3
+        #if IS_RELAY
             #if !defined(RH95_IRQ)
                 #define RH95_IRQ              3             // radio pins
             #endif

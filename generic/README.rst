@@ -22,7 +22,7 @@ Generic firmware
 About
 *****
 
-A flexible software breadboard for sensor-, transceiver- and gateway-nodes transmitting
+A flexible software breadboard for sensor-, relay-, and gateway-nodes, transmitting
 telemetry data in multi-hop radio link environments. It is a hybrid/unified single-file
 firmware `generic.ino`_, with an accompanying configuration settings header file, `config.h`_.
 
@@ -72,9 +72,9 @@ The firmware serves different purposes.
 
 - A sensor node collects sensor data, encodes it with :ref:`BERadio`
   and sends it through a RFM69 radio module to a gateway node
-  or a protocol transceiver node.
+  or a telemetry relay node.
 
-- A protocol transceiver node receives radio signals on RFM69
+- A telemetry relay node receives radio signals on RFM69
   and emits them to RFM95 (LoRa). The messages are processed
   opaque, no decoding takes place here.
 
@@ -98,7 +98,7 @@ Workbench
     Three nodes, each running the "generic" firmware in a different configuration:
 
         - A sensor node emitting telemetry data via RFM69 (left)
-        - A transceiver node receiving RFM69 and emitting RFM95 LoRa (middle)
+        - A relay node receiving RFM69 and emitting RFM95 LoRa (middle)
         - A gateway node receiving RFM95 LoRa and sending it to the UART interface (right)
 
 .. figure:: https://ptrace.hiveeyes.org/2016-07-08_Hiveeyes%20generic%20node%20RFM69-to-RFM95%20picocom.png
@@ -138,7 +138,7 @@ Configuration
 =============
 
 In order to configure and build the firmware for different variants/roles (node vs.
-transceiver vs. gateway), the `PlatformIO`_ configuration file ``platformio.ini``
+relay vs. gateway), the `PlatformIO`_ configuration file ``platformio.ini``
 provides corresponding environment sections, which you can adjust to your needs.
 
 Try those commands to invoke builds for the individual target environments::
@@ -149,7 +149,7 @@ Try those commands to invoke builds for the individual target environments::
     # Run build for individual environments.
     pio run --environment=node-rfm69
     pio run --environment=node-rh69
-    pio run --environment=transceiver
+    pio run --environment=relay
     pio run --environment=gateway-rh69
     pio run --environment=gateway-rh95
     pio run --environment=gateway-rh95-linkit7688
@@ -161,7 +161,7 @@ directive.
 
 You can also invoke the build by defining ``build_flags`` on the command line, like::
 
-    PLATFORMIO_BUILD_FLAGS="-D CUSTOM_CONFIG=config_foobar.h" pio run --environment=transceiver
+    PLATFORMIO_BUILD_FLAGS="-D CUSTOM_CONFIG=config_foobar.h" pio run --environment=relay
 
 
 .. _About the generic firmware: https://community.hiveeyes.org/t/about-the-generic-firmware/317

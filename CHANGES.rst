@@ -185,7 +185,7 @@ in-progress
 - Add :ref:`open-hive-firmware-gprs` from Clemens Gruber as "`node-gprs-http.ino`_". Thanks, Clemens!
 - Satisfy dependencies of “node-gprs-http” per git submodules (mostly), accompanied by Arduino Makefile yak shaving.
 - Add :ref:`scale-adjust-firmware`. Thanks again, Clemens!
-- Finish restructuring work on "generic" sketch. Proof-of-Concept "node69-transceiver69x95-gateway95" is working!
+- Finish restructuring work on "generic" sketch. Proof-of-Concept ``node69-relay69x95-gateway95`` is working!
 
 
 2016-07-04 0.7.1

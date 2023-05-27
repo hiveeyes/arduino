@@ -134,7 +134,7 @@ void BERadioMessage::send(char* buffer, int length) {
     terrine.log("msg: ", false);
     terrine.log(buffer);
 
-    //manager69.sendtoWait(payload.c_str(), payload.length(), RH69_TRANSCEIVER_ID);
+    //manager69.sendtoWait(payload.c_str(), payload.length(), RH69_RELAY_ID);
 
     // C++ std::string
     //uint8_t *buf69 = new uint8_t[payload.length() + 1];
