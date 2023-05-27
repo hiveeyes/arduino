@@ -50,5 +50,4 @@ Build on your workstation
     # Upload to MCU
     make upload
 
-.. note:: You might want to adjust the appropriate Makefile to match your environment.
-
+.. tip:: Please inspect the ``platformio.ini`` file, and adjust it to match your setup.

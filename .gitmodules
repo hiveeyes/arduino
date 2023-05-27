@@ -1,9 +1,0 @@
-[submodule "tools/Arduino-Makefile"]
-	path = tools/Arduino-Makefile
-	url = https://github.com/sudar/Arduino-Makefile
-[submodule "tools/Bare-Arduino-Project"]
-	path = tools/Bare-Arduino-Project
-	url = https://github.com/ladislas/Bare-Arduino-Project
-[submodule "tools/makeEspArduino"]
-	path = tools/makeEspArduino
-	url = https://github.com/plerup/makeEspArduino
