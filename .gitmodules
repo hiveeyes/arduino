@@ -1,47 +1,9 @@
-[submodule "libraries/RFM69"]
-	path = libraries/RFM69
-	url = https://github.com/LowPowerLab/RFM69
-[submodule "libraries/SPIFlash"]
-	path = libraries/SPIFlash
-	url = https://github.com/LowPowerLab/SPIFlash
-[submodule "libraries/LowPower"]
-	path = libraries/LowPower
-	url = https://github.com/LowPowerLab/LowPower
-[submodule "libraries/HX711"]
-	path = libraries/HX711
-	url = https://github.com/bogde/HX711
-[submodule "libraries/OneWire"]
-	path = libraries/OneWire
-	url = https://github.com/PaulStoffregen/OneWire
-[submodule "libraries/WirelessProgramming"]
-	path = libraries/WirelessProgramming
-	url = https://github.com/einsiedlerkrebs/WirelessProgramming
 [submodule "tools/Arduino-Makefile"]
 	path = tools/Arduino-Makefile
 	url = https://github.com/sudar/Arduino-Makefile
 [submodule "tools/Bare-Arduino-Project"]
 	path = tools/Bare-Arduino-Project
 	url = https://github.com/ladislas/Bare-Arduino-Project
-[submodule "libraries/DHT"]
-	path = libraries/DHT
-	url = https://github.com/markruys/arduino-DHT
-[submodule "libraries/EmBencode"]
-	path = libraries/EmBencode
-	url = https://github.com/hiveeyes/embencode
-	branch = fix-typeinfo-reference
-[submodule "libraries/StandardCplusplus"]
-	path = libraries/StandardCplusplus
-	url = https://github.com/hiveeyes/StandardCplusplus
-	branch = gcc5-fixups
-[submodule "libraries/RadioHead"]
-	path = libraries/RadioHead
-	url = https://github.com/Yveaux/RadioHead
-[submodule "libraries/MemoryFree"]
-	path = libraries/MemoryFree
-	url = https://github.com/McNeight/MemoryFree
-[submodule "libraries/RobTillaart-Arduino"]
-	path = libraries/RobTillaart-Arduino
-	url = https://github.com/RobTillaart/Arduino
 [submodule "tools/makeEspArduino"]
 	path = tools/makeEspArduino
 	url = https://github.com/plerup/makeEspArduino
