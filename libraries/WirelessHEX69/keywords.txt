@@ -1,8 +1,0 @@
-CheckForWirelessHEX	KEYWORD2
-HandleWirelessHEXData	KEYWORD2
-readSerialLine	KEYWORD2
-BYTEfromHEX	KEYWORD2
-waitForAck	KEYWORD2
-PrintHex83	KEYWORD2
-resetUsingWatchdog	KEYWORD2
-WirelessHEX	KEYWORD1
