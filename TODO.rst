@@ -107,7 +107,6 @@ Misc
 2017-01-11
 ----------
 - Document ADS1231 patch for ESP8266, write to forum
-- generic.ino: Rename RESCEIVER_ID to RECEIVER_ID
 - Augment calibration sketches to send calibration values to backend?
 - Use PlatformIO
 - Rename repository from "arduino" to "firmware"

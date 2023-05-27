@@ -204,9 +204,9 @@
 
     // RadioHead's HE_RH69radio lib
     #if HE_RH69
-        #define RH69_NODE_ID          99             //    radio topology
-        #define RH69_RESCEIVER_ID       1              // ID of next RESCEIVER (gateway | transceiver)
-        //#define RH69_TRANSCEIVER_ID   3              //
+        #define RH69_NODE_ID          99             // Radio topology
+        #define RH69_RECEIVER_ID       1             // ID of next receiver (gateway | transceiver)
+        //#define RH69_TRANSCEIVER_ID   3
 
         #define RH69_IRQ              2             // radio pins
         #define RH69_SS               10              //
@@ -219,9 +219,9 @@
     // RadioHead's HE_RH95radio lib
     #if HE_RH95
 
-        #define RH95_NODE_ID          99             //       radio topology
-        #define RH95_RESCEIVER_ID       1            // ID of next RESCEIVER (gateway | transceiver)
-        //#define RH95_TRANSCEIVER_ID   3              //
+        #define RH95_NODE_ID          99             // Radio topology
+        #define RH95_RECEIVER_ID       1             // ID of next receiver (gateway | transceiver)
+        //#define RH95_TRANSCEIVER_ID   3
         #if IS_TRANSCEIVER
             #if !defined(RH95_IRQ)
                 #define RH95_IRQ              3             // radio pins

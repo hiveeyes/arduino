@@ -240,10 +240,10 @@ Terrine terrine;
     uint8_t buf95[RH_RF95_MAX_MESSAGE_LEN];
     #if HE_RH95 && IS_TRANSCEIVER
         void transceive();
-        RHReliableDatagram manager95(rh95, RH95_RESCEIVER_ID);
+        RHReliableDatagram manager95(rh95, RH95_RECEIVER_ID);
     #elif HE_RH95 && IS_GATEWAY
         void gatewayReceive95();
-        RHReliableDatagram manager95(rh95, RH95_RESCEIVER_ID);
+        RHReliableDatagram manager95(rh95, RH95_RECEIVER_ID);
     #else
         RHReliableDatagram manager95(rh95, RH95_NODE_ID);
     #endif
@@ -257,10 +257,10 @@ Terrine terrine;
     uint8_t buf69[RH69_MAX_MESSAGE_LEN];
     #if HE_RH69 && IS_TRANSCEIVER
         void transceive();
-        RHReliableDatagram manager69(rh69, RH69_RESCEIVER_ID);
+        RHReliableDatagram manager69(rh69, RH69_RECEIVER_ID);
     #elif HE_RH69 && IS_GATEWAY
         void gatewayReceive69();
-        RHReliableDatagram manager69(rh69, RH69_RESCEIVER_ID);
+        RHReliableDatagram manager69(rh69, RH69_RECEIVER_ID);
     #else
         RHReliableDatagram manager69(rh69, RH69_NODE_ID);
     #endif
@@ -824,7 +824,7 @@ void receivePackages(){
                     digitalWrite(RH69_SS, HIGH);
                     //bool success95 = manager95.sendtoWait(buf69, len69, RH95_GATEWAY_ID);
                     bool success95 = false;
-                    success95 = manager95.sendtoWait(buf69, len69, RH95_RESCEIVER_ID);
+                    success95 = manager95.sendtoWait(buf69, len69, RH95_RECEIVER_ID);
                     #if DEBUG_RADIO
                         terrine.log("SUCCESS95: ", false);
                         terrine.log(success95);
@@ -907,7 +907,7 @@ void receivePackages(){
         // Radio transmission
         if (is_online) {
             #if HE_RH69
-                bool success = manager69.sendtoWait(rh_buffer, length, RH69_RESCEIVER_ID);
+                bool success = manager69.sendtoWait(rh_buffer, length, RH69_RECEIVER_ID);
                 terrine.log("SUCCESS: ", false);
                 terrine.log(success);
                 delay(BERadio_DELAY);
