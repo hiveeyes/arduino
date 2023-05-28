@@ -30,7 +30,7 @@ discussions are taking place these days.
     BERadio/README
     TerkinData/README
     firmware-builder
-    development/index
+    project/index
 
 
 ************
