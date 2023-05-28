@@ -12,10 +12,6 @@
 # All configuration values have a default; values that are commented out
 # serve to show the default.
 
-import sys
-import os
-import shlex
-
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
@@ -30,10 +26,14 @@ import shlex
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
-    'sphinx.ext.intersphinx',
-    'sphinx.ext.todo',
-    'sphinx.ext.ifconfig',
-    'sphinx.ext.graphviz',
+    "myst_parser",
+    "sphinx_copybutton",
+    "sphinx_togglebutton",
+    "sphinx.ext.intersphinx",
+    "sphinx.ext.todo",
+    "sphinx.ext.ifconfig",
+    "sphinx.ext.graphviz",
+    "sphinxext.opengraph",
 ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -42,7 +42,7 @@ templates_path = ['_templates']
 # The suffix(es) of source filenames.
 # You can specify multiple suffix as a list of string:
 # source_suffix = ['.rst', '.md']
-source_suffix = '.rst'
+# source_suffix = '.rst'
 
 # The encoding of source files.
 #source_encoding = 'utf-8-sig'
@@ -51,9 +51,9 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'Hiveeyes Arduino'
-copyright = u'2013-2023, The Hiveeyes Developers'
-author = u'The Hiveeyes Developers'
+project   = 'Hiveeyes Arduino'
+copyright = '2013-2023, The Hiveeyes Developers'
+author    = 'The Hiveeyes Developers'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -82,6 +82,9 @@ language = "en"
 exclude_patterns = [
     "**/.venv*",
     "**/.pio",
+    "_build",
+    "Thumbs.db",
+    ".DS_Store",
 ]
 
 # The reST default role (used for this markup: `text`) to use for all
@@ -108,16 +111,14 @@ pygments_style = 'sphinx'
 # If true, keep warnings as "system message" paragraphs in the built documents.
 #keep_warnings = False
 
-# If true, `todo` and `todoList` produce output, else they produce nothing.
-todo_include_todos = True
-
 
 # -- Options for HTML output ----------------------------------------------
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #html_theme = 'alabaster'
-html_theme = 'sphinx_rtd_theme'
+#html_theme = 'sphinx_rtd_theme'
+html_theme = 'furo'
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
@@ -129,7 +130,7 @@ html_theme = 'sphinx_rtd_theme'
 
 # The name for this set of Sphinx documents.  If None, it defaults to
 # "<project> v<release> documentation".
-#html_title = None
+html_title = "Hiveeyes Arduino"
 
 # A shorter title for the navigation bar.  Default is the same as html_title.
 #html_short_title = None
@@ -178,7 +179,7 @@ html_static_path = ['_static']
 #html_split_index = False
 
 # If true, links to the reST sources are added to the pages.
-#html_show_sourcelink = True
+html_show_sourcelink = True
 
 # If true, "Created using Sphinx" is shown in the HTML footer. Default is True.
 #html_show_sphinx = True
@@ -231,8 +232,8 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-  (master_doc, 'HiveeyesArduino.tex', u'Hiveeyes Arduino Documentation',
-   u'Hiveeyes Developers', 'manual'),
+  (master_doc, 'HiveeyesArduino.tex', 'Hiveeyes Arduino',
+   'Hiveeyes Developers', 'manual'),
 ]
 
 # The name of an image file (relative to this directory) to place at the top of
@@ -261,7 +262,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    (master_doc, 'hiveeyesarduino', u'Hiveeyes Arduino Documentation',
+    (master_doc, 'hiveeyesarduino', 'Hiveeyes Arduino',
      [author], 1)
 ]
 
@@ -275,7 +276,7 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-  (master_doc, 'HiveeyesArduino', u'Hiveeyes Arduino Documentation',
+  (master_doc, 'HiveeyesArduino', 'Hiveeyes Arduino',
    author, 'HiveeyesArduino', 'One line description of project.',
    'Miscellaneous'),
 ]
@@ -316,3 +317,35 @@ intersphinx_mapping = {
 # http://www.sphinx-doc.org/en/stable/ext/intersphinx.html#confval-intersphinx_cache_limit
 intersphinx_cache_limit = 0
 
+sphinx_tabs_valid_builders = ["linkcheck"]
+
+
+
+# == Extension configuration ==========================================
+
+# If true, `todo` and `todoList` produce output, else they produce nothing.
+todo_include_todos = True
+
+# -- Options for MyST -------------------------------------------------
+myst_heading_anchors = 3
+myst_enable_extensions = [
+    "attrs_block",
+    "attrs_inline",
+    "colon_fence",
+    "deflist",
+    "fieldlist",
+    "linkify",
+    "strikethrough",
+    "tasklist",
+]
+
+# -- Options for sphinx-copybutton ------------------------------------
+copybutton_remove_prompts = True
+copybutton_line_continuation_character = "\\"
+copybutton_prompt_text = r">>> |\.\.\. |\$ |sh\$ |PS> |cr> |mysql> |In \[\d*\]: | {2,5}\.\.\.: | {5,8}: "
+copybutton_prompt_is_regexp = True
+
+# -- Options for sphinxext-opengraph ----------------------------------
+ogp_site_url = "https://hiveeyes.org/docs/arduino/"
+ogp_description_length = 300
+ogp_enable_meta_description = True

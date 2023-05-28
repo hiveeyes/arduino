@@ -3,12 +3,13 @@
 # =============
 
 $(eval venv         := .venv)
-$(eval pip          := $(venv)/bin/pip)
-$(eval python       := $(venv)/bin/python)
-$(eval pytest       := $(venv)/bin/pytest)
 $(eval bumpversion  := $(venv)/bin/bumpversion)
+$(eval pip          := $(venv)/bin/pip)
+$(eval pytest       := $(venv)/bin/pytest)
+$(eval python       := $(venv)/bin/python)
+$(eval sphinx       := $(venv)/bin/sphinx-build)
+$(eval sphinx-autobuild := $(venv)/bin/sphinx-autobuild)
 $(eval twine        := $(venv)/bin/twine)
-
 
 # =====
 # Setup

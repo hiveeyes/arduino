@@ -1,2 +1,7 @@
-Sphinx<8
-sphinx_rtd_theme<2
+furo
+myst-parser[linkify]<2
+sphinx<8
+sphinx-copybutton<1
+sphinx-design<1
+sphinx-togglebutton<1
+sphinxext-opengraph<1
