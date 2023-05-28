@@ -2,7 +2,7 @@
 
 .. include:: ../../../resources.rst
 
-.. _changes:
+.. _homie-basic-changes:
 
 #######
 CHANGES

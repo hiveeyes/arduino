@@ -11,6 +11,17 @@ $(eval sphinx       := $(venv)/bin/sphinx-build)
 $(eval sphinx-autobuild := $(venv)/bin/sphinx-autobuild)
 $(eval twine        := $(venv)/bin/twine)
 
+
+# =============
+# Miscellaneous
+# =============
+all:
+	@echo "Nothing to do."
+
+clean:
+	@echo "Nothing to do."
+
+
 # =====
 # Setup
 # =====

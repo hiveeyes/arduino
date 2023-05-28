@@ -1,7 +1,7 @@
 .. include:: ../../../resources.rst
 
 .. _node-esp32-generic:
-
+.. _bienenwaage-5.0:
 
 ###########################
 Bienenwaage 5.0 TTGO-T-CALL

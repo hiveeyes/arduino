@@ -40,7 +40,7 @@ Development
 - Version 1.15 MQTT_Test_wg_HX711_V1.1 - V1.1f sind die einzel Schritte dahin
 - Version 1.15 u.a. Setup & Haupteil vereinfacht - jetzt DeepSleep in Main Loop aufgerufen, fürher separater Codezweig in SetupPfad
 - Version 1.15 Code passt zu Fritzing Bienenwaage 4.2 5V CN3064.fzz
-- Version 1.15 Kalibrierung mit Sketch "Kalibrierung f_r_Waage_3.0_Demos_" durchgeführt
+- Version 1.15 Kalibrierung mit Sketch ``Kalibrierung f_r_Waage_3.0_Demos_`` durchgeführt
 - Version 1.15 Aktuell nur ohne Sensor SD18B20 möglich da PIN für Waage benötigt wird
 - Version 1.15 Farbcode Anschlußkabel BOSCHE H40A
 - Version 1.15 ToDo Test ob Jumper D8 möglich der nach dem Booten geschlossen wird.

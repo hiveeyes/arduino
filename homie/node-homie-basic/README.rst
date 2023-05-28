@@ -215,10 +215,10 @@ Backlog
 
 .. todo::
 
-- Improve documentation at all
-- Document how to determine calibration values (i.e. "Use sketch BeeScale-Calibration to get these values").
-  Would it be possible to build it into the main firmware and run it conditionally somehow?
-- Document how to determine scale's temperature compensation values.
+    - Improve documentation at all
+    - Document how to determine calibration values (i.e. "Use sketch BeeScale-Calibration to get these values").
+      Would it be possible to build it into the main firmware and run it conditionally somehow?
+    - Document how to determine scale's temperature compensation values.
 
 
 .. _Homie custom settings: https://homie-esp8266.readme.io/docs/custom-settings
