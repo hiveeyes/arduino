@@ -185,6 +185,8 @@ Usage
 
 .. highlight:: bash
 
+Build for embedded targets
+==========================
 ::
 
     # Get source code.
@@ -194,8 +196,21 @@ Usage
     # Build examples for all embedded platforms.
     make
 
-    # Build and run examples on host platform.
+Build individual programs::
+
+    PLATFORMIO_SRC_DIR=csv pio run --environment=avr328
+
+Build and run on POSIX
+======================
+Rebuild and run all examples::
+
     make run
+
+Run individual example::
+
+    make csv
+    make json
+    make urlencoded
 
 
 ********

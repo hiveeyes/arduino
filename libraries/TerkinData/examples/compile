@@ -2,18 +2,23 @@
 # Build example programs against glibc.
 # Usage: ./compile csv_basic.cpp
 
+BUILD_DIR="${BUILD_DIR:-.build}"
+mkdir -p ${BUILD_DIR}
+
 INPUT=$1
-OUTPUT=build/$(basename $INPUT ".cpp")
+OUTPUT=${BUILD_DIR}/$(basename $INPUT ".cpp")
 
 LIB_DIR="../.."
 TERRINE="${LIB_DIR}/Terrine"
 TERKINDATA="${LIB_DIR}/TerkinData"
-ARDUINOJSON="${LIB_DIR}/ArduinoJson"
+# TODO: Acquire `ArduinoJson` independently of the `avr328` environment.
+ARDUINOJSON="${PLATFORMIO_WORKSPACE_DIR}/libdeps/avr328/ArduinoJson"
 INCLUDE="-I$TERRINE -I$TERKINDATA -I$ARDUINOJSON"
 
 #CPP=g++
+#CPP=/usr/local/bin/g++-12
 CPP=clang
-#CPP=/opt/local/bin/g++-mp-5
+#CPP=/usr/local/Cellar/llvm/16.0.1/bin/clang
 
 # ./sim/compat.h
 CPP_FLAGS="-x c++ -lstdc++ -std=gnu++11 -Os -fno-exceptions -ffunction-sections -fdata-sections -fpermissive"

@@ -12,4 +12,4 @@ upload: setup-virtualenv
 
 setup-virtualenv:
 	@test -e $(python) || python3 -m venv $(venvpath)
-	$(pip) install platformio
+	$(pip) --quiet install platformio
