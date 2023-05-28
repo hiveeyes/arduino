@@ -46,10 +46,9 @@ Setup
 
 Source code
 ===========
-Get source code with all dependency libraries and tools::
+Acquire source code repository::
 
-    git clone --recursive https://github.com/hiveeyes/arduino
-
+    git clone https://github.com/hiveeyes/arduino
 
 Toolchain
 =========

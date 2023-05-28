@@ -190,7 +190,7 @@ Build for embedded targets
 ::
 
     # Get source code.
-    git clone --recursive https://github.com/hiveeyes/arduino
+    git clone https://github.com/hiveeyes/arduino
     cd arduino/libraries/TerkinData/examples
 
     # Build examples for all embedded platforms.
