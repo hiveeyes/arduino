@@ -42,44 +42,45 @@ jobs:
   changes:
     runs-on: ubuntu-latest
     outputs:
-      scale-adjust: ${{ steps.changes.outputs.scale-adjust }}
-      gateway-rfm69: ${{ steps.changes.outputs.gateway-rfm69 }}
-      generic: ${{ steps.changes.outputs.generic }}
-      node-gprs-http: ${{ steps.changes.outputs.node-gprs-http }}
-      node-rfm69: ${{ steps.changes.outputs.node-rfm69 }}
-      node-wifi-mqtt: ${{ steps.changes.outputs.node-wifi-mqtt }}
-      node-esp8266-generic: ${{ steps.changes.outputs.node-esp8266-generic }}
-      node-esp32-generic: ${{ steps.changes.outputs.node-esp32-generic }}
-      node-wifi-mqtt-homie: ${{ steps.changes.outputs.node-wifi-mqtt-homie }}
-      node-yun-http: ${{ steps.changes.outputs.node-yun-http }}
+      homie: ${{ steps.changes.outputs.homie }}
+      backdoor-any-rfm69: ${{ steps.changes.outputs.backdoor-any-rfm69 }}
+      backdoor-multihop: ${{ steps.changes.outputs.backdoor-multihop }}
+      backdoor-node-wifi-mqtt: ${{ steps.changes.outputs.backdoor-node-wifi-mqtt }}
+      openhive-any-rfm69: ${{ steps.changes.outputs.openhive-any-rfm69 }}
+      openhive-gsm-wifi: ${{ steps.changes.outputs.openhive-gsm-wifi }}
+      openhive-yun: ${{ steps.changes.outputs.openhive-yun }}
+      openhive-scale-adjust: ${{ steps.changes.outputs.openhive-scale-adjust }}
+      trudering-bienenwaage-20: ${{ steps.changes.outputs.trudering-bienenwaage-20 }}
+      trudering-bienenwaage-50: ${{ steps.changes.outputs.trudering-bienenwaage-50 }}
     steps:
       - uses: actions/checkout@v3
       - uses: dorny/paths-filter@v2
         id: changes
         with:
           filters: |
-            scale-adjust:
-              - 'scale-adjust/**'
-            gateway-rfm69:
-              - 'gateway-rfm69-*/**'
-            generic:
+            homie:
+              - 'homie/**'
+            backdoor-any-rfm69:
+              - 'backdoor/gateway-rfm69-beradio/**'
+              - 'backdoor/node-rfm69-beradio/**'
+            backdoor-multihop:
               - 'generic/**'
-            node-gprs-http:
-              - 'node-gprs-http/**'
-            node-rfm69:
-              - 'node-rfm69-*/**'
-            node-wifi-mqtt:
-              - 'node-wifi-mqtt/**'
-            node-esp8266-generic:
-              - 'node-esp8266-generic/**'
-            node-esp32-generic:
-              - 'node-esp32-generic/**'
-            node-wifi-mqtt-homie:
-              - 'node-wifi-mqtt-homie/**'
-              - 'node-wifi-mqtt-homie-battery/**'
-              - 'node-wifi-mqtt-homie-calibration/**'
-            node-yun-http:
-              - 'node-yun-http/**'
+            backdoor-node-wifi-mqtt:
+              - 'backdoor/node-wifi-mqtt/**'
+            openhive-any-rfm69:
+              - 'openhive/gateway-rfm69-csv-sdcard/**'
+              - 'openhive/gateway-rfm69-csv-uart/**'
+              - 'openhive/node-rfm69-csv/**'
+            openhive-gsm-wifi:
+              - 'openhive/openhive-gsm-wifi/**'
+            openhive-scale-adjust:
+              - 'openhive/scale-adjust/**'
+            openhive-yun:
+              - 'openhive/openhive-yun/**'
+            trudering-bienenwaage-20:
+              - 'trudering/bienenwaage-2.0/**'
+            trudering-bienenwaage-50:
+              - 'trudering/bienenwaage-5.0/**'
 
   build:
     needs: changes
@@ -111,62 +112,78 @@ jobs:
         run: |
           pip install --upgrade --requirement requirements-test.txt
 
-      - name: Build scale-adjust / ADS1231
-        if: ${{ needs.changes.outputs.scale-adjust == 'true' }}
-        run: |
-          pio run --project-dir scale-adjust/ADS1231
 
-      - name: Build scale-adjust / HX711
-        if: ${{ needs.changes.outputs.scale-adjust == 'true' }}
-        run: |
-          pio run --project-dir scale-adjust/HX711
+      # ------------------------------------------
+      #   Backdoor
+      # ------------------------------------------
 
-      - name: Build gateway-rfm69-*
-        if: ${{ needs.changes.outputs.gateway-rfm69 == 'true' }}
+      - name: Build backdoor-any-rfm69
+        if: ${{ needs.changes.outputs.backdoor-any-rfm69 == 'true' }}
         run: |
-          pio run --project-dir gateway-rfm69-beradio
-          pio run --project-dir gateway-rfm69-csv-sdcard
-          pio run --project-dir gateway-rfm69-csv-uart
+          pio run --project-dir backdoor/gateway-rfm69-beradio
+          pio run --project-dir backdoor/node-rfm69-beradio
 
-      - name: Build generic
-        if: ${{ needs.changes.outputs.generic == 'true' }}
+      - name: Build backdoor/multihop
+        if: ${{ needs.changes.outputs.backdoor-multihop == 'true' }}
         run: |
-          pio run --project-dir generic
+          pio run --project-dir backdoor/multihop
 
-      - name: Build node-gprs-http
-        if: ${{ needs.changes.outputs.node-gprs-http == 'true' }}
+      - name: Build backdoor/node-wifi-mqtt
+        if: ${{ needs.changes.outputs.backdoor-node-wifi-mqtt == 'true' }}
         run: |
-          pio run --project-dir node-gprs-http
+          pio run --project-dir backdoor/node-wifi-mqtt
 
-      - name: Build node-rfm69-*
-        if: ${{ needs.changes.outputs.node-rfm69 == 'true' }}
-        run: |
-          pio run --project-dir node-rfm69-beradio
-          pio run --project-dir node-rfm69-csv
 
-      - name: Build node-wifi-mqtt
-        if: ${{ needs.changes.outputs.node-wifi-mqtt == 'true' }}
-        run: |
-          pio run --project-dir node-wifi-mqtt
+      # ------------------------------------------
+      #   Homie
+      # ------------------------------------------
 
-      - name: Build node-esp8266-generic
-        if: ${{ needs.changes.outputs.node-esp8266-generic == 'true' }}
+      - name: Build homie/**
+        if: ${{ needs.changes.outputs.homie == 'true' }}
         run: |
-          pio run --project-dir node-esp8266-generic
+          pio run --project-dir homie/node-homie-basic
+          pio run --project-dir homie/node-homie-lowpower
+          pio run --project-dir homie/node-homie-scale-adjust
 
-      - name: Build node-esp32-generic
-        if: ${{ needs.changes.outputs.node-esp32-generic == 'true' }}
-        run: |
-          pio run --project-dir node-esp32-generic
 
-      - name: Build node-yun-http
-        if: ${{ needs.changes.outputs.node-yun-http == 'true' }}
-        run: |
-          pio run --project-dir node-yun-http
+      # ------------------------------------------
+      #   Open Hive
+      # ------------------------------------------
 
-      - name: Build node-wifi-mqtt-homie-*
-        if: ${{ needs.changes.outputs.node-wifi-mqtt-homie == 'true' }}
+      - name: Build openhive-any-rfm69
+        if: ${{ needs.changes.outputs.openhive-any-rfm69 == 'true' }}
         run: |
-          pio run --project-dir node-wifi-mqtt-homie
-          pio run --project-dir node-wifi-mqtt-homie-battery
-          pio run --project-dir node-wifi-mqtt-homie-calibration
+          pio run --project-dir openhive/rfm69-gateway-sdcard
+          pio run --project-dir openhive/rfm69-gateway-uart
+          pio run --project-dir openhive/rfm69-node
+
+      - name: Build openhive-gsm-wifi
+        if: ${{ needs.changes.outputs.openhive-gsm-wifi == 'true' }}
+        run: |
+          pio run --project-dir openhive/openhive-gsm-wifi
+
+      - name: Build openhive-scale-adjust
+        if: ${{ needs.changes.outputs.openhive-scale-adjust == 'true' }}
+        run: |
+          pio run --project-dir openhive/scale-adjust/ADS1231
+          pio run --project-dir openhive/scale-adjust/HX711
+
+      - name: Build openhive-yun
+        if: ${{ needs.changes.outputs.openhive-yun == 'true' }}
+        run: |
+          pio run --project-dir openhive/openhive-yun
+
+
+      # ------------------------------------------
+      #   Trudering
+      # ------------------------------------------
+
+      - name: Build trudering/bienenwaage-2.0
+        if: ${{ needs.changes.outputs.trudering-bienenwaage-20 == 'true' }}
+        run: |
+          pio run --project-dir trudering/bienenwaage-2.0
+
+      - name: Build trudering/bienenwaage-5.0
+        if: ${{ needs.changes.outputs.trudering-bienenwaage-50 == 'true' }}
+        run: |
+          pio run --project-dir trudering/bienenwaage-5.0
