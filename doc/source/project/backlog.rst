@@ -14,6 +14,27 @@ Backlog
 ----
 
 
+****
+2023
+****
+
+- Refine new firmware overview page
+- Add firmwares by @wtf, @tonke, and @hsors.
+
+  - https://git.cicer.de/autonome-zelle/autonome-zelle-sfwv
+  - https://git.cicer.de/autonome-zelle/az3-cubecell-boden
+  - https://github.com/hsors/connected-bee-hive
+  - https://github.com/hiveeyes/terkin-datalogger
+  - https://github.com/marcelgasser/nexTerkin
+  - https://git.cicer.de/tonke/esphome-nau7802
+  - https://git.cicer.de/tonke/preferencesscale
+  - https://git.cicer.de/tonke/sx126x-arduino-lorawan
+  - https://git.cicer.de/tonke/sim7000g
+  - https://git.cicer.de/tonke/esphome
+  - https://git.cicer.de/tonke/fipy
+  - https://git.cicer.de/tonke/wipy
+  - https://git.cicer.de/tonke/amqp-to-mqtt
+
 
 ****
 2019
