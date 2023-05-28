@@ -180,15 +180,20 @@
 .. _NodeMCU: https://en.wikipedia.org/wiki/NodeMCU
 
 .. _Arduino Uno: https://en.wikipedia.org/wiki/Arduino_Uno
+.. _CC-BY-SA license: https://creativecommons.org/licenses/by-sa/4.0/
 .. _Cellular: https://en.wikipedia.org/wiki/Cellular_network
+.. _CERN Open Hardware Licence: https://ohwr.org/project/cernohl/wikis/home
 .. _GPRS: https://en.wikipedia.org/wiki/General_Packet_Radio_Service
 .. _GSM: https://en.wikipedia.org/wiki/GSM
 .. _ISM: https://en.wikipedia.org/wiki/ISM_radio_band
 .. _multi-hop: https://en.wikipedia.org/wiki/Multi-hop_routing
+.. _LICENSE: https://github.com/hiveeyes/arduino/blob/main/LICENSE.txt
+.. _Licenses: https://hiveeyes.org/docs/arduino/project/licenses.html
 .. _LinkIt Smart 7688 Duo: https://community.hiveeyes.org/t/linkit-smart-7688-duo/105
 .. _LoRa: https://en.wikipedia.org/wiki/LoRa
 .. _LoRaWAN: https://en.wikipedia.org/wiki/LoRaWAN#LoRaWAN
 .. _picocom: https://github.com/npat-efault/picocom
+.. _PlatformIO Registry: https://registry.platformio.org/
 .. _Wi-Fi: https://en.wikipedia.org/wiki/Wi-Fi
 .. _yak shaving: http://www.catb.org/jargon/html/Y/yak-shaving.html
 
