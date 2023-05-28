@@ -1,13 +1,15 @@
-#######
-Sandbox
-#######
+###################
+Development sandbox
+###################
 
 
 ****
 Todo
 ****
 
-Have a look at the agenda at :ref:`todo`.
+.. todo::
+
+    Have a look at the agenda at :ref:`todo`.
 
 
 .. _hacking:

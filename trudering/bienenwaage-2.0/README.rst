@@ -1,6 +1,7 @@
 .. include:: ../../../resources.rst
 
 .. _node-esp8266-generic:
+.. _bienenwaage-2.0:
 
 #######################
 Bienenwaage 2.0 NodeMCU

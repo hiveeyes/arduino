@@ -1,6 +1,7 @@
 :orphan:
 
 .. _node-wifi-mqtt-homie-battery-changes:
+.. _homie-lowpower-changes:
 
 #######
 CHANGES
@@ -10,7 +11,7 @@ CHANGES
 in-progress
 ===========
 - Set some custom settings as default, limited at the moment by issue:
- https://github.com/marvinroger/homie-esp8266/issues/323
+  https://github.com/marvinroger/homie-esp8266/issues/323
 
 2017-11-02 0.10.0
 =================
