@@ -39,7 +39,7 @@ Build on your workstation
 ::
 
     # Get hold of the source code repository including all dependencies
-    git clone --recursive https://github.com/hiveeyes/arduino
+    git clone https://github.com/hiveeyes/arduino
 
     # Select this firmware
     cd gateway-rfm69-csv-sdcard

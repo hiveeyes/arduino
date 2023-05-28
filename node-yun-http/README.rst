@@ -71,7 +71,7 @@ Clone git repository
 ::
 
     # Get hold of the source code repository including all dependencies
-    git clone --recursive https://github.com/hiveeyes/arduino
+    git clone https://github.com/hiveeyes/arduino
 
     # Select this firmware
     cd node-yun-http
