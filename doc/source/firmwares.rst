@@ -11,13 +11,6 @@ We have single sensor nodes with GPRS uplink and tandem nodes using
 RF radio links to communicate between multiple sensor nodes
 and a single gateway node.
 
-.. contents::
-    :local:
-    :depth: 2
-
-
-----
-
 
 ******
 Stable

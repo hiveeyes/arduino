@@ -2,9 +2,9 @@
 
 .. _README:
 
-##########################
-Hiveeyes Arduino Firmwares
-##########################
+#######################
+Hiveeyes Arduino README
+#######################
 
 .. image:: https://github.com/hiveeyes/arduino/actions/workflows/platformio-ci.yaml/badge.svg
     :target: https://github.com/hiveeyes/arduino/actions/workflows/platformio-ci.yaml
@@ -17,7 +17,8 @@ Hiveeyes Arduino Firmwares
 
 .. tip::
 
-    Please `continue reading this document on our documentation space <https://hiveeyes.org/docs/arduino/>`_,
+    Please `continue reading this document on our documentation space
+    <https://hiveeyes.org/docs/arduino/>`_,
     all inline links will be working there.
 
 
@@ -61,13 +62,15 @@ PlatformIO
 We recommend to use `PlatformIO`_. Installing all dependency libraries will be managed
 automatically, accurately, and reproducibly, because each programs' subdirectory contains
 a ``platformio.ini`` file, which enumerates the list of dependencies within the
-``env.lib_deps`` sections, like::
+``env.lib_deps`` sections, like:
 
-[env]
-lib_deps =
-    lowpowerlab/RFM69@^1.5
-    lowpowerlab/SPIFlash@^101
-    https://github.com/hiveeyes/embencode
+.. code-block:: ini
+
+    [env]
+    lib_deps =
+        lowpowerlab/RFM69@^1.5
+        lowpowerlab/SPIFlash@^101
+        https://github.com/hiveeyes/embencode
 
 You will be able to choose between CLI and UI operations, see `PlatformIO IDE`_.
 

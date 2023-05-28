@@ -5,8 +5,6 @@
    Receives sensor data over radio and forward it to the UART interface,
    which is connected to the serial port of the gateway machine.
 
-   Software release 0.5.1
-
    Copyright (C) 2014-2016  Richard Pobering <einsiedlerkrebs@ginnungagap.org>
    Copyright (C) 2014-2016  Andreas Motl <andreas.motl@elmyra.de>
 

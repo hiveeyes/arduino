@@ -1,16 +1,16 @@
-.. include:: ../../resources.rst
+.. include:: ../../../resources.rst
 
 .. _generic-firmware:
+.. _multihop-firmware:
 
-################
-Generic firmware
-################
+#################
+multihop firmware
+#################
 
 » `Documentation <About the generic firmware_>`_
-| `Development <Embedded Radio-to-IP Gateway (AVR)_>`_
+| `Discussions <Embedded Radio-to-IP Gateway (AVR)_>`_
 | `Issues`_
 | `Source code`_
-| `README`_
 
 .. tip::
 
@@ -52,7 +52,7 @@ Synopsis
 
 `Multi-hop`_ RF / ISM / packet radio and telemetry `yak shaving`_.
 
-.. graphviz:: synopsis.dot
+.. graphviz:: multihop.dot
 
 *The firmware serves different purposes, you can configure it as a »sensor node«,
 »telemetry relay node«, or »network gateway node«.*
@@ -153,5 +153,4 @@ You can also invoke the build by defining ``build_flags`` on the command line, l
 .. _About the generic firmware: https://community.hiveeyes.org/t/about-the-generic-firmware/317
 .. _Embedded Radio-to-IP Gateway (AVR): https://community.hiveeyes.org/t/embedded-radio-to-ip-gateway-avr/314
 .. _Issues: https://github.com/hiveeyes/arduino/issues
-.. _README: https://github.com/hiveeyes/arduino/blob/main/generic/README.rst
-.. _Source code: https://github.com/hiveeyes/arduino/tree/main/generic
+.. _Source code: https://github.com/hiveeyes/arduino/tree/main/backdoor/multihop

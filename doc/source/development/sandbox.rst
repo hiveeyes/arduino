@@ -1,12 +1,7 @@
-###########
-Development
-###########
+#######
+Sandbox
+#######
 
-.. contents::
-   :local:
-   :depth: 1
-
-----
 
 ****
 Todo
@@ -82,8 +77,7 @@ Research
     :maxdepth: 1
     :glob:
 
-    BERadio/research
-    BERadio/firmware-size
+    ../BERadio/research
+    ../BERadio/firmware-size
 
 .. seealso:: Specification and more at :ref:`beradio`.
-

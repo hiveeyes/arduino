@@ -1,9 +1,13 @@
-***********
-platform.io
-***********
+*****************
+PlatformIO how-to
+*****************
+
+
+Setup
+=====
 ::
 
-    pip install -U platformio
+    pip install --upgrade platformio
 
 
 Atmel AVR
@@ -28,3 +32,4 @@ E.g. for Adafruit Huzzah::
 
     platformio init --board huzzah
     platformio run --environment huzzah
+

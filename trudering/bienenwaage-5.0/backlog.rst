@@ -1,6 +1,6 @@
-#####################################
-Bienenwaage 5.0 TTGO-T-CALL - backlog
-#####################################
+#######################
+Bienenwaage 5.0 backlog
+#######################
 
 - Improve configuration section within README.rst.
 - Pull all configuration variables like "Taragewicht_A"

@@ -1,4 +1,4 @@
-.. include:: ../../resources.rst
+.. include:: ../../../resources.rst
 
 .. _node-esp8266-generic:
 

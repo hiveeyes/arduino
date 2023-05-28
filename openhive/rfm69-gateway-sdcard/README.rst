@@ -1,4 +1,4 @@
-.. include:: ../../resources.rst
+.. include:: ../../../resources.rst
 
 .. _open-hive-firmware-rfm69-gateway-sdcard:
 
@@ -21,7 +21,7 @@ Telemetry data is received from the :ref:`open-hive-firmware-rfm69-node`,
 decoded from CSV and stored to a SD card.
 The most recent version is available at `gateway-rfm69-csv-sdcard.ino`_.
 
-.. graphviz:: ../node-rfm69-csv/synopsis.dot
+.. graphviz:: ../rfm69-node/synopsis.dot
 
 .. figure:: https://ptrace.hiveeyes.org/2016-06-17_openhive-yun-uno.jpg
     :alt: Open Hive RFM69 Arduino Yún

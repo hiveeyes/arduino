@@ -6,11 +6,6 @@
 Firmware builder
 ################
 
-.. contents::
-    :local:
-    :depth: 1
-
-----
 
 ************
 Introduction
@@ -204,4 +199,3 @@ On the server, there's currently Arduino 1.0.5::
     Version: 2:1.0.5+dfsg2-4
 
 So the appropriate settings for Arduino 1.0.x should be used inside the respective Makefile.
-

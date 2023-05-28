@@ -1,4 +1,4 @@
-.. include:: ../../resources.rst
+.. include:: ../../../resources.rst
 
 .. _mois-node:
 .. _mois-firmware:
