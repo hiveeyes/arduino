@@ -11,7 +11,11 @@ include util.mk
 # Software tests, Documentation builder, Virtual environment builder
 #
 docs-html: virtualenv
-	export SPHINXBUILD="`pwd`/.venv/bin/sphinx-build"; cd doc; make html
+	cd doc; make html
+
+docs-autobuild: virtualenv
+	$(pip) --quiet install sphinx-autobuild
+	$(sphinx-autobuild) --open-browser doc/source doc/build
 
 virtualenv: setup-virtualenv
 	@echo Install packages from requirements-docs.txt
