@@ -59,28 +59,37 @@ jobs:
         with:
           filters: |
             homie:
-              - 'homie/**'
+              - 'homie/**/*.ini'
+              - 'homie/**/*.ino'
             backdoor-any-rfm69:
               - 'backdoor/gateway-rfm69-beradio/**'
               - 'backdoor/node-rfm69-beradio/**'
             backdoor-multihop:
-              - 'generic/**'
+              - 'backdoor/multihop/**/*.h'
+              - 'backdoor/multihop/**/*.ini'
+              - 'backdoor/multihop/**/*.ino'
             backdoor-node-wifi-mqtt:
-              - 'backdoor/node-wifi-mqtt/**'
+              - 'backdoor/node-wifi-mqtt/**/*.ini'
+              - 'backdoor/node-wifi-mqtt/**/*.ino'
             openhive-any-rfm69:
               - 'openhive/gateway-rfm69-csv-sdcard/**'
               - 'openhive/gateway-rfm69-csv-uart/**'
               - 'openhive/node-rfm69-csv/**'
             openhive-gsm-wifi:
-              - 'openhive/openhive-gsm-wifi/**'
+              - 'openhive/openhive-gsm-wifi/**/*.ini'
+              - 'openhive/openhive-gsm-wifi/**/*.ino'
             openhive-scale-adjust:
-              - 'openhive/scale-adjust/**'
+              - 'openhive/scale-adjust/**/*.ini'
+              - 'openhive/scale-adjust/**/*.ino'
             openhive-yun:
-              - 'openhive/openhive-yun/**'
+              - 'openhive/openhive-yun/**/*.ini'
+              - 'openhive/openhive-yun/**/*.ino'
             trudering-bienenwaage-20:
-              - 'trudering/bienenwaage-2.0/**'
+              - 'trudering/bienenwaage-2.0/**/*.ini'
+              - 'trudering/bienenwaage-2.0/**/*.ino'
             trudering-bienenwaage-50:
-              - 'trudering/bienenwaage-5.0/**'
+              - 'trudering/bienenwaage-5.0/**/*.ini'
+              - 'trudering/bienenwaage-5.0/**/*.ino'
 
   build:
     needs: changes
