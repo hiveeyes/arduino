@@ -1,16 +1,10 @@
-.. include:: ../../resources.rst
+.. include:: ../../../resources.rst
 
 .. _node-wifi-mqtt-homie-battery:
 
 ####################################################
 Battery-powered ESP8266 beehive scale based on Homie
 ####################################################
-
-.. contents::
-   :local:
-   :depth: 1
-
-----
 
 This is the low power battery version of :ref:`node-wifi-mqtt-homie`.
 The most recent version is available at `node-wifi-mqtt-homie-battery.ino`_.
@@ -27,5 +21,8 @@ battery lifetime a lot.
     - Describe how to determine scale's temperature compensation values.
 
 
-.. include:: CHANGES.rst
+*********
+Changelog
+*********
 
+See :doc:`changelog`.

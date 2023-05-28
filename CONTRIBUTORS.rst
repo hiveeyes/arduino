@@ -2,17 +2,18 @@
 Contributors
 ############
 
-Authors/contributors in order of appearance:
+Authors and contributors, alphabetically sorted:
 
-* Clemens Gruber    -- clemens@hiveeyes.org
-* Markus Euskirchen -- mois@hiveeyes.org
-* Richard Pobering  -- richard@hiveeyes.org
-* Andreas Motl      -- andreas@hiveeyes.org
 * Alexander Wilms   -- https://www.imker-nettetal.de/
-* Matthias Büchner
+* Andreas Motl      -- andreas@hiveeyes.org
+* Clemens Gruber    -- clemens@hiveeyes.org
 * Giuseppe Tuveri
-* Stefan Ulmer      -- ulmi@gmx.de
+* @marfrh
+* Markus Euskirchen -- mois@hiveeyes.org
+* Matthias Büchner
+* Richard Pobering  -- richard@hiveeyes.org
 * Robin Vobruba     -- robin.vobruba@gmx.net
+* Stefan Ulmer      -- ulmi@gmx.de
 * Weef
 
 Thanks a bunch!

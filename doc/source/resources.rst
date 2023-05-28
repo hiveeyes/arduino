@@ -167,6 +167,10 @@
 .. _Bridge Library for Yún devices: https://www.arduino.cc/en/Reference/YunBridgeLibrary
 
 .. Tools
+.. _Ino: http://inotool.org
+.. _Arduino-Makefile: https://github.com/sudar/Arduino-Makefile
+.. _makeESPArduino: https://github.com/plerup/makeEspArduino
+.. _Bare-Arduino-Project: https://github.com/ladislas/Bare-Arduino-Project
 .. _HTTPie: http://httpie.org
 .. _HttpRequester: https://addons.mozilla.org/en-us/firefox/addon/httprequester/
 
@@ -176,9 +180,16 @@
 .. _NodeMCU: https://en.wikipedia.org/wiki/NodeMCU
 
 .. _Arduino Uno: https://en.wikipedia.org/wiki/Arduino_Uno
+.. _Cellular: https://en.wikipedia.org/wiki/Cellular_network
+.. _GPRS: https://en.wikipedia.org/wiki/General_Packet_Radio_Service
+.. _GSM: https://en.wikipedia.org/wiki/GSM
+.. _ISM: https://en.wikipedia.org/wiki/ISM_radio_band
 .. _multi-hop: https://en.wikipedia.org/wiki/Multi-hop_routing
 .. _LinkIt Smart 7688 Duo: https://community.hiveeyes.org/t/linkit-smart-7688-duo/105
+.. _LoRa: https://en.wikipedia.org/wiki/LoRa
+.. _LoRaWAN: https://en.wikipedia.org/wiki/LoRaWAN#LoRaWAN
 .. _picocom: https://github.com/npat-efault/picocom
+.. _Wi-Fi: https://en.wikipedia.org/wiki/Wi-Fi
 .. _yak shaving: http://www.catb.org/jargon/html/Y/yak-shaving.html
 
 

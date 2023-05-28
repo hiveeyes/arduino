@@ -7,9 +7,9 @@
 
 .. _hiveeyes-arduino:
 
-#######################################
-Hiveeyes Arduino firmware documentation
-#######################################
+##########################
+Hiveeyes Arduino Firmwares
+##########################
 
 This is the firmware source code documentation of the `Hiveeyes project`_,
 a beehive monitoring system made of open source software and hardware components.
@@ -23,17 +23,14 @@ discussions are taking place these days.
     :maxdepth: 1
     :hidden:
 
-    README
+    README <README>
 
     firmwares
-    development
-
-    CONTRIBUTORS
-    Changelog <CHANGES>
-
+    firmware/overview
     BERadio/README
     TerkinData/README
     firmware-builder
+    development/index
 
 
 ************

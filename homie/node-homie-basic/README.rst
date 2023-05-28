@@ -1,16 +1,10 @@
-.. include:: ../../resources.rst
+.. include:: ../../../resources.rst
 
 .. _node-wifi-mqtt-homie:
 
 ####################################
 ESP8266 beehive scale based on Homie
 ####################################
-
-.. contents::
-   :local:
-   :depth: 1
-
-----
 
 .. tip::
 
@@ -206,12 +200,21 @@ When installing the `UI bundle`_ "``ui_bundle.gz``", the configuration UI will b
     # 2. Configure device
     make upload_fs
 
-.. _UI bundle: https://homie-esp8266.readme.io/docs/ui-bundle
 
 
-****
-Todo
-****
+***********
+Development
+***********
+
+Changelog
+=========
+See :doc:`changelog`.
+
+Backlog
+=======
+
+.. todo::
+
 - Improve documentation at all
 - Document how to determine calibration values (i.e. "Use sketch BeeScale-Calibration to get these values").
   Would it be possible to build it into the main firmware and run it conditionally somehow?
@@ -219,3 +222,4 @@ Todo
 
 
 .. _Homie custom settings: https://homie-esp8266.readme.io/docs/custom-settings
+.. _UI bundle: https://homie-esp8266.readme.io/docs/ui-bundle

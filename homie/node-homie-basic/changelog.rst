@@ -1,4 +1,6 @@
-.. include:: resources.rst
+:orphan:
+
+.. include:: ../../../resources.rst
 
 .. _changes:
 

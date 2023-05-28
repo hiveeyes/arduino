@@ -60,8 +60,22 @@ Details
   - https://github.com/hiveeyes/arduino/tree/master/node-pipa/examples/pipa-envirodiy
 
 
+*******
+Backlog
+*******
+
+See :doc:`docs/backlog`.
+
+
 *********
 Etymology
 *********
 
 https://en.wikipedia.org/wiki/Pipa
+
+
+
+.. toctree::
+    :hidden:
+
+    docs/backlog

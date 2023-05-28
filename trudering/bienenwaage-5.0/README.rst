@@ -1,4 +1,4 @@
-.. include:: ../../resources.rst
+.. include:: ../../../resources.rst
 
 .. _node-esp32-generic:
 
@@ -120,3 +120,14 @@ Pictures
 
 .. figure:: https://raw.githubusercontent.com/hiveeyes/arduino/master/node-esp32-generic/Bienenwaage%205.0%20TTGO-T-CALL_Leiterplatte.png
     :target: https://raw.githubusercontent.com/hiveeyes/arduino/master/node-esp32-generic/Bienenwaage%205.0%20TTGO-T-CALL_Leiterplatte.png
+
+
+***********
+Development
+***********
+
+.. toctree::
+    :maxdepth: 1
+
+    changelog
+    backlog

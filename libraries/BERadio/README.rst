@@ -8,15 +8,10 @@
 BERadio C++
 ###########
 
-.. contents::
-   :local:
-   :depth: 1
-
-----
-
 .. tip::
 
-    You might want to `read this document on our documentation space <https://hiveeyes.org/docs/arduino/BERadio/README.html>`_,
+    Please `continue reading this document on our documentation space
+    <https://hiveeyes.org/docs/arduino/BERadio/README.html>`_,
     all inline links will be working there.
 
 
@@ -41,7 +36,7 @@ humans (8-bit clean).
 BERadio C++ was tested successfully on
 Arduino (ATmega328p Pro/Uno), SimulAVR and x86_64 (both Mac OS X).
 It compiles with *avr-g++ 4.8, 4.9 and 5.2* as well as *clang++ 3.4*
-on Mac OS X and Archlinux.
+on Mac OS X and Arch Linux.
 
 
 
@@ -88,10 +83,8 @@ using EmBencode_::
 Download
 ********
 
-BERadio C++
-===========
-    | Please download from GitHub:
-    | https://github.com/hiveeyes/arduino/tree/master/libraries/BERadio
+| Please download from GitHub:
+| https://github.com/hiveeyes/arduino/tree/main/libraries/BERadio
 
 
 ************
@@ -101,20 +94,22 @@ Dependencies
 
 StandardCplusplus
 =================
-    | Standard C++ for Arduino (port of uClibc++)
-    | https://github.com/maniacbug/StandardCplusplus
-    | https://github.com/hiveeyes/StandardCplusplus
+
+| Standard C++ for Arduino (port of uClibc++)
+| https://github.com/maniacbug/StandardCplusplus
+| https://github.com/hiveeyes/StandardCplusplus
 
 
 EmBencode
 =========
-    | Bencode protocol support for embedded processors
-    | https://github.com/jcw/embencode
-    | https://github.com/hiveeyes/embencode
+
+| Bencode protocol support for embedded processors
+| https://github.com/jcw/embencode
+| https://github.com/hiveeyes/embencode
 
 
 Terrine
 =======
-    | Application boilerplate for convenient MCU development
-    | https://github.com/hiveeyes/arduino/tree/master/libraries/Terrine
 
+| Application boilerplate for convenient MCU development
+| https://github.com/hiveeyes/arduino/tree/main/libraries/Terrine

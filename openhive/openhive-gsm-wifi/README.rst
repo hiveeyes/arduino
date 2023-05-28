@@ -1,4 +1,4 @@
-.. include:: ../../resources.rst
+.. include:: ../../../resources.rst
 
 .. _open-hive-firmware:
 .. _open-hive-firmware-gprs:

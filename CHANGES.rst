@@ -1,10 +1,10 @@
-.. include:: resources.rst
+.. include:: ../resources.rst
 
 .. _changes:
 
-#######
-CHANGES
-#######
+#########
+Changelog
+#########
 
 
 in-progress
@@ -234,7 +234,7 @@ Libraries
 
 2016-06-17 0.6.1
 ================
-- Add Firmware-Builder helper to Linux Makefile for `node-gprs-any.ino`_.
+- Add Firmware-Builder helper to Linux Makefile for `node-gprs-http.ino`_.
 - Update docs.
 
 
@@ -245,7 +245,7 @@ General
 -------
 - Add project tooling `Arduino-Makefile`_ and `Bare-Arduino-Project`_ as git submodules under ``tools/``.
 
-- Adapt vanilla Makefiles from Bare-Arduino-Project for vendor ``node-gprs-any``.
+- Adapt vanilla Makefiles from Bare-Arduino-Project for vendor ``node-gprs-http``.
 
 - Add Hiveeyes foundation libraries as proposal
   for decoupling sensor and transmitter domains.
@@ -254,8 +254,8 @@ General
   ``make --file Makefile-Xyz.mk all-plus-firmware-info`` should
   output the path to the target HEX- and ELF files, e.g.::
 
-      TARGET_HEX: ../bin/node-gprs-any/pro328/node-gprs-any.hex
-      TARGET_ELF: ../bin/node-gprs-any/pro328/node-gprs-any.elf
+      TARGET_HEX: ../bin/node-gprs-http/pro328/node-gprs-http.hex
+      TARGET_ELF: ../bin/node-gprs-http/pro328/node-gprs-http.elf
 
 
 Open Hive GPRSbee
@@ -266,7 +266,7 @@ Terkin_, `Hiveeyes-Lib`_ and `OpenHive-Lib`_.
 
 - Add ArduinoJson_ and `GPRSbee library`_ as git submodules under ``libraries/``.
 
-- Add example sketch `node-gprs-any.ino`_ demonstrating
+- Add example sketch `node-gprs-http.ino`_ demonstrating
   simple HTTP+JSON communication over GPRSbee.
 
 - Update ``HE_API_URL`` to use different url for non-TLS
@@ -347,4 +347,3 @@ Documentation
 2014-11-04 0.0.0
 ================
 - Start working on Hiveeyes Arduino using RFM12
-

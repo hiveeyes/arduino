@@ -8,15 +8,9 @@
 TerkinData C++
 ##############
 
-.. contents::
-   :local:
-   :depth: 1
-
-----
-
 .. tip::
 
-    You might want to `read this document on our documentation space
+    Please `continue reading this document on our documentation space
     <https://hiveeyes.org/docs/arduino/TerkinData/README.html>`_,
     all inline links will be working there.
 
@@ -164,7 +158,6 @@ x-www-form-urlencoded
 
 JSON
 ----
-.. note:: To use the fine ArduinoJson_ library for JSON serialization, please compile using ``-DHAVE_ARDUINO_JSON``.
 
 ::
 
@@ -279,39 +272,25 @@ JSON
 .. seealso:: Full source of `<json_basic.cpp_>`_.
 
 
-.. _csv_basic.cpp: https://github.com/hiveeyes/arduino/blob/master/libraries/TerkinData/examples/csv_basic.cpp
-.. _urlencoded_basic.cpp: https://github.com/hiveeyes/arduino/blob/master/libraries/TerkinData/examples/urlencoded_basic.cpp
-.. _json_basic.cpp: https://github.com/hiveeyes/arduino/blob/master/libraries/TerkinData/examples/json_basic.cpp
+.. _csv_basic.cpp: https://github.com/hiveeyes/arduino/blob/main/libraries/TerkinData/examples/csv_basic.cpp
+.. _urlencoded_basic.cpp: https://github.com/hiveeyes/arduino/blob/main/libraries/TerkinData/examples/urlencoded_basic.cpp
+.. _json_basic.cpp: https://github.com/hiveeyes/arduino/blob/main/libraries/TerkinData/examples/json_basic.cpp
 
 
 ********
 Download
 ********
 
-TerkinData C++
-==============
 | Please download a recent version from GitHub:
-| https://github.com/hiveeyes/arduino/tree/master/libraries/TerkinData
-|
+| https://github.com/hiveeyes/arduino/tree/main/libraries/TerkinData
 
 
 ************
 Dependencies
 ************
 
-ArduinoSTL
-==========
-| ArduinoSTL by Mike Matera
-| https://github.com/mike-matera/ArduinoSTL
-|
-
-ArduinoJson
-===========
-| ArduinoJson by Benoît Blanchon
-| https://github.com/bblanchon/ArduinoJson
-|
-| This library is optional, but obviously required when serializing to JSON.
-|
+- `ArduinoSTL`_ by Mike Matera.
+- `ArduinoJSON`_ by Benoît Blanchon.
 
 
 *******
@@ -320,10 +299,8 @@ Backlog
 
 .. todo::
 
-    - Add :ref:`BERadio` serialization format
-    - Move to repository https://github.com/daq-tools/terkin
-
-|
+    - Add :ref:`BERadio` serialization format.
+    - Spin off into separate repository https://github.com/daq-tools/terkin.
 
 
 *********
@@ -336,4 +313,7 @@ Terkin
 | Basically, the fundamental individual.
 |
 | -- http://www.urbandictionary.com/define.php?term=Terkin
-|
+
+
+.. _ArduinoJSON: https://github.com/bblanchon/ArduinoJson
+.. _ArduinoSTL: https://github.com/mike-matera/ArduinoSTL

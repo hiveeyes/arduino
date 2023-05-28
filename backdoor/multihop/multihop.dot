@@ -10,25 +10,28 @@ digraph generic_firmware_synopsis {
     node [pin=true, shape="box", fontname="Verdana"];
     edge [fontname="Verdana"];
 
-    // Graph nodes represent hardware node units
-    "sensor-1"      [label="Sensor node 1"];
-    "sensor-2"      [label="Sensor node 2"];
-    "sensor-N"      [label="Sensor node N"];
-    "relay"         [label="Telemetry relay node"];
-    "gateway"       [label="Gateway node"];
-    "soc"           [label="SoC machine", style=dashed];
+    // Graph nodes represent hardware appliance devices
+    "sensor-1"      [label="Sensor 1"];
+    "sensor-2"      [label="Sensor 2"];
+    "sensor-N"      [label="Sensor N"];
+    "relay"         [label="Telemetry relay"];
+    "gateway"       [label="Network gateway"];
+    "linux"         [label="Linux machine", style=dashed];
+    "mqtt"          [label="MQTT", style=dashed];
+    {rank=same; "sensor-1"; "sensor-2"; "sensor-N"; };
 
     // Graph edges represent radio families and
-    // protocols spoken between node units.
+    // protocols spoken between devices.
     "sensor-1"      -> "relay"          [label="RFM69"];
     "sensor-2"      -> "relay";
     "sensor-N"      -> "relay";
     "relay"         -> "gateway"        [label="RFM95\n(LoRa)"];
-    "gateway"       -> "soc"            [label="UART", style=dashed];
+    "gateway"       -> "linux"          [label="UART"];
+    "linux"         -> "mqtt"           [label="TCP/IP", style=dotted];
+    {rank=same; "gateway"; "linux"; "mqtt"; };
 
     // Draw a dotted line between sensor-2
     // and sensor-N, but retain node positions.
     "sensor-2"      -> "sensor-N"       [dir=none, style=dotted];
-    {rank=same; "sensor-1"; "sensor-2"; "sensor-N" };
 
 }

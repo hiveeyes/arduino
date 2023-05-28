@@ -1,14 +1,15 @@
-.. include:: resources.rst
+.. include:: ../resources.rst
 
 .. _todo:
 
-####
-TODO
-####
+#######
+Backlog
+#######
 
 .. contents::
    :local:
    :depth: 1
+   :class: this-will-duplicate-information-and-it-is-still-useful-here
 
 ----
 
@@ -318,4 +319,3 @@ PlatformIO
 - http://docs.platformio.org/en/latest/librarymanager/creating.html#library-creating-examples
 - http://docs.platformio.org/en/latest/userguide/lib/cmd_install.html#cmd-lib-install
 - http://docs.platformio.org/en/latest/platforms/atmelavr.html#packages
-

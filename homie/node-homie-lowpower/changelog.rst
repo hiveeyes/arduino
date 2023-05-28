@@ -1,3 +1,5 @@
+:orphan:
+
 .. _node-wifi-mqtt-homie-battery-changes:
 
 #######
