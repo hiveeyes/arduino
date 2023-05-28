@@ -11,5 +11,6 @@ upload: setup-virtualenv
 	$(pio) run --target upload --upload-port=${MCU_PORT}
 
 setup-virtualenv:
+	@echo Installing or updating prerequisites
 	@test -e $(python) || python3 -m venv $(venvpath)
 	$(pip) --quiet install platformio
