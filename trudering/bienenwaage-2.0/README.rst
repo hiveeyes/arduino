@@ -33,7 +33,7 @@ Details
 
 A beehive monitoring sensor node based on the NodeMCU_ hardware, featuring an ESP8266_ MCU.
 Telemetry data is transmitted using MQTT over WiFi or GSM.
-The most recent firmware version is available at `node-esp8266-generic.ino`_.
+The most recent firmware version is available at `bienenwaage-esp8266.ino`_.
 
 
 ********
@@ -114,11 +114,11 @@ Clone git repository
 ====================
 ::
 
-    # Get hold of the source code repository including all dependencies
+    # Acquire source code repository.
     git clone https://github.com/hiveeyes/arduino
 
-    # Select this firmware
-    cd node-esp8266-generic
+    # Select this firmware.
+    cd arduino/trudering/bienenwaage-2.0
 
 
 Build

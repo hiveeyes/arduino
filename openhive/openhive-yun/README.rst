@@ -3,6 +3,7 @@
 .. _mois-node:
 .. _mois-firmware:
 .. _node-yun-http:
+.. _openhive-yun:
 
 ################
 Mois sensor node
@@ -70,11 +71,11 @@ Clone git repository
 ====================
 ::
 
-    # Get hold of the source code repository including all dependencies
+    # Acquire source code repository
     git clone https://github.com/hiveeyes/arduino
 
     # Select this firmware
-    cd node-yun-http
+    cd arduino/openhive/openhive-yun
 
 
 Configure firmware
@@ -96,31 +97,24 @@ Configure load cell calibration settings::
 
 .. tip::
 
-    Read about :ref:`scale-adjust-firmware` to determine those values.
+    Use :ref:`scale-adjust-firmware` to determine those values.
 
 
 *****
-Build
+Usage
 *****
 
 .. highlight:: bash
+
+Build
+=====
 
 The build system is based on `PlatformIO`_, which will install toolchains and build
 your customized firmware without efforts. All you need is a Python installation.
 
 ::
 
-    # Build firmware
     make build
-
-.. note::
-
-    If you need to build for different targets, or if you want to modernize your dependencies,
-    you may want to adjust the ``platformio.ini`` file, to match your needs.
-
-    In order to make changes to the firmware, edit the ``node-yun-http.ino`` file, and
-    invoke ``make build`` to build it again.
-
 
 Upload to MCU
 =============
@@ -130,4 +124,10 @@ Upload to MCU
     make upload
 
 
-.. _PlatformIO: https://platformio.org/
+.. tip::
+
+    If you need to build for different targets, or if you want to modernize your dependencies,
+    you may want to adjust the ``platformio.ini`` file, to match your needs.
+
+    In order to make changes to the firmware, edit the ``node-yun-http.ino`` file, and
+    invoke ``make build`` to build it again.

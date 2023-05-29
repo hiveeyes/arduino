@@ -182,11 +182,13 @@ Build for embedded targets
 ==========================
 ::
 
-    # Get source code.
+    # Acquire source code repository.
     git clone https://github.com/hiveeyes/arduino
+
+    # Select firmware.
     cd arduino/libraries/TerkinData/examples
 
-    # Build examples for all embedded platforms.
+    # Build examples for all designated platforms.
     make
 
 Build individual programs::

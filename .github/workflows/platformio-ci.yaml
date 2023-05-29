@@ -89,7 +89,7 @@ jobs:
               - 'trudering/bienenwaage-2.0/**/*.ino'
             trudering-bienenwaage-50:
               - 'trudering/bienenwaage-5.0/**/*.ini'
-              - 'trudering/bienenwaage-5.0/**/*.ino'
+              - 'trudering/bienenwaage-5.0/**/*.cpp'
 
   build:
     needs: changes

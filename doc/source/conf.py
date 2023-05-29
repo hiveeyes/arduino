@@ -28,6 +28,7 @@
 extensions = [
     "myst_parser",
     "sphinx_copybutton",
+    "sphinx_design",
     "sphinx_togglebutton",
     "sphinx.ext.intersphinx",
     "sphinx.ext.todo",
@@ -334,6 +335,7 @@ myst_enable_extensions = [
     "colon_fence",
     "deflist",
     "fieldlist",
+    "html_admonition",
     "linkify",
     "strikethrough",
     "tasklist",

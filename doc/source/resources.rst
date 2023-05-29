@@ -31,41 +31,41 @@
 .. ----------------------
 
 .. Source code
-.. _node-rfm69-beradio.ino: https://github.com/hiveeyes/arduino/blob/master/node-rfm69-beradio/src/node-rfm69-beradio.ino
-.. _gateway-rfm69-beradio.ino: https://github.com/hiveeyes/arduino/blob/master/gateway-rfm69-beradio/src/gateway-rfm69-beradio.ino
-.. _generic.ino: https://github.com/hiveeyes/arduino/blob/master/generic/generic.ino
-.. _config.h: https://github.com/hiveeyes/arduino/blob/master/generic/config.h
-.. _Terrine: https://github.com/hiveeyes/arduino/tree/master/libraries/Terrine
-.. _Terkin: https://github.com/hiveeyes/arduino/tree/master/libraries/Terkin
-.. _Hiveeyes-Lib: https://github.com/hiveeyes/arduino/tree/master/libraries/Hiveeyes
-.. _scale-adjust-ads1231.ino: https://github.com/hiveeyes/arduino/blob/master/scale-adjust/ADS1231/scale-adjust-ads1231.ino
-.. _scale-adjust-hx711.ino: https://github.com/hiveeyes/arduino/blob/master/scale-adjust/HX711/scale-adjust-hx711.ino
+.. _node-rfm69-beradio.ino: https://github.com/hiveeyes/arduino/blob/main/backdoor/node-rfm69-beradio/node-rfm69-beradio.ino
+.. _gateway-rfm69-beradio.ino: https://github.com/hiveeyes/arduino/blob/main/backdoor/gateway-rfm69-beradio/gateway-rfm69-beradio.ino
+.. _multihop.ino: https://github.com/hiveeyes/arduino/blob/main/backdoor/multihop/multihop.ino
+.. _config.h: https://github.com/hiveeyes/arduino/blob/main/backdoor/multihop/config.h
+.. _Terrine: https://github.com/hiveeyes/arduino/tree/main/libraries/Terrine
+.. _Terkin: https://github.com/hiveeyes/arduino/tree/main/libraries/Terkin
+.. _Hiveeyes-Lib: https://github.com/hiveeyes/arduino/tree/main/libraries/Hiveeyes
+.. _scale-adjust-ads1231.ino: https://github.com/hiveeyes/arduino/blob/main/openhive/scale-adjust/ADS1231/scale-adjust-ads1231.ino
+.. _scale-adjust-hx711.ino: https://github.com/hiveeyes/arduino/blob/main/openhive/scale-adjust/HX711/scale-adjust-hx711.ino
 
 .. BERadio
-.. _BERadio C++: https://github.com/hiveeyes/arduino/tree/master/libraries/BERadio
+.. _BERadio C++: https://github.com/hiveeyes/arduino/tree/main/libraries/BERadio
 
 .. Mois
-.. _node-yun-http.ino: https://github.com/hiveeyes/arduino/blob/master/node-yun-http/node-yun-http.ino
+.. _node-yun-http.ino: https://github.com/hiveeyes/arduino/blob/main/openhive/openhive-yun/openhive-yun.ino
 .. _Mois Box: https://www.euse.de/wp/blog/2017/03/bienenwaage-2_0/
 
 .. Open Hive
-.. _OpenHive-Lib: https://github.com/hiveeyes/arduino/tree/master/libraries/OpenHive
-.. _node-gprs-http.ino: https://github.com/hiveeyes/arduino/blob/master/node-gprs-http/node-gprs-http.ino
-.. _node-rfm69-csv.ino: https://github.com/hiveeyes/arduino/blob/master/node-rfm69-csv/node-rfm69-csv.ino
-.. _gateway-rfm69-csv-sdcard.ino: https://github.com/hiveeyes/arduino/blob/master/gateway-rfm69-csv-sdcard/gateway-rfm69-csv-sdcard.ino
-.. _gateway-rfm69-csv-uart.ino: https://github.com/hiveeyes/arduino/blob/master/gateway-rfm69-csv-uart/gateway-rfm69-csv-uart.ino
-.. _node-wifi-mqtt.ino: https://github.com/hiveeyes/arduino/blob/master/node-wifi-mqtt/node-wifi-mqtt.ino
+.. _OpenHive-Lib: https://github.com/hiveeyes/arduino/tree/main/libraries/OpenHive
+.. _openhive-gsm-wifi.ino: https://github.com/hiveeyes/arduino/blob/main/openhive/openhive-gsm-wifi/openhive-gsm-wifi.ino
+.. _rfm69-node.ino: https://github.com/hiveeyes/arduino/blob/main/openhive/rfm69-node/rfm69-node.ino
+.. _rfm69-gateway-sdcard.ino: https://github.com/hiveeyes/arduino/blob/main/openhive/rfm69-gateway-sdcard/rfm69-gateway-sdcard.ino
+.. _rfm69-gateway-uart.ino: https://github.com/hiveeyes/arduino/blob/main/openhive/rfm69-gateway-uart/rfm69-gateway-uart.ino
+.. _node-wifi-mqtt.ino: https://github.com/hiveeyes/arduino/blob/main/backdoor/node-wifi-mqtt/node-wifi-mqtt.ino
 
 .. imker-nettetal.de
 .. _Imkerverein Nettetal e.V.: https://www.imker-nettetal.de
-.. _ESP8266 Stockwaage – erste Eindrücke: https://www.imker-nettetal.de/esp8266-beescale-erste-eindruecke/
+.. _esp8266-beescale-erste-eindruecke: https://www.imker-nettetal.de/esp8266-beescale-erste-eindruecke/
 .. _ESP8266-BeeScale.fzz: https://www.imker-nettetal.de/bienen-nsa/ESP8266-BeeScale1_1.fzz
-.. _node-wifi-mqtt-homie.ino: https://github.com/hiveeyes/arduino/blob/master/node-wifi-mqtt-homie/node-wifi-mqtt-homie.ino
-.. _node-wifi-mqtt-homie-battery.ino: https://github.com/hiveeyes/arduino/blob/master/node-wifi-mqtt-homie-battery/node-wifi-mqtt-homie-battery.ino
+.. _node-homie-basic.ino: https://github.com/hiveeyes/arduino/blob/main/homie/node-homie-basic/node-homie-basic.ino
+.. _node-homie-lowpower.ino: https://github.com/hiveeyes/arduino/blob/main/homie/node-homie-lowpower/node-homie-lowpower.ino
 
 .. ulmi
-.. _node-esp8266-generic.ino: https://github.com/hiveeyes/arduino/blob/master/node-esp8266-generic/node-esp8266-generic.ino
-.. _node-esp32-generic.ino: https://github.com/hiveeyes/arduino/blob/master/node-esp32-generic/node-esp32-generic.ino
+.. _bienenwaage-esp8266.ino: https://github.com/hiveeyes/arduino/blob/main/trudering/bienenwaage-2.0/bienenwaage-esp8266.ino
+.. _bienenwaage-esp32.cpp: https://github.com/hiveeyes/arduino/blob/main/trudering/bienenwaage-5.0/bienenwaage-esp32.cpp
 
 .. Kotori
 .. _Kotori: https://getkotori.org/docs/
@@ -180,20 +180,25 @@
 .. _NodeMCU: https://en.wikipedia.org/wiki/NodeMCU
 
 .. _Arduino Uno: https://en.wikipedia.org/wiki/Arduino_Uno
+.. _Backdoor collective: https://backdoor-collective.org/
 .. _CC-BY-SA license: https://creativecommons.org/licenses/by-sa/4.0/
 .. _Cellular: https://en.wikipedia.org/wiki/Cellular_network
 .. _CERN Open Hardware Licence: https://ohwr.org/project/cernohl/wikis/home
 .. _GPRS: https://en.wikipedia.org/wiki/General_Packet_Radio_Service
 .. _GSM: https://en.wikipedia.org/wiki/GSM
 .. _ISM: https://en.wikipedia.org/wiki/ISM_radio_band
+.. _ISM radio: https://en.wikipedia.org/wiki/ISM_radio_band
 .. _multi-hop: https://en.wikipedia.org/wiki/Multi-hop_routing
 .. _LICENSE: https://github.com/hiveeyes/arduino/blob/main/LICENSE.txt
 .. _Licenses: https://hiveeyes.org/docs/arduino/project/licenses.html
 .. _LinkIt Smart 7688 Duo: https://community.hiveeyes.org/t/linkit-smart-7688-duo/105
 .. _LoRa: https://en.wikipedia.org/wiki/LoRa
 .. _LoRaWAN: https://en.wikipedia.org/wiki/LoRaWAN#LoRaWAN
+.. _openhive-yun.ino: https://github.com/hiveeyes/arduino/blob/main/openhive/openhive-yun/openhive-yun.ino
 .. _picocom: https://github.com/npat-efault/picocom
+.. _pipa-espressif.ino: https://github.com/hiveeyes/arduino/blob/main/backdoor/node-pipa/examples/pipa-espressif/pipa-espressif.ino
 .. _PlatformIO Registry: https://registry.platformio.org/
+.. _TTGO T-Call: https://community.hiveeyes.org/t/ttgo-t-call-sim800x/2690
 .. _Wi-Fi: https://en.wikipedia.org/wiki/Wi-Fi
 .. _yak shaving: http://www.catb.org/jargon/html/Y/yak-shaving.html
 

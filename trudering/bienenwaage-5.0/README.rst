@@ -15,6 +15,13 @@ A beehive monitor firmware for ESP32.
 
 :Author: Stefan Ulmer <ulmi [ät] gmx.de>
 
+Details
+=======
+
+A beehive monitoring sensor node based on the `TTGO T-Call`_ board, featuring
+an `ESP32`_ MCU. Telemetry data is transmitted using MQTT over `Wi-Fi`_ or `GSM`_.
+The most recent firmware version is available at `bienenwaage-esp32.cpp`_.
+
 
 ********
 Features
@@ -82,11 +89,11 @@ Clone git repository
 ====================
 ::
 
-    # Get hold of the source code repository including all dependencies
+    # Acquire source code repository.
     git clone https://github.com/hiveeyes/arduino
 
     # Select this firmware
-    cd node-esp32-generic
+    cd arduino/trudering/bienenwaage-5.0
 
 
 Build

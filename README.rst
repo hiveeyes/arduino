@@ -21,9 +21,10 @@ Hiveeyes Arduino README
 About
 *****
 
-This is the firmware source code documentation of the `Hiveeyes project`_, which is
-developing a flexible beehive monitoring infrastructure toolkit and platform based
-on affordable hardware, wireless telemetry and modern software.
+This is the firmware source code and documentation repository of the `Hiveeyes project`_,
+which is developing a flexible beehive monitoring infrastructure toolkit and platform, based
+on affordable hardware, wireless telemetry, and modern software.
+
 
 ****
 Note

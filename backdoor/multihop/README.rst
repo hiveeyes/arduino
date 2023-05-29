@@ -24,7 +24,7 @@ About
 
 A flexible software breadboard for sensor-, relay-, and gateway-nodes, transmitting
 telemetry data in multi-hop radio link environments. It is a hybrid/unified single-file
-firmware `generic.ino`_, with an accompanying configuration settings header file, `config.h`_.
+firmware `multihop.ino`_, with an accompanying configuration settings header file, `config.h`_.
 
 The system has originally been conceived for beehive monitoring, but can be used for
 other environmental monitoring purposes.
@@ -105,11 +105,11 @@ Build on your workstation
 =========================
 ::
 
-    # Acquire the source code repository including all dependencies.
+    # Acquire source code repository.
     git clone https://github.com/hiveeyes/arduino
 
     # Select this firmware.
-    cd generic
+    cd arduino/backdoor/multihop
 
     # Build firmware.
     make build

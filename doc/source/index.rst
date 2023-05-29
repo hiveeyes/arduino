@@ -25,7 +25,6 @@ Hiveeyes Arduino Firmwares
     :maxdepth: 1
     :hidden:
 
-    firmwares
     firmware/overview
     BERadio/README
     TerkinData/README
@@ -53,21 +52,21 @@ Overview
 ========
 
 The repository includes different firmware implementations for different scenarios
-and use cases. :ref:`firmware-overview-ng` has a summary.
+and use cases. The :ref:`firmware-overview` page enumerates all of them.
 
 Coverage
 ========
 
-- MCU: There are firmwares for ATmega328_, ESP8266_, and ESP32_.
-- Purpose: Either *node* or *gateway*.
-- Telemetry transport: *RFM69*, *GSM*, or *Wi-Fi*.
-- Telemetry protocol: *BERadio*, *MQTT*, or *HTTP*.
+- MCU: ATmega328_, ESP8266_, ESP32_
+
+.. include:: coverage.md
+   :parser: myst_parser.sphinx_
 
 .. note::
 
     Some firmware names reflect their purpose using a naming convention like
     ``<purpose>-<transport>-<protocol>``. Otherwise, please inspect their documentation
-    and source code to find out exactly.
+    and source code to find out about their ingredients more exactly.
 
 
 *****
@@ -90,10 +89,11 @@ Build
 
 Select a firmware according to your needs, and build it::
 
-    cd trudering/bienenwaage-5.0
+    cd arduino/trudering/bienenwaage-5.0
     make build
 
-For selecting the right firmware, have a look at :ref:`firmware-overview-ng`.
+For selecting the right firmware for your purposes, please inspect the
+:ref:`firmware-overview` page.
 
 Upload
 ======
@@ -107,17 +107,6 @@ finally start a serial port monitor, invoke::
     # Run serial port monitor
     make monitor
 
-
-----
-
-.. tip::
-
-    Depending on your use case, when using PlatformIO, you may want to turn off telemetry,
-    by running that command within the Python environment you are running ``pio`` in:
-
-    .. code-block:: shell
-
-        pio settings set enable_telemetry false
 
 
 .. _about-platformio:
@@ -181,6 +170,15 @@ dependencies. You will be able to choose between CLI and UI operations, see `Pla
     If you *absolutely have to use* the Arduino IDE, you may want to inspect the
     ``env.lib_deps`` sections within the corresponding ``platformio.ini`` files,
     in order to learn about the required dependencies for each individual firmware.
+
+.. tip::
+
+    Depending on your use case, when using PlatformIO, you may want to turn off telemetry,
+    by running that command within the Python environment you are running ``pio`` in:
+
+    .. code-block:: shell
+
+        pio settings set enable_telemetry false
 
 
 .. _Community Forum: https://community.hiveeyes.org/
