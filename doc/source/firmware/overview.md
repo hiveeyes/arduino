@@ -399,6 +399,70 @@ Collect sensor data, encode it to [CSV], and send it using an [RFM69] radio modu
 :::
 
 
+### Ringlabs
+
+
+:::::::{grid} 1
+:margin: 0
+:padding: 0
+
+::::::{grid-item-card}
+:::::{grid} 2
+:margin: 0
+:padding: 0
+
+::::{grid-item}
+:columns: 8
+[](#bienenwaage-2.0)
+
+A beehive monitoring sensor node based on the [NodeMCU] hardware, using an
+[ESP8266] MCU. Telemetry data is transmitted using MQTT over Wi-Fi or GSM.
+
+**Date:** 2019
+**Source:** [bienenwaage-esp8266.ino]
+::::
+::::{grid-item}
+:columns: 4
+{bdg-primary-line}`wifi` {bdg-primary-line}`gsm` {bdg-primary-line}`mqtt`
+
+{bdg-success-line}`hx711` {bdg-success-line}`ds18b20`
+
+{bdg-secondary-line}`esp8266`
+
+{bdg-info-line}`low-power`
+:::::
+::::::
+
+::::::{grid-item-card}
+:::::{grid} 2
+:margin: 0
+:padding: 0
+
+::::{grid-item}
+:columns: 8
+[](#bienenwaage-5.0)
+
+A beehive monitoring sensor node based on the [TTGO T-Call] board, featuring
+an [ESP32] MCU. Telemetry data is transmitted using MQTT over Wi-Fi or GSM.
+
+**Date:** 2019
+**Source:** [bienenwaage-esp32.cpp]
+::::
+::::{grid-item}
+:columns: 4
+{bdg-primary-line}`wifi` {bdg-primary-line}`gsm` {bdg-primary-line}`mqtt`
+
+{bdg-success-line}`hx711` {bdg-success-line}`ds18b20`
+
+{bdg-secondary-line}`esp32`
+
+{bdg-info-line}`low-power`
+:::::
+::::::
+
+:::::::
+
+
 ```{toctree}
 ---
 caption: Firmwares
@@ -416,4 +480,6 @@ openhive/rfm69-gateway-sdcard/README
 openhive/rfm69-gateway-uart/README
 openhive/rfm69-node/README
 openhive/scale-adjust/README
+ringlabs/bienenwaage-2.0/README
+ringlabs/bienenwaage-5.0/README
 ```
