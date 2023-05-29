@@ -6,6 +6,12 @@
 Firmware builder
 ################
 
+.. warning::
+
+    The Firmware builder subsystem of Kotori used to use very early Arduino 1.0.x already,
+    and is currently effectively defunct. There is already a ticket about `modernizing the
+    firmware builder to use PlatformIO`_. Contributions are welcome.
+
 
 ************
 Introduction
@@ -199,3 +205,6 @@ On the server, there's currently Arduino 1.0.5::
     Version: 2:1.0.5+dfsg2-4
 
 So the appropriate settings for Arduino 1.0.x should be used inside the respective Makefile.
+
+
+.. _modernizing the firmware builder to use PlatformIO: https://github.com/daq-tools/kotori/issues/137
