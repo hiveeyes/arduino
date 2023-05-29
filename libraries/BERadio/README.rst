@@ -92,12 +92,12 @@ Dependencies
 ************
 
 
-StandardCplusplus
-=================
+ArduinoSTL
+==========
 
-| Standard C++ for Arduino (port of uClibc++)
-| https://github.com/maniacbug/StandardCplusplus
-| https://github.com/hiveeyes/StandardCplusplus
+| Standard C++ template library for Arduino
+| https://github.com/mike-matera/ArduinoSTL
+| https://registry.platformio.org/libraries/mike-matera/ArduinoSTL
 
 
 EmBencode
