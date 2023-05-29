@@ -18,7 +18,22 @@ Backlog
 2023
 ****
 
-- Refine new firmware overview page
+Iteration 1
+===========
+- [x] FW INDEX :hidden:
+- [x] Refine new firmware overview page
+- [x] Get rid of tools subdirectory
+- [x] Hibernate Firmware Builder
+- [x] Run linkchecker
+- [x] Use brand color of previous theme
+- [x] Naming things: ``trudering`` => ``stulabs`` or ``ringlabs``
+- [x] Docs: Add Ringlabs Bienenwaage
+- [o] Docs: Add Terkin, BOB, BEEP, EasyHive, Autonome Zelle, Dachboden Lab, @hsors
+
+Iteration 2
+===========
+- Fix links within ``coverage.md``
+- [o] Add Mermaid
 - Add firmwares by @wtf, @tonke, and @hsors.
 
   - https://git.cicer.de/autonome-zelle/autonome-zelle-sfwv
@@ -34,6 +49,48 @@ Backlog
   - https://git.cicer.de/tonke/fipy
   - https://git.cicer.de/tonke/wipy
   - https://git.cicer.de/tonke/amqp-to-mqtt
+
+- Look at muon, and more. https://github.com/hiveeyes/beradio/issues
+- Generalize HTTP access
+
+  - https://registry.platformio.org/libraries/csharpermantle2/http-parser
+  - https://registry.platformio.org/libraries/csharpermantle/http-parser-arduino
+  - https://registry.platformio.org/libraries/exosite/libexosite%20http-data-api%20sync
+  - https://registry.platformio.org/libraries/azure/AzureIoTProtocol_HTTP
+  - https://registry.platformio.org/libraries/khoih-prog/AsyncHTTPRequest_RP2040W
+  - https://github.com/boblemaire/asyncHTTPrequest
+  - https://registry.platformio.org/libraries/petruspierre/EasyHTTP
+  - https://registry.platformio.org/libraries/khoih-prog/AsyncHTTPSRequest_Generic
+
+- More libs
+
+  - https://registry.platformio.org/libraries/ostaquet/SIM800L%20HTTP%20connector
+  - https://registry.platformio.org/libraries/heltecautomation/ESP32_LoRaWAN
+  - https://registry.platformio.org/libraries/ostaquet/SIM800L%20HTTP%20connector
+
+Include reStructuredText - links do not work::
+
+    ```{eval-rst}
+    .. include:: ../resources.rst
+    ```
+
+Firmware-Builder - Helper.mk::
+
+    firmware-info:
+
+        @# For architecture "AVR"
+        @echo "TARGET_HEX: $(TARGET_HEX)"
+        @echo "TARGET_ELF: $(TARGET_ELF)"
+        @echo "TARGET_BOARD_TAG: $(BOARD_TAG)"
+        @echo "TARGET_BOARD_SUB: $(BOARD_SUB)"
+
+        @# For architecture "ESP"
+        @echo "TARGET_BIN: $(MAIN_EXE)"
+        @echo "TARGET_CHIP: $(CHIP)"
+
+    all-plus-firmware-info: all firmware-info
+
+
 
 
 ****
@@ -99,7 +156,7 @@ Misc
 
 2017-04-05
 ----------
-- Polish https://github.com/hiveeyes/arduino/tree/master/libraries/ADS1231
+- Polish https://github.com/hiveeyes/aerowind-ads1231
 - Add http://www.nikolaus-lueneburg.de/2016/10/wemos-d1-mini-battery-shield/
 - Announce at http://forum.sodaq.com/t/hive-scale-code/275 when this works on ESP8266 also
 
@@ -147,7 +204,7 @@ Misc
 - https://github.com/bogde/HX711/pull/59
 - Alternative libraries for ADS1231:
 
-    - https://github.com/rfjakob/barwin-arduino/tree/master/lib/ads1231
+    - https://github.com/rfjakob/barwin-arduino
     - | https://github.com/jensfranke/ads-1231-particle-library
       | see also: https://community.particle.io/t/library-for-ads-1231-bee-hive-weigh-scale/21719
 
@@ -332,11 +389,11 @@ ESP8266
 
 PlatformIO
 ==========
-- http://platformio.org/
-- http://platformio.org/lib/show/92/RFM69
-- http://platformio.org/lib/show/276/AESLib
-- http://docs.platformio.org/en/latest/librarymanager/config.html#dependencies
-- http://docs.platformio.org/en/latest/librarymanager/config.html#library-json
-- http://docs.platformio.org/en/latest/librarymanager/creating.html#library-creating-examples
-- http://docs.platformio.org/en/latest/userguide/lib/cmd_install.html#cmd-lib-install
-- http://docs.platformio.org/en/latest/platforms/atmelavr.html#packages
+- https://platformio.org/
+- https://registry.platformio.org/libraries/lowpowerlab/RFM69
+- https://registry.platformio.org/libraries/davylandman/AESLib
+- https://docs.platformio.org/en/latest/librarymanager/dependencies.html#dependency-specifications
+- https://docs.platformio.org/en/latest/manifests/library-json/index.html#library-json
+- https://docs.platformio.org/en/latest/librarymanager/creating.html#examples
+- https://docs.platformio.org/en/latest/core/userguide/lib/cmd_install.html#pio-lib-install
+- https://docs.platformio.org/en/latest/platforms/atmelavr.html#packages
