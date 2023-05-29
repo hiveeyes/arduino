@@ -34,6 +34,7 @@ extensions = [
     "sphinx.ext.todo",
     "sphinx.ext.ifconfig",
     "sphinx.ext.graphviz",
+    "sphinxcontrib.mermaid",
     "sphinxext.opengraph",
 ]
 
