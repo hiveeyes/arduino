@@ -28,8 +28,8 @@
 [ESP8266-BeeScale.fzz]: https://www.imker-nettetal.de/bienen-nsa/ESP8266-BeeScale1_1.fzz
 [node-homie-basic.ino]: https://github.com/hiveeyes/arduino/blob/main/homie/node-homie-basic/node-homie-basic.ino
 [node-homie-lowpower.ino]: https://github.com/hiveeyes/arduino/blob/main/homie/node-homie-lowpower/node-homie-lowpower.ino
-[bienenwaage-esp8266.ino]: https://github.com/hiveeyes/arduino/blob/main/trudering/bienenwaage-2.0/bienenwaage-esp8266.ino
-[bienenwaage-esp32.cpp]: https://github.com/hiveeyes/arduino/blob/main/trudering/bienenwaage-5.0/bienenwaage-esp32.cpp
+[bienenwaage-esp8266.ino]: https://github.com/hiveeyes/arduino/blob/main/ringlabs/bienenwaage-2.0/bienenwaage-esp8266.ino
+[bienenwaage-esp32.cpp]: https://github.com/hiveeyes/arduino/blob/main/ringlabs/bienenwaage-5.0/bienenwaage-esp32.cpp
 [Kotori]: https://getkotori.org/docs/
 [Atmel]: https://en.wikipedia.org/wiki/Atmel
 [Microchip]: https://en.wikipedia.org/wiki/Microchip_Technology
