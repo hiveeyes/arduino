@@ -10,14 +10,20 @@ include util.mk
 # Miscellaneous tools:
 # Software tests, Documentation builder, Virtual environment builder
 
+# Build documentation.
 docs-html: virtualenv
 	@# TODO: Invoke from `conf.py`.
 	$(MAKE) rst2md
 	export SPHINXBUILD="$(PWD)/$(sphinx)"; cd doc; make html
 
+# Continuously build documentation.
 docs-autobuild: virtualenv
 	$(pip) --quiet install sphinx-autobuild
 	$(sphinx-autobuild) --open-browser doc/source doc/build
+
+# Run link checker on documentation.
+docs-linkcheck: virtualenv
+	$(sphinx) -j auto -n -W --keep-going -b linkcheck doc/source doc/build
 
 virtualenv: setup-virtualenv
 	@echo Installing packages from requirements-docs.txt.

@@ -4,7 +4,7 @@
 
 # Sensors
 
-- [HX711], [BME280], [DS18B20], [DHT22], [TSL2591]
+- [HX711], [BME280], [DS18B20], [DHT22], [TSL25911]
 
 
 # Telemetry transports

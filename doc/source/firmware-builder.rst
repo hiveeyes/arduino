@@ -36,7 +36,7 @@ for setting up a GPRS device for communication in form of the quadruple
 
 For getting an idea about the variable replacements we are aiming at with an example sketch
 suitable for automatic building using the variables described above, please have a look at
-`node-gprs-any.ino, line 81 ff. <https://github.com/hiveeyes/arduino/blob/master/node-gprs-any/node-gprs-any.ino#L81#>`_
+`openhive-gsm-wifi.ino, line 81 ff. <https://github.com/hiveeyes/arduino/blob/main/openhive/openhive-gsm-wifi/openhive-gsm-wifi.ino#L81#>`_
 
 .. attention::
 
@@ -45,7 +45,8 @@ suitable for automatic building using the variables described above, please have
 
     The blueprint is the fine Cloud Build Service of the NodeMCU community:
 
-        - https://nodemcu.readthedocs.io/en/master/en/build/
+        - https://nodemcu.readthedocs.io/en/release/getting-started/#cloud-builder
+        - https://nodemcu.readthedocs.io/en/release/build/#cloud-build-service
         - https://nodemcu-build.com/
 
 

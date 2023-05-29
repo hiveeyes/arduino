@@ -351,3 +351,11 @@ copybutton_prompt_is_regexp = True
 ogp_site_url = "https://hiveeyes.org/docs/arduino/"
 ogp_description_length = 300
 ogp_enable_meta_description = True
+
+# -- Options for link checker ----------------------------------
+
+# A list of regular expressions that match URIs that should not be checked when doing a linkcheck build.
+linkcheck_ignore = [
+    # Ignore GitHub anchors.
+    "https://github.com/plerup/makeEspArduino.*#",
+]

@@ -55,10 +55,9 @@ If you're still reading, you might want to have a look at these fine papers:
 - `Load cell troubleshooting from Interface`_
 
 
+.. _How to use load cells: http://www.aandd.jp/products/weighing/loadcell/introduction/pdf/6-1.pdf
 .. _Load cell Primer: http://www.phidgets.com/docs/Load_Cell_Primer
 .. _Load cell glossary: http://www.interfaceforce.com/index.php?mod=library&show=22
-.. _How to use load cells: http://www.aandd.jp/products/weighing/loadcell/introduction/pdf/6-1.pdf
-.. _Load cell and weight module handbook: https://www.ricelake.com/docs/prodinfo/Manuals/load-cells/lch_22054.pdf
+.. _Load cell and weight module handbook: https://www.ricelake.com/media/b5mlti1q/m_us_22054_lc-wm_handbook_revb.pdf
 .. _Load cell troubleshooting from VPG Sensors: http://www.vishaypg.com/docs/11867/vpg-08.pdf
 .. _Load cell troubleshooting from Interface: http://www.loadcelltheory.com/troubleshoot.html
-

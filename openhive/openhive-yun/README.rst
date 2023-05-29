@@ -59,8 +59,8 @@ Sensors
 - ADS1231_ ADC weigh scale breakout board
 - DS18B20_ digital thermometer
 - DHT22_ (RHT03_) digital humidity/temperature sensor
-- TSL25911_ Ambient Light Sensor aka.
-  TSL2591_ High Dynamic Range Digital Light Sensor
+- `TSL25911`_ Ambient Light Sensor aka.
+  `Adafruit TSL2591 STEMMA QT`_ High Dynamic Range Digital Light Sensor
 
 
 *****

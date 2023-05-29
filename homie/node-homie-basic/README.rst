@@ -144,7 +144,8 @@ When starting the ESP8266 device with Homie firmware, it will come up in ``confi
 and spawn a secure WiFi access point named ``Homie-xxxxxxxxxxxx``, like ``Homie-c631f278df44``.
 Connect to it.
 
-Configure the device by uploading the `JSON configuration file <json-configuration-file_>`_ to the `HTTP JSON API <http-json-api_>`_ at http://192.168.1.1::
+Configure the device by uploading the `JSON configuration file <json-configuration-file_>`_ to
+the `HTTP JSON API <http-json-api_>`_ at ``http://192.168.1.1``::
 
     # 1. Clone real configuration from blueprint
     cp example.config.json config.json
@@ -157,10 +158,7 @@ Configure the device by uploading the `JSON configuration file <json-configurati
 
 .. seealso::
 
-    `Connecting to the AP and configuring the device <https://homie-esp8266.readme.io/docs/getting-started#section-connecting-to-the-ap-and-configuring-the-device>`_
-
-.. _http-json-api: https://homie-esp8266.readme.io/docs/http-json-api
-.. _json-configuration-file: https://homie-esp8266.readme.io/docs/json-configuration-file
+    `Connecting to the AP and configuring the device <https://homieiot.github.io/homie-esp8266/docs/2.0.0/quickstart/getting-started/#connecting-to-the-ap-and-configuring-the-device>`_
 
 
 SPIFFS
@@ -223,4 +221,6 @@ Backlog
 
 
 .. _Homie custom settings: https://homie-esp8266.readme.io/docs/custom-settings
+.. _http-json-api: https://homieiot.github.io/homie-esp8266/docs/2.0.0/configuration/http-json-api/
 .. _UI bundle: https://homie-esp8266.readme.io/docs/ui-bundle
+.. _json-configuration-file: https://homieiot.github.io/homie-esp8266/docs/2.0.0/configuration/json-configuration-file/

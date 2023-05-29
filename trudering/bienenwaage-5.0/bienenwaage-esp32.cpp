@@ -1,8 +1,9 @@
-/*
+/**
+ * Bienenwaage 5.0 TTGO T-Call (ESP32)
+ * https://github.com/hiveeyes/arduino/tree/main/trudering/bienenwaage-5.0
+ */
 
-Bienenwaage 5.0 TTGO-T-CALL
-https://github.com/hiveeyes/arduino/tree/master/node-esp32-generic
-
+/**
 
 Telemetry | GSM or WiFi
 -----------------------

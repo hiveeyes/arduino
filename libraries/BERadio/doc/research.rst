@@ -115,10 +115,10 @@ Misc
 
 Simulation
 ==========
-- http://www.nongnu.org/simulavr/
+- https://www.nongnu.org/simulavr/
 - https://github.com/Traumflug/simulavr
-- http://mirror.unicorncloud.org/savannah-nongnu/simulavr/manual-1.0.pdf
-- http://download.savannah.gnu.org/releases/simulavr/
+- https://bigsearcher.com/mirrors/nongnu/simulavr/manual-1.0.pdf
+- https://download.savannah.gnu.org/releases/simulavr/
 
 
 Operating Systems

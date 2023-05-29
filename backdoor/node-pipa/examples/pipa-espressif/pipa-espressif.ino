@@ -103,9 +103,9 @@
 // Libraries
 // ---------
 #include <ArduinoJson.h>                // https://github.com/bblanchon/ArduinoJson
-#include <Terkin.h>                     // https://github.com/hiveeyes/arduino/tree/master/libraries/Terkin
-#include <Hiveeyes.h>                   // https://github.com/hiveeyes/arduino/tree/master/libraries/Hiveeyes
-#include <OpenHive.h>                   // https://github.com/hiveeyes/arduino/tree/master/libraries/OpenHive
+#include <Terkin.h>                     // https://github.com/hiveeyes/arduino/tree/main/libraries/Terkin
+#include <Hiveeyes.h>                   // https://github.com/hiveeyes/arduino/tree/main/libraries/Hiveeyes
+#include <OpenHive.h>                   // https://github.com/hiveeyes/arduino/tree/main/libraries/OpenHive
 #include <Wire.h>                       // Arduino
 
 

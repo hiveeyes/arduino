@@ -118,9 +118,9 @@
 #if USE_GPRSBEE
 #include <GPRSbee.h>                    // https://github.com/SodaqMoja/GPRSbee
 #endif
-#include <Terkin.h>                     // https://github.com/hiveeyes/arduino/tree/master/libraries/Terkin
-#include <Hiveeyes.h>                   // https://github.com/hiveeyes/arduino/tree/master/libraries/Hiveeyes
-#include <OpenHive.h>                   // https://github.com/hiveeyes/arduino/tree/master/libraries/OpenHive
+#include <Terkin.h>                     // https://github.com/hiveeyes/arduino/tree/main/libraries/Terkin
+#include <Hiveeyes.h>                   // https://github.com/hiveeyes/arduino/tree/main/libraries/Hiveeyes
+#include <OpenHive.h>                   // https://github.com/hiveeyes/arduino/tree/main/libraries/OpenHive
 #include <Wire.h>                       // Arduino
 
 
