@@ -4,8 +4,14 @@
 .. _bienenwaage-5.0:
 
 ###########################
-Bienenwaage 5.0 TTGO-T-CALL
+Bienenwaage 5.0 TTGO T-Call
 ###########################
+
+.. tip::
+
+    Please `continue reading this document on our documentation space
+    <https://hiveeyes.org/docs/arduino/firmware/ringlabs/bienenwaage-5.0/README.html>`_,
+    all inline links will be working there.
 
 
 *****

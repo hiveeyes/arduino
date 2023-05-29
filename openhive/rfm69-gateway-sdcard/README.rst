@@ -9,7 +9,8 @@ Open Hive Arduino Yún gateway
 
 .. tip::
 
-    You might want to `read this document on our documentation space <https://hiveeyes.org/docs/arduino/firmware/gateway-rfm69-csv-sdcard/README.html>`_,
+    Please `continue reading this document on our documentation space
+    <https://hiveeyes.org/docs/arduino/firmware/openhive/rfm69-gateway-sdcard/README.html>`_,
     all inline links will be working there.
 
 

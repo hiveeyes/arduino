@@ -6,15 +6,10 @@
 Basic WiFi/MQTT sensor node
 ###########################
 
-.. contents::
-   :local:
-   :depth: 1
-
-----
-
 .. tip::
 
-    You might want to `read this document on our documentation space <https://hiveeyes.org/docs/arduino/firmware/node-wifi-mqtt/README.html>`_,
+    Please `continue reading this document on our documentation space
+    <https://hiveeyes.org/docs/arduino/firmware/backdoor/node-wifi-mqtt/README.html>`_,
     all inline links will be working there.
 
 

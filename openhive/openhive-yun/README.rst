@@ -9,13 +9,14 @@
 Mois sensor node
 ################
 
-.. highlight:: bash
-
 .. tip::
 
-    You might want to `read this document on our documentation space <https://hiveeyes.org/docs/arduino/firmware/node-yun-http/README.html>`_,
+    Please `continue reading this document on our documentation space
+    <https://hiveeyes.org/docs/arduino/firmware/openhive/openhive-yun/README.html>`_,
     all inline links will be working there.
 
+
+.. highlight:: bash
 
 ************
 Introduction

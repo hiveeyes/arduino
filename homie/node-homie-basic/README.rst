@@ -9,7 +9,8 @@ ESP8266 beehive scale based on Homie
 
 .. tip::
 
-    You might want to `read this document on our documentation space <https://hiveeyes.org/docs/arduino/firmware/node-wifi-mqtt-homie/README.html>`_,
+    Please `continue reading this document on our documentation space
+    <https://hiveeyes.org/docs/arduino/firmware/homie/node-homie-basic/README.html>`_,
     all inline links will be working there.
 
 

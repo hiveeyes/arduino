@@ -13,7 +13,8 @@ Open Hive GSM and WiFi sensor nodes
 
 .. tip::
 
-    You might want to `read this document on our documentation space <https://hiveeyes.org/docs/arduino/firmware/node-gprs-http/README.html>`_,
+    Please `continue reading this document on our documentation space
+    <https://hiveeyes.org/docs/arduino/firmware/openhive/openhive-wifi-gsm/README.html>`_,
     all inline links will be working there.
 
 

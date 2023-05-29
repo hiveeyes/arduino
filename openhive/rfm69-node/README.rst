@@ -9,7 +9,8 @@ Open Hive RFM69 sensor node
 
 .. tip::
 
-    You might want to `read this document on our documentation space <https://hiveeyes.org/docs/arduino/firmware/node-rfm69-csv/README.html>`_,
+    Please `continue reading this document on our documentation space
+    <https://hiveeyes.org/docs/arduino/firmware/openhive/rfm69-node/README.html>`_,
     all inline links will be working there.
 
 
