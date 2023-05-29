@@ -1,6 +1,7 @@
 .. include:: ../../../resources.rst
 
 .. _node-wifi-mqtt-homie:
+.. _node-homie-basic:
 
 ####################################
 ESP8266 beehive scale based on Homie
@@ -20,7 +21,7 @@ A beehive monitoring sensor node based on a ESP8266 module and a custom made PCB
 Telemetry data is transmitted using WiFi/MQTT.
 
 The standard firmware is based on the `ESP8266 framework for Homie`_,
-its most recent version is available at `node-wifi-mqtt-homie.ino`_.
+its most recent version is available at `node-homie-basic.ino`_.
 However, the PCB (`ESP8266-BeeScale.fzz`_) can be used with any firmware.
 
 .. figure:: https://www.imker-nettetal.de/wp-content/gallery/esp8266-gh/PCB-Built-in.jpg
@@ -35,7 +36,7 @@ Platform and supported peripherals
 
 .. seealso::
 
-    - `ESP8266 Stockwaage – erste Eindrücke`_
+    - `ESP8266 Stockwaage – erste Eindrücke <esp8266-beescale-erste-eindruecke_>`_
     - https://www.imker-nettetal.de/category/stockwaage/
     - Nodes with identical hardware: :ref:`node-wifi-http` and :ref:`node-wifi-mqtt`
 
@@ -79,7 +80,7 @@ Configuration
 
 .. highlight:: c++
 
-Have a look at the source code `node-wifi-mqtt-homie.ino`_ and adapt
+Have a look at the source code `node-homie-basic.ino`_ and adapt
 setting variables according to your environment.
 
 Configure load cell calibration settings::
@@ -100,11 +101,11 @@ Clone git repository
 ====================
 ::
 
-    # Get hold of the source code repository including all dependencies
+    # Acquire source code repository
     git clone https://github.com/hiveeyes/arduino
 
     # Select this firmware
-    cd node-wifi-mqtt-homie
+    cd arduino/homie/node-homie-basic
 
 
 Build

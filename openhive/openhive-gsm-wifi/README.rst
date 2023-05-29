@@ -4,6 +4,7 @@
 .. _open-hive-firmware-gprs:
 .. _node-gsm-http:
 .. _node-wifi-http:
+.. _openhive-gsm-wifi:
 
 ###################################
 Open Hive GSM and WiFi sensor nodes
@@ -21,7 +22,7 @@ Introduction
 ************
 This hybrid firmware supports two different hardware devices.
 Telemetry data is transmitted using HTTP. Both HX711_ and ADS1231_ load cell sensor chips are supported.
-The most recent firmware version is available at `node-gprs-http.ino`_.
+The most recent firmware version is available at `openhive-gsm-wifi.ino`_.
 
 .. figure:: https://ptrace.hiveeyes.org/2016-07-08_open-hive_box-with-electronics.jpg
     :alt: Open Hive Box with electronics
@@ -70,18 +71,18 @@ Clone git repository
 ====================
 ::
 
-    # Get hold of the source code repository including all dependencies
+    # Acquire source code repository
     git clone https://github.com/hiveeyes/arduino
 
     # Select this firmware
-    cd node-gprs-http
+    cd arduino/openhive/openhive-gsm-wifi
 
 
 Configure firmware
 ==================
 .. highlight:: c++
 
-Have a look at the source code `node-gprs-http.ino`_ and adapt
+Have a look at the source code `openhive-gsm-wifi.ino`_ and adapt
 feature flags and setting variables according to your environment:
 
 When using a HX711_ sensor::

@@ -47,7 +47,7 @@ suitable for automatic building using the variables described above, please have
 Build node-gprs-http
 ********************
 
-The firmware source code `node-gprs-http.ino`_ of the :ref:`open-hive-firmware-gprs`
+The firmware source code `openhive-gsm-wifi.ino`_ of the :ref:`open-hive-firmware-gprs`
 is pulled from the master branch of the `Hiveeyes Arduino repository`_ on GitHub.
 Specify appropriate parameters to match your environment.
 
@@ -104,7 +104,7 @@ response content on the right side of the screen into a .hex file and upload to 
 .. tip::
 
     As the available configuration parameters and possible values are currently not documented
-    in detail, please have a look at the source code (`node-gprs-http.ino`_). All preprocessor
+    in detail, please have a look at the source code (`openhive-gsm-wifi.ino`_). All preprocessor
     variables (``#define ...``) can be changed through HTTP POST parameters.
 
 

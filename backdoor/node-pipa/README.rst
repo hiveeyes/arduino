@@ -1,3 +1,5 @@
+.. _pipa-datalogger:
+
 ########################
 Hiveeyes Pipa Datalogger
 ########################
@@ -33,7 +35,7 @@ Usage
 ::
 
     git clone https://github.com/hiveeyes/arduino
-    cd arduino/node-pipa
+    cd arduino/backdoor/node-pipa
     make
 
 

@@ -80,11 +80,11 @@ Clone git repository
 ====================
 ::
 
-    # Get hold of the source code repository including all dependencies
+    # Acquire source code repository
     git clone https://github.com/hiveeyes/arduino
 
     # Select this firmware
-    cd node-wifi-mqtt
+    cd arduino/backdoor/node-wifi-mqtt
 
 
 Configure

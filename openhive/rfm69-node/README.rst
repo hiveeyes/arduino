@@ -1,6 +1,7 @@
 .. include:: ../../../resources.rst
 
 .. _open-hive-firmware-rfm69-node:
+.. _openhive-rfm69-node:
 
 ###########################
 Open Hive RFM69 sensor node
@@ -15,11 +16,13 @@ Open Hive RFM69 sensor node
 ************
 Introduction
 ************
-The `Open Hive Box`_ RFM69 is a sensor node transmitting data using radio link communication.
-Telemetry data is serialized using CSV and transmitted
-to the receiver node :ref:`open-hive-firmware-rfm69-gateway-sdcard`
-or :ref:`open-hive-firmware-rfm69-gateway-uart`.
-The most recent firmware version is available at `node-rfm69-csv.ino`_.
+
+The `Open Hive Box`_ RFM69 is a sensor node transmitting data using radio link
+communication. Telemetry data is serialized using CSV and transmitted to the
+receiver node :ref:`open-hive-firmware-rfm69-gateway-sdcard` or
+:ref:`open-hive-firmware-rfm69-gateway-uart`.
+
+The most recent firmware version is available at `rfm69-node.ino`_.
 
 .. figure:: https://ptrace.hiveeyes.org/2016-07-08_open-hive_box-with-electronics.jpg
     :alt: Open Hive Box with electronics
@@ -38,11 +41,11 @@ Build on your workstation
 =========================
 ::
 
-    # Get hold of the source code repository including all dependencies
+    # Acquire source code repository
     git clone https://github.com/hiveeyes/arduino
 
     # Select this firmware
-    cd node-rfm69-csv
+    cd arduino/openhive/rfm69-node
 
     # Build firmware
     make build

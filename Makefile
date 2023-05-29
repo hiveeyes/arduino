@@ -9,8 +9,10 @@ include util.mk
 #
 # Miscellaneous tools:
 # Software tests, Documentation builder, Virtual environment builder
-#
+
 docs-html: virtualenv
+	@# TODO: Invoke from `conf.py`.
+	$(MAKE) rst2md
 	export SPHINXBUILD="$(PWD)/$(sphinx)"; cd doc; make html
 
 docs-autobuild: virtualenv
@@ -20,6 +22,9 @@ docs-autobuild: virtualenv
 virtualenv: setup-virtualenv
 	@echo Installing packages from requirements-docs.txt.
 	$(pip) install --quiet --upgrade --requirement requirements-docs.txt
+
+rst2md:
+	cat doc/source/resources.rst | $(python) doc/rst2md.py > doc/source/resources-md.md
 
 
 # ==========================================

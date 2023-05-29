@@ -137,9 +137,9 @@ in-progress
 
 2017-01-10 0.11.0
 =================
-- Add firmware for :ref:`node-wifi-mqtt-homie` (`node-wifi-mqtt-homie.ino`_).
+- Add firmware for :ref:`node-wifi-mqtt-homie` (`node-homie-basic.ino`_).
   Contributed as `PR #1`_ by Alexander Wilms of `Imkerverein Nettetal e.V.`_. Thanks a bunch!
-- Update firmware for :ref:`open-hive-firmware-gprs`: (`node-gprs-http.ino`_). Thanks, Clemens!
+- Update firmware for :ref:`open-hive-firmware-gprs`: (`openhive-gsm-wifi.ino`_). Thanks, Clemens!
 
     - Add support for HX711
     - Add support for ESP8266
@@ -155,7 +155,7 @@ in-progress
 2016-11-01 0.10.0
 =================
 - Add sketch and update documentation about CSV payload transmission and forwarding to UART using a JeeLink device
-  to complete the Open Hive RFM69 trio: :ref:`open-hive-firmware-rfm69-gateway-uart` (`gateway-rfm69-csv-uart.ino`_).
+  to complete the Open Hive RFM69 trio: :ref:`openhive-rfm69-gateway-uart` (`rfm69-gateway-uart.ino`_).
   Thanks Richard!
 - Update sketch (beta release) and add documentation about :ref:`node-wifi-mqtt` (`node-wifi-mqtt.ino`_).
   Thanks Clemens and Karsten!
@@ -164,25 +164,25 @@ in-progress
 2016-09-17 0.9.0
 ================
 - Add documentation about :ref:`scale-adjust-firmware`.
-- Update firmware for :ref:`open-hive-firmware-gprs` "`node-gprs-http.ino`_": Modularize sensors and debugging. Thanks, Clemens!
+- Update firmware for :ref:`open-hive-firmware-gprs` "`openhive-gsm-wifi.ino`_": Modularize sensors and debugging. Thanks, Clemens!
 - Add firmwares for Open Hive RFM69 tandem with build infrastructure and documentation
 
-    - :ref:`open-hive-firmware-rfm69-node`: `node-rfm69-csv.ino`_
-    - :ref:`open-hive-firmware-rfm69-gateway-sdcard`: `gateway-rfm69-csv-sdcard.ino`_
+    - :ref:`open-hive-firmware-rfm69-node`: `rfm69-node.ino`_
+    - :ref:`open-hive-firmware-rfm69-gateway-sdcard`: `rfm69-gateway-sdcard.ino`_
 
 - Improve documentation
 
 
 2016-07-08 0.8.1
 ================
-- Add documentation about the new :ref:`generic-firmware`, "`generic.ino`_".
+- Add documentation about the new :ref:`generic-firmware`, "`multihop.ino`_".
 - Switch “node-gprs-http” sketch from Rob Tillaarts DHTlib to DHTstable, as suggested by Clemens. Thanks again!
 
 
 2016-07-08 0.8.0
 ================
 - Make building “generic” sketch for x86_64 a bit easier, just do ``cd generic; ./sim/build``.
-- Add :ref:`open-hive-firmware-gprs` from Clemens Gruber as "`node-gprs-http.ino`_". Thanks, Clemens!
+- Add :ref:`open-hive-firmware-gprs` from Clemens Gruber as "`openhive-gsm-wifi.ino`_". Thanks, Clemens!
 - Satisfy dependencies of “node-gprs-http” per git submodules (mostly), accompanied by Arduino Makefile yak shaving.
 - Add :ref:`scale-adjust-firmware`. Thanks again, Clemens!
 - Finish restructuring work on "generic" sketch. Proof-of-Concept ``node69-relay69x95-gateway95`` is working!
@@ -198,7 +198,7 @@ in-progress
 
 General
 -------
-- Add sketch `generic.ino`_ as a module composition breadboard.
+- Add sketch `multihop.ino`_ as a module composition breadboard.
 - Add Terrine_, an application boilerplate for convenient MCU development.
 - Run generic sketch on x86_64 incl. pseudo radio link
   communication using RadioHead RH_TCP driver.
@@ -234,7 +234,7 @@ Libraries
 
 2016-06-17 0.6.1
 ================
-- Add Firmware-Builder helper to Linux Makefile for `node-gprs-http.ino`_.
+- Add Firmware-Builder helper to Linux Makefile for `openhive-gsm-wifi.ino`_.
 - Update docs.
 
 
@@ -266,7 +266,7 @@ Terkin_, `Hiveeyes-Lib`_ and `OpenHive-Lib`_.
 
 - Add ArduinoJson_ and `GPRSbee library`_ as git submodules under ``libraries/``.
 
-- Add example sketch `node-gprs-http.ino`_ demonstrating
+- Add example sketch `openhive-gsm-wifi.ino`_ demonstrating
   simple HTTP+JSON communication over GPRSbee.
 
 - Update ``HE_API_URL`` to use different url for non-TLS

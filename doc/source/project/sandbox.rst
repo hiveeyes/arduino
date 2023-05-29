@@ -22,13 +22,14 @@ For hacking on the repository, there are some guidelines.
 
 Initialize a new firmware flavour
 =================================
-The following steps are needed to initialize a new project inside the multivariant repository::
+The following steps are needed to initialize a new project inside the
+multi-variant firmware repository::
 
     # Create new project directory following the naming convention.
-    mkdir purpose-transport-protocol
+    mkdir -p origin/purpose-transport-protocol
 
     # Initialize project directory by bootstrapping from another project.
-    cp generic/{Makefile,platformio.ini} purpose-transport-protocol/
+    cp backdoor/node-wifi-mqtt/{Makefile,platformio.ini} origin/purpose-transport-protocol/
 
 
 .. _simulation:
@@ -42,7 +43,7 @@ Run on Unix
 ===========
 ::
 
-    cd generic
+    cd backdoor/multihop
 
     # Build arch=x86_64, not Arduino
     ./sim/build
@@ -52,11 +53,11 @@ Run on Unix
 
     # Run "generic" program on local workstation, it
     # will send data to localhost:4000 through RH_TCP.
-    ./sim/generic
+    ./sim/multihop
 
 ::
 
-    file ./sim/generic
+    file ./sim/multihop
     sim/generic: Mach-O 64-bit x86_64 executable
 
 
