@@ -7,6 +7,17 @@
 Battery-powered ESP8266 beehive scale based on Homie
 ####################################################
 
+.. tip::
+
+    Please `continue reading this document on our documentation space
+    <https://hiveeyes.org/docs/arduino/firmware/homie/node-homie-lowpower/README.html>`_,
+    all inline links will be working there.
+
+
+*****
+About
+*****
+
 This is the low-power version of :ref:`node-wifi-mqtt-homie`, in order to run
 the device on batteries.
 

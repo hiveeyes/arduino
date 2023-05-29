@@ -14,7 +14,8 @@ multihop firmware
 
 .. tip::
 
-    Please `continue reading this document on our documentation space <https://hiveeyes.org/docs/arduino/>`_,
+    Please `continue reading this document on our documentation space
+    <https://hiveeyes.org/docs/arduino/firmware/backdoor/multihop/README.html>`_,
     all inline links will be working there.
 
 
