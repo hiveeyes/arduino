@@ -7,6 +7,15 @@ AVR playground
     The Makefile includes machine-specific path definitions. Please adapt to your environment.
 
 
+Synopsis
+========
+::
+
+    make name=avr-hello
+    make name=avr-sim
+    make name=arduino-vector
+
+
 Hello world on simulavr
 =======================
 

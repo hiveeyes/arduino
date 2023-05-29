@@ -15,24 +15,34 @@
 #    remark: can be overwritten from
 #            command line
 # ------------------------------------------
-name     := hello
-#name     := hellovector
+name      := avr-hello
+name      := avr-sim
+name      := arduino-vector
 
 
 
 # ------------------------------------------
 #           configuration options
 # ------------------------------------------
-compiler := /opt/local/bin/avr-gcc
+#compiler := /opt/local/bin/avr-gcc
 #compiler := /opt/local/bin/avr-g++
 #compiler := /usr/share/arduino/hardware/tools/avr/bin/avr-gcc
+compiler := avr-gcc
 cppflags := -mmcu=atmega328p -DF_CPU=8000000L -DARDUINO=105 -ffunction-sections -fdata-sections -g -Os -w -fno-exceptions
 
-define INCLUDE
+define INCLUDE_NATIVE
 		-I/opt/local/avr/include \
 		-I/Applications/Arduino.app/Contents/Resources/Java/hardware/arduino/cores/arduino \
 		-I/Applications/Arduino.app/Contents/Resources/Java/hardware/arduino/variants/standard \
 		-I/Users/amo/dev/foss/open.nshare.de/beradio/tmp/StandardCplusplus \
+		-I.
+endef
+
+define INCLUDE
+		-I/opt/local/avr/include \
+		-I/Users/amo/.platformio/packages/framework-arduino-avr/cores/arduino \
+		-I/Users/amo/.platformio/packages/framework-arduino-avr/variants/standard \
+		-I/Users/amo/dev/hiveeyes/sources/arduino/libraries/TerkinData/examples/.pio/libdeps/avr328/ArduinoSTL/src \
 		-I.
 endef
 

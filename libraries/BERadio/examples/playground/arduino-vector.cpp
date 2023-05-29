@@ -3,9 +3,13 @@
 //#include <pnew.cpp>
 
 // Variant 2: Standard C++ for Arduino (port of uClibc++)
-#include <Arduino.h>
+//#include <Arduino.h>
+//#include <new.cpp>
+//#include <StandardCplusplus.h>
+
+// Variant 3: Classic ArduinoSTL
+#include <ArduinoSTL.h>
 #include <new.cpp>
-#include <StandardCplusplus.h>
 
 // main program
 #include <iterator>

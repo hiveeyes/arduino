@@ -17,9 +17,7 @@
     #include <Arduino.h>
 
     // Standard C++ for Arduino
-    #include <new.cpp>
-    #include <StandardCplusplus.h>
-    #include <func_exception.cpp>
+    #include <ArduinoSTL.h>
     #include <MemoryFree.h>
 
     #include <simulavr.h>
