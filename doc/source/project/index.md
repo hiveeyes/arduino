@@ -3,7 +3,6 @@
 ```{toctree}
 ---
 maxdepth: 1
-hidden:
 ---
 sandbox.rst
 platformio.rst
