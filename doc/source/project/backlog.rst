@@ -28,13 +28,14 @@ Iteration 1
 - [x] Use brand color of previous theme
 - [x] Naming things: ``trudering`` => ``stulabs`` or ``ringlabs``
 - [x] Docs: Add Ringlabs Bienenwaage
+- [x] Fix links within ``coverage.md``
+  https://hiveeyes.org/docs/arduino/#coverage
+- [x] Add Mermaid
 - [o] Docs: Add Terkin, BOB, BEEP, EasyHive, Autonome Zelle, Dachboden Lab, @hsors
 
 Iteration 2
 ===========
-- Fix links within ``coverage.md``
-- [o] Add Mermaid
-- Add firmwares by @wtf, @tonke, and @hsors.
+- [o] Add firmwares by @wtf, @tonke, and @hsors.
 
   - https://git.cicer.de/autonome-zelle/autonome-zelle-sfwv
   - https://git.cicer.de/autonome-zelle/az3-cubecell-boden

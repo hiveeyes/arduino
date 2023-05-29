@@ -17,7 +17,10 @@ chronologically sorted.
 ### Backdoor
 
 Those firmwares have been conceived by members of the [Backdoor collective].
-_No worries, it is not about backdoors into systems_.
+:::{note}
+_No worries, it is not about breaking into systems, it is only the name
+of a collective_.
+:::
 
 :::::::{grid} 1
 :margin: 0
