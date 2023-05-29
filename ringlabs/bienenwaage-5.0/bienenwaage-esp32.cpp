@@ -1,6 +1,6 @@
 /**
  * Bienenwaage 5.0 TTGO T-Call (ESP32)
- * https://github.com/hiveeyes/arduino/tree/main/trudering/bienenwaage-5.0
+ * https://github.com/hiveeyes/arduino/tree/main/ringlabs/bienenwaage-5.0
  */
 
 /**

@@ -1,6 +1,6 @@
 /**
  * Bienenwaage 2.0 NodeMCU (ESP8266)
- * https://github.com/hiveeyes/arduino/tree/main/trudering/bienenwaage-2.0
+ * https://github.com/hiveeyes/arduino/tree/main/ringlabs/bienenwaage-2.0
  */
 //Version 1.01 Spannungs Messung und Deep Sleep
 //Version 1.02 MQTT Anbindung

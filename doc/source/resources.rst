@@ -64,8 +64,8 @@
 .. _node-homie-lowpower.ino: https://github.com/hiveeyes/arduino/blob/main/homie/node-homie-lowpower/node-homie-lowpower.ino
 
 .. ulmi
-.. _bienenwaage-esp8266.ino: https://github.com/hiveeyes/arduino/blob/main/trudering/bienenwaage-2.0/bienenwaage-esp8266.ino
-.. _bienenwaage-esp32.cpp: https://github.com/hiveeyes/arduino/blob/main/trudering/bienenwaage-5.0/bienenwaage-esp32.cpp
+.. _bienenwaage-esp8266.ino: https://github.com/hiveeyes/arduino/blob/main/ringlabs/bienenwaage-2.0/bienenwaage-esp8266.ino
+.. _bienenwaage-esp32.cpp: https://github.com/hiveeyes/arduino/blob/main/ringlabs/bienenwaage-5.0/bienenwaage-esp32.cpp
 
 .. Kotori
 .. _Kotori: https://getkotori.org/docs/

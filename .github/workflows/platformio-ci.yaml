@@ -50,8 +50,8 @@ jobs:
       openhive-gsm-wifi: ${{ steps.changes.outputs.openhive-gsm-wifi }}
       openhive-yun: ${{ steps.changes.outputs.openhive-yun }}
       openhive-scale-adjust: ${{ steps.changes.outputs.openhive-scale-adjust }}
-      trudering-bienenwaage-20: ${{ steps.changes.outputs.trudering-bienenwaage-20 }}
-      trudering-bienenwaage-50: ${{ steps.changes.outputs.trudering-bienenwaage-50 }}
+      ringlabs-bienenwaage-20: ${{ steps.changes.outputs.ringlabs-bienenwaage-20 }}
+      ringlabs-bienenwaage-50: ${{ steps.changes.outputs.ringlabs-bienenwaage-50 }}
     steps:
       - uses: actions/checkout@v3
       - uses: dorny/paths-filter@v2
@@ -84,12 +84,12 @@ jobs:
             openhive-yun:
               - 'openhive/openhive-yun/**/*.ini'
               - 'openhive/openhive-yun/**/*.ino'
-            trudering-bienenwaage-20:
-              - 'trudering/bienenwaage-2.0/**/*.ini'
-              - 'trudering/bienenwaage-2.0/**/*.ino'
-            trudering-bienenwaage-50:
-              - 'trudering/bienenwaage-5.0/**/*.ini'
-              - 'trudering/bienenwaage-5.0/**/*.cpp'
+            ringlabs-bienenwaage-20:
+              - 'ringlabs/bienenwaage-2.0/**/*.ini'
+              - 'ringlabs/bienenwaage-2.0/**/*.ino'
+            ringlabs-bienenwaage-50:
+              - 'ringlabs/bienenwaage-5.0/**/*.ini'
+              - 'ringlabs/bienenwaage-5.0/**/*.cpp'
 
   build:
     needs: changes
@@ -184,15 +184,15 @@ jobs:
 
 
       # ------------------------------------------
-      #   Trudering
+      #   ringlabs
       # ------------------------------------------
 
-      - name: Build trudering/bienenwaage-2.0
-        if: ${{ needs.changes.outputs.trudering-bienenwaage-20 == 'true' }}
+      - name: Build ringlabs/bienenwaage-2.0
+        if: ${{ needs.changes.outputs.ringlabs-bienenwaage-20 == 'true' }}
         run: |
-          pio run --project-dir trudering/bienenwaage-2.0
+          pio run --project-dir ringlabs/bienenwaage-2.0
 
-      - name: Build trudering/bienenwaage-5.0
-        if: ${{ needs.changes.outputs.trudering-bienenwaage-50 == 'true' }}
+      - name: Build ringlabs/bienenwaage-5.0
+        if: ${{ needs.changes.outputs.ringlabs-bienenwaage-50 == 'true' }}
         run: |
-          pio run --project-dir trudering/bienenwaage-5.0
+          pio run --project-dir ringlabs/bienenwaage-5.0

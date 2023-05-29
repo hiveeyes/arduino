@@ -89,7 +89,7 @@ Build
 
 Select a firmware according to your needs, and build it::
 
-    cd arduino/trudering/bienenwaage-5.0
+    cd arduino/ringlabs/bienenwaage-5.0
     make build
 
 For selecting the right firmware for your purposes, please inspect the
