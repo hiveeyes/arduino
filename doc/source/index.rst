@@ -201,6 +201,93 @@ dependencies. You will be able to choose between CLI and UI operations, see `Pla
         pio settings set enable_telemetry false
 
 
+************************
+Sensor network telemetry
+************************
+
+An example scenario how a telemetry data network can look like in a multi-sensor
+environment. In order to learn more about the Kotori message router and data historian,
+visit its documentation at :ref:`kotori`.
+
+.. mermaid::
+
+   %%{init: {"flowchart": {"htmlLabels": false}} }%%
+
+   flowchart LR
+
+      subgraph sensors
+
+         subgraph ism
+            RF-1[RF sensor 1]
+            RF-2[RF sensor 2]
+            RF-N[RF sensor N]
+            relay{{telemetry relay}}
+         end
+         subgraph sub1ghz
+            LORAWAN[LoRaWAN sensor]
+            LORA[LoRa sensor]
+         end
+         subgraph cellular
+            CELL-GSM[GSM sensor]
+            CELL-LTE[LTE M1/NB1 sensor]
+         end
+
+         gateway{{network gateway}}
+
+         RF-1  --> relay
+         RF-2  --> relay
+         RF-N  --> relay
+         relay --> gateway
+
+         TTN{TTN}
+
+      end
+
+      subgraph network
+         HTTP{HTTP}
+         MQTT{MQTT}
+      end
+
+      subgraph backend
+
+         Kotori>Kotori message router\nand data historian]
+         InfluxDB[(InfluxDB)]
+         CrateDB[(CrateDB)]
+
+         Kotori               --> InfluxDB
+         Kotori               --> CrateDB
+         Kotori               --> Grafana
+
+      end
+
+      %% Breadboard
+
+      %% Sensors
+      LORAWAN     --> TTN
+      LORA        --> gateway
+
+      %% Network
+      gateway     --> network
+      TTN         --> network
+
+      CELL-GSM  --> network
+      CELL-LTE  --> network
+
+      %% Kotori
+      MQTT     --> Kotori
+      HTTP     --> Kotori
+
+
+      %% WS       --> MQTT
+      %% MS       --> MQTT
+      %% HS       --> HTTP
+      %% subgraph lan
+      %%    WS[Wi-Fi sensor]
+      %%    HS[HTTP sensor]
+      %%    MS[MQTT sensor]
+      %% end
+
+
 .. _Community Forum: https://community.hiveeyes.org/
 .. _Documentation: https://hiveeyes.org/docs/arduino/
 .. _Hiveeyes Community Forum: https://community.hiveeyes.org/
