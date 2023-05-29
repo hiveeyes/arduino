@@ -57,10 +57,30 @@ and use cases. The :ref:`firmware-overview` page enumerates all of them.
 Coverage
 ========
 
-- MCU: ATmega328_, ESP8266_, ESP32_
+MCUs
+====
 
-.. include:: coverage.md
-   :parser: myst_parser.sphinx_
+- `ATmega328`_, `ESP8266`_, `ESP32`_
+
+Sensors
+=======
+
+-  `HX711`_, `BME280`_, `DS18B20`_, `DHT22`_, `TSL25911`_
+
+Telemetry transports
+====================
+
+-  `Cellular`_: `GSM`_, `GPRS`_, `LTE Cat M1`_, `LTE Cat NB1`_.
+-  `ISM radio`_: Sub-1GHz transmitter, RF packet radio `RFM69`_ and `RFM95`_.
+-  `ISM radio`_: `LoRa`_ and `LoRaWAN`_ telemetry.
+-  Classic `Wi-Fi`_.
+
+Telemetry protocols
+===================
+
+- :ref:`BERadio <beradio:beradio-spec>`, `MQTT`_, `HTTP`_
+
+----
 
 .. note::
 
