@@ -124,7 +124,36 @@ html_theme = 'furo'
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
 # documentation.
-#html_theme_options = {}
+html_theme_options = {
+    # https://github.com/pradyunsg/furo/blob/main/src/furo/assets/styles/variables/_colors.scss
+    "light_css_variables": {
+        "color-brand-primary": "#0E979cFF",
+        "color-brand-content": "#0F8F7CFF",
+        "color-background-border": "#046B9C4F",
+    },
+    "footer_icons": [
+        {
+            "name": "GitHub",
+            "url": "https://github.com/hiveeyes/arduino",
+            "html": "",
+            "class": "fa-brands fa-solid fa-github fa-2x",
+        },
+        {
+            "name": "Documentation",
+            "url": "https://hiveeyes.org/docs/arduino/",
+            "html": "",
+            "class": "fa-brands fa-solid fa-readthedocs fa-2x",
+        },
+    ],
+}
+
+# Furo: Add Font Awesome Icon Pack.
+# https://pradyunsg.me/furo/customisation/footer/#font-awesome
+html_css_files = [
+    "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/fontawesome.min.css",
+    "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/solid.min.css",
+    "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/brands.min.css",
+]
 
 # Add any paths that contain custom themes here, relative to this directory.
 #html_theme_path = []
@@ -302,10 +331,9 @@ texinfo_documents = [
 
 # Activate more functionality
 def setup(app):
+    # TODO: Add `rst2md.py` invocation here.
+    pass
 
-    # https://github.com/snide/sphinx_rtd_theme/issues/117#issuecomment-41571653
-    app.add_css_file("css/sphinx-cicerops.css")
-    app.add_css_file("css/sphinx-arduino.css")
 
 # Link with Hiveeyes, BERadio and Kotori projects
 intersphinx_mapping = {
