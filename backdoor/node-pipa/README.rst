@@ -49,7 +49,7 @@ Details
 
 - The telemetry domain has been sketched out by @amotl.
 
-  - https://github.com/hiveeyes/arduino/tree/master/node-pipa/examples/legacy-gprsbee
+  - https://github.com/hiveeyes/arduino/tree/main/backdoor/node-pipa/examples/legacy-gprsbee
   - https://hiveeyes.org/docs/arduino/TerkinData/README.html
 
 - The sensor domain might be implemented on top of the EnviroDIY
@@ -59,7 +59,7 @@ Details
 
   - https://community.hiveeyes.org/t/envirodiy-mayfly-data-logger/3035
   - https://github.com/EnviroDIY/ModularSensors
-  - https://github.com/hiveeyes/arduino/tree/master/node-pipa/examples/pipa-envirodiy
+  - https://github.com/hiveeyes/arduino/tree/main/backdoor/node-pipa/examples/pipa-envirodiy
 
 
 *******

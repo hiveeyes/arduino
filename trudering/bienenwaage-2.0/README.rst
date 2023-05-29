@@ -66,7 +66,7 @@ Weight scale
 Adjust ``SCALE_DOUT_PIN_{A,B}``, ``SCALE_SCK_PIN_{A,B}``, ``Taragewicht_{A,B}`` and ``Skalierung_{A,B}``.
 To find out about appropriate values for ``Taragewicht_X`` and ``Skalierung_X``,
 please use a weight scale adjustment sketch like
-https://github.com/hiveeyes/arduino/tree/master/scale-adjust/HX711.
+https://github.com/hiveeyes/arduino/tree/main/openhive/scale-adjust/HX711.
 
 ::
 

@@ -146,6 +146,14 @@ A playground for building a generic C++ datalogger framework.
 
 ### Homie-based
 
+:::{note} **References:**
+The Homie-based firmwares have been conceived by Alexander Wilms.
+- https://www.imker-nettetal.de/esp8266-beescale-erste-eindruecke/
+- https://community.hiveeyes.org/t/welcome-alex/189
+- https://community.hiveeyes.org/t/inbetriebnahme-von-node-wifi-mqtt-homie-mit-hiveeyes-anbindung/185
+- https://imker-nettetal.de/nsa-for-bees/
+:::
+
 ::::::{grid} 1
 :margin: 0
 :padding: 0
@@ -217,8 +225,7 @@ Markus Euskirchen and Clemens Gruber reported about the development progress.
 - https://www.euse.de/wp/blog/series/bienenwaage2/
 :::
 
-
-#### Wi-Fi, GSM
+#### GSM, Wi-Fi
 
 ::::::{grid} 1
 :margin: 0
@@ -269,7 +276,7 @@ using the [GPRSbee] GSM modem.
 :columns: 4
 {bdg-primary-line}`gsm` {bdg-primary-line}`wifi` {bdg-primary-line}`http` {bdg-primary-line}`csv`
 
-{bdg-success-line}`hx711` {bdg-success-line}`ds18b20` {bdg-success-line}`dht22`
+{bdg-success-line}`hx711` {bdg-success-line}`ads1231` {bdg-success-line}`ds18b20` {bdg-success-line}`dht22`
 
 {bdg-secondary-line}`ATmega328` {bdg-secondary-line}`esp8266`
 
@@ -327,7 +334,7 @@ gateway.
 :::
 :::{grid-item}
 :columns: 4
-{bdg-primary-line}`rfm69` {bdg-primary-line}`uart` {bdg-primary-line}`csv`
+{bdg-primary-line}`rf69` {bdg-primary-line}`uart` {bdg-primary-line}`csv`
 
 {bdg-secondary-line}`ATmega328`
 :::
@@ -350,7 +357,7 @@ Receive sensor data over radio and store it onto an SD card on an Arduino Yún.
 :::
 :::{grid-item}
 :columns: 4
-{bdg-primary-line}`rfm69` {bdg-primary-line}`sdcard` {bdg-primary-line}`csv`
+{bdg-primary-line}`rf69` {bdg-primary-line}`sdcard` {bdg-primary-line}`csv`
 
 {bdg-secondary-line}`ATmega328`
 :::
@@ -373,7 +380,7 @@ Collect sensor data, encode it to [CSV], and send it using an [RFM69] radio modu
 :::
 :::{grid-item}
 :columns: 4
-{bdg-primary-line}`rfm69` {bdg-primary-line}`csv`
+{bdg-primary-line}`rf69` {bdg-primary-line}`csv`
 
 {bdg-success-line}`ads1231` {bdg-success-line}`ds18b20` {bdg-success-line}`dht22`
 

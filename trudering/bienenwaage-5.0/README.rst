@@ -54,7 +54,7 @@ Weight scale
 Adjust ``SCALE_DOUT_PIN_X``, ``SCALE_SCK_PIN_X``, ``Taragewicht_X`` and ``Skalierung_X``.
 To find out about appropriate values for ``Taragewicht_X`` and ``Skalierung_X``,
 please use a weight scale adjustment sketch like
-https://github.com/hiveeyes/arduino/tree/master/scale-adjust/HX711.
+https://github.com/hiveeyes/arduino/tree/main/openhive/scale-adjust/HX711.
 
 Temperature sensors
 ===================
@@ -125,8 +125,8 @@ Pictures
 .. figure:: https://community.hiveeyes.org/uploads/default/optimized/2X/d/d3994ea5a4556598ba5b1c0f0d9baab587444943_2_375x500.jpeg
     :target: https://community.hiveeyes.org/uploads/default/original/2X/d/d3994ea5a4556598ba5b1c0f0d9baab587444943.jpeg
 
-.. figure:: https://raw.githubusercontent.com/hiveeyes/arduino/master/node-esp32-generic/Bienenwaage%205.0%20TTGO-T-CALL_Leiterplatte.png
-    :target: https://raw.githubusercontent.com/hiveeyes/arduino/master/node-esp32-generic/Bienenwaage%205.0%20TTGO-T-CALL_Leiterplatte.png
+.. figure:: https://raw.githubusercontent.com/hiveeyes/arduino/main/trudering/bienenwaage-5.0/Bienenwaage%205.0%20TTGO-T-CALL_Leiterplatte.png
+    :target: https://raw.githubusercontent.com/hiveeyes/arduino/main/trudering/bienenwaage-5.0/Bienenwaage%205.0%20TTGO-T-CALL_Leiterplatte.png
 
 
 ***********

@@ -274,11 +274,6 @@ JSON
 .. seealso:: Full source of `<json_basic.cpp_>`_.
 
 
-.. _csv_basic.cpp: https://github.com/hiveeyes/arduino/blob/main/libraries/TerkinData/examples/csv_basic.cpp
-.. _urlencoded_basic.cpp: https://github.com/hiveeyes/arduino/blob/main/libraries/TerkinData/examples/urlencoded_basic.cpp
-.. _json_basic.cpp: https://github.com/hiveeyes/arduino/blob/main/libraries/TerkinData/examples/json_basic.cpp
-
-
 ********
 Download
 ********
@@ -319,3 +314,6 @@ Terkin
 
 .. _ArduinoJSON: https://github.com/bblanchon/ArduinoJson
 .. _ArduinoSTL: https://github.com/mike-matera/ArduinoSTL
+.. _csv_basic.cpp: https://github.com/hiveeyes/arduino/blob/main/libraries/TerkinData/examples/csv/csv_basic.cpp
+.. _json_basic.cpp: https://github.com/hiveeyes/arduino/blob/main/libraries/TerkinData/examples/json/json_basic.cpp
+.. _urlencoded_basic.cpp: https://github.com/hiveeyes/arduino/blob/main/libraries/TerkinData/examples/urlencoded/urlencoded_basic.cpp

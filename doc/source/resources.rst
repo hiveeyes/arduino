@@ -85,7 +85,7 @@
 .. _Microchip: https://en.wikipedia.org/wiki/Microchip_Technology
 .. _AVR microcontroller family: https://en.wikipedia.org/wiki/MegaAVR
 .. _ATmega328: https://en.wikipedia.org/wiki/ATmega328
-.. _Seeeduino Stalker v2.3: http://wiki.seeedstudio.com/wiki/Seeeduino_Stalker_v2.3
+.. _Seeeduino Stalker v2.3: https://web.archive.org/web/20180118214610/https://wiki.seeedstudio.com/wiki/Seeeduino_Stalker_v2.3
 
 .. Espressif
 .. _ESP8266: https://en.wikipedia.org/wiki/ESP8266
@@ -117,8 +117,8 @@
 .. _RHT03: http://www.humiditycn.com/cp22.html
 .. _DHT33: http://shop.boxtec.ch/digital-humiditytemperature-sensor-dht33-rht04-p-40541.html
 .. _RHT04: http://www.humiditycn.com/cp21.html
-.. _TSL25911: http://ams.com/eng/Products/Light-Sensors/Ambient-Light-Sensors/TSL25911
-.. _TSL2591: https://www.adafruit.com/product/1980
+.. _TSL25911: https://ams.com/tsl25911
+.. _Adafruit TSL2591 STEMMA QT: https://www.adafruit.com/product/1980
 
 .. LowPowerLab and computourist
 .. _LowPowerLab: https://lowpowerlab.com/
@@ -172,7 +172,7 @@
 .. _makeESPArduino: https://github.com/plerup/makeEspArduino
 .. _Bare-Arduino-Project: https://github.com/ladislas/Bare-Arduino-Project
 .. _HTTPie: http://httpie.org
-.. _HttpRequester: https://addons.mozilla.org/en-us/firefox/addon/httprequester/
+.. _HttpRequester: https://github.com/tommut/HttpRequester
 
 
 .. _PlatformIO: https://platformio.org/

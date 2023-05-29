@@ -270,7 +270,7 @@ Terkin_, `Hiveeyes-Lib`_ and `OpenHive-Lib`_.
   simple HTTP+JSON communication over GPRSbee.
 
 - Update ``HE_API_URL`` to use different url for non-TLS
-  communication: http://swarm.hiveeyes.org/api-notls/.
+  communication: ``http://swarm.hiveeyes.org/api-notls/``.
   The default GPRSbee devices don't do SSL.
 
 - Connect to access point with authentication by default,

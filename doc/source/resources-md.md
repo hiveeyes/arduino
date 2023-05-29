@@ -35,7 +35,7 @@
 [Microchip]: https://en.wikipedia.org/wiki/Microchip_Technology
 [AVR microcontroller family]: https://en.wikipedia.org/wiki/MegaAVR
 [ATmega328]: https://en.wikipedia.org/wiki/ATmega328
-[Seeeduino Stalker v2.3]: http://wiki.seeedstudio.com/wiki/Seeeduino_Stalker_v2.3
+[Seeeduino Stalker v2.3]: https://web.archive.org/web/20180118214610/https://wiki.seeedstudio.com/wiki/Seeeduino_Stalker_v2.3
 [ESP8266]: https://en.wikipedia.org/wiki/ESP8266
 [ESP32]: https://en.wikipedia.org/wiki/ESP32
 [Adafruit Feather HUZZAH]: https://www.adafruit.com/product/2821
@@ -57,8 +57,8 @@
 [RHT03]: http://www.humiditycn.com/cp22.html
 [DHT33]: http://shop.boxtec.ch/digital-humiditytemperature-sensor-dht33-rht04-p-40541.html
 [RHT04]: http://www.humiditycn.com/cp21.html
-[TSL25911]: http://ams.com/eng/Products/Light-Sensors/Ambient-Light-Sensors/TSL25911
-[TSL2591]: https://www.adafruit.com/product/1980
+[TSL25911]: https://ams.com/tsl25911
+[Adafruit TSL2591 STEMMA QT]: https://www.adafruit.com/product/1980
 [LowPowerLab]: https://lowpowerlab.com/
 [RFM69 based sensors and MQTT gateway]: https://github.com/computourist/RFM69-MQTT-client
 [Bencode]: https://en.wikipedia.org/wiki/Bencode
@@ -96,7 +96,7 @@
 [makeESPArduino]: https://github.com/plerup/makeEspArduino
 [Bare-Arduino-Project]: https://github.com/ladislas/Bare-Arduino-Project
 [HTTPie]: http://httpie.org
-[HttpRequester]: https://addons.mozilla.org/en-us/firefox/addon/httprequester/
+[HttpRequester]: https://github.com/tommut/HttpRequester
 [PlatformIO]: https://platformio.org/
 [PlatformIO IDE]: https://platformio.org/platformio-ide
 [NodeMCU]: https://en.wikipedia.org/wiki/NodeMCU

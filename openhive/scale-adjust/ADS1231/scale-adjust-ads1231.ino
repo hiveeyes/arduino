@@ -75,7 +75,7 @@ int weightSamplesNumber = 10;  // take at least 10 readings for adjusting
 
 // libraries
 // load cell
-#include <ADS1231.h>    // https://github.com/hiveeyes/arduino/tree/master/libraries/ADS1231
+#include <ADS1231.h>    // https://github.com/hiveeyes/aerowind-ads1231
 ADS1231 loadCell;       // Create ADS1231 object
 int adjustScale = true;  // flag for adjust vs. operation mode
 long weightSensorValue;
