@@ -11,21 +11,28 @@ open source projects.
 
 ## Groups
 
-This section lists firmwares by group / origin, alphabetically and
-chronologically sorted.
+This section enumerates and groups firmwares by origin, chronologically sorted
+in the order of appearance.
 
-### Open Hive
 
-All systems conceived by Open Hive and friends.
+### Mois Labs
 
-:::{note} **References:**
-Markus Euskirchen and Clemens Gruber reported about the development progress.
-- http://open-hive.org/
-- https://www.euse.de/wp/blog/series/bienenwaage/
-- https://www.euse.de/wp/blog/series/bienenwaage2/
-  :::
+Collecting beehive sensor data since 2011. With the first »Hello, world« post in
+[November 2011], and the most recent one in [May 2023], you can see that Markus
+is surely one of the most avid and proficient data collectors, and inspired many
+others to start similar projects.
 
-#### GSM, Wi-Fi
+:::{seealso}
+He published many articles about his journey, and it is a pleasure to read all
+about the development progress in the [bienenwaage] and [bienenwaage2] sections
+on his personal blog.
+:::
+
+[bienenwaage]: https://www.euse.de/wp/blog/series/bienenwaage/
+[bienenwaage2]:  https://www.euse.de/wp/blog/series/bienenwaage2/
+[November 2011]: https://www.euse.de/wp/blog/2011/11/bienen-ueberwachen/
+[May 2023]: https://www.euse.de/wp/blog/2023/05/wettermessung-direkt-am-stand/
+
 
 ::::::{grid} 1
 :margin: 0
@@ -38,13 +45,13 @@ Markus Euskirchen and Clemens Gruber reported about the development progress.
 
 :::{grid-item}
 :columns: 8
-[Open Hive Yún](#openhive-yun)
+[](#beescale-yun)
 
 Running the [Mois Box], transmitting sensor data over HTTP, using the
 [Bridge Library for Yún devices].
 
-**Date:** 2014
-**Source:** [openhive-yun.ino]
+**Date:** 2011
+**Source:** [beescale-yun.ino]
 :::
 :::{grid-item}
 :columns: 4
@@ -477,8 +484,8 @@ backdoor/node-pipa/README
 backdoor/node-wifi-mqtt/README
 homie/node-homie-basic/README
 homie/node-homie-lowpower/README
+moislabs/beescale-yun/README
 openhive/openhive-gsm-wifi/README
-openhive/openhive-yun/README
 openhive/rfm69-gateway-sdcard/README
 openhive/rfm69-gateway-uart/README
 openhive/rfm69-node/README

@@ -23,6 +23,7 @@
 .. -----------
 
 .. Open Hive
+.. _Open Hive Bee Scale GSM: https://community.hiveeyes.org/t/open-hive-bee-monitoring-system-hardware-overview-gsm-node/279
 .. _Open Hive Box: https://hiveeyes.org/docs/system/vendor/open-hive/#open-hive-seeeduino-stalker
 .. _Open Hive WiFi Solar: https://community.hiveeyes.org/t/open-hive-wifi-solar-adafruit-huzzah/247
 
@@ -45,7 +46,7 @@
 .. _BERadio C++: https://github.com/hiveeyes/arduino/tree/main/libraries/BERadio
 
 .. Mois
-.. _node-yun-http.ino: https://github.com/hiveeyes/arduino/blob/main/openhive/openhive-yun/openhive-yun.ino
+.. _beescale-yun.ino: https://github.com/hiveeyes/arduino/blob/main/moislabs/beescale-yun/beescale-yun.ino
 .. _Mois Box: https://www.euse.de/wp/blog/2017/03/bienenwaage-2_0/
 
 .. Open Hive
@@ -85,6 +86,7 @@
 .. _Microchip: https://en.wikipedia.org/wiki/Microchip_Technology
 .. _AVR microcontroller family: https://en.wikipedia.org/wiki/MegaAVR
 .. _ATmega328: https://en.wikipedia.org/wiki/ATmega328
+.. _ATmega328P: https://www.microchip.com/en-us/product/ATmega328P
 .. _Seeeduino Stalker v2.3: https://web.archive.org/web/20180118214610/https://wiki.seeedstudio.com/wiki/Seeeduino_Stalker_v2.3
 
 .. Espressif
@@ -197,7 +199,6 @@
 .. _LoRaWAN: https://en.wikipedia.org/wiki/LoRaWAN#LoRaWAN
 .. _LTE Cat M1: https://en.wikipedia.org/wiki/LTE-M
 .. _LTE Cat NB1: https://en.wikipedia.org/wiki/Narrowband_IoT
-.. _openhive-yun.ino: https://github.com/hiveeyes/arduino/blob/main/openhive/openhive-yun/openhive-yun.ino
 .. _picocom: https://github.com/npat-efault/picocom
 .. _pipa-espressif.ino: https://github.com/hiveeyes/arduino/blob/main/backdoor/node-pipa/examples/pipa-espressif/pipa-espressif.ino
 .. _PlatformIO Registry: https://registry.platformio.org/
@@ -214,5 +215,9 @@
 .. https://stackoverflow.com/questions/4550021/working-example-of-floating-image-in-restructured-text
 .. |clearfix| raw:: html
 
+    <style>
+    .clearfix {
+      clear: both;
+    }
+    </style>
     <div class="clearfix"></div>
-

@@ -46,9 +46,9 @@ jobs:
       backdoor-any-rfm69: ${{ steps.changes.outputs.backdoor-any-rfm69 }}
       backdoor-multihop: ${{ steps.changes.outputs.backdoor-multihop }}
       backdoor-node-wifi-mqtt: ${{ steps.changes.outputs.backdoor-node-wifi-mqtt }}
+      moislabs-beescale-yun: ${{ steps.changes.outputs.moislabs-beescale-yun }}
       openhive-any-rfm69: ${{ steps.changes.outputs.openhive-any-rfm69 }}
       openhive-gsm-wifi: ${{ steps.changes.outputs.openhive-gsm-wifi }}
-      openhive-yun: ${{ steps.changes.outputs.openhive-yun }}
       openhive-scale-adjust: ${{ steps.changes.outputs.openhive-scale-adjust }}
       ringlabs-bienenwaage-20: ${{ steps.changes.outputs.ringlabs-bienenwaage-20 }}
       ringlabs-bienenwaage-50: ${{ steps.changes.outputs.ringlabs-bienenwaage-50 }}
@@ -71,6 +71,9 @@ jobs:
             backdoor-node-wifi-mqtt:
               - 'backdoor/node-wifi-mqtt/**/*.ini'
               - 'backdoor/node-wifi-mqtt/**/*.ino'
+            moislabs-beescale-yun:
+              - 'moislabs/beescale-yun/**/*.ini'
+              - 'moislabs/beescale-yun/**/*.ino'
             openhive-any-rfm69:
               - 'openhive/gateway-rfm69-csv-sdcard/**'
               - 'openhive/gateway-rfm69-csv-uart/**'
@@ -81,9 +84,6 @@ jobs:
             openhive-scale-adjust:
               - 'openhive/scale-adjust/**/*.ini'
               - 'openhive/scale-adjust/**/*.ino'
-            openhive-yun:
-              - 'openhive/openhive-yun/**/*.ini'
-              - 'openhive/openhive-yun/**/*.ino'
             ringlabs-bienenwaage-20:
               - 'ringlabs/bienenwaage-2.0/**/*.ini'
               - 'ringlabs/bienenwaage-2.0/**/*.ino'
@@ -120,6 +120,16 @@ jobs:
       - name: Install PlatformIO
         run: |
           pip install --upgrade --requirement requirements-test.txt
+
+
+      # ------------------------------------------
+      #   Mois Labs
+      # ------------------------------------------
+
+      - name: Build moislabs-beescale-yun
+        if: ${{ needs.changes.outputs.moislabs-beescale-yun == 'true' }}
+        run: |
+          pio run --project-dir moislabs/beescale-yun
 
 
       # ------------------------------------------
@@ -177,14 +187,9 @@ jobs:
           pio run --project-dir openhive/scale-adjust/ADS1231
           pio run --project-dir openhive/scale-adjust/HX711
 
-      - name: Build openhive-yun
-        if: ${{ needs.changes.outputs.openhive-yun == 'true' }}
-        run: |
-          pio run --project-dir openhive/openhive-yun
-
 
       # ------------------------------------------
-      #   ringlabs
+      #   Ringlabs
       # ------------------------------------------
 
       - name: Build ringlabs/bienenwaage-2.0
