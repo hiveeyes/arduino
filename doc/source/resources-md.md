@@ -3,6 +3,7 @@
 [Hiveeyes project]: https://hiveeyes.org/
 [Hiveeyes Arduino repository]: https://github.com/hiveeyes/arduino
 [Hiveeyes Backend]: https://getkotori.org/
+[Open Hive Bee Scale GSM]: https://community.hiveeyes.org/t/open-hive-bee-monitoring-system-hardware-overview-gsm-node/279
 [Open Hive Box]: https://hiveeyes.org/docs/system/vendor/open-hive/#open-hive-seeeduino-stalker
 [Open Hive WiFi Solar]: https://community.hiveeyes.org/t/open-hive-wifi-solar-adafruit-huzzah/247
 [node-rfm69-beradio.ino]: https://github.com/hiveeyes/arduino/blob/main/backdoor/node-rfm69-beradio/node-rfm69-beradio.ino
@@ -15,7 +16,7 @@
 [scale-adjust-ads1231.ino]: https://github.com/hiveeyes/arduino/blob/main/openhive/scale-adjust/ADS1231/scale-adjust-ads1231.ino
 [scale-adjust-hx711.ino]: https://github.com/hiveeyes/arduino/blob/main/openhive/scale-adjust/HX711/scale-adjust-hx711.ino
 [BERadio C++]: https://github.com/hiveeyes/arduino/tree/main/libraries/BERadio
-[node-yun-http.ino]: https://github.com/hiveeyes/arduino/blob/main/openhive/openhive-yun/openhive-yun.ino
+[beescale-yun.ino]: https://github.com/hiveeyes/arduino/blob/main/moislabs/beescale-yun/beescale-yun.ino
 [Mois Box]: https://www.euse.de/wp/blog/2017/03/bienenwaage-2_0/
 [OpenHive-Lib]: https://github.com/hiveeyes/arduino/tree/main/libraries/OpenHive
 [openhive-gsm-wifi.ino]: https://github.com/hiveeyes/arduino/blob/main/openhive/openhive-gsm-wifi/openhive-gsm-wifi.ino
@@ -35,6 +36,7 @@
 [Microchip]: https://en.wikipedia.org/wiki/Microchip_Technology
 [AVR microcontroller family]: https://en.wikipedia.org/wiki/MegaAVR
 [ATmega328]: https://en.wikipedia.org/wiki/ATmega328
+[ATmega328P]: https://www.microchip.com/en-us/product/ATmega328P
 [Seeeduino Stalker v2.3]: https://web.archive.org/web/20180118214610/https://wiki.seeedstudio.com/wiki/Seeeduino_Stalker_v2.3
 [ESP8266]: https://en.wikipedia.org/wiki/ESP8266
 [ESP32]: https://en.wikipedia.org/wiki/ESP32
@@ -118,7 +120,6 @@
 [LoRaWAN]: https://en.wikipedia.org/wiki/LoRaWAN#LoRaWAN
 [LTE Cat M1]: https://en.wikipedia.org/wiki/LTE-M
 [LTE Cat NB1]: https://en.wikipedia.org/wiki/Narrowband_IoT
-[openhive-yun.ino]: https://github.com/hiveeyes/arduino/blob/main/openhive/openhive-yun/openhive-yun.ino
 [picocom]: https://github.com/npat-efault/picocom
 [pipa-espressif.ino]: https://github.com/hiveeyes/arduino/blob/main/backdoor/node-pipa/examples/pipa-espressif/pipa-espressif.ino
 [PlatformIO Registry]: https://registry.platformio.org/
