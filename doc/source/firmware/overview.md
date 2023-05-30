@@ -14,209 +14,6 @@ open source projects.
 This section lists firmwares by group / origin, alphabetically and
 chronologically sorted.
 
-### Backdoor
-
-Those firmwares have been conceived by members of the [Backdoor collective].
-:::{note}
-_No worries, it is not about breaking into systems, it is only the name
-of a collective_.
-:::
-
-:::::::{grid} 1
-:margin: 0
-:padding: 0
-
-::::::{grid-item-card}
-:::::{grid} 2
-:margin: 0
-:padding: 0
-
-::::{grid-item}
-:columns: 8
-**ISM RF sensor and gateway nodes using BERadio**
-
-The sensor device will acquire measurement readings, and emit messages
-encoded with [](inv:beradio:std:label#beradio) protocol for [ISM radio]
-telemetry. The gateway device receives it, and forwards it to the UART
-interface of the gateway machine.
-
-:::{note}
-[beradio-python](inv:beradio#beradio-python) will read this data, decodes the
-[](inv:beradio:std:label#beradio) protocol, and publishes the decoded data to an
-[MQTT] bus topic.
-[](inv:hiveeyes#hiveeyes-one) is running this firmware since February 2016.
-:::
-
-**Date:** 2014
-**Source:** [node-rfm69-beradio.ino], [gateway-rfm69-beradio.ino]
-::::
-::::{grid-item}
-:columns: 4
-{bdg-primary-line}`rf69` {bdg-primary-line}`beradio` {bdg-primary-line}`mqtt`
-
-{bdg-success-line}`hx711` {bdg-success-line}`ds18b20` {bdg-success-line}`dht22`
-
-{bdg-secondary-line}`ATmega328`
-
-{bdg-info-line}`low-power`
-::::
-:::::
-::::::
-
-::::::{grid-item-card}
-:::::{grid} 2
-:margin: 0
-:padding: 0
-
-::::{grid-item}
-:columns: 8
-[](#multihop-firmware)
-
-A flexible software breadboard for ISM RF packet radio nodes, relays, and gateways.
-
-**Date:** 2015
-**Source:** [multihop.ino]
-::::
-::::{grid-item}
-:columns: 4
-{bdg-primary-line}`rf69` {bdg-primary-line}`rf96` {bdg-primary-line}`lora` {bdg-primary-line}`beradio`
-
-{bdg-success-line}`hx711` {bdg-success-line}`ds18b20` {bdg-success-line}`dht22`
-
-{bdg-secondary-line}`ATmega328`
-
-{bdg-info-line}`low-power`
-::::
-:::::
-::::::
-
-::::::{grid-item-card}
-:::::{grid} 2
-:margin: 0
-:padding: 0
-
-::::{grid-item}
-:columns: 8
-[Wi-Fi sensor node](#node-wifi-mqtt)
-
-An educational/testing firmware powering the Open Hive [Adafruit Feather HUZZAH],
-transmitting sensor data using [MQTT] over [Wi-Fi].
-
-**Date:** 2016
-**Source:** [node-wifi-mqtt.ino]
-::::
-::::{grid-item}
-:columns: 4
-{bdg-primary-line}`wifi` {bdg-primary-line}`mqtt` {bdg-primary-line}`json`
-
-{bdg-success-line}`hx711` {bdg-success-line}`ads1231` {bdg-success-line}`ds18b20` {bdg-success-line}`dht22`
-
-{bdg-secondary-line}`esp8266`
-
-{bdg-info-line}`education`
-::::
-:::::
-::::::
-
-::::::{grid-item-card}
-:::::{grid} 2
-:margin: 0
-:padding: 0
-
-::::{grid-item}
-:columns: 8
-[](#pipa-datalogger)
-
-A playground for building a generic C++ datalogger framework.
-
-**Date:** 2017
-**Source:** [pipa-espressif.ino]
-::::
-::::{grid-item}
-:columns: 4
-{bdg-primary-line}`wifi` {bdg-primary-line}`gsm` {bdg-primary-line}`mqtt` 
-{bdg-primary-line}`http` {bdg-primary-line}`json` {bdg-primary-line}`csv` {bdg-primary-line}`urlencoded`
-
-{bdg-secondary-line}`esp8266` {bdg-secondary-line}`esp32` {bdg-secondary-line}`esp32s2`
-
-{bdg-info-line}`pre-alpha`
-::::
-:::::
-::::::
-
-:::::::
-
-
-### Homie-based
-
-:::{note} **References:**
-The Homie-based firmwares have been conceived by Alexander Wilms.
-- https://www.imker-nettetal.de/esp8266-beescale-erste-eindruecke/
-- https://community.hiveeyes.org/t/welcome-alex/189
-- https://community.hiveeyes.org/t/inbetriebnahme-von-node-wifi-mqtt-homie-mit-hiveeyes-anbindung/185
-- https://imker-nettetal.de/nsa-for-bees/
-:::
-
-::::::{grid} 1
-:margin: 0
-:padding: 0
-
-:::::{grid-item-card}
-::::{grid} 2
-:margin: 0
-:padding: 0
-
-:::{grid-item}
-:columns: 8
-[Wi-Fi sensor node based on Homie](#node-wifi-mqtt-homie)
-
-Powers the »[ESP8266 beehive scale by Alexander Wilms][esp8266-beescale-erste-eindruecke]«.
-See also the low-power variant [](#node-homie-lowpower).
-
-**Date:** 2017
-**Source:** [node-homie-basic.ino]
-:::
-:::{grid-item}
-:columns: 4
-{bdg-primary-line}`wifi` {bdg-primary-line}`mqtt` {bdg-primary-line}`json`
-
-{bdg-success-line}`hx711` {bdg-success-line}`ds18b20`
-
-{bdg-secondary-line}`esp8266`
-:::
-::::
-:::::
-
-:::::{grid-item-card}
-::::{grid} 2
-:margin: 0
-:padding: 0
-
-:::{grid-item}
-:columns: 8
-[](#node-homie-lowpower)
-
-Low-power variant of [](#node-homie-basic).
-
-**Date:** 2017
-**Source:** [node-homie-lowpower.ino]
-:::
-:::{grid-item}
-:columns: 4
-{bdg-primary-line}`wifi` {bdg-primary-line}`mqtt` {bdg-primary-line}`json`
-
-{bdg-success-line}`hx711` {bdg-success-line}`ds18b20`
-
-{bdg-secondary-line}`esp8266`
-
-{bdg-info-line}`low-power`
-:::
-::::
-:::::
-
-::::::
-
-
 ### Open Hive
 
 All systems conceived by Open Hive and friends.
@@ -226,7 +23,7 @@ Markus Euskirchen and Clemens Gruber reported about the development progress.
 - http://open-hive.org/
 - https://www.euse.de/wp/blog/series/bienenwaage/
 - https://www.euse.de/wp/blog/series/bienenwaage2/
-:::
+  :::
 
 #### GSM, Wi-Fi
 
@@ -399,7 +196,210 @@ Collect sensor data, encode it to [CSV], and send it using an [RFM69] radio modu
 
 :::{todo}
 - Are there any Open Hive [LoRa]/[LoRaWAN] firmwares available already?
+  :::
+
+
+### Backdoor
+
+Those firmwares have been conceived by members of the [Backdoor collective].
+:::{note}
+_No worries, it is not about breaking into systems, it is only the name
+of a collective_.
 :::
+
+:::::::{grid} 1
+:margin: 0
+:padding: 0
+
+::::::{grid-item-card}
+:::::{grid} 2
+:margin: 0
+:padding: 0
+
+::::{grid-item}
+:columns: 8
+**ISM RF sensor and gateway nodes using BERadio**
+
+The sensor device will acquire measurement readings, and emit messages
+encoded with [](inv:beradio:std:label#beradio) protocol for [ISM radio]
+telemetry. The gateway device receives it, and forwards it to the UART
+interface of the gateway machine.
+
+:::{note}
+[beradio-python](inv:beradio#beradio-python) will read this data, decodes the
+[](inv:beradio:std:label#beradio) protocol, and publishes the decoded data to an
+[MQTT] bus topic.
+[](inv:hiveeyes#hiveeyes-one) is running this firmware since February 2016.
+:::
+
+**Date:** 2014
+**Source:** [node-rfm69-beradio.ino], [gateway-rfm69-beradio.ino]
+::::
+::::{grid-item}
+:columns: 4
+{bdg-primary-line}`rf69` {bdg-primary-line}`beradio` {bdg-primary-line}`mqtt`
+
+{bdg-success-line}`hx711` {bdg-success-line}`ds18b20` {bdg-success-line}`dht22`
+
+{bdg-secondary-line}`ATmega328`
+
+{bdg-info-line}`low-power`
+::::
+:::::
+::::::
+
+::::::{grid-item-card}
+:::::{grid} 2
+:margin: 0
+:padding: 0
+
+::::{grid-item}
+:columns: 8
+[](#multihop-firmware)
+
+A flexible software breadboard for ISM RF packet radio nodes, relays, and gateways.
+
+**Date:** 2015
+**Source:** [multihop.ino]
+::::
+::::{grid-item}
+:columns: 4
+{bdg-primary-line}`rf69` {bdg-primary-line}`rf96` {bdg-primary-line}`lora` {bdg-primary-line}`beradio`
+
+{bdg-success-line}`hx711` {bdg-success-line}`ds18b20` {bdg-success-line}`dht22`
+
+{bdg-secondary-line}`ATmega328`
+
+{bdg-info-line}`low-power`
+::::
+:::::
+::::::
+
+::::::{grid-item-card}
+:::::{grid} 2
+:margin: 0
+:padding: 0
+
+::::{grid-item}
+:columns: 8
+[Wi-Fi sensor node](#node-wifi-mqtt)
+
+An educational/testing firmware powering the Open Hive [Adafruit Feather HUZZAH],
+transmitting sensor data using [MQTT] over [Wi-Fi].
+
+**Date:** 2016
+**Source:** [node-wifi-mqtt.ino]
+::::
+::::{grid-item}
+:columns: 4
+{bdg-primary-line}`wifi` {bdg-primary-line}`mqtt` {bdg-primary-line}`json`
+
+{bdg-success-line}`hx711` {bdg-success-line}`ads1231` {bdg-success-line}`ds18b20` {bdg-success-line}`dht22`
+
+{bdg-secondary-line}`esp8266`
+
+{bdg-info-line}`educational`
+::::
+:::::
+::::::
+
+::::::{grid-item-card}
+:::::{grid} 2
+:margin: 0
+:padding: 0
+
+::::{grid-item}
+:columns: 8
+[](#pipa-datalogger)
+
+A playground for building a generic C++ datalogger framework.
+
+**Date:** 2017
+**Source:** [pipa-espressif.ino]
+::::
+::::{grid-item}
+:columns: 4
+{bdg-primary-line}`wifi` {bdg-primary-line}`gsm` {bdg-primary-line}`mqtt` 
+{bdg-primary-line}`http` {bdg-primary-line}`json` {bdg-primary-line}`csv` {bdg-primary-line}`urlencoded`
+
+{bdg-secondary-line}`esp8266` {bdg-secondary-line}`esp32` {bdg-secondary-line}`esp32s2`
+
+{bdg-info-line}`pre-alpha`
+::::
+:::::
+::::::
+
+:::::::
+
+
+### Homie-based
+
+:::{note} **References:**
+The Homie-based firmwares have been conceived by Alexander Wilms.
+- https://www.imker-nettetal.de/esp8266-beescale-erste-eindruecke/
+- https://community.hiveeyes.org/t/welcome-alex/189
+- https://community.hiveeyes.org/t/inbetriebnahme-von-node-wifi-mqtt-homie-mit-hiveeyes-anbindung/185
+- https://imker-nettetal.de/nsa-for-bees/
+:::
+
+::::::{grid} 1
+:margin: 0
+:padding: 0
+
+:::::{grid-item-card}
+::::{grid} 2
+:margin: 0
+:padding: 0
+
+:::{grid-item}
+:columns: 8
+[Wi-Fi sensor node based on Homie](#node-wifi-mqtt-homie)
+
+Powers the »[ESP8266 beehive scale by Alexander Wilms][esp8266-beescale-erste-eindruecke]«.
+See also the low-power variant [](#node-homie-lowpower).
+
+**Date:** 2017
+**Source:** [node-homie-basic.ino]
+:::
+:::{grid-item}
+:columns: 4
+{bdg-primary-line}`wifi` {bdg-primary-line}`mqtt` {bdg-primary-line}`json`
+
+{bdg-success-line}`hx711` {bdg-success-line}`ds18b20`
+
+{bdg-secondary-line}`esp8266`
+:::
+::::
+:::::
+
+:::::{grid-item-card}
+::::{grid} 2
+:margin: 0
+:padding: 0
+
+:::{grid-item}
+:columns: 8
+[](#node-homie-lowpower)
+
+Low-power variant of [](#node-homie-basic).
+
+**Date:** 2017
+**Source:** [node-homie-lowpower.ino]
+:::
+:::{grid-item}
+:columns: 4
+{bdg-primary-line}`wifi` {bdg-primary-line}`mqtt` {bdg-primary-line}`json`
+
+{bdg-success-line}`hx711` {bdg-success-line}`ds18b20`
+
+{bdg-secondary-line}`esp8266`
+
+{bdg-info-line}`low-power`
+:::
+::::
+:::::
+
+::::::
 
 
 ### Ringlabs
