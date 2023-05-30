@@ -251,7 +251,7 @@ Running the [Mois Box], transmitting sensor data over HTTP, using the
 :::
 :::{grid-item}
 :columns: 4
-{bdg-primary-line}`wifi` {bdg-primary-line}`mqtt` {bdg-primary-line}`http` {bdg-primary-line}`json`
+{bdg-primary-line}`eth` {bdg-primary-line}`wifi` {bdg-primary-line}`mqtt` {bdg-primary-line}`http` {bdg-primary-line}`json`
 
 {bdg-success-line}`ads1231` {bdg-success-line}`ds18b20` {bdg-success-line}`dht22` {bdg-success-line}`tsl2591`
 
