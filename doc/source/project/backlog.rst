@@ -31,9 +31,25 @@ Iteration 1
 - [x] Fix links within ``coverage.md``
   https://hiveeyes.org/docs/arduino/#coverage
 - [x] Add Mermaid
-- [o] Docs: Add Terkin, BOB, BEEP, EasyHive, Autonome Zelle, Dachboden Lab, @hsors
 
 Iteration 2
+===========
+- [x] Dissolve ``StandardCplusplus`` completely
+- [o] @mois-update
+- [o] Polish individual pages, e.g. mois
+- [o] Broadcast PlatformIO configs to @wtf's firmwares
+- [o] At least, on all firmwares, you will need to configure the ``HX711_OFFSET`` and ``HX711_KNOWN_WEIGHT`` values ...
+- [o] Improve leftnav, with sections
+- [o] Rename ``./openhive/rfm69-node/synopsis.dot``
+- [o] Improve section about Kotori
+- [o] Add more footer links like Discourse
+- [o] Update changelog
+- [o] multihop: Remove notion of ``HE_CONTAINERS``.
+      After switching to ArduinoSTL, container data structures can be taken for granted.
+- [o] Release
+- [o] Docs: Add Terkin, BOB, BEEP, EasyHive, Autonome Zelle, Dachboden Lab, @hsors
+
+Iteration 3
 ===========
 - [o] Add firmwares by @wtf, @tonke, and @hsors.
 
