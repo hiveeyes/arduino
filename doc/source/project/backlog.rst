@@ -35,22 +35,56 @@ Iteration 1
 Iteration 2
 ===========
 - [x] Dissolve ``StandardCplusplus`` completely
-- [o] @mois-update
-- [o] Polish individual pages, e.g. mois
-- [o] Broadcast PlatformIO configs to @wtf's firmwares
-- [o] At least, on all firmwares, you will need to configure the ``HX711_OFFSET`` and ``HX711_KNOWN_WEIGHT`` values ...
-- [o] Improve leftnav, with sections
-- [o] Rename ``./openhive/rfm69-node/synopsis.dot``
-- [o] Improve section about Kotori
-- [o] Add more footer links like Discourse
-- [o] Update changelog
+- [o] Release aerowind-ads1231 0.1.0
+- [o] Broadcast PlatformIO configurations to @wtf's and @mois' firmwares
 - [o] multihop: Remove notion of ``HE_CONTAINERS``.
       After switching to ArduinoSTL, container data structures can be taken for granted.
+- [o] Curate dependencies once more
 - [o] Release
-- [o] Docs: Add Terkin, BOB, BEEP, EasyHive, Autonome Zelle, Dachboden Lab, @hsors
+
+Layout
+------
+- [o] @mois-update
+
+  - New group ``Moislabs``
+  - https://github.com/bee-mois/beescale
+  - Update README
+  - first: https://www.euse.de/wp/blog/2011/11/bienen-ueberwachen/ (8. November 2011)
+  - recent: https://www.euse.de/wp/blog/2023/05/wettermessung-direkt-am-stand/ (22. Mai 2023)
+
+- [o] Rename ``Homie`` group to ``Nettetal`` or ``Nettlabs``
+
+Documentation
+-------------
+- [o] Polish individual pages
+- [o] At least, on all firmwares, you will need to configure the ``HX711_OFFSET`` and ``HX711_KNOWN_WEIGHT`` values ...
+- [o] Rename ``./openhive/rfm69-node/synopsis.dot``
+- [o] Add a flowchart to each program? Use Mermaid instead of Graphviz?
+- [o] Improve leftnav, with sections
+- [o] Improve section about Kotori
+- [o] Add more footer links like Discourse
+- [o] Bienenwaage 6.0?
+- [o] Update ``project/licenses`` page to encourage users to use open data licenses as well
+- [o] Update changelog
+- [o] Nettetal: Links veraltet.
+
+  - https://www.imker-nettetal.de/esp8266-beescale-erste-eindruecke/
+  - https://www.nikolaus-lueneburg.de/2016/10/wemos-d1-mini-battery-shield/
+  - https://community.hiveeyes.org/t/inbetriebnahme-von-node-wifi-mqtt-homie-mit-hiveeyes-anbindung/185
+- [o] Link to "Bauanleitungen"
+
+
+
 
 Iteration 3
 ===========
+- [o] Migrate POSIX examples to PlatformIO
+- [o] Add firmwares from Beelogger, BEEP, EasyHive, Autonome Zelle, Dachboden Lab, @hsors, Terkin, BOB
+- [o] Firmware builder NG::
+
+    pip install pio-launch
+    pio-launch https://github.com/hiveeyes/arduino/tree/main/ringlabs/bienenwaage-5.0
+
 - [o] Add firmwares by @wtf, @tonke, and @hsors.
 
   - https://git.cicer.de/autonome-zelle/autonome-zelle-sfwv
