@@ -145,8 +145,8 @@ Misc
 
 - check out workbench@elbanco:/opt/esp-open-sdk after resizing /opt
 
-    - https://github.com/pfalcon/esp-open-sdk
-    - http://domoticx.com/sdk-esp8266-xtensa-architecture-toolchain/
+  - https://github.com/pfalcon/esp-open-sdk
+  - http://domoticx.com/sdk-esp8266-xtensa-architecture-toolchain/
 
 
 2017-04-09
@@ -158,17 +158,17 @@ Misc
 ----------
 - Further improvements to :ref:`node-wifi-mqtt`
 
-    - [o] Publish discrete values to the MQTT bus, use MQTT_DISCRETE maybe.
-    - [o] Add debugging using http://playground.arduino.cc/Code/SerialDebugger
-    - [x] Comment: "Connect the D0 pin with RST pin to enable wakeup of the MCU." re. deep sleep mode
-        - On "Adafruit Feather HUZZAH", wire RST with GPIO16,
-          see also https://learn.adafruit.com/adafruit-feather-huzzah-esp8266/pinouts
-    - [x] @gtuveri: it makes no sense to add #if SENSOR* stuff if SENSOR_DUMMY is true?
-    - [o] @gtuveri: why to proceed within execution if no WiFi connection has been established?
-    - [x] @Thias: ``#define DEEPSLEEP_TIME MEASUREMENT_INTERVAL * 1000UL`` since measurement interval is in ms already
-    - [x] Improve inline comments again
-    - [o] Switch from Adafruit_MQTT to https://github.com/tuanpmt/esp_mqtt or https://github.com/marvinroger/async-mqtt-client?
-    - [x] Add sensor ADS1231
+  - [o] Publish discrete values to the MQTT bus, use MQTT_DISCRETE maybe.
+  - [o] Add debugging using http://playground.arduino.cc/Code/SerialDebugger
+  - [x] Comment: "Connect the D0 pin with RST pin to enable wakeup of the MCU." re. deep sleep mode
+      - On "Adafruit Feather HUZZAH", wire RST with GPIO16,
+        see also https://learn.adafruit.com/adafruit-feather-huzzah-esp8266/pinouts
+  - [x] @gtuveri: it makes no sense to add #if SENSOR* stuff if SENSOR_DUMMY is true?
+  - [o] @gtuveri: why to proceed within execution if no WiFi connection has been established?
+  - [x] @Thias: ``#define DEEPSLEEP_TIME MEASUREMENT_INTERVAL * 1000UL`` since measurement interval is in ms already
+  - [x] Improve inline comments again
+  - [o] Switch from Adafruit_MQTT to https://github.com/tuanpmt/esp_mqtt or https://github.com/marvinroger/async-mqtt-client?
+  - [x] Add sensor ADS1231
 
 
 2017-04-05
@@ -221,9 +221,9 @@ Misc
 - https://github.com/bogde/HX711/pull/59
 - Alternative libraries for ADS1231:
 
-    - https://github.com/rfjakob/barwin-arduino
-    - | https://github.com/jensfranke/ads-1231-particle-library
-      | see also: https://community.particle.io/t/library-for-ads-1231-bee-hive-weigh-scale/21719
+  - https://github.com/rfjakob/barwin-arduino
+  - | https://github.com/jensfranke/ads-1231-particle-library
+    | see also: https://community.particle.io/t/library-for-ads-1231-bee-hive-weigh-scale/21719
 
 - http://forum.sodaq.com/c/beekeeping
 - Rename node-gprs-http to node-gsm-wifi-http
@@ -279,15 +279,16 @@ RaspIO setup
 ----------
 - [o] Investigate alternative HX711 library
 
-    - http://www.arduinolibraries.info/libraries/queuetue-digital-balance-library
-    - http://www.arduinolibraries.info/libraries/queuetue-hx711-library
-    - https://github.com/queuetue/Q2-Balance-Arduino-Library
-    - https://github.com/queuetue/Q2-HX711-Arduino-Library
+  - http://www.arduinolibraries.info/libraries/queuetue-digital-balance-library
+  - http://www.arduinolibraries.info/libraries/queuetue-hx711-library
+  - https://github.com/queuetue/Q2-Balance-Arduino-Library
+  - https://github.com/queuetue/Q2-HX711-Arduino-Library
 
 - [o] Migrate from StandardCplusplus to ArduinoSTL?
-    - https://github.com/mike-matera/ArduinoSTL
-    - http://platformio.org/lib/show/750/ArduinoSTL
-    - See also https://github.com/maniacbug/StandardCplusplus/pull/20
+
+  - https://github.com/mike-matera/ArduinoSTL
+  - http://platformio.org/lib/show/750/ArduinoSTL
+  - See also https://github.com/maniacbug/StandardCplusplus/pull/20
 
 
 2016-11-01
