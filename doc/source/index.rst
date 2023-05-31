@@ -209,6 +209,8 @@ An example scenario how a telemetry data network can look like in a multi-sensor
 environment. In order to learn more about the Kotori message router and data historian,
 visit its documentation at :ref:`kotori`.
 
+.. Mermaid Flowcharts documentation: https://mermaid.js.org/syntax/flowchart.html
+
 .. mermaid::
 
    %%{init: {"flowchart": {"htmlLabels": false}} }%%

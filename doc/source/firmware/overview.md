@@ -64,6 +64,31 @@ Running the [Mois Box], transmitting sensor data over HTTP, using the
 ::::
 :::::
 
+::::::
+
+### Open Hive
+
+All systems conceived by Open Hive. Clemens Gruber reports about the development progress
+on his personal site at http://open-hive.org/. He pioneered low-cost scale platform
+designs based on aluminium bars.
+
+:::{seealso}
+Clemens shared many resources about the [development of a low-cost, aluminium scale platform],
+see [Bee Scale Prototype 2], [Open Hive Single Scale Bar], and [Two-bars aluminium scale platform].
+:::
+
+[Bee Scale Prototype 2]: https://www.facebook.com/media/set/?set=a.10204255675971783.1073741828.1224510416&type=1&l=41802f0fee
+[development of a low-cost, aluminium scale platform]: https://community.hiveeyes.org/t/low-cost-half-only-scale-platform-aluminium/250
+[Open Hive Single Scale Bar]: https://community.hiveeyes.org/t/open-hive-scale-bar-for-single-side-weighting/595
+[Two-bars aluminium scale platform]: https://community.hiveeyes.org/t/waage-konstruktion-mit-2-wagebalken-und-130-x-30-x-22-mm-wagezellen/3033
+
+
+#### GSM, Wi-Fi
+
+::::::{grid} 1
+:margin: 0
+:padding: 0
+
 :::::{grid-item-card}
 ::::{grid} 2
 :margin: 0
@@ -73,10 +98,10 @@ Running the [Mois Box], transmitting sensor data over HTTP, using the
 :columns: 8
 [Open Hive GSM / Wi-Fi sensor node](#openhive-gsm-wifi)
 
-The firmware source code powering the [Open Hive Box] and [Open Hive WiFi Solar],
-using the [GPRSbee] GSM modem.
+Firmware powering the [Open Hive Bee Scale GSM], using a [GPRSbee] GSM
+modem, and the [Open Hive WiFi Solar], based on an [ESP8266].
 
-**Date:** 2015
+**Date:** 2014
 **Source:** [openhive-gsm-wifi.ino]
 :::
 :::{grid-item}
@@ -479,17 +504,17 @@ caption: Firmwares
 maxdepth: 1
 hidden:
 ---
-backdoor/multihop/README
-backdoor/node-pipa/README
-backdoor/node-wifi-mqtt/README
-homie/node-homie-basic/README
-homie/node-homie-lowpower/README
 moislabs/beescale-yun/README
 openhive/openhive-gsm-wifi/README
 openhive/rfm69-gateway-sdcard/README
 openhive/rfm69-gateway-uart/README
 openhive/rfm69-node/README
 openhive/scale-adjust/README
+backdoor/multihop/README
+backdoor/node-pipa/README
+backdoor/node-wifi-mqtt/README
+homie/node-homie-basic/README
+homie/node-homie-lowpower/README
 ringlabs/bienenwaage-2.0/README
 ringlabs/bienenwaage-5.0/README
 ```

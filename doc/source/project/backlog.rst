@@ -44,10 +44,10 @@ Iteration 2
 
 Layout
 ------
-- [o] @mois-update
+- [o] Updates for @mois' system
 
-  - New group ``Moislabs``
-  - https://github.com/bee-mois/beescale
+  - New group ``Mois' Lab``
+  - Link to https://github.com/bee-mois/beescale
   - Update README
   - first: https://www.euse.de/wp/blog/2011/11/bienen-ueberwachen/ (8. November 2011)
   - recent: https://www.euse.de/wp/blog/2023/05/wettermessung-direkt-am-stand/ (22. Mai 2023)
@@ -60,6 +60,7 @@ Documentation
 - [o] At least, on all firmwares, you will need to configure the ``HX711_OFFSET`` and ``HX711_KNOWN_WEIGHT`` values ...
 - [o] Rename ``./openhive/rfm69-node/synopsis.dot``
 - [o] Add a flowchart to each program? Use Mermaid instead of Graphviz?
+- [o] Add Grafana embed to each program?
 - [o] Improve leftnav, with sections
 - [o] Improve section about Kotori
 - [o] Add more footer links like Discourse
