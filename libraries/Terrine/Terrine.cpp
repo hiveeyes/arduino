@@ -27,8 +27,8 @@ Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA
 
 #if ARDUINO && !ESP32
     #include <MemoryFree.h>
-#elif defined(__unix__)
-#else
+#endif
+#if defined(__unix__) || defined(__APPLE__)
     #include <iostream>
 #endif
 
@@ -87,7 +87,7 @@ void Terrine::log(int value) {
         #ifdef ARDUINO
             SERIAL_PORT_HARDWARE.println(value);
             delay(TERRINE_SERIAL_DELAY);
-        #elif defined(__unix__)
+        #elif defined(RH_SIMULATOR_DEFUNCT)
             SERIAL_PORT_HARDWARE.println(std::to_string(value).c_str());
         #else
             std::cout << value << std::endl;
@@ -112,7 +112,7 @@ void Terrine::logmem() {
             SERIAL_PORT_HARDWARE.print("free: ");
             SERIAL_PORT_HARDWARE.println(memfree());
             delay(TERRINE_SERIAL_DELAY);
-        #elif defined(__unix__)
+        #elif defined(RH_SIMULATOR_DEFUNCT)
             SERIAL_PORT_HARDWARE.println(std::to_string(memfree()).c_str());
         #else
             log("free: ", false);

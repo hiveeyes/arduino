@@ -29,7 +29,7 @@ Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA
     #include <Arduino.h>
 #elif defined SIMULAVR
     #include <simulavr.h>
-#elif defined __unix__
+#elif defined RH_SIMULATOR
     #include <RHutil/simulator.h>
 #endif
 
@@ -45,7 +45,7 @@ Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA
 
 #define TERRINE_SERIAL_DELAY 100
 
-#if defined(__unix__)
+#if defined(RH_SIMULATOR_DEFUNCT)
     #include <sstream>
     namespace std {
         std::string to_string(size_t n) {
@@ -55,7 +55,7 @@ Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA
         }
     }
 #endif
-#if defined(__unix__)
+#if defined(RH_SIMULATOR_DEFUNCT)
     extern char *ultoa(unsigned long int __val, char *__s, int __radix) {
         snprintf(__s, __radix, "%d", __val);
         return __s;
