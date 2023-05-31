@@ -42,6 +42,7 @@ jobs:
   changes:
     runs-on: ubuntu-latest
     outputs:
+      library-terkindata: ${{ steps.changes.outputs.library-terkindata }}
       homie: ${{ steps.changes.outputs.homie }}
       backdoor-any-rfm69: ${{ steps.changes.outputs.backdoor-any-rfm69 }}
       backdoor-multihop: ${{ steps.changes.outputs.backdoor-multihop }}
@@ -58,6 +59,12 @@ jobs:
         id: changes
         with:
           filters: |
+            library-terkindata:
+              - 'libraries/TerkinData/Makefile'
+              - 'libraries/TerkinData/**/*.cpp'
+              - 'libraries/TerkinData/**/*.ini'
+              - 'libraries/TerkinData/**/*.ino'
+              - 'libraries/TerkinData/**/*.mk'
             homie:
               - 'homie/**/*.ini'
               - 'homie/**/*.ino'
@@ -120,6 +127,17 @@ jobs:
       - name: Install PlatformIO
         run: |
           pip install --upgrade --requirement requirements-test.txt
+
+
+      # ------------------------------------------
+      #   Libraries
+      # ------------------------------------------
+
+      - name: Build TerkinData
+        if: ${{ needs.changes.outputs.library-terkindata == 'true' }}
+        run: |
+          cd libraries/TerkinData/examples
+          make
 
 
       # ------------------------------------------
