@@ -61,6 +61,7 @@
 [RHT04]: http://www.humiditycn.com/cp21.html
 [TSL25911]: https://ams.com/tsl25911
 [Adafruit TSL2591 STEMMA QT]: https://www.adafruit.com/product/1980
+[SHT30]: https://sensirion.com/products/catalog/SHT30-DIS-B
 [LowPowerLab]: https://lowpowerlab.com/
 [RFM69 based sensors and MQTT gateway]: https://github.com/computourist/RFM69-MQTT-client
 [Bencode]: https://en.wikipedia.org/wiki/Bencode

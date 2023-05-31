@@ -1,60 +1,42 @@
-/***********************************************************************************************************
-   mois Yun Beescale
-   Collect sensor data, send it via GSM to local SD, flatfile on webserver, and Hiveeyes' Kotori/InfluxDB.
-   
-   (c)2014-2017 Markus Euskirchen
-   https://www.euse.de/wp/blog/series/bienenwaage2/
-   https://github.com/bee-mois/beescale
-   
-   Changes
-   -------
-   2014-04-04 Initial version
-   2015-01-12 Added second scale
-   2015-03-14 Modularized code into functions, code cleanup, thanks Alexander!
-   2016-10-30 Change from Wifi to ethernet
-   2016-11-15 Median instead average
-   2017-02-26 Change from Ethernet-Shield to Yun-Shield
-   2017-03-06 Added DHT22
-   2017-03-09 Added switch, SD for local backup
-   2017-03-12 Added TSL2591 digital light sensor
-   
-   GNU GPL v3 License
-   ------------------
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 3 of the License, or
-   (at your option) any later version.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
-   You should have received a copy of the GNU General Public License
-   along with this program; if not, see:
-   <http://www.gnu.org/licenses/gpl-3.0.txt>,
-   or write to the Free Software Foundation,
-   Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA
-   -------------------------------------------------------------------------
-   
-   Credits: Alexander Wilms for a first modularized/functionized loop.
-            Hiveeyes Developers for pushing me forward.
-  
-  Used libraries:
-   Bridge:               Yun Standard
-   Console:              Yun Standard
-   HttpClient:           Yun Standard
-   FileIO:               Yun Standard
-   ADS1231:		          http://forum.arduino.cc/index.php?action=dlattach;topic=131086.0;attach=67564
-                         maybe better (?): https://github.com/rfjakob/barwin-arduino/tree/master/lib/ads1231
-   RunningMedian:	       https://github.com/RobTillaart/Arduino/tree/master/libraries/RunningMedian
-   SPI:                  Arduino Standard
-   digitalWriteFast:     https://github.com/watterott/Arduino-Libs/tree/master/digitalWriteFast
-   OneWire:              https://github.com/PaulStoffregen/OneWire
-   DallasTemperature:	 https://github.com/milesburton/Arduino-Temperature-Control-Library
-   DHT:	      	       https://github.com/adafruit/DHT-sensor-library
-   Wire:                 Arduino Standard
-   Adafruit_Sensor:      https://github.com/adafruit/Adafruit_Sensor
-   Adafruit_TSL2591:     https://github.com/adafruit/Adafruit_TSL2591_Library
-**********************************************************************************************************/
+/**
+
+  Mois Labs Beescale Yun - Firmware source code
+  Collect sensor data, send it via GSM to local SD, flat-file on webserver, and to Hiveeyes' Kotori/InfluxDB/Grafana.
+
+  https://hiveeyes.org/docs/arduino/firmware/moislabs/beescale-yun/README.html
+
+  (c) 2011-2023 Markus Euskirchen
+  License: Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License
+  Lizenz:  Creative Commons Namensnennung - Nicht-kommerziell - Weitergabe unter gleichen Bedingungen 4.0 International Lizenz
+
+  Source code repository and documentation:
+  - https://github.com/bee-mois/beescale
+  - https://github.com/hiveeyes/arduino/tree/main/moislabs/beescale-yun
+  - https://www.euse.de/wp/blog/series/bienenwaage2/
+
+  Changelog:
+  2014-04-04 mois  - Initial version
+  2015-01-12 mois  - Added second scale
+  2015-03-14 Alexander Wilms -
+                     Modularized code into functions, adjusted loop order to avoid program hangs in case of
+                     client/network/transmit errors. Code cleanup.
+  2016-10-30 mois  - Verbindung umgestellt auf Ethernet hinter OpenWRT-Router
+  2016-11-15 mois  - Zeile 116: Median statt Average
+  2017-02-20 mois  - zweite Wägezelle wieder eingebaut
+  2017-02-26 mois  - für Yun: Bridgeverwendung aktiviert, Kontroll-LED eingebaut, GET Request
+  2017-02-27 mois  - Serverantwort auf die Console leiten
+  2017-03-06 mois  - DHT22 eingebaut
+  2017-03-09 mois  - Schalter; SD-Backup eingebaut
+  2017-03-12 mois  - TSL2591 eingebaut; überflüssige Kommentare und Optionen gelöscht.
+  2017-03-14 mois  - TSL2591 optimiert: simple read!
+  2019-06-16 mois  - added code to swich on/off USB-power by a relay on pinA0/D14
+  2020-10-05 mois  - added code to check t2 and correct via relay if necessary.
+                   - commented out other relay stuff.
+  2022-03-15 mois  - replaced DHT22 by SHT30. 
+                   - therefore had to add an i2c multiplexer TCA9548A.
+                   - wrapped TSL2591 stuff in multiplexer code.
+                   - removed relay which had to reset one of the dht22.
+*/
 
 // define individual values for used load cell type
 //   loadCellZeroOffset: write down the sensor value of the scale with no load and adjust it
@@ -77,10 +59,10 @@ long loadCellKgDivider01 = 3800000;
 // initialize all needed variables
 float temp1;   // Temp outside box
 float temp2;   // Temp in box
-float h1;      // DHT Humidity Hive1
-float t1;      // DHT Temperature Hive1
-float h2;      // DHT Humidity Hive2
-float t2;      // DHT Temperature Hive2
+float h1;      // SHT30 Humidity Hive1, connect sensor pins to I2C bus number 1 on multiplexer
+float t1;      // SHT30 Temperature Hive1, -"-
+float h2;      // SHT30 Humidity Hive2, connect sensor pins to I2C bus number 2 on multiplexer
+float t2;      // SHT30 Temperature Hive2, -"-
 float weight1;
 long weightSensorValue;
 float weightKg;
@@ -92,12 +74,13 @@ boolean weightKgTrusted01 = false;
 static char cKg00[8];
 static char cKg01[8];
 String dataURL = "";
-int switchPin = 11;   // switch is connected to pin 11
-uint16_t lux = 0;
+int switchPin = 11;      // switch is connected to pin 11
+uint16_t lux;            // connect sensor pins to I2C bus number 4 on multiplexer
+uint8_t bus;
 
 #include <ADS1231.h>
 
-ADS1231 loadCell;  // create ADS1231 object
+ADS1231 loadCell;        // create ADS1231 object
 ADS1231 loadCell01;
 
 #include <RunningMedian.h>
@@ -117,23 +100,37 @@ OneWire OneWire(ONE_WIRE_BUS);
 // Pass our OneWire reference to Dallas Temperature.
 DallasTemperature sensors(&OneWire);
 
-#include "DHT.h"
-
-#define DHT1PIN 2
-#define DHT2PIN 3
-#define DHT1TYPE DHT22
-#define DHT2TYPE DHT22
-DHT dht1(DHT1PIN, DHT1TYPE);
-DHT dht2(DHT2PIN, DHT2TYPE);
-
 #include <Wire.h>
 #include <Adafruit_Sensor.h>
 #include "Adafruit_TSL2591.h"
 
-Adafruit_TSL2591 tsl = Adafruit_TSL2591(2591); // pass in a number for the sensor identifier
+Adafruit_TSL2591 tsl = Adafruit_TSL2591(2591); // pins to I2C bus number 4
 
-// Forward declarations
-String getTimeStamp();
+#include "Adafruit_SHT31.h"
+
+bool enableHeater = false;
+Adafruit_SHT31 sht1 = Adafruit_SHT31();        // connect sensor pins to I2C bus number 1
+Adafruit_SHT31 sht2 = Adafruit_SHT31();        // connect sensor pins to I2C bus number 2
+
+// Function to select I2C bus on multiplexer TCA9548A
+void tcaselect(uint8_t bus) {
+    if (bus > 7) return;
+    Wire.beginTransmission(0x70);  // TCA9548A multiplexer address
+    Wire.write(1 << bus);          // send byte to select bus
+    Wire.endTransmission();
+}
+
+// Function to read temp&humidity from SHT31 sensors
+void readValues(Adafruit_SHT31 sht31, int bus) {
+    tcaselect(bus);
+    if (bus == 1) {
+        h1 = sht31.readHumidity() + 0.4;    /* +x% korrektur */
+        t1 = sht31.readTemperature();
+    } else if (bus == 2) {
+        h2 = sht31.readHumidity() - 0.4;    /* -x% korrektur */
+        t2 = sht31.readTemperature();
+    }
+}
 
 // Function to read out weight cell.
 void getWeight(void) {
@@ -161,9 +158,9 @@ void getWeight(void) {
     }
 }
 
-void configureSensor(void)    // Configures the gain and integration time for the TSL2591
-{
-    tsl.setGain(TSL2591_GAIN_LOW);    // 1x gain (bright light)
+// Function for TSL2591 to configure gain and integration time
+void configureSensor(void) {
+    tsl.setGain(TSL2591_GAIN_LOW);       // 1x gain (bright light)
     // tsl.setGain(TSL2591_GAIN_MED);    // 25x gain
     // tsl.setGain(TSL2591_GAIN_HIGH);   // 428x gain
     // tsl.setTiming(TSL2591_INTEGRATIONTIME_100MS);  // shortest integration time (bright light)
@@ -172,18 +169,20 @@ void configureSensor(void)    // Configures the gain and integration time for th
     // tsl.setTiming(TSL2591_INTEGRATIONTIME_400MS);
     // tsl.setTiming(TSL2591_INTEGRATIONTIME_500MS);
     // tsl.setTiming(TSL2591_INTEGRATIONTIME_600MS);  // longest integration time (dim light)
-    //
     // 25 gain/200ms ok for winter indoor. spring sun too bright.
     //  1 gain/300ms ok for sunny spring morning
 }
 
-void simpleRead(void) {
-    // Simple data read example. Just read the infrared, fullspecrtrum diode
-    // or 'visible' (difference between the two) channels.
-    // This can take 100-600 milliseconds! Uncomment whichever of the following you want to read
-    lux = tsl.getLuminosity(TSL2591_VISIBLE);
-    //uint16_t x = tsl.getLuminosity(TSL2591_FULLSPECTRUM);
-    //uint16_t x = tsl.getLuminosity(TSL2591_INFRARED);
+// Function to read from TSL2591 brightness sensor
+void TSLRead(void) {
+    tcaselect(4);
+    uint32_t lum = tsl.getFullLuminosity();
+    uint16_t ir, full;
+    ir = lum >> 16;
+    full = lum & 0xFFFF;
+    lux = tsl.calculateLux(full, ir);
+//  lux = tsl.getLuminosity(TSL2591_VISIBLE);
+// Serial.print("Visible: "); Serial.print(full - ir);
 }
 
 // Function to send values via GET request.
@@ -191,7 +190,8 @@ void add_line() {
     HttpClient client;
     // convert the readings to a String to send it:
     dataURL = "http://www.euse.de/honig/beescale/add_line2.php?weight1=";
-    dataURL += cKg00;
+//    dataURL += cKg00;
+    dataURL += "17.075";    // fixwert wegen bloeder sonderzeichen
     dataURL += "&weight2=";
     dataURL += cKg01;
     dataURL += "&temp1=";
@@ -235,7 +235,7 @@ void add_line() {
     //send data
     client.get(dataURL);
     Console.println("sending data...");
-    //if there's incoming data from the net connection send it out the console.
+    //if there's incoming data from the net connection, send it out the console.
     while (client.available()) {
         char c = client.read();
         Console.print(c);
@@ -243,6 +243,7 @@ void add_line() {
     Console.flush();
 }
 
+// Function to write backup to SD
 void add_line_sd() {
     // make a string that starts with a timestamp for assembling the data to log:
     String dataString;
@@ -251,7 +252,7 @@ void add_line_sd() {
     dataString += cKg00;
     dataString += ",";
     dataString += temp1;
-    dataString += ",0,";
+    dataString += ",0,";              // ??
     dataString += lux;
     dataString += ",";
     dataString += cKg01;
@@ -274,6 +275,7 @@ void add_line_sd() {
         // print to the serial port too:
         Console.println("OK.");
 //    Console.print("OK. File Size: "); Console.println(getLogSize());
+        Console.println("");
     }
         // if the file isn't open, pop up an error:
     else {
@@ -299,31 +301,17 @@ String getTimeStamp() {
     return result;
 }
 
-/*
-String getLogSize()
-{
-  String res;
-  Process size;
-  size.runShellCommand("du -h /mnt/sda1/arduino/www/datalog.txt | cut -f1");
-  while (size.running());
-  while (size.available() > 0) {
-    char c = size.read();
-    if (c != '\n') {
-      res += c;
-    }
-  }
-  return res;
-}
-*/
-
 void setup() {
+    Console.println("00");
 //  delay(1000);
+    Wire.begin();
     Serial.begin(9600); //init serial port and set baudrate
     Bridge.begin();
     Console.begin();
     FileSystem.begin();
     // a second to initialize:
     delay(1000);
+    // while (!Console);   // Wait for the Console port to connect
     // load cell / ADS1231 pin definition: SCL 7, Data 6, PowerDown 10
     loadCell.attach(7, 6, 10);
     // second load cell / ADS1231 pin definition: SCL 8, Data 5, PowerDown 9
@@ -332,33 +320,34 @@ void setup() {
     // Switch LED: initialize digital pin LED_BUILTIN as an output.
     pinMode(LED_BUILTIN, OUTPUT);
     pinMode(switchPin, INPUT);    // Switch: Set the switch pin as input
-    dht1.begin();
-    dht2.begin();
-    tsl.begin();
-    configureSensor();    // digital light sensor
+    // Init sensors on multiplexers I2C bus
+    tcaselect(1);
+    sht1.begin(0x44);
+    tcaselect(2);
+    sht2.begin(0x44);
+    tcaselect(4);
+    tsl.begin(0x29);
+    configureSensor();
 }
 
 void loop() {
     while (digitalRead(switchPin) == HIGH) {
-        digitalWrite(LED_BUILTIN, HIGH);    // turn the LED on (HIGH is the voltage level)
+        digitalWrite(LED_BUILTIN, HIGH); // turn the LED on (HIGH is the voltage level)
         Console.println("paused by switch...");
         delay(5000);
     }
-    digitalWrite(LED_BUILTIN, LOW);    // turn the LED off (LOW is the voltage level)
-//  delay(1000);
+    digitalWrite(LED_BUILTIN, LOW);      // turn the LED off (LOW is the voltage level)
+    //delay(1000);
     //read and prepare sensor data
-    sensors.requestTemperatures();      // get temperatures
-    temp2 = sensors.getTempCByIndex(0); // Temp in box
-    temp1 = sensors.getTempCByIndex(1); // Temp outside box
-    simpleRead();                       // Luminosity by TSL2591
-    h1 = dht1.readHumidity();
-    t1 = dht1.readTemperature();
-    h2 = dht2.readHumidity();
-    t2 = dht2.readTemperature();
-    getWeight();
-    add_line();     //transmit data
-    add_line_sd();  // backup to Yun's MicroSD
-    Console.println();
-//  delay(21000); //run every 30 seconds (runtime without delay: 9 seconds)
-    delay(111000); //run every two minutes (runtime without delay: 9 seconds)
+    readValues(sht1, 1);                 // get SHT31 temperatures/humidity
+    readValues(sht2, 2);
+    sensors.requestTemperatures();       // get DS18B20 temperatures
+    temp2 = sensors.getTempCByIndex(0);  // get temperature from inside sensor node box
+    temp1 = sensors.getTempCByIndex(1);  // temperature outside box
+    TSLRead();                           // Luminosity by TSL2591
+    getWeight();                         // Load cell
+    add_line();                          // transmit data
+    add_line_sd();                       // backup to Yun's MicroSD
+    //  delay(21000); //run every 30 seconds (runtime without delay: 9 seconds)
+    delay(111000);    //run every two minutes (runtime without delay: 9 seconds)
 }

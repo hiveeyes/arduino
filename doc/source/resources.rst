@@ -121,6 +121,7 @@
 .. _RHT04: http://www.humiditycn.com/cp21.html
 .. _TSL25911: https://ams.com/tsl25911
 .. _Adafruit TSL2591 STEMMA QT: https://www.adafruit.com/product/1980
+.. _SHT30: https://sensirion.com/products/catalog/SHT30-DIS-B
 
 .. LowPowerLab and computourist
 .. _LowPowerLab: https://lowpowerlab.com/
