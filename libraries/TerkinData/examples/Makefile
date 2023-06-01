@@ -21,11 +21,11 @@ export BUILD_DIR := $(PWD)/.build
 # =================
 
 # Main entrypoint targets.
-all: run build
+all: setup-virtualenv run build
 run: posix-run
 
 # Run all POSIX program examples.
-posix-run: csv json urlencoded
+posix-run: csv json sql urlencoded
 
 
 # ==================================================
@@ -35,6 +35,7 @@ posix-run: csv json urlencoded
 build: setup-virtualenv
 	PLATFORMIO_SRC_DIR=csv $(pio) run  # --verbose
 	PLATFORMIO_SRC_DIR=json $(pio) run  # --verbose
+	PLATFORMIO_SRC_DIR=sql $(pio) run  # --verbose
 	PLATFORMIO_SRC_DIR=urlencoded $(pio) run  # --verbose
 
 
@@ -44,12 +45,16 @@ build: setup-virtualenv
 
 .PHONY: csv
 csv:
-	PLATFORMIO_SRC_DIR=csv pio run -e native -t exec
+	PLATFORMIO_SRC_DIR=csv $(pio) run -e native -t exec
 
 .PHONY: json
 json:
-	PLATFORMIO_SRC_DIR=json pio run -e native -t exec
+	PLATFORMIO_SRC_DIR=json $(pio) run -e native -t exec
+
+.PHONY: sql
+sql:
+	PLATFORMIO_SRC_DIR=sql $(pio) run -e native -t exec
 
 .PHONY: urlencoded
 urlencoded:
-	PLATFORMIO_SRC_DIR=urlencoded pio run -e native -t exec
+	PLATFORMIO_SRC_DIR=urlencoded $(pio) run -e native -t exec

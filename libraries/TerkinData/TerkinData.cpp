@@ -201,3 +201,85 @@ std::string DataManager::json_data(Measurement& measurement) {
 #endif
 
 }
+
+
+/**
+ *
+ * Serialize measurement data to SQL CREATE statement
+ *
+**/
+std::string DataManager::sql_create(std::string table, Measurement& measurement) {
+
+    // Translate sensor value names to telemetry field names.
+    this->map_fields(measurement);
+
+    // Containers for SQL CREATE statements' columns, with types.
+    std::vector<std::string> fields;
+
+    // Iterate header field names.
+    for (std::string name: *this->field_names) {
+
+        // #include <stdio.h>
+        // std::cout << "name: " << name << std::endl;
+
+        // Handle .time specially
+        if (name == "time") {
+            fields.push_back("'" + name + "'" + " DATETIME WITH TIMEZONE");
+            continue;
+        }
+
+        fields.push_back("'" + name + "'" + " FLOAT");
+    }
+
+    // Serialize to SQL INSERT statement.
+    std::string fields_clause = join(fields, ',');
+    std::string sql = "CREATE TABLE " + table + " (" + fields_clause + ");";
+
+    return sql;
+
+}
+
+
+/**
+ *
+ * Serialize measurement data to SQL INSERT statement
+ *
+**/
+std::string DataManager::sql_insert(std::string table, Measurement& measurement) {
+
+    // Translate sensor value names to telemetry field names.
+    this->map_fields(measurement);
+
+    // Containers for SQL INSERT statements' columns and values clauses.
+    std::vector<std::string> columns;
+    std::vector<std::string> values;
+
+    // Iterate header field names.
+    for (std::string name: *this->field_names) {
+
+        // #include <stdio.h>
+        // std::cout << "name: " << name << std::endl;
+
+        // Handle .time specially
+        if (name == "time") {
+            columns.push_back(name);
+            values.push_back("'" + measurement.time + "'");
+            continue;
+        }
+
+        // Add values of sensor readings
+        if (key_exists(measurement.data, name)) {
+            float value = measurement.data[name];
+            columns.push_back(name);
+            values.push_back(to_string(value));
+        }
+    }
+
+    // Serialize to SQL INSERT statement.
+    std::string columns_clause = join(columns, ',');
+    std::string values_clause = join(values, ',');
+    std::string sql = "INSERT INTO " + table + " (" + columns_clause + ") VALUES (" + values_clause + ");";
+
+    return sql;
+
+}

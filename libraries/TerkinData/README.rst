@@ -19,7 +19,9 @@ TerkinData C++
 Introduction
 ************
 
-TerkinData C++ is a convenient library for handling sensor readings.
+TerkinData C++ is a convenient library for collecting sensor readings, and
+for marshalling them into different output formats, like CSV, JSON, SQL, or
+x-www-form-urlencoded.
 
 It helps to decouple the sensor reading domain from the telemetry domain in a
 typical data logger application. While providing a generic interface, it can
@@ -171,6 +173,20 @@ JSON
     delete measurement;
 
 
+SQL
+---
+
+::
+
+    // Define table name.
+    std::string table_name = "testdrive";
+
+    // Serialize data into SQL CREATE statement.
+    datamgr->sql_create(table_name, *measurement);
+
+    // Serialize data into SQL INSERT statement.
+    datamgr->sql_insert(table_name, *measurement);
+
 
 *****
 Usage
@@ -274,6 +290,29 @@ JSON
 .. seealso:: Full source of `<json_basic.cpp_>`_.
 
 
+.. _terkindata-sql-example:
+
+SQL
+===
+
+::
+
+    ==============================
+    TerkinData SQL DDL+DML example
+    ==============================
+
+    -- Test DDL
+    data:   CREATE TABLE testdrive ('time' DATETIME WITH TIMEZONE,'weight' FLOAT,'temperature_outside' FLOAT,'humidity_outside' FLOAT,'temperature_inside' FLOAT,'voltage' FLOAT);
+
+    -- Test DML single reading (complete)
+    data:   INSERT INTO testdrive (time,weight,temperature_outside,humidity_outside,temperature_inside,voltage) VALUES ('2023-06-03T13:14:24Z',85.000000,42.419998,84.839996,33.330002,3.843000);
+
+    -- Test DML single reading (incomplete)
+    data:   INSERT INTO testdrive (time,temperature_outside,humidity_outside,voltage) VALUES ('2023-06-03T13:14:24Z',42.419998,84.839996,3.843000);
+
+.. seealso:: Full source of `<sql_basic.cpp_>`_.
+
+
 ********
 Download
 ********
@@ -317,3 +356,4 @@ Terkin
 .. _csv_basic.cpp: https://github.com/hiveeyes/arduino/blob/main/libraries/TerkinData/examples/csv/csv_basic.cpp
 .. _json_basic.cpp: https://github.com/hiveeyes/arduino/blob/main/libraries/TerkinData/examples/json/json_basic.cpp
 .. _urlencoded_basic.cpp: https://github.com/hiveeyes/arduino/blob/main/libraries/TerkinData/examples/urlencoded/urlencoded_basic.cpp
+.. _sql_basic.cpp: https://github.com/hiveeyes/arduino/blob/main/libraries/TerkinData/examples/urlencoded/sql_basic.cpp
