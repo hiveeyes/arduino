@@ -22,7 +22,7 @@ Iteration 1
 ===========
 - [x] FW INDEX :hidden:
 - [x] Refine new firmware overview page
-- [x] Get rid of tools subdirectory
+- [x] Get rid of ``tools`` subdirectory
 - [x] Hibernate Firmware Builder
 - [x] Run linkchecker
 - [x] Use brand color of previous theme
@@ -35,11 +35,12 @@ Iteration 1
 Iteration 2
 ===========
 - [x] Dissolve ``StandardCplusplus`` completely
+- [x] multihop: Remove notion of ``HE_CONTAINERS``.
+      After switching to ArduinoSTL, container data structures can be taken for granted.
 - [o] Release aerowind-ads1231 0.1.0
 - [o] Broadcast PlatformIO configurations to @wtf's and @mois' firmwares
-- [o] multihop: Remove notion of ``HE_CONTAINERS``.
-      After switching to ArduinoSTL, container data structures can be taken for granted.
 - [o] Curate dependencies once more
+- [o] Format code with CLion code formatter
 - [o] Release
 
 Layout
@@ -75,12 +76,16 @@ Documentation
 - [o] Link to "Bauanleitungen"
 
 
-
-
 Iteration 3
 ===========
 - [o] Migrate POSIX examples to PlatformIO
-- [o] Add firmwares from Beelogger, BEEP, EasyHive, Autonome Zelle, Dachboden Lab, @hsors, Terkin, BOB
+- [o] Add firmwares from BOB, Open Hive v3, Beelogger, BEEP, EasyHive, Autonome Zelle, Dachboden Lab, @hsors, Terkin
+  - Die Firmware fürs BOB kit auf Arduino Basis
+    https://github.com/ClemensGruber/bee-observer_bee-monitoring-arduino
+  - Die TTGO T-Call Version
+    https://github.com/ClemensGruber/open-hive_bee-monitoring
+    https://community.hiveeyes.org/t/openhive-esp32-ttgo-t-call-sim800c/4202
+
 - [o] Firmware builder NG::
 
     pip install pio-launch

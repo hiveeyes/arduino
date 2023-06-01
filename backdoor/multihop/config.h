@@ -220,8 +220,12 @@
                 #define RH95_SS               5              //
             #endif
         #elif IS_GATEWAY
-            #define RH95_IRQ              2             // radio pins
-            #define RH95_SS               10              //
+            #if !defined(RH95_IRQ)
+                #define RH95_IRQ              2             // radio pins
+            #endif
+            #if !defined(RH95_SS)
+                #define RH95_SS               10              //
+            #endif
         #endif
 
 

@@ -39,6 +39,9 @@ About
 The second generation `Mois Box`_ is a beehive monitoring system based on the
 `Arduino Yún Shield`_-compatible `Dragino Yun Shield v2.4`_, running `OpenWrt`_.
 
+The article `Bienenwaage 2.0`_ introduces you to the hardware setup.
+
+
 Project repository
 ==================
 
@@ -130,6 +133,7 @@ Build
 
 The build system is based on `PlatformIO`_, which will install toolchains and build
 your customized firmware without efforts. All you need is a Python installation.
+If you want to use an IDE, we recommend to use the `PlatformIO IDE`_.
 
 ::
 
@@ -280,6 +284,7 @@ an issue`_, or `submit a patch`_. Thank you.
 .. _AR9331: http://en.techinfodepot.shoutwiki.com/wiki/Atheros_AR9331
 .. _@bee-mois: https://github.com/bee-mois
 .. _beescale repository: https://github.com/bee-mois/beescale
+.. _Bienenwaage 2.0: https://www.euse.de/wp/blog/2017/03/bienenwaage-2_0/
 .. _create an issue: https://github.com/hiveeyes/arduino/issues
 .. _custom PHP receiver program: https://github.com/bee-mois/beescale/blob/master/add_line2.php
 .. _Daten zu Hiveeyes übertragen: https://community.hiveeyes.org/t/daten-per-http-und-php-ans-backend-auf-swarm-hiveeyes-org-ubertragen/162
