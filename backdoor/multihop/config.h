@@ -33,7 +33,6 @@
 #define HE_RFM69_OTA              false
 #define HE_BERadio                false
 #define HE_RADIO                  false
-#define HE_CONTAINERS             false
 
 #define IS_NODE                   false
 #define IS_RELAY                  false
@@ -122,9 +121,6 @@
     #define  HE_HIVE_ID                2
     #define  BAD_VALUE             273.15
     #define  BERadio_DELAY         500
-    #if HE_CONTAINERS == false
-        #define HE_CONTAINERS      true
-    #endif
 #endif
 
 
@@ -171,9 +167,6 @@
 #ifdef HE_TEMPERATURE
     #define DS18B20_BUS           9              // DS18B20 data pin
     #define TEMP_PRECISION        9              // DS18B20 value resolution
-    #if HE_CONTAINERS
-        #define CONT_HUM            true
-    #endif
 #endif
 
 #ifdef  HE_HUMIDITY
@@ -181,12 +174,6 @@
     #define DHT_PIN1                  7              // DHT pin #1
     #define DHT_PIN2                  6              // DHT pin #2
     #define DHT_TYPE                  DHT22          // DHT type (dht22)
-    #if HE_CONTAINERS
-        #define CONT_HUM             true
-        #ifndef CONT_TEMP
-            #define CONT_TEMP        true
-        #endif
-    #endif
 #endif
 
 #ifdef HE_SCALE
@@ -195,9 +182,6 @@
     #define HX711_OFFSET          8361975
 
     #define HX711_KNOWN_WEIGHT     21901.f
-    #if HE_CONTAINERS
-        #define CONT_WGHT        true
-    #endif
 #endif
 
 

@@ -160,37 +160,23 @@ Terrine terrine;
 // Sensors
 // -------
 
-#if HE_CONTAINERS
-    #include <BERadio.h>
-#endif
-
 #if HE_TEMPERATURE
     #include <OneWire.h>                    // https://github.com/PaulStoffregen/OneWire
     #include <DallasTemperature.h>          // https://github.com/milesburton/Arduino-Temperature-Control-Library
     void readTemperature();
     OneWire oneWire(DS18B20_BUS);
     DallasTemperature sensors(&oneWire);
-    #ifndef HE_CONTAINERS
-        float temp0, temp1, temp2, temp3, temp4;
-    #endif
 #endif
 #if HE_HUMIDITY
     #include <DHT.h>
     DHT dht1;
     DHT dht2;
     void readHumidity();
-    #ifndef HE_CONTAINERS
-        float hum0 = 0, hum1 = 0;
-        float temp5 = 0, temp6 = 0, temp7 = 0, temp8 = 0;
-    #endif
 #endif
 #if HE_SCALE
     #include <HX711.h>                      // https://github.com/bogde/HX711
     HX711 scale;
     void readScale();
-    #ifndef HE_CONTAINERS
-        float wght0 = 0, wght1 = 0;
-    #endif
 #endif
 #if HE_BERadio
     #include <BERadio.h>
@@ -209,15 +195,9 @@ Terrine terrine;
 // Data
 // ----
 
-#if CONT_HUM
-    FloatList *humL = new FloatList();
-#endif
-#if CONT_WGHT
-    FloatList *wghtL = new FloatList();
-#endif
-#if CONT_TEMP
-    FloatList *tempL = new FloatList();
-#endif
+FloatList *humL = new FloatList();
+FloatList *wghtL = new FloatList();
+FloatList *tempL = new FloatList();
 
 
 
@@ -534,16 +514,9 @@ void loop() {
 
     // get sensor data
 
-    #if CONT_TEMP
-        tempL->clear();
-    #endif
-    #if CONT_HUM
-        tempL->clear();
-        humL->clear();
-    #endif
-    #if CONT_WGHT
-        wghtL->clear();
-    #endif
+    tempL->clear();
+    humL->clear();
+    wghtL->clear();
 
     #if HE_TEMPERATURE
         readTemperature();
