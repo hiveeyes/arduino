@@ -93,6 +93,10 @@ namespace TerkinData {
             // Serialize measurement data to JSON format
             std::string json_data(Measurement&);
 
+            // Serialize measurement data to SQL statements
+            std::string sql_create(std::string, Measurement&);
+            std::string sql_insert(std::string, Measurement&);
+
             // Serialize measurement data to x-www-urlencoded format
             std::string urlencode_data(Measurement&);
 
