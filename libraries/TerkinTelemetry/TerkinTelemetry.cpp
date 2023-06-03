@@ -79,6 +79,11 @@ ChannelAddress::ChannelAddress(const char *realm, const char *network, const cha
  *
 **/
 
+TelemetryClient::TelemetryClient(CrateDBTransmitter* transmitter, ChannelAddress* address) {
+    _transmitter = transmitter;
+    _address = address;
+    transmitter_type = CRATEDB;
+}
 TelemetryClient::TelemetryClient(JsonHttpTransmitter* transmitter, ChannelAddress* address) {
     _transmitter = transmitter;
     _address = address;
@@ -113,6 +118,15 @@ bool TelemetryClient::transmit(TerkinData::Measurement data) {
                 string("data");
         return ((JsonHttpTransmitter*) _transmitter)->transmit(address_path.c_str(), data);
 
+    // CrateDB over HTTP.
+    } else if (this->transmitter_type == CRATEDB) {
+        string database =
+                string(_address->realm) + string("_") +
+                string(_address->network);
+        string table =
+                string(_address->gateway) + string("_") +
+                string(_address->device);
+        return ((CrateDBTransmitter*) _transmitter)->transmit(database.c_str(), table.c_str(), data);
     }
 
     terrine2.log("ERROR: Unable to discover telemetry implementation");
@@ -323,4 +337,33 @@ bool JsonHttpTransmitter::transmit(const char *path, TerkinData::Measurement dat
     terrine.log(data_record.c_str());
 
     return true;
+}
+
+CrateDBTransmitter::CrateDBTransmitter(const char *url, const char *username, const char *password)
+    :
+    _url(url),
+    _username(username),
+    _password(password)
+{}
+
+// The transmit method obtains a reference to a JsonObject
+// which will get serialized before handing the payload
+// over to the appropriate driver component.
+bool CrateDBTransmitter::transmit(const char *database, const char *table, TerkinData::Measurement data) {
+
+    terrine.log("CrateDBTransmitter::transmit");
+    terrine.log(string("Database: ") + string(database));
+    terrine.log(string("Table:    ") + string(table));
+
+    // TODO: Improve.
+    TerkinData::DataManager *datamgr = new TerkinData::DataManager();
+    std::string data_record = datamgr->sql_insert(table, data);
+    delete datamgr;
+
+    // Output
+    terrine.log("Data:     ", false);
+    terrine.log(data_record.c_str());
+
+    return true;
+
 }

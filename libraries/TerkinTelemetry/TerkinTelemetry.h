@@ -41,6 +41,7 @@ namespace Terkin {
     class TelemetryClient;
 
     // Forward declarations: Transmitters.
+    class CrateDBTransmitter;
     class JsonHttpTransmitter;
 
 
@@ -87,11 +88,13 @@ namespace Terkin {
 
     enum TransmitterType {
         DUMMY = 0,
+        CRATEDB,
         JSON_HTTP
     };
 
     class TelemetryClient {
         public:
+            TelemetryClient(CrateDBTransmitter* transmitter, ChannelAddress* address);
             TelemetryClient(JsonHttpTransmitter* transmitter, ChannelAddress* address);
             bool transmit(JsonObject& data);
             bool transmit(TerkinData::Measurement data);
@@ -117,6 +120,18 @@ namespace Terkin {
      * TODO: For wiring the GPRSbee, we currently use JSON,
      *       let's also aim at BERadio.
     **/
+
+    class CrateDBTransmitter {
+    public:
+        CrateDBTransmitter(const char *url, const char *username, const char *password);
+        ~CrateDBTransmitter() = default;
+        bool transmit(const char *database, const char *table, JsonObject& data);
+        bool transmit(const char *database, const char *table, TerkinData::Measurement data);
+    protected:
+        const char *_url;
+        const char *_username;
+        const char *_password;
+    };
 
     class JsonHttpTransmitter {
     public:
