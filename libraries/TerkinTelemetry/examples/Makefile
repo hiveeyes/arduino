@@ -25,7 +25,7 @@ all: setup-virtualenv run build
 run: posix-run
 
 # Run all POSIX program examples.
-posix-run: http-kotori
+posix-run: http-cratedb http-kotori
 
 
 # ==================================================
@@ -33,6 +33,7 @@ posix-run: http-kotori
 # ==================================================
 
 build: setup-virtualenv
+	$(MAKE) build-generic NAME=http-cratedb
 	$(MAKE) build-generic NAME=http-kotori
 
 .PHONY: build-generic
@@ -43,6 +44,10 @@ build-generic:
 # =========================================
 # Build and run individual examples (POSIX)
 # =========================================
+
+.PHONY: http-cratedb
+http-cratedb:
+	$(MAKE) generic NAME=$@
 
 .PHONY: http-kotori
 http-kotori:
