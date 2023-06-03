@@ -1,10 +1,17 @@
 /**
  *
- * TerkinTelemetry - a flexible telemetry client interface layer
+ * TerkinTelemetry - a polyglot telemetry client interface.
  *
+ * Copyright (C) 2015-2023  Andreas Motl <andreas.motl@panodata.org>
+ * Copyright (C) 2015-2016  Richard Pobering <einsiedlerkrebs@ginnungagap.org>
  *
- *  Copyright (C) 2015-2016  Andreas Motl <andreas.motl@elmyra.de>
- *  Copyright (C) 2015-2016  Richard Pobering <einsiedlerkrebs@ginnungagap.org>
+ * TerkinTelemetry C++ provides an universal interface to user-space Arduino code, in order
+ * to generalize interfacing with a range of telemetry backends.
+ *
+ * TerkinTelemetry C++ provides backend drivers for supporting different telemetry communication
+ * paths, similar to what RadioHead provides as adapters to different radio link hardware,
+ * and TinyGSM provides as adapters to different modems. Examples: Generic JSON, CrateDB,
+ * InfluxDB.
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -14,19 +21,20 @@
  *  See also "LICENSE.txt" in the root folder of
  *  this repository or distribution package.
  *
- *
- * Terkin Arduino provides drivers for supporting different
- * communication paths, similar to what RadioHead provides
- * as adapters to different radio link hardware.
- *
- * For generalizing user-space Arduino code, Terkin provides
- * an universal interface to the communication subsystems
- * under the hood.
- *
 **/
+#include <Terrine.h>
 #include "TerkinTelemetry.h"
 
+#if defined(__unix__) || defined(__APPLE__)
+#include <iostream>
+#endif
+
+
+using namespace std;
 using namespace Terkin;
+
+// Terrine: Application boilerplate
+Terrine terrine2;
 
 
 // ==========================================
@@ -35,86 +43,79 @@ using namespace Terkin;
 
 /**
  *
- * A NodeAddress stores the topology address of a sensor node.
- * Sensor nodes have a quadruple addressing scheme:
+ * A ChannelAddress stores the topology address of a sensor device.
+ * Sensor devices have a quadruple addressing scheme.
  *
  *   - Realm
  *   - Network
  *   - Gateway
- *   - Node
+ *   - Device
  *
  * All four address components are made of ASCII characters.
  *
  * Example:
  *
- *   acme-org / testdrive / area-42 / node-3
+ *   acme-org / testdrive / area-42 / device-3
  *
 **/
 
 // Initialize with full quadruple address
-NodeAddress::NodeAddress(const char *realm, const char *network, const char *gateway, const char *node)
+ChannelAddress::ChannelAddress(const char *realm, const char *network, const char *gateway, const char *device)
     :
     realm(realm),
     network(network),
     gateway(gateway),
-    node(node)
+    device(device)
 {}
 
 
 /**
  *
- * A TelemetryNode is the main API the user interacts with.
- * It offers a single method "transmit" to call after
- * reading the sensors.
+ * The TelemetryClient is the main API the user interacts with.
+ * It offers a single method "transmit" to call after reading the sensors.
  *
- * When creating an instance, a TelemetryManager
- * and a NodeAddress instance have to be supplied.
+ * When creating an instance, it obtains a transmitter component, and a
+ * channel address.
  *
 **/
 
-// Initialize with TelemetryManager and NodeAddress components
-TelemetryNode::TelemetryNode(TelemetryManager& manager, NodeAddress& address)
-    :
-    _manager(manager),
-    _address(address)
-{}
-
-// The transmit method on the TelemetryNode object builds the full
-// address path from topology address segments before handing the
-// data container over to the appropriate TelemetryManager component.
-bool TelemetryNode::transmit(JsonObject& data) {
-    String address_path =
-        String(_address.realm) + String("/") +
-        String(_address.network) + String("/") +
-        String(_address.gateway) + String("/") +
-        String(_address.node) + String("/") +
-        String("data");
-    return _manager.transmit(address_path.c_str(), data);
+TelemetryClient::TelemetryClient(JsonHttpTransmitter* transmitter, ChannelAddress* address) {
+    _transmitter = transmitter;
+    _address = address;
+    transmitter_type = JSON_HTTP;
 }
 
+/*
+bool TelemetryClient::transmit(JsonObject& data) {
+    terrine2.log("FIXME: Implement TelemetryClient::transmit(JsonObject& data)");
 
-/**
- *
- * The TelemetryManager obtains a transmitter component
- * on creation and offers a single method "transmit".
- * It gets consumed by a TelemetryNode and dispatches
- * calls to the transmitter instance.
- *
- * When creating an instance, a GenericJsonTransmitter
- * and a target URI resource have to be supplied.
- *
- * When aiming at HTTP, this would be the full URL to
- * your data collection API endpoint.
- *
-**/
-TelemetryManager::TelemetryManager(GenericJsonTransmitter& transmitter, const char *http_uri)
-    :
-    transmitter(transmitter),
-    http_uri(http_uri)
-{}
-bool TelemetryManager::transmit(const char *address_path, JsonObject& data) {
-    String uri = String(http_uri) + String(address_path);
-    return transmitter.transmit(uri.c_str(), data);
+    //string uri = string(http_uri) + string(address_path);
+    //TerkinData::Measurement measurement;
+    //return transmitter->transmit(measurement);
+
+    //return _manager->transmit(address_path.c_str(), data);
+    TerkinData::Measurement data_out;
+    return transmit(data_out);
+}
+*/
+
+bool TelemetryClient::transmit(TerkinData::Measurement data) {
+    // TODO: Use double-dispatch instead?
+    // https://gieseanw.wordpress.com/2018/12/29/stop-reimplementing-the-virtual-table-and-start-using-double-dispatch/
+
+    // JSON over HTTP.
+    if (this->transmitter_type == JSON_HTTP) {
+        string address_path =
+                string(_address->realm) + string("/") +
+                string(_address->network) + string("/") +
+                string(_address->gateway) + string("/") +
+                string(_address->device) + string("/") +
+                string("data");
+        return ((JsonHttpTransmitter*) _transmitter)->transmit(address_path.c_str(), data);
+
+    }
+
+    terrine2.log("ERROR: Unable to discover telemetry implementation");
 }
 
 
@@ -248,13 +249,11 @@ void sendRequest(const char *uri) {
     }
 }
 
-ESPHTTPTransmitter::ESPHTTPTransmitter()
-{}
 
 // The transmit method obtains a reference to a JsonObject
 // which will get serialized before handing the payload
 // over to the appropriate driver component.
-bool ESPHTTPTransmitter::transmit(const char *uri, JsonObject& data) {
+bool ESPHTTPTransmitter::transmit(JsonObject& data) {
 
     // Serialize data
     char payload[256];
@@ -267,15 +266,15 @@ bool ESPHTTPTransmitter::transmit(const char *uri, JsonObject& data) {
     memset(response, 0, sizeof(response));
     bool retval;
 
-    sendRequest(uri);
+    sendRequest(http_uri);
 
     /*
     if (!_authenticated) {
         // Without APN authentication
-        //retval = _driver.doHTTPPOSTWithReply(_apn, uri, payload, strlen(payload), response, sizeof(response));
+        //retval = _driver.doHTTPPOSTWithReply(_apn, http_uri, payload, strlen(payload), response, sizeof(response));
     } else {
         // With APN authentication
-        //retval = _driver.doHTTPPOSTWithReply(_apn, _apnuser, _apnpwd, uri, payload, strlen(payload), response, sizeof(response));
+        //retval = _driver.doHTTPPOSTWithReply(_apn, _apnuser, _apnpwd, http_uri, payload, strlen(payload), response, sizeof(response));
     }
     */
 
@@ -294,4 +293,34 @@ bool ESPHTTPTransmitter::transmit(const char *uri, JsonObject& data) {
     return retval;
 
 }
+
+bool ESPHTTPTransmitter::transmit(TerkinData::Measurement data) {
+    terrine2.log("ESPHTTPTransmitter::transmit");
+    return true;
+}
+
 #endif
+
+
+JsonHttpTransmitter::JsonHttpTransmitter(const char *http_uri)
+    :
+    http_uri(http_uri)
+{}
+
+
+bool JsonHttpTransmitter::transmit(const char *path, TerkinData::Measurement data) {
+    terrine2.log("JsonHttpTransmitter::transmit");
+    terrine2.log((string("URI:  ") + string(http_uri)).c_str());
+    terrine2.log(string("Path: ") + string(path));
+
+    // TODO: Improve.
+    TerkinData::DataManager *datamgr = new TerkinData::DataManager();
+    std::string data_record = datamgr->json_data(data);
+    delete datamgr;
+
+    // Output
+    terrine.log("Data: ", false);
+    terrine.log(data_record.c_str());
+
+    return true;
+}

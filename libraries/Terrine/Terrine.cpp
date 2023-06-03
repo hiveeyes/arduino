@@ -56,6 +56,30 @@ void Terrine::log(const char *message, bool newline) {
     #endif
 }
 
+void Terrine::log(std::string message, bool newline) {
+#ifdef SIMULAVR
+    if (newline) {
+            _d(message);
+        } else {
+            _l(message);
+        }
+#elif defined(ARDUINO)
+    if (newline) {
+            SERIAL_PORT_HARDWARE.println(message.c_str());
+        } else {
+            SERIAL_PORT_HARDWARE.print(message.c_str());
+        }
+        #ifdef ARDUINO
+            delay(TERRINE_SERIAL_DELAY);
+        #endif
+#else
+    std::cout << message;
+    if (newline) {
+        std::cout << std::endl;
+    }
+#endif
+}
+
 void Terrine::log(bool newline) {
     #ifdef SIMULAVR
         if (newline) {

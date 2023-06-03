@@ -43,7 +43,7 @@
 .. _scale-adjust-hx711.ino: https://github.com/hiveeyes/arduino/blob/main/openhive/scale-adjust/HX711/scale-adjust-hx711.ino
 
 .. BERadio
-.. _BERadio C++: https://github.com/hiveeyes/arduino/tree/main/libraries/BERadio
+.. _BERadio C++: https://hiveeyes.org/docs/arduino/BERadio/README.html
 
 .. Mois
 .. _beescale-yun.ino: https://github.com/hiveeyes/arduino/blob/main/moislabs/beescale-yun/beescale-yun.ino
@@ -69,7 +69,7 @@
 .. _bienenwaage-esp32.cpp: https://github.com/hiveeyes/arduino/blob/main/ringlabs/bienenwaage-5.0/bienenwaage-esp32.cpp
 
 .. Kotori
-.. _Kotori: https://getkotori.org/docs/
+.. _Kotori: https://getkotori.org/
 
 
 
@@ -191,6 +191,8 @@
 .. _GSM: https://en.wikipedia.org/wiki/GSM
 .. _ISM: https://en.wikipedia.org/wiki/ISM_radio_band
 .. _ISM radio: https://en.wikipedia.org/wiki/ISM_radio_band
+.. _Hashids: https://hashids.org/
+.. _Home Assistant MQTT device discovery: https://www.home-assistant.io/integrations/mqtt/#mqtt-discovery
 .. _HTTP: https://en.wikipedia.org/wiki/HTTP
 .. _multi-hop: https://en.wikipedia.org/wiki/Multi-hop_routing
 .. _LICENSE: https://github.com/hiveeyes/arduino/blob/main/LICENSE.txt
@@ -200,13 +202,27 @@
 .. _LoRaWAN: https://en.wikipedia.org/wiki/LoRaWAN#LoRaWAN
 .. _LTE Cat M1: https://en.wikipedia.org/wiki/LTE-M
 .. _LTE Cat NB1: https://en.wikipedia.org/wiki/Narrowband_IoT
+.. _multi-tenancy: https://en.wikipedia.org/wiki/Multitenancy
+.. _Online UUID Generator: https://www.uuidgenerator.net/
 .. _picocom: https://github.com/npat-efault/picocom
 .. _pipa-espressif.ino: https://github.com/hiveeyes/arduino/blob/main/backdoor/node-pipa/examples/pipa-espressif/pipa-espressif.ino
 .. _PlatformIO Registry: https://registry.platformio.org/
 .. _RFM69: https://www.hoperf.com/modules/rf_transceiver/RFM69W.html
 .. _RFM69 - microcontroller.net: https://www.mikrocontroller.net/articles/RFM69
 .. _RFM95: https://www.hoperf.com/modules/lora/RFM95.html
+.. _sensor node: https://en.wikipedia.org/wiki/Sensor_node
+.. _sensor nodes: https://en.wikipedia.org/wiki/Sensor_node
+.. _sensor network: https://en.wikipedia.org/wiki/Wireless_sensor_network
+.. _sensor networks: https://en.wikipedia.org/wiki/Wireless_sensor_network
+.. _Sparkplug: https://sparkplug.eclipse.org/
+.. _Terkin MicroPython Datalogger: https://github.com/hiveeyes/terkin-datalogger
+.. _TerkinData: https://hiveeyes.org/docs/arduino/TerkinData/README.html
+.. _TerkinData C++: https://hiveeyes.org/docs/arduino/TerkinData/README.html
+.. _TerkinTelemetry: https://hiveeyes.org/docs/arduino/TerkinTelemetry/README.html
+.. _TerkinTelemetry C++: https://hiveeyes.org/docs/arduino/TerkinTelemetry/README.html
+.. _Terrine: https://github.com/hiveeyes/arduino/tree/main/libraries/Terrine
 .. _TTGO T-Call: https://community.hiveeyes.org/t/ttgo-t-call-sim800x/2690
+.. _Vasuki: https://api.hiveeyes.org/vasuki/
 .. _Wi-Fi: https://en.wikipedia.org/wiki/Wi-Fi
 .. _yak shaving: http://www.catb.org/jargon/html/Y/yak-shaving.html
 
