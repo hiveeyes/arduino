@@ -47,6 +47,7 @@
  *
 **/
 #include "OpenHiveTemperatureArray.h"
+#include "TerkinData.h"
 
 using namespace OpenHive;
 
@@ -108,7 +109,7 @@ JsonObject& OpenHiveTemperatureArray::read_demo() {
 // inside the data container for each frame
 const char * OpenHiveTemperatureArray::get_name(int frame_number) {
     /* Frame name builder, e.g. "frame-42" */
-    return (String("frame-") + String(frame_number)).c_str();
+    return (std::string("frame-") + TerkinUtil::to_string(frame_number)).c_str();
 }
 
 // Create the data container root object

@@ -28,6 +28,7 @@ Hiveeyes Arduino Firmwares
     firmware/overview
     BERadio/README
     TerkinData/README
+    TerkinTelemetry/README
     firmware-builder
     project/index
 

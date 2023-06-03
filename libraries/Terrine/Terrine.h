@@ -33,6 +33,7 @@ Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA
     #include <RHutil/simulator.h>
 #endif
 
+#include <string>
 
 #include <execvf.h>
 #include <varargs.h>
@@ -84,6 +85,7 @@ class Terrine {
 
         //void dprint(const char *message);
         void log(const char *message, bool newline=true);
+        void log(std::string message, bool newline=true);
         void log(int value);
         void log(bool newline=true);
 

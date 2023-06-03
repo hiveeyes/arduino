@@ -1,7 +1,5 @@
 .. include:: ../resources.rst
 
-.. _terkindata:
-
 .. _lib-terkin-data:
 
 ##############
@@ -14,38 +12,73 @@ TerkinData C++
     <https://hiveeyes.org/docs/arduino/TerkinData/README.html>`_,
     all inline links will be working there.
 
+.. highlight:: cpp
 
-************
-Introduction
-************
 
-TerkinData C++ is a convenient library for collecting sensor readings, and
-for marshalling them into different output formats, like CSV, JSON, SQL, or
-x-www-form-urlencoded.
+*****
+About
+*****
+
+The TerkinData C++ library offers a generic interface for collecting sensor
+readings, and for marshalling them into different output formats, like CSV,
+JSON, SQL, or x-www-form-urlencoded.
 
 It helps to decouple the sensor reading domain from the telemetry domain in a
-typical data logger application. While providing a generic interface, it can
-serialize measurement values to CSV, x-www-form-urlencoded and JSON formats.
+typical data logger application.
 
-The library solves some important obstacles usually encountered when doing
-telemetry:
+The `TerkinTelemetry C++`_ library provides adapters for different telemetry backends
+in form of transmitter components, and uses `TerkinData C++`_ for marshalling.
+
+
+********
+Synopsis
+********
+::
+
+    // Data container for collecting sensor data.
+    TerkinData::Measurement measurement;
+
+    // Optionally set timestamp (any format).
+    measurement.time = "2017-01-11T14:48:56Z";
+
+    // Collect sensor readings.
+    measurement.data["dht.0.temp"] = 42.42f;
+    measurement.data["dht.0.hum"]  = 84.84f;
+
+
+*******
+Details
+*******
+
+The library addresses a few important obstacles usually encountered when doing
+telemetry.
+
+CSV marshalling
+===============
 
 - When serializing to CSV, the order of fields is important.
   Therefore, an ordered list of field names is required for proper operation.
-  When serializing a CSV data line and some sensor values are missing due to
-  sensor defects or other errors, this must not have an impact on the CSV data
-  line. Optionally, the CSV header line can be prefixed with an arbitrary
-  string on serialization.
-- Some sensors like the DHT33_ (RHT04_) digital humidity/temperature sensor
-  deliver two values in a single reading cycle: Humidity and temperature.
-  The data channeling from reading the sensor to telemetry submission has to
-  account for that. As with the DS18B20_ digital thermometer or other `1-Wire`_
-  devices, multiple sensors of the same type might be attached, the data
-  channeling also has to account for that.
-  This is achieved by one level of indirection between the sensor reading and
-  the telemetry domain by introducing a convenient mapping between lowlevel
-  sensor values and the designated highlevel telemetry field names, which is
-  resolved and applied on serialization.
+- When serializing a measurement reading into CSV, and some sensor values are missing,
+  possibly due to sensor defects, or other errors, this **must not** have a negative
+  impact on the outbound CSV record. Optionally, the CSV header line can be prefixed
+  with an arbitrary string on serialization.
+
+Multiple values per sensor reading
+==================================
+
+Some sensors, like the `DHT33`_/`RHT04`_ digital humidity/temperature sensor,
+deliver **two values** in a single reading cycle: Humidity and temperature.
+
+The data channeling from reading the sensor to telemetry submission has to
+account for that. As with the `DS18B20`_ digital thermometer or other `1-Wire`_
+devices, multiple sensors of the same type might be attached, the data
+channeling also has to account for that.
+
+This is achieved by one level of indirection between the sensor reading and
+the telemetry domain by introducing a convenient mapping between low-level
+sensor values and the designated high-level telemetry field names, which is
+resolved and applied on serialization.
+
 - A timestamp string in arbitrary format can be attached to a single
   measurement.
 
@@ -54,9 +87,9 @@ leaks yet. It has also not been run on embedded MCU hardware yet, as this is
 just a design draft by now. Helping hands on that are very welcome!
 
 
-***********
-Environment
-***********
+************
+Environments
+************
 
 TerkinData C++ has been compiled successfully for/with:
 
@@ -66,18 +99,16 @@ TerkinData C++ has been compiled successfully for/with:
 - ESP32: xtensa-esp32-elf-gcc 8.4.0
 - macOS: Apple clang version 12.0.0
 
-On AVR, the framework relies on the STL_ implementation ArduinoSTL_ as it uses
-the ``map`` and ``vector`` data containers and its corresponding iterators
-under the hood.
+On AVR, the framework relies on the `STL`_ implementation `ArduinoSTL`_, because
+it uses the ``map`` and ``vector`` data containers and its corresponding iterators.
 
-The example programs `<csv_basic.cpp_>`_, `<json_basic.cpp_>`_,
-`<urlencoded_basic.cpp_>`_ and have been tested successfully at runtime on
-x86_64 (macOS).
+The example programs `<csv_basic.cpp_>`_, `<json_basic.cpp_>`_, and
+`<urlencoded_basic.cpp_>`_ have been tested successfully at runtime on x86_64.
 
 
-********
-Synopsis
-********
+*****
+Usage
+*****
 
 .. highlight:: cpp
 
@@ -329,26 +360,16 @@ Dependencies
 - `ArduinoJSON`_ by Benoît Blanchon.
 
 
-*******
-Backlog
-*******
-
-.. todo::
-
-    - Add :ref:`BERadio` serialization format.
-    - Spin off into separate repository https://github.com/daq-tools/terkin.
-
-
 *********
 Etymology
 *********
 
 Terkin
 ======
-| Epitomizes the greatest, the most immenense, the supreme and the paramount one.
+| Epitomizes the greatest, the most immense, the supreme and the paramount one.
 | Basically, the fundamental individual.
 |
-| -- http://www.urbandictionary.com/define.php?term=Terkin
+| -- https://www.urbandictionary.com/define.php?term=Terkin
 
 
 .. _ArduinoJSON: https://github.com/bblanchon/ArduinoJson
