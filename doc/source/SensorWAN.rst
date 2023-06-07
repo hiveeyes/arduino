@@ -6,12 +6,13 @@
 SensorWAN 3.0
 #############
 
+.. highlight:: text
 
 *****
 About
 *****
 
-The *SensorWAN channel addressing scheme* can be used for assigning telemetry
+The `SensorWAN`_ channel addressing scheme can be used for assigning telemetry
 data communication channels to individual `sensor nodes`_ in wide-area `sensor
 network`_ scenarios, or similar multi-node, multi-sensor environments.
 
@@ -25,7 +26,7 @@ components.
 
 ::
 
-    realm/network/group/name
+    <realm>/<network>/<group>/<name>
 
 As such, it maps 1:1 to MQTT topics and HTTP URL paths, and provides other means
 for protocols which do not support path-based addressing.
@@ -55,12 +56,19 @@ Features
 - **Freedom in topic design.**
 
   The four address components ``realm``, ``network``, ``group``, and ``name``, can be
-  freely adjusted to fit the jargon or semantics of your application or data acquisition
+  freely adjusted to fit the jargon and semantics of your application or data acquisition
   scenario.
 
-  For example, the Hiveeyes project uses ``organization / beekeeper / apiary / hive``,
-  and for addressing a global scenario, one could think of ``continent / country /
-  region / city``, or corresponding variants thereof.
+  .. tip::
+
+      To give you a few examples of possible addressing topologies for more specific use-cases:
+
+      - The Hiveeyes project uses ``organization/beekeeper/apiary/hive``.
+      - When addressing a global scenario, one could think of ``continent/country/region/city``,
+        or corresponding variants thereof.
+      - When looking at a more regional scenario instead, ``amazonas/ecuador/cuyabeno/hydro-1``
+        is the canonical topology example we are using on a few spots in the documentation of the
+        reference implementations.
 
 - **Infinite number of channels.**
 
@@ -69,9 +77,10 @@ Features
 
 - **Semantic grouping of channels.**
 
-  Without any need for a registry, you are able to quickly establish MQTT topic
-  conventions. For example, it is sensible to use address prefixes like ``realm/testdrive``
-  for designating channels used for testing purposes.
+  Without any need for a registry and corresponding machineries, you are able to quickly
+  establish address conventions. For example, it is both sensible and advisable to use
+  address prefixes like ``<realm>/testdrive`` for designating channels to be exclusively
+  used for testing purposes.
 
 - **Permission control.**
 
@@ -154,21 +163,24 @@ Downlink messages
 For pushing downlink messages to devices, SensorWAN uses the ``/downlink`` path suffix.
 
 
-*************************
-Direct channel addressing
-*************************
+.. _sensorwan-direct-addressing:
 
-With SensorWAN 3.0, a "direct" addressing scheme has been added, which can be used to
-directly address channels and devices, either by using their identifiers, or by encoding
-the channel topology using other non-path-based variants not using ``/`` as component
-separator, for example by using the dash character ``-``.
+*****************
+Direct addressing
+*****************
+
+With SensorWAN 3.0, two "direct" addressing schemes have been added, which can be used to
+directly address channels and devices, either by using their identifiers as opaque labels,
+or by encoding the channel topology differently than using a path-based scheme. For example,
+the "dash" character can be used to separate topology fragments.
+
 ::
 
-    # Address device
-    mqttkit-1/device/123e4567-e89b-12d3-a456-426614174000
+    # Addressing a device.
+    <realm>/device/123e4567-e89b-12d3-a456-426614174000
 
-    # Address channel
-    mqttkit-1/channel/network-gateway-node
+    # Addressing a channel.
+    <realm>/channel/<network>-<group>-<name>
 
 Therefore, the ``channel`` and ``device`` labels became reserved identifiers within the
 ``network`` namespace.
@@ -188,12 +200,9 @@ Databases
 For databases following the classic ``database`` -> ``table`` addressing scheme, or
 corresponding variants, the topology mapping from a path-based topic may look like::
 
-    # In
-    Topic:    realm/network/group/name
-
-    # Out
-    Database: realm_network
-    Table:    group_name
+    SensorWAN address: <realm>/<network>/<group>/<name>
+    Database name:     <realm>_<network>
+    Table name:        <group>_<name>
 
 Message buses
 =============
@@ -204,11 +213,8 @@ topic identifiers to the syntax conventions used in downstream systems. For exam
 usually encodes topic identifiers (here: routing keys) with fragments separated by dots. In
 this case, a topic identifier mapping may look like::
 
-    # In
-    Topic: realm/network/group/name
-
-    # Out
-    Topic: realm.network.group.name
+    SensorWAN address: <realm>/<network>/<group>/<name>
+    AMQP routing key:  <realm>.<network>.<group>.<name>
 
 Object stores
 =============
@@ -219,7 +225,7 @@ However, for the sake of organizational simplicity, the folder concept is usuall
 synthesized as a means of grouping objects.
 
 Building upon the SensorWAN path-based addressing scheme, a suitable object address within
-an S3 bucket would be, for example, ``realm/network/group/name.parquet``.
+an S3 bucket would be, for example, ``<realm>/<network>/<group>/<name>.parquet``.
 
 
 ***************
@@ -228,7 +234,7 @@ Payload formats
 
 SensorWAN does not impose any constraints on payload formats. You are free to select
 anything which fits your needs. However, it provides a mechanism to convey content
-type information over transports links which do not offer corresponding metadata fields,
+type information over transport links which do not offer corresponding metadata fields,
 like HTTP's ``Content-Type`` header.
 
 For example, `MQTT`_ version 3 does not provide any means to signal the content type,
@@ -241,7 +247,7 @@ add a ``/data.json`` suffix to the channel base address.
 
 ::
 
-    realm/network/group/name/data.json
+    <realm>/<network>/<group>/<name>/data.json
 
 
 ********
@@ -261,17 +267,19 @@ For example, generate UUIDs, like ``34f83b61-9044-4ca8-b310-84f412175a4d`` using
 suitable for human consumption using the `Vasuki`_ identifier generator, which you can
 use on your own systems as either a command line program, or as a library.
 
-If you don't fancy UUIDs, and would like to use shorter identifiers instead, like ``re69x8``,
-or ``ZgBxoo``, saving bandwidth both on the wire and on human communication about them, we
-recommend to use *Nagamani19*. Nagamani19 is a short, unique, non-sequential, collision-free
-identifier based on `Hashids`_ and a custom Epoch starting on January 1, 2019.
+.. tip::
 
-For generating random, pronounceable pseudo-words like ``blaumaueff``, or ``schnoerr``,
-we recommend to use the *Gibberish* generator.
+    If you don't fancy UUIDs, and would like to use shorter identifiers instead, like ``re69x8``,
+    or ``ZgBxoo``, saving bandwidth both on the wire and on human communication about them, we
+    recommend to use *Nagamani19*. Nagamani19 is a short, unique, non-sequential identifier
+    based on `Hashids`_ and a custom Epoch starting on January 1, 2019.
 
-Even shorter names, like ``Gime``, ``Togu``, or ``Viku``, suitable for assigning individual
-device names in a scenario with a few devices can be generated by using epoch slugs,
-available through the *MomentName* generator.
+    For generating random, pronounceable pseudo-words like ``blaumaueff``, or ``schnoerr``,
+    we recommend to use the *Gibberish* generator.
+
+    Even shorter names, like ``Gime``, ``Togu``, or ``Viku``, suitable for assigning individual
+    device names in a scenario with a few devices can be generated by using epoch slugs,
+    available through the *MomentName* generator.
 
 
 History

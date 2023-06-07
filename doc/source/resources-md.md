@@ -15,7 +15,7 @@
 [Hiveeyes-Lib]: https://github.com/hiveeyes/arduino/tree/main/libraries/Hiveeyes
 [scale-adjust-ads1231.ino]: https://github.com/hiveeyes/arduino/blob/main/openhive/scale-adjust/ADS1231/scale-adjust-ads1231.ino
 [scale-adjust-hx711.ino]: https://github.com/hiveeyes/arduino/blob/main/openhive/scale-adjust/HX711/scale-adjust-hx711.ino
-[BERadio C++]: https://github.com/hiveeyes/arduino/tree/main/libraries/BERadio
+[BERadio C++]: https://hiveeyes.org/docs/arduino/BERadio/README.html
 [beescale-yun.ino]: https://github.com/hiveeyes/arduino/blob/main/moislabs/beescale-yun/beescale-yun.ino
 [Mois Box]: https://www.euse.de/wp/blog/2017/03/bienenwaage-2_0/
 [OpenHive-Lib]: https://github.com/hiveeyes/arduino/tree/main/libraries/OpenHive
@@ -31,7 +31,7 @@
 [node-homie-lowpower.ino]: https://github.com/hiveeyes/arduino/blob/main/homie/node-homie-lowpower/node-homie-lowpower.ino
 [bienenwaage-esp8266.ino]: https://github.com/hiveeyes/arduino/blob/main/ringlabs/bienenwaage-2.0/bienenwaage-esp8266.ino
 [bienenwaage-esp32.cpp]: https://github.com/hiveeyes/arduino/blob/main/ringlabs/bienenwaage-5.0/bienenwaage-esp32.cpp
-[Kotori]: https://getkotori.org/docs/
+[Kotori]: https://getkotori.org/
 [Atmel]: https://en.wikipedia.org/wiki/Atmel
 [Microchip]: https://en.wikipedia.org/wiki/Microchip_Technology
 [AVR microcontroller family]: https://en.wikipedia.org/wiki/MegaAVR
@@ -112,6 +112,8 @@
 [GSM]: https://en.wikipedia.org/wiki/GSM
 [ISM]: https://en.wikipedia.org/wiki/ISM_radio_band
 [ISM radio]: https://en.wikipedia.org/wiki/ISM_radio_band
+[Hashids]: https://hashids.org/
+[Home Assistant MQTT device discovery]: https://www.home-assistant.io/integrations/mqtt/#mqtt-discovery
 [HTTP]: https://en.wikipedia.org/wiki/HTTP
 [multi-hop]: https://en.wikipedia.org/wiki/Multi-hop_routing
 [LICENSE]: https://github.com/hiveeyes/arduino/blob/main/LICENSE.txt
@@ -121,12 +123,26 @@
 [LoRaWAN]: https://en.wikipedia.org/wiki/LoRaWAN#LoRaWAN
 [LTE Cat M1]: https://en.wikipedia.org/wiki/LTE-M
 [LTE Cat NB1]: https://en.wikipedia.org/wiki/Narrowband_IoT
+[multi-tenancy]: https://en.wikipedia.org/wiki/Multitenancy
+[Online UUID Generator]: https://www.uuidgenerator.net/
 [picocom]: https://github.com/npat-efault/picocom
 [pipa-espressif.ino]: https://github.com/hiveeyes/arduino/blob/main/backdoor/node-pipa/examples/pipa-espressif/pipa-espressif.ino
 [PlatformIO Registry]: https://registry.platformio.org/
 [RFM69]: https://www.hoperf.com/modules/rf_transceiver/RFM69W.html
 [RFM69 - microcontroller.net]: https://www.mikrocontroller.net/articles/RFM69
 [RFM95]: https://www.hoperf.com/modules/lora/RFM95.html
+[sensor node]: https://en.wikipedia.org/wiki/Sensor_node
+[sensor nodes]: https://en.wikipedia.org/wiki/Sensor_node
+[sensor network]: https://en.wikipedia.org/wiki/Wireless_sensor_network
+[sensor networks]: https://en.wikipedia.org/wiki/Wireless_sensor_network
+[Sparkplug]: https://sparkplug.eclipse.org/
+[Terkin MicroPython Datalogger]: https://github.com/hiveeyes/terkin-datalogger
+[TerkinData]: https://hiveeyes.org/docs/arduino/TerkinData/README.html
+[TerkinData C++]: https://hiveeyes.org/docs/arduino/TerkinData/README.html
+[TerkinTelemetry]: https://hiveeyes.org/docs/arduino/TerkinTelemetry/README.html
+[TerkinTelemetry C++]: https://hiveeyes.org/docs/arduino/TerkinTelemetry/README.html
+[Terrine]: https://github.com/hiveeyes/arduino/tree/main/libraries/Terrine
 [TTGO T-Call]: https://community.hiveeyes.org/t/ttgo-t-call-sim800x/2690
+[Vasuki]: https://api.hiveeyes.org/vasuki/
 [Wi-Fi]: https://en.wikipedia.org/wiki/Wi-Fi
 [yak shaving]: http://www.catb.org/jargon/html/Y/yak-shaving.html
