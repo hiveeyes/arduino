@@ -57,18 +57,7 @@ Features
 
   The four address components ``realm``, ``network``, ``group``, and ``name``, can be
   freely adjusted to fit the jargon and semantics of your application or data acquisition
-  scenario.
-
-  .. tip::
-
-      To give you a few examples of possible addressing topologies for more specific use-cases:
-
-      - The Hiveeyes project uses ``organization/beekeeper/apiary/hive``.
-      - When addressing a global scenario, one could think of ``continent/country/region/city``,
-        or corresponding variants thereof.
-      - When looking at a more regional scenario instead, ``amazonas/ecuador/cuyabeno/hydro-1``
-        is the canonical topology example we are using on a few spots in the documentation of the
-        reference implementations.
+  scenario, see also :ref:`sensorwan-address-examples`.
 
 - **Infinite number of channels.**
 
@@ -137,10 +126,14 @@ Name
 ``name`` designates the channel name. For example, you can use it to reflect the
 **device/node identifier**. Choose anything you like.
 
+----
+
 .. tip::
 
     In order to assign unique values as address components, you can generate them by using
-    online or standalone programs, see :ref:`unique-identifiers`.
+    online or standalone programs, see :ref:`sensorwan-unique-identifiers`. In order to
+    get a few ideas about possible topology address implementations, have a look at the
+    :ref:`sensorwan-address-examples`.
 
 
 ************
@@ -254,7 +247,27 @@ add a ``/data.json`` suffix to the channel base address.
 Appendix
 ********
 
-.. _unique-identifiers:
+.. _sensorwan-address-examples:
+
+Addressing examples
+===================
+
+To give you a few examples of possible addressing topologies for more specific use-cases:
+
+- | **continent/country/region/city**
+  | Addressing a global/world-wide scenario, or corresponding variants thereof.
+
+- | **amazonas/ecuador/cuyabeno/hydro-1**
+  | When looking at a more regional scenario instead. This is the canonical topology example we
+  | are using on a few spots in the documentation of the reference implementations.
+
+- | **organization/beekeeper/apiary/hive**
+  | The data acquisition topology of the Hiveeyes project.
+
+- | **organization/plant/shop-floor/machine**
+  | For addressing industrial data acquisition scenarios.
+
+.. _sensorwan-unique-identifiers:
 
 Unique identifiers
 ==================
