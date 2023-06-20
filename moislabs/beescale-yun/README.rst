@@ -250,7 +250,7 @@ Live data
 - https://www.euse.de/honig/beescale/graph.php
 - https://www.euse.de/honig/beescale/graph_pure.php
 - https://swarm.hiveeyes.org/grafana/d/5NpVD1qiz/mois-2-1-hives-overview-and-bee-weather
-- http://www.euse.de/honig/beescale/b-cam/gallery.html
+- https://www.euse.de/honig/beescale/b-cam/gallery.html
 
 
 
